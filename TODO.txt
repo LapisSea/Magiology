@@ -1,0 +1,52 @@
+Working on:
+	Fancy rendering
+	
+In plans:
+	Animated model renderer
+	json models
+	reimplement IItemRenderer (as much as possible)
+	Standardize gui style
+	Ingame mod book
+	repeating crossbow
+	--------> whole fudging machine system <--------
+	Config for all the things!
+	
+Abandoned for other projects:
+	The hand functionality 
+	Rare space pipes (item pipes)
+	Ore structure crusher
+	Particle launcher
+	
+To improve:
+	The wings animation/physics
+	The hand better model
+	Power system (low priority)
+	JavaScript editor
+	text editor
+	THE PREFORMANCE OF THE MOD!! 
+	
+For scraping and reusing:
+	Disco floor
+	Epic particle effects
+
+
+possible fire essence names (mod power unit and main item)
+hot fire
+calidus ignis (to Latin)
+Caligni
+
+fire power
+virtutem ignis (to Latin)
+Virtugni
+
+movie: Moving tower 
+Calcifer (movie character)
+Calciferium 
+
+hot juice
+calidus sucus (to Latin)
+Caliducus
+
+Ignia
+
+for now it is Calciferium

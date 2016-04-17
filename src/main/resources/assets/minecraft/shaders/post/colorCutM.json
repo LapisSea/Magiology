@@ -1,0 +1,21 @@
+{
+    "targets": [
+        "swap"
+    ],
+    "passes": [
+        {
+            "name": "colorCutM",
+            "intarget": "minecraft:main",
+            "outtarget": "swap",
+            "uniforms": [
+            ]
+        },
+        {
+            "name": "colorCutM",
+            "intarget": "swap",
+            "outtarget": "minecraft:main",
+            "uniforms": [
+            ]
+        }
+    ]
+}

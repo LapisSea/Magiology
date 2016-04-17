@@ -1,0 +1,84 @@
+itemGroup.Magical Ore Processing=Magical Ore Processing
+itemGroup.Whwmmt Ores=Whwmmt Ores
+
+tile.FireLamp.name=Fire Lamp
+tile.FirePipe.name=Fire Pipe
+tile.bedrockBreaker.name=Bedrock Breaker
+
+tile.IronLevel2.name=Iron Ore Level 2
+tile.IronLevel3.name=Iron Ore Level 3
+tile.IronLevel4.name=Iron Ore Level 4
+tile.IronLevel5.name=Iron Ore Level 5
+tile.SuperDuperIron.name=Super Duper Iron Ore
+
+tile.GoldLevel2.name=Gold Ore Level 2
+tile.GoldLevel3.name=Gold Ore Level 3
+tile.GoldLevel4.name=Gold Ore Level 4
+tile.GoldLevel5.name=Gold Ore Level 5
+tile.SuperDuperGold.name=Super Duper Gold
+
+tile.DiamondLevel2.name=Diamond Ore Level 2
+tile.DiamondLevel3.name=Diamond Ore Level 3
+tile.DiamondLevel4.name=Diamond Ore Level 4
+tile.DiamondLevel5.name=Diamond Ore Level 5
+tile.SuperDuperDiamond.name=Super Duper Diamond Ore
+
+tile.LapisLazuliLevel2.name=Lapis Ore Lazuli Level 2
+tile.LapisLazuliLevel3.name=Lapis Ore Lazuli Level 3
+tile.LapisLazuliLevel4.name=Lapis Ore Lazuli Level 4
+tile.LapisLazuliLevel5.name=Lapis Ore Lazuli Level 5
+tile.SuperDuperLapisLazuli.name=Super Duper Lapis Lazuli Ore
+
+tile.RedstoneLevel2.name=Redstone Ore Level 2
+tile.RedstoneLevel3.name=Redstone Ore Level 3
+tile.RedstoneLevel4.name=Redstone Ore Level 4
+tile.RedstoneLevel5.name=Redstone Ore Level 5
+tile.SuperDuperRedstone.name=Super Duper Redstone Ore
+
+tile.EmeraldLevel2.name=Emerald Ore Level 2
+tile.EmeraldLevel3.name=Emerald Ore Level 3
+tile.EmeraldLevel4.name=Emerald Ore Level 4
+tile.EmeraldLevel5.name=Emerald Ore Level 5
+tile.SuperDuperEmerald.name=Super Duper Emerald Ore
+
+tile.NetherQuartzLevel2.name=Nether Quartz Ore Level 2
+tile.NetherQuartzLevel3.name=Nether Quartz Ore Level 3
+tile.NetherQuartzLevel4.name=Nether Quartz Ore Level 4
+tile.NetherQuartzLevel5.name=Nether Quartz Ore Level 5
+tile.SuperDuperNetherQuartz.name=Super Duper Nether Quartz Ore
+
+tile.CoalLevel2.name=Coal Ore Level 2
+tile.CoalLevel3.name=Coal Ore Level 3
+tile.CoalLevel4.name=Coal Ore Level 4
+tile.CoalLevel5.name=Coal Ore Level 5
+tile.SuperDuperCoal.name=Super Duper Coal Ore
+
+tile.armorEditor.name=Armor Editor
+
+item.Control upgrade level.1.name=Control Upgrade Level 1
+item.Priority upgrade level.1.name=Priority Upgrade Level 1
+item.Flight upgrade level.1.name=Flight Upgrade Level 1
+item.ThermalVision upgrade level.1.name=Thermal Vision Upgrade Level 1
+
+item.Capacity upgrade level.1.name=Capacity Upgrade Level 1
+item.Capacity upgrade level.2.name=Capacity Upgrade Level 2
+item.Capacity upgrade level.3.name=Capacity Upgrade Level 3
+item.Capacity upgrade level.4.name=Capacity Upgrade Level 4
+item.Capacity upgrade level.5.name=Capacity Upgrade Level 5
+
+item.Range upgrade level.1.name=Range Upgrade Level 1
+item.Range upgrade level.2.name=Range Upgrade Level 2
+
+item.Speed upgrade level.1.name=Speed Upgrade Level 1
+item.Speed upgrade level.2.name=Speed Upgrade Level 2
+item.Speed upgrade level.3.name=Speed Upgrade Level 3
+item.Speed upgrade level.4.name=Speed Upgrade Level 4
+item.Speed upgrade level.5.name=Speed Upgrade Level 5
+
+item.EquivalentRightClickWandOfMagic.name=Equivalent Right Click Wand Of Magic
+item.PowerCounter.name=Power Counter
+item.FireHammer.name=Fire Hammer
+item.pants_42.name=Fire Pants
+item.helmet42.name=Fire Helmet
+
+//item.tutorialItem.name=Tutorial Item

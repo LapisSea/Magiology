@@ -1,0 +1,5 @@
+I made this custom language from scrap. It is inspired by OpenGL Shading Language and java. 
+It can do basic functions. No if-s no while-s etc... it is 0.05% done.
+I replaced it with JavaScript after I found out how to compile and run it. 
+Feel free to download it and change it. 
+PS: it uses some classes from my mod like ObjectCalculator. 
