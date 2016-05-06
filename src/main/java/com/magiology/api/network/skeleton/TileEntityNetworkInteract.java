@@ -14,12 +14,13 @@ import com.magiology.api.network.WorldNetworkInterface;
 import com.magiology.api.network.interfaces.registration.InterfaceBinder;
 import com.magiology.api.network.interfaces.registration.InterfaceBinder.TileToInterfaceHelper;
 import com.magiology.core.init.MItems;
-import com.magiology.forgepowered.packets.packets.SavableDataWithKeyPacket;
+import com.magiology.forgepowered.packets.packets.toclient.SavableDataWithKeyPacket;
 import com.magiology.mcobjects.tileentityes.network.TileEntityNetworkRouter;
 import com.magiology.util.utilclasses.SideUtil;
 import com.magiology.util.utilclasses.UtilM;
 import com.magiology.util.utilclasses.UtilM.U;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -101,7 +102,8 @@ public abstract class TileEntityNetworkInteract extends TileEntityNetwork implem
 				worldObj.notifyBlockOfStateChange(pos, blockType);
 				int side=getOrientation();
 				BlockPos pos1=SideUtil.offsetNew(side, pos);
-				if(U.getBlock(worldObj, pos1).isOpaqueCube())worldObj.notifyBlockOfStateChange(pos, U.getBlock(worldObj, pos1));
+				IBlockState state=worldObj.getBlockState(pos1);
+				if(state.getBlock().isOpaqueCube(state))worldObj.notifyBlockOfStateChange(pos, U.getBlock(worldObj, pos1));
 			}
 		}
 	}

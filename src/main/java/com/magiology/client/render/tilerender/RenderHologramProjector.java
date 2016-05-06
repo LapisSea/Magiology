@@ -11,6 +11,7 @@ import com.magiology.mcobjects.tileentityes.hologram.TileEntityHologramProjector
 import com.magiology.util.renderers.GL11U;
 import com.magiology.util.renderers.OpenGLM;
 import com.magiology.util.renderers.TessUtil;
+import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilclasses.UtilM;
 import com.magiology.util.utilobjects.ColorF;
 import com.magiology.util.utilobjects.m_extension.TileEntitySpecialRendererM;
@@ -30,10 +31,10 @@ public class RenderHologramProjector extends TileEntitySpecialRendererM{
 		OpenGLM.translate(x,y,z);
 		GL11U.texture(false);
 		GL11U.glLighting(true);
-		TessUtil.drawCube(t.getBlockType().getBlockBoundsMinX(),t.getBlockType().getBlockBoundsMinY(),t.getBlockType().getBlockBoundsMinZ(),t.getBlockType().getBlockBoundsMaxX(),t.getBlockType().getBlockBoundsMaxY(),t.getBlockType().getBlockBoundsMaxZ());
+		TessUtil.drawCube(t.getBlockType().getBoundingBox(tile.getWorld().getBlockState(tile.getPos()), tile.getWorld(), tile.getPos()));
 		GL11U.setUpOpaqueRendering(1);
 		GL11U.glScale(0.99999);
-		ColorF color=new ColorF(UtilM.fluctuateSmooth(10, 0)*0.2+tile.mainColor.x,UtilM.fluctuateSmooth(35, 0)*0.2+tile.mainColor.y,UtilM.fluctuateSmooth(16, 0)*0.2+tile.mainColor.z,0.2);
+		ColorF color=new ColorF(UtilC.fluctuateSmooth(10, 0)*0.2+tile.mainColor.x,UtilC.fluctuateSmooth(35, 0)*0.2+tile.mainColor.y,UtilC.fluctuateSmooth(16, 0)*0.2+tile.mainColor.z,0.2);
 		color.bind();
 		OpenGLM.translate(tile.offset.x, tile.offset.y-UtilM.p*1.45F, 0.5F);
 		tile.main.draw();

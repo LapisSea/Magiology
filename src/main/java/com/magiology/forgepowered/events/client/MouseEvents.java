@@ -2,7 +2,7 @@ package com.magiology.forgepowered.events.client;
 
 import com.magiology.client.gui.custom.hud.WingModeChangerHUD;
 import com.magiology.handlers.animationhandlers.WingsFromTheBlackFireHandler;
-import com.magiology.util.utilclasses.UtilM;
+import com.magiology.util.utilclasses.UtilC;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.client.event.MouseEvent;
@@ -20,7 +20,7 @@ public class MouseEvents{
 		//switch scrolling to WingModeChangerGui
 		if(direction==1)WingModeChangerHUD.instance.next();
 		else WingModeChangerHUD.instance.prev();
-		if(!(!GuiScreen.isCtrlKeyDown()||!WingsFromTheBlackFireHandler.getIsActive(UtilM.getThePlayer())))event.setCanceled(true);
+		if(!(!GuiScreen.isCtrlKeyDown()||!WingsFromTheBlackFireHandler.getIsActive(UtilC.getThePlayer())))event.setCanceled(true);
 //		
 //		if(H.RB(0.9))FakeMessageHUD.addMessage(new Message(new ColorF(), "such mesage"+direction, null));
 //		else FakeMessageHUD.addMessage(new Message(new ColorF(), "wow such mesage!", "some "));
@@ -30,8 +30,8 @@ public class MouseEvents{
 	//caller
 	@SubscribeEvent
 	public void startMouseInput(MouseEvent event){
-		mouseInput(event,event.button);
-		int roll=event.dwheel;if(roll==0)return;
+		mouseInput(event,event.getButton());
+		int roll=event.getDwheel();if(roll==0)return;
 		int negative=roll<0?-1:1;roll*=negative;
 		for(int a=120;a<=roll;a+=120)roll(event,negative);
 		

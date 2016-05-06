@@ -4,12 +4,12 @@ import com.magiology.client.gui.container.ArmorContainer;
 import com.magiology.client.gui.custom.guiparticels.GuiStandardFX;
 import com.magiology.client.gui.guiutil.gui.buttons.InvisivleGuiButton;
 import com.magiology.core.MReference;
-import com.magiology.mcobjects.effect.GuiParticle;
+import com.magiology.mcobjects.particles.GuiParticle;
 import com.magiology.util.renderers.GL11U;
 import com.magiology.util.renderers.OpenGLM;
 import com.magiology.util.renderers.TessUtil;
 import com.magiology.util.utilclasses.RandUtil;
-import com.magiology.util.utilclasses.UtilM.U;
+import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilclasses.math.PartialTicksUtil;
 
 import net.minecraft.client.gui.GuiButton;
@@ -20,7 +20,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiArmor extends GuiContainerAndGuiParticles{
 	
-protected static ItemRenderer itemRenderer = new ItemRenderer(U.getMC());
+protected static ItemRenderer itemRenderer = new ItemRenderer(UtilC.getMC());
 	//	private ItemRendererHelmet42 IRH42 = new ItemRendererHelmet42();
 	ResourceLocation main= new ResourceLocation(MReference.MODID,"/textures/gui/GuiArmorEditor.png");
 	int numberOfSlots=0,xMouse=0,yMouse=0,startRandom;
@@ -78,7 +78,7 @@ protected static ItemRenderer itemRenderer = new ItemRenderer(U.getMC());
 	}
 	
 	public void drawBIGRotatingItemStack(ItemStack stack){
-		long WT=U.getMC().theWorld.getTotalWorldTime();
+		long WT=UtilC.getMC().theWorld.getTotalWorldTime();
 		int angleX=(int)(WT%360),rotatePosX=37+8*3;
 		double angleY2=500,angleY1=(int)(WT%angleY2),angleY3=(angleY1>angleY2/2?angleY2-angleY1:angleY1),
 				angleY=(angleY3-angleY2/4)/(angleY2/25),rotateYOffset=36;
@@ -150,7 +150,7 @@ protected static ItemRenderer itemRenderer = new ItemRenderer(U.getMC());
 			if(o1<o2)o1+=0.035;
 			if(o1>o2)o1-=0.035;
 		}
-		long WT=U.getMC().theWorld.getTotalWorldTime();
+		long WT=UtilC.getMC().theWorld.getTotalWorldTime();
 		OpenGLM.translate(0, 0, 250);
 		drawBIGRotatingItemStack(p42[pos]);
 		OpenGLM.translate(0, 0,-250);

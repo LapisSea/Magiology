@@ -1,19 +1,12 @@
 package com.magiology.client.render.tilerender;
 
 import com.magiology.client.render.Textures;
-import com.magiology.client.render.aftereffect.LongAfterRenderRenderer;
-import com.magiology.client.render.aftereffect.RenderFirePipeGlow;
-import com.magiology.client.render.aftereffect.RenderFirePipePriorityCube;
-import com.magiology.core.init.MItems;
-import com.magiology.forgepowered.events.client.RenderEvents;
 import com.magiology.mcobjects.tileentityes.TileEntityFirePipe;
 import com.magiology.util.renderers.GL11U;
 import com.magiology.util.renderers.TessUtil;
 import com.magiology.util.renderers.VertexModel;
 import com.magiology.util.renderers.VertexRenderer;
 import com.magiology.util.utilclasses.Get.Render;
-import com.magiology.util.utilclasses.UtilM;
-import com.magiology.util.utilobjects.m_extension.AxisAlignedBBM;
 import com.magiology.util.utilobjects.m_extension.TileEntitySpecialRendererM;
 
 import net.minecraft.tileentity.TileEntity;
@@ -443,35 +436,7 @@ public class RenderFirePipe extends TileEntitySpecialRendererM {
 	@Override
 	public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float f){
 		GL11U.protect();
-		TileEntityFirePipe pipe= (TileEntityFirePipe) tileentity;
-		if(UtilM.isItemInStack(MItems.fireHammer, UtilM.getThePlayer().getHeldItemMainhand())){
-			if(pipe.hasPriorityUpg){
-				boolean var1=true;
-				for(int a=0;a<RenderEvents.universalLongRender.size();a++){
-					LongAfterRenderRenderer ab=RenderEvents.universalLongRender.get(a);
-					if(ab instanceof RenderFirePipePriorityCube&&!((RenderFirePipePriorityCube)ab).isDead())if(((RenderFirePipePriorityCube)ab).pipe==pipe)var1=false;
-				}
-				if(var1&&pipe.FirstSide>=0){
-					int a=0;
-					switch (pipe.FirstSide){
-					case 0:a=4;break;
-					case 1:a=1;break;
-					case 2:a=2;break;
-					case 3:a=3;break;
-					case 4:a=5;break;
-					case 5:a=0;break;
-					}
-					AxisAlignedBBM b=pipe.getBoxes().get(a).box;
-					RenderEvents.spawnLARR(new RenderFirePipePriorityCube(pipe, pipe.getPos(), b));
-				}
-			}
-			boolean var2=true;
-			for(int a=0;a<RenderEvents.universalLongRender.size();a++){
-				LongAfterRenderRenderer ab=RenderEvents.universalLongRender.get(a);
-				if(ab instanceof RenderFirePipeGlow&&!((RenderFirePipeGlow)ab).isDead()&&((RenderFirePipeGlow)ab).pipe==pipe)var2=false;
-			}
-			if(var2)RenderEvents.spawnLARR(new RenderFirePipeGlow(pipe));
-		}
+		TileEntityFirePipe pipe=(TileEntityFirePipe) tileentity;
 		Render.WR().setTranslation(x,y,z);
 		if(pipe.DCFFL)drawConectorFFL();
 		for(int i=0;i<pipe.connections.length;i++){

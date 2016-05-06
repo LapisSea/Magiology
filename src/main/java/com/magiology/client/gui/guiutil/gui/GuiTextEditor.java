@@ -22,6 +22,7 @@ import com.magiology.util.renderers.OpenGLM;
 import com.magiology.util.renderers.TessUtil;
 import com.magiology.util.renderers.VertexRenderer;
 import com.magiology.util.utilclasses.Get.Render.Font;
+import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilclasses.math.MathUtil;
 import com.magiology.util.utilclasses.math.PartialTicksUtil;
 import com.magiology.util.utilobjects.ColorF;
@@ -636,7 +637,7 @@ public class GuiTextEditor extends Gui implements Updateable,SliderParent{
 		}
 		FontRendererMClipped fr=FontRendererMClipped.get();
 		
-		int guiScale=getGuiScaleRaw();
+		int guiScale=UtilC.getGuiScaleRaw();
 		GL11U.texture(false);
 		OpenGLM.lineWidth(guiScale);
 		
@@ -660,7 +661,7 @@ public class GuiTextEditor extends Gui implements Updateable,SliderParent{
 		GL11U.texture(true);
 		
 		OpenGLM.pushMatrix();
-		Vector2f offset=PartialTicksUtil.calculatePos(prevTextOffset, getSlideableOffset()).negate(null);
+		Vector2f offset=PartialTicksUtil.calculate(prevTextOffset, getSlideableOffset()).negate(null);
 		OpenGLM.translate(offset.x, offset.y, 0);
 		if(active&&isSelected()){
 			renderSelection(0xFFDFB578);
@@ -681,7 +682,7 @@ public class GuiTextEditor extends Gui implements Updateable,SliderParent{
 		
 		if(active){
 			Rectangle box=new Rectangle(pos.x-2-(int)offset.x,pos.y-2-(int)offset.y,size.x+4, size.y+4);
-			if(getWorldTime(getTheWorld())/6%2==0){
+			if(getWorldTime(UtilC.getTheWorld())/6%2==0){
 				if(getCursorPosition().x>getCurrentLine().length())getCursorPosition().x=getCurrentLine().length();
 				int cursorX=pos.x+fr.getStringWidth(getCurrentLine().substring(0, getCursorPosition().x));
 				int cursorY=pos.y+getCursorPosition().y*fr.FONT_HEIGHT;
@@ -736,7 +737,7 @@ public class GuiTextEditor extends Gui implements Updateable,SliderParent{
 		Vec2i first=selection.obj1;
 		Vec2i last=selection.obj2;
 		
-		Vector2f offset=PartialTicksUtil.calculatePos(prevTextOffset, getSlideableOffset()).negate(null);
+		Vector2f offset=PartialTicksUtil.calculate(prevTextOffset, getSlideableOffset()).negate(null);
 		
 		if(first.y==last.y){
 			int x1=fr.getStringWidth(getLine(first.y).substring(0, first.x));

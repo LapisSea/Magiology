@@ -8,6 +8,7 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
@@ -46,7 +47,7 @@ public abstract class ClassTransformerBase{
 		transformTypeClass=new ASMClass("bgr$b", "net/minecraft/client/renderer/block/model/ItemCameraTransforms$TransformType"),
 		renderItemClass=new ASMClass("bjh", "net/minecraft/client/renderer/entity/RenderItem"),
 		itemRendererClass=new ASMClass("bfn", "net/minecraft/client/renderer/ItemRenderer"),
-		iBakedModel=new ASMClass("boq", "net/minecraft/client/resources/model/IBakedModel"),
+		iBakedModel=new ASMClass("boq", "net/minecraft/client/renderer/block/model/IBakedModel"),
 		tessellator=new ASMClass("bfx", "net/minecraft/client/renderer/Tessellator"),
 		glStateManager=new ASMClass("bfl", "net/minecraft/client/renderer/GlStateManager"),
 		forgeHooksClient=new ASMClass("net/minecraftforge/client/ForgeHooksClient", "net/minecraftforge/client/ForgeHooksClient");
@@ -60,10 +61,16 @@ public abstract class ClassTransformerBase{
 		tessellator_draw=new ASMMethod("b", "draw", new ASMFuncDesc("V")),
 		iBakedModel_isBuiltInRenderer=new ASMMethod("d", "isBuiltInRenderer", new ASMFuncDesc("Z")),
 		glStateManager_popMatrix=new ASMMethod("F", "popMatrix", new ASMFuncDesc("V")),
-		handleCameraTransforms=new ASMMethod("handleCameraTransforms", "handleCameraTransforms", new ASMFuncDesc(iBakedModel.normal, iBakedModel,transformTypeClass));
+		handleCameraTransforms=new ASMMethod("handleCameraTransforms", "handleCameraTransforms", new ASMFuncDesc(iBakedModel.normal, iBakedModel,transformTypeClass,()->"Z"));
 	
+	protected static boolean isLdc(AbstractInsnNode line, float value){
+		return line.getOpcode()==LDC&&((LdcInsnNode)line).cst.equals(value);
+	}
 	protected static boolean isAloadValue(AbstractInsnNode line, int value){
 		return line.getOpcode()==ALOAD&&((VarInsnNode)line).var==value;
+	}
+	protected static boolean isAreturnValue(AbstractInsnNode line){
+		return line.getOpcode()==ARETURN;
 	}
 	
 	
@@ -91,27 +98,32 @@ public abstract class ClassTransformerBase{
 			}
 		}
 		
-		Class<?> returnType=method.getReturnType();
-		
-		String returnTypeS=Type.getInternalName(returnType);
-		if(returnTypeS.equals("void"))returnTypeS="V";
-		else if(returnTypeS.equals(Type.getInternalName(byte.class)))returnTypeS="B";
-		else if(returnTypeS.equals(Type.getInternalName(char.class)))returnTypeS="C";
-		else if(returnTypeS.equals(Type.getInternalName(double.class)))returnTypeS="D";
-		else if(returnTypeS.equals(Type.getInternalName(float.class)))returnTypeS="F";
-		else if(returnTypeS.equals(Type.getInternalName(int.class)))returnTypeS="I";
-		else if(returnTypeS.equals(Type.getInternalName(long.class)))returnTypeS="J";
-		else if(returnTypeS.equals(Type.getInternalName(short.class)))returnTypeS="S";
-		else if(returnTypeS.equals(Type.getInternalName(boolean.class)))returnTypeS="Z";
+		String returnTypeS=classToString(method.getReturnType());
 		
 		Class<?>[] params=method.getParameterTypes();
 		ASMClass[] param=new ASMClass[params.length];
 		
-		for(int i=0;i<param.length;i++)param[i]=new ASMClass("", Type.getInternalName(params[i]));
+		for(int i=0;i<param.length;i++)param[i]=new ASMClass("", fixName(Type.getInternalName(params[i])));
 		
 		ASMFuncDesc desc=new ASMFuncDesc(returnTypeS, param);
-		
+		PrintUtil.println(desc);
 		return new MethodInsnNode(INVOKESTATIC, Type.getInternalName(clazz), method.getName(), desc.get(),false);
+	}
+	private String classToString(Class clazz){
+		return fixName(Type.getInternalName(clazz));
+	}
+	private String fixName(String internalName){
+		PrintUtil.println(internalName);
+		if(internalName.equals("void"))internalName="V";
+		else if(internalName.equals(Type.getInternalName(byte.class)))internalName="B";
+		else if(internalName.equals(Type.getInternalName(char.class)))internalName="C";
+		else if(internalName.equals(Type.getInternalName(double.class)))internalName="D";
+		else if(internalName.equals(Type.getInternalName(float.class)))internalName="F";
+		else if(internalName.equals(Type.getInternalName(int.class)))internalName="I";
+		else if(internalName.equals(Type.getInternalName(long.class)))internalName="J";
+		else if(internalName.equals(Type.getInternalName(short.class)))internalName="S";
+		else if(internalName.equals(Type.getInternalName(boolean.class)))internalName="Z";
+		return internalName;
 	}
 	public abstract String getDebudInfo();
 	public abstract String[] getTransformingClasses();

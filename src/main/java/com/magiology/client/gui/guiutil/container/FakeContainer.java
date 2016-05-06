@@ -3,6 +3,7 @@ package com.magiology.client.gui.guiutil.container;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
 
 public class FakeContainer implements IInventory{
 	
@@ -50,7 +51,7 @@ public class FakeContainer implements IInventory{
 	}
 
 	@Override
-	public IChatComponent getDisplayName() {
+	public ITextComponent getDisplayName() {
 		// TODO Auto-generated method stub
 		return null;
 	}

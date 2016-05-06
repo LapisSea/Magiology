@@ -3,62 +3,79 @@ package com.magiology.util.utilclasses.math;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import com.magiology.api.Calculable;
+import com.magiology.util.utilobjects.ColorF;
 import com.magiology.util.utilobjects.vectors.Vec3M;
 
 import net.minecraft.entity.Entity;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class PartialTicksUtil{
 
 	public static float partialTicks=0;
 	
-	public static float calculatePos(final double prevPos,final double pos){
-		return (float)(prevPos+(pos-prevPos)*partialTicks);
+	public static <T extends Calculable<T>> T calculate(T prevPos,T pos){
+		return prevPos.add(pos.sub(prevPos).mul(partialTicks));
+	}
+	public static double calculate(double prevPos,double pos){
+		return (prevPos+(pos-prevPos)*partialTicks);
+	}
+	public static float calculate(float prevPos,float pos){
+		return (prevPos+(pos-prevPos)*partialTicks);
 	}
 
-	public static Vec3M calculatePos(Entity entity){
+	public static Vec3M calculate(Entity entity){
 		return new Vec3M(
-			calculatePosX(entity),
-			calculatePosY(entity),
-			calculatePosZ(entity)
+			calculateX(entity),
+			calculateY(entity),
+			calculateZ(entity)
 		);
 	}
 
-	public static float[] calculatePos(final float[] prevPos,final float[] pos){
+	public static float[] calculate(final float[] prevPos,final float[] pos){
 		if(pos.length!=prevPos.length)return null;
 		float[] result=new float[pos.length];
-		for(int a=0;a<pos.length;a++)result[a]=calculatePos(prevPos[a], pos[a]);
+		for(int a=0;a<pos.length;a++)result[a]=calculate(prevPos[a], pos[a]);
 		return result;
 	}
 	
-	public static float[][] calculatePos(float[][] prevPos,float[][] pos){
+	public static float[][] calculate(float[][] prevPos,float[][] pos){
 		if(pos.length!=prevPos.length)return null;
 		float[][] result=new float[pos.length][0];
-		for(int a=0;a<pos.length;a++)result[a]=calculatePos(prevPos[a], pos[a]);
+		for(int a=0;a<pos.length;a++)result[a]=calculate(prevPos[a], pos[a]);
 		return result;
 	}
-	public static Vec3M calculatePos(Vec3M prevPos, Vec3M pos){
+	public static Vec3M calculate(Vec3M prevPos, Vec3M pos){
 		return new Vec3M(
-			calculatePos(prevPos.x, pos.x),
-			calculatePos(prevPos.y, pos.y),
-			calculatePos(prevPos.z, pos.z)
+			calculate(prevPos.x, pos.x),
+			calculate(prevPos.y, pos.y),
+			calculate(prevPos.z, pos.z)
 		);
 	}
-	public static Vector2f calculatePos(Vector2f prevVec, Vector2f vec){
+	public static Vector2f calculate(Vector2f prevVec, Vector2f vec){
 		return new Vector2f(
-			calculatePos(prevVec.x, vec.x),
-			calculatePos(prevVec.y, vec.y)
+			calculate(prevVec.x, vec.x),
+			calculate(prevVec.y, vec.y)
 		);
 	}
-	public static float calculatePosX(Entity entity){
-		return calculatePos(entity.prevPosX, entity.posX);
+	public static double calculateX(Entity entity){
+		return calculate(entity.prevPosX, entity.posX);
 	}
 	
-	public static float calculatePosY(Entity entity){
-		return calculatePos(entity.prevPosY, entity.posY);
+	public static double calculateY(Entity entity){
+		return calculate(entity.prevPosY, entity.posY);
 	}
 
-	public static float calculatePosZ(Entity entity){
-		return calculatePos(entity.prevPosZ, entity.posZ);
+	public static double calculateZ(Entity entity){
+		return calculate(entity.prevPosZ, entity.posZ);
+	}
+	public static ColorF calculate(ColorF prevColor, ColorF color){
+		return new ColorF(calculate(prevColor.r, color.r),
+						  calculate(prevColor.g, color.g),
+						  calculate(prevColor.b, color.b),
+						  calculate(prevColor.a, color.a));
 	}
 	
 }

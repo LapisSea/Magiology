@@ -18,6 +18,7 @@ import com.magiology.forgepowered.packets.core.AbstractToClientMessage;
 import com.magiology.forgepowered.packets.core.AbstractToServerMessage;
 import com.magiology.util.utilclasses.FileUtil;
 import com.magiology.util.utilclasses.PrintUtil;
+import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilclasses.UtilM;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -237,11 +238,11 @@ public class WorldData<KeyCast extends CharSequence,ValueCast extends Serializab
 		StringBuilder result=new StringBuilder();
 		addDir(addDir(result, "saves"), getModName());
 		if(!dataStatic){
-			if(UtilM.isRemote())addDir(result, UtilM.getMC().getIntegratedServer().getFolderName());
+			if(UtilM.isRemote())addDir(result, UtilC.getMC().getIntegratedServer()!=null?UtilC.getMC().getIntegratedServer().getFolderName():"<world name>");
 			else addDir(result, world!=null?world.getSaveHandler().getWorldDirectory().getName():"<world name>");
 		}
 		
-		if(dimSpesific)addDir(result, world!=null?world.provider.getDimensionId()+"":"<dimension id>");
+		if(dimSpesific)addDir(result, world!=null?world.provider.getDimension()+"":"<dimension id>");
 		addDir(result,folderName);
 		return result.toString();
 	}
@@ -249,8 +250,8 @@ public class WorldData<KeyCast extends CharSequence,ValueCast extends Serializab
 	public void load(WorldEvent.Load e){
 //		UtilM.printInln(worldDataName,shallRun(e.world));
 		try{
-			if(!shallRun(e.world))return;
-			loadFromWorld(e.world);
+			if(!shallRun(e.getWorld()))return;
+			loadFromWorld(e.getWorld());
 		}catch(Exception e2){
 			e2.printStackTrace();
 		}
@@ -323,8 +324,8 @@ public class WorldData<KeyCast extends CharSequence,ValueCast extends Serializab
 	@SubscribeEvent
 	public void save(WorldEvent.Save e){
 		try{
-			if(!shallRun(e.world))return;
-			saveFromWorld(e.world);
+			if(!shallRun(e.getWorld()))return;
+			saveFromWorld(e.getWorld());
 		}catch(Exception e2){
 			e2.printStackTrace();
 		}
@@ -345,7 +346,7 @@ public class WorldData<KeyCast extends CharSequence,ValueCast extends Serializab
 		}
 		for(Entry<KeyCast,FileContent<ValueCast>> fileWrite:data.entrySet()){
 			FileContent<ValueCast> file=fileWrite.getValue();
-			if(dimSpesific?world.provider.getDimensionId()==file.dimension:true){
+			if(dimSpesific?world.provider.getDimension()==file.dimension:true){
 				//Clear the file and write to it.
 				FileUtil.setFileObj(new File(bp+fileWrite.getKey()+"_"+file.dimension+"."+extension), file);
 			}
@@ -356,7 +357,7 @@ public class WorldData<KeyCast extends CharSequence,ValueCast extends Serializab
 	//TODO: NETWORKING START------------------------------------------------------------------------------------------------------------
 	//----------------------------------------------------------------------------------------------------------------------------------
 	private boolean shallRun(World world){
-		if(world!=null)if(!dimSpesific&&world.provider.getDimensionId()!=0)return false;
+		if(world!=null)if(!dimSpesific&&world.provider.getDimension()!=0)return false;
 		if(world!=null?world.isRemote:UtilM.isRemote())return fromClient;
 		else return fromServer;
 	}

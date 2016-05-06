@@ -19,6 +19,7 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.model.TexturedQuad;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,7 +28,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
-public abstract class EntityModelColider<T extends EntityLivingBase> extends RendererLivingEntity<T> implements Colideable{
+public abstract class EntityModelColider<T extends EntityLivingBase> extends RenderLivingBase<T> implements Colideable{
 	
 	protected class ModelRendererColider extends ModelRenderer{
 		
@@ -140,7 +141,7 @@ public abstract class EntityModelColider<T extends EntityLivingBase> extends Ren
 	private Vec3M modelOffset=new Vec3M();
 	public List<Quad> quads=new ArrayList<Quad>(),prevQuads=new ArrayList<>(),difference;
 	
-	public RendererLivingEntity src;
+	public RenderLivingBase<T> src;
 
 	public List<Triangle> triangles,prevTriangles;
 	
@@ -189,6 +190,7 @@ public abstract class EntityModelColider<T extends EntityLivingBase> extends Ren
 		return new ResourceLocation("blank");
 	}
 	
+	@Override
 	public Vec3M getModelOffset(){
 		return modelOffset;
 	}
@@ -216,6 +218,7 @@ public abstract class EntityModelColider<T extends EntityLivingBase> extends Ren
 		}
 		return null;
 	}
+	@Override
 	protected void renderModel(T entitylivingbaseIn, float p_77036_2_, float p_77036_3_, float p_77036_4_, float p_77036_5_, float p_77036_6_, float p_77036_7_){
 
 		matrix.pushMatrix();
@@ -225,6 +228,7 @@ public abstract class EntityModelColider<T extends EntityLivingBase> extends Ren
 		
 		matrix.popMatrix();
 	}
+	@Override
 	public void setModelOffset(Vec3M modelOffset){
 //		modelOffset=new Vec3M();
 		this.modelOffset=modelOffset;
@@ -247,8 +251,8 @@ public abstract class EntityModelColider<T extends EntityLivingBase> extends Ren
 			float f1=interpolateRotation(entity.prevRotationYawHead, entity.rotationYawHead, partialTicks);
 			float f2=f1-f;
 
-			if(entity.isRiding()&&entity.ridingEntity instanceof EntityLivingBase){
-				EntityLivingBase entitylivingbase=(EntityLivingBase)entity.ridingEntity;
+			if(entity.isRiding()&&entity.getRidingEntity() instanceof EntityLivingBase){
+				EntityLivingBase entitylivingbase=(EntityLivingBase)entity.getRidingEntity();
 				f=interpolateRotation(entitylivingbase.prevRenderYawOffset, entitylivingbase.renderYawOffset, partialTicks);
 				f2=f1-f;
 				float f3=MathHelper.wrapAngleTo180_float(f2);
@@ -280,7 +284,7 @@ public abstract class EntityModelColider<T extends EntityLivingBase> extends Ren
 
 				matrix.rotate(f3*this.getDeathMaxRotation(entity), 0.0F, 0.0F, 1.0F);
 			}else{
-				String s=ChatFormatting.getTextWithoutFormattingCodes(entity.getName());
+				String s=ChatFormatting.stripFormatting(entity.getName());
 
 				if(s!=null&&(s.equals("Dinnerbone")||s.equals("Grumm"))&&(!(entity instanceof EntityPlayer)||((EntityPlayer)entity).isWearing(EnumPlayerModelParts.CAPE))){
 					matrix.translate(0.0F, entity.height+0.1F, 0.0F);

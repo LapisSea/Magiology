@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import com.magiology.client.render.shaders.core.ShaderAspectRenderer;
-import com.magiology.util.utilclasses.UtilM;
+import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilclasses.math.PartialTicksUtil;
 
 import net.minecraft.client.shader.Framebuffer;
@@ -31,9 +31,9 @@ public class ColorCutRenderer extends ShaderAspectRenderer{
 	
 	@Override
 	public void redner(){
-		ShaderAspectRenderer.setUniform(uniforms.get(0), PartialTicksUtil.calculatePos(rPrev, r),PartialTicksUtil.calculatePos(gPrev, g),PartialTicksUtil.calculatePos(bPrev, b));
-		ShaderAspectRenderer.setUniform(uniforms.get(1), PartialTicksUtil.calculatePos(prevTolerance, tolerance));
-		ShaderAspectRenderer.setUniform(uniforms.get(2), PartialTicksUtil.calculatePos(prevIntensity, intensity));
+		ShaderAspectRenderer.setUniform(uniforms.get(0), PartialTicksUtil.calculate(rPrev, r),PartialTicksUtil.calculate(gPrev, g),PartialTicksUtil.calculate(bPrev, b));
+		ShaderAspectRenderer.setUniform(uniforms.get(1), PartialTicksUtil.calculate(prevTolerance, tolerance));
+		ShaderAspectRenderer.setUniform(uniforms.get(2), PartialTicksUtil.calculate(prevIntensity, intensity));
 	}
 	
 	@Override
@@ -44,7 +44,7 @@ public class ColorCutRenderer extends ShaderAspectRenderer{
 		gPrev=g;
 		bPrev=b;
 		
-		Framebuffer fb=UtilM.getMC().getFramebuffer();
+		Framebuffer fb=UtilC.getMC().getFramebuffer();
 		pixels.clear();
 		GL11.glReadPixels(fb.framebufferWidth/2, fb.framebufferHeight/2, 1, 1, GL12.GL_BGRA, GL12.GL_UNSIGNED_INT_8_8_8_8_REV, pixels);
 		

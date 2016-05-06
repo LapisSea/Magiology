@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import com.magiology.core.MReference;
 import com.magiology.util.utilclasses.PrintUtil;
-import com.magiology.util.utilclasses.UtilM.U;
+import com.magiology.util.utilclasses.UtilC;
 
 import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -30,7 +30,7 @@ public class Textures{
 	WingColors
 	;
 	private static boolean isInit=false;
-	private static TextureManager re=U.getMC().renderEngine;
+	private static TextureManager re=UtilC.getMC().renderEngine;
 	private static String textur="WTF!?!!";
 	
 	public static ResourceLocation getResource(String FolderPath){return getResource("",FolderPath);}

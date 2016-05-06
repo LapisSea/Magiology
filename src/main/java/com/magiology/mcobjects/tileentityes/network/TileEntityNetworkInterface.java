@@ -117,7 +117,7 @@ public class TileEntityNetworkInterface extends TileEntityNetworkInteract implem
 							
 							setInteractData("redstone", redstoneData);
 							IBlockState state=worldObj.getBlockState(pos1);
-							if(!U.getBlock(worldObj, pos1).isFullCube())worldObj.notifyBlockOfStateChange(pos1, state.getBlock());
+							if(!state.getBlock().isFullCube(state))worldObj.notifyBlockOfStateChange(pos1, state.getBlock());
 							else if(!U.isNull(pos1,worldObj))for(int i=0;i<6;i++)worldObj.notifyBlockOfStateChange(pos1.offset(EnumFacing.getFront(i)), U.getBlock(worldObj, pos1.offset(EnumFacing.getFront(i))));
 						}
 					}

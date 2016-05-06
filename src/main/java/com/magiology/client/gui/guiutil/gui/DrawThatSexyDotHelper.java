@@ -32,8 +32,8 @@ public class DrawThatSexyDotHelper extends Gui{
 		isUpdated=false;
 		x=x3;y=y3;
 		if(!isUpdated){
-			double scale=PartialTicksUtil.calculatePos(prevScale, this.scale);
-			double rotation=PartialTicksUtil.calculatePos(prevRotation, this.rotation);
+			double scale=PartialTicksUtil.calculate(prevScale, this.scale);
+			double rotation=PartialTicksUtil.calculate(prevRotation, this.rotation);
 			
 			double scal=scale-1.2;
 			double xR=x-scal*7.5,yR=y-scal*7.5;

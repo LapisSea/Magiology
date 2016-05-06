@@ -8,15 +8,16 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 
 public enum SoundM{
-	PopFX("poop"),
-	WeirdFX("weird"),
-	WindFX("wind"),
-	WingSwingFX("swing1","swing2");
+	PopFX(SoundCategory.BLOCKS,"poop"),
+	WeirdFX(SoundCategory.BLOCKS,"weird"),
+	WindFX(SoundCategory.AMBIENT,"wind"),
+	WingSwingFX(SoundCategory.AMBIENT,"swing1","swing2");
 	
 	public final String[] soundNames;
 	public final SoundCategory category;
 	private SoundM(SoundCategory category, String... names){
 		soundNames=names;
+		this.category=category;
 	}
 	@Override
 	public String toString(){

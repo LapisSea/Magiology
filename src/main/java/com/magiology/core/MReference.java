@@ -14,7 +14,7 @@ public class MReference{
 		PROXY_LOCATION=MOD_START_FOLDER+MODID+".forgepowered.proxy",
 		ClIENT_PROXY_LOCATION=PROXY_LOCATION+".ClientProxy",
 		SERVER_PROXY_LOCATION=PROXY_LOCATION+".ServerProxy",
-		MC_VERSION= "1.8.9",
+		MC_VERSION= "1.9",
 		MODS_SUBFOLDER_DIR= "mods/"+MC_VERSION+"/"+NAME,
 		UPDATER_DIR= MODS_SUBFOLDER_DIR+"/updater/"+NAME+"Updater.jar",
 		NEWEST_VERSION_URL= "http://www.mediafire.com/download/d41w4px39x74gzt/Magiology.jar",

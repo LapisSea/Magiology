@@ -1,15 +1,7 @@
 package com.magiology.client.gui.custom.hud;
 
-import java.awt.Color;
-
-import com.magiology.core.MReference;
 import com.magiology.mcobjects.entitys.ExtendedPlayerData;
-import com.magiology.util.renderers.GL11U;
 import com.magiology.util.renderers.OpenGLM;
-import com.magiology.util.renderers.TessUtil;
-import com.magiology.util.utilclasses.Get.Render.Font;
-
-import net.minecraft.util.ResourceLocation;
 
 public class SoulFlameHUD extends HUD{
 	public static SoulFlameHUD instance=new SoulFlameHUD();
@@ -21,22 +13,22 @@ public class SoulFlameHUD extends HUD{
 	
 	@Override
 	public void render(int xScreen, int yScreen, float partialTicks){
-		if(data==null)data=ExtendedPlayerData.get(player);
-		if(data==null)return;
-		if(data.player!=player){
-			data=ExtendedPlayerData.get(player);
-		}
-		if(data==null)return;
-		maxSoulFlame=data.maxSoulFlame;
-		soulFlame=data.soulFlame;
-		TessUtil.bindTexture(new ResourceLocation(MReference.MODID,"/textures/gui/fp/soulFlame.png"));
-		GL11U.setUpOpaqueRendering(1);
-		OpenGLM.translate(0, 10, 0);
-		renderSlider();
-		renderMain();
-		renderFire();
-		GL11U.endOpaqueRendering();
-		Font.FR().drawStringWithShadow(" "+soulFlame+"/"+maxSoulFlame, 0, 90, Color.WHITE.hashCode());
+//		if(data==null)data=ExtendedPlayerData.get(player);
+//		if(data==null)return;
+//		if(data.player!=player){
+//			data=ExtendedPlayerData.get(player);
+//		}
+//		if(data==null)return;
+//		maxSoulFlame=data.maxSoulFlame;
+//		soulFlame=data.soulFlame;
+//		TessUtil.bindTexture(new ResourceLocation(MReference.MODID,"/textures/gui/fp/soulFlame.png"));
+//		GL11U.setUpOpaqueRendering(1);
+//		OpenGLM.translate(0, 10, 0);
+//		renderSlider();
+//		renderMain();
+//		renderFire();
+//		GL11U.endOpaqueRendering();
+//		Font.FR().drawStringWithShadow(" "+soulFlame+"/"+maxSoulFlame, 0, 90, Color.WHITE.hashCode());
 	}
 	private void renderFire(){
 		long time=player.worldObj.getTotalWorldTime();

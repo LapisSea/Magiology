@@ -2,7 +2,7 @@ package com.magiology.client.render.shaders;
 
 import com.magiology.client.render.shaders.core.ShaderAspectRenderer;
 import com.magiology.util.utilclasses.RandUtil;
-import com.magiology.util.utilclasses.math.CricleUtil;
+import com.magiology.util.utilclasses.math.MathUtil;
 import com.magiology.util.utilobjects.vectors.physics.PhysicsFloat;
 
 public class BlurRenderer extends ShaderAspectRenderer{
@@ -35,8 +35,8 @@ public class BlurRenderer extends ShaderAspectRenderer{
 		y.update();
 		if(Math.sqrt(x.speed*x.speed+y.speed*y.speed)<0.2){
 			float rotation=RandUtil.RF(360);
-			x.wantedPoint=CricleUtil.sin(rotation)*2;
-			y.wantedPoint=CricleUtil.cos(rotation)*2;
+			x.wantedPoint=MathUtil.sin(rotation)*2;
+			y.wantedPoint=MathUtil.cos(rotation)*2;
 		}
 	}
 }

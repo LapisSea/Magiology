@@ -1,6 +1,5 @@
 package com.magiology.core.init;
 
-import com.magiology.core.MReference;
 import com.magiology.mcobjects.blocks.HologramProjector;
 import com.magiology.mcobjects.blocks.JSProgrammer;
 import com.magiology.mcobjects.blocks.fire.FirePipe;
@@ -23,7 +22,7 @@ public class MBlocks{
 		jSProgrammer;
 
 	public static void blocksInit(){
-		firePipe=init(new FirePipe().setBlockTextureName(MReference.MODID + ":" + "FirePipeIcon").setUnlocalizedName("FirePipe").setCreativeTab(MCreativeTabs.Whwmmt_power));
+		firePipe=init(new FirePipe().setUnlocalizedName("FirePipe").setCreativeTab(MCreativeTabs.Whwmmt_power));
 		hologramProjector=init(new HologramProjector().setCreativeTab(MCreativeTabs.Whwmmt_core).setUnlocalizedName("hologramProjector"));
 		networkController=init(new NetworkController().setCreativeTab(MCreativeTabs.Whwmmt_core).setUnlocalizedName("networkController"));
 		networkConductor=init(new NetworkConductor().setCreativeTab(MCreativeTabs.Whwmmt_core).setUnlocalizedName("networkConductor"));

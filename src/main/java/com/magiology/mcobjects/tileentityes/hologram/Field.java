@@ -5,6 +5,7 @@ import org.lwjgl.util.vector.Vector2f;
 import com.magiology.util.renderers.GL11U;
 import com.magiology.util.renderers.tessellatorscripts.CubeModel;
 import com.magiology.util.utilclasses.UtilM;
+import com.magiology.util.utilclasses.math.PartialTicksUtil;
 import com.magiology.util.utilobjects.ColorF;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,7 +34,7 @@ public class Field extends HoloObject{
 	public void render(ColorF color){
 		checkHighlight();
 		if(body==null)body=new CubeModel(0, 0, -UtilM.p/2, -size.x, -size.y, UtilM.p/2);
-		UtilM.calculateRenderColor(prevColor,this.color).bind();
+		PartialTicksUtil.calculate(prevColor,this.color).bind();
 		GL11U.texture(false);
 		body.draw();
 		GL11U.texture(true);
@@ -45,6 +46,6 @@ public class Field extends HoloObject{
 		size=new Vector2f(originalSize.x*scale, originalSize.y*scale);
 		if(host.getWorld().getTotalWorldTime()%40==0)body=new CubeModel(0, 0, -UtilM.p/2, -size.x, -size.y, UtilM.p/2);
 		prevColor=color;
-		color=UtilM.slowlyEqalizeColor(color, setColor, 0.1F);
+		color=UtilM.graduallyEqualize(color, setColor, 0.1F);
 	}
 }

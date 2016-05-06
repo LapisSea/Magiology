@@ -5,6 +5,7 @@ import com.magiology.mcobjects.tileentityes.network.TileEntityNetworkProgramHold
 import com.magiology.util.utilclasses.UtilM;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -36,8 +37,8 @@ public class CommandCenterContainer extends Container{
 		return true;
 	}
 	@Override
-	public ItemStack slotClick(int slotId, int clickedButton, int mode, EntityPlayer player){
-		if(slotId<0)return super.slotClick(slotId, clickedButton, mode, player);
+	public ItemStack func_184996_a(int slotId, int clickedButton, ClickType mode, EntityPlayer player){
+		if(slotId<0)return super.func_184996_a(slotId, clickedButton, mode, player);
 		Slot clickedSlot=inventorySlots.get(slotId);
 		switch (clickedButton){
 		case 0:if(selectedSlotId==slotId-36)selectedSlotId=-1;break;
@@ -46,7 +47,7 @@ public class CommandCenterContainer extends Container{
 			return clickedSlot.getStack();
 		}break;
 		}
-		return super.slotClick(slotId, clickedButton, mode, player);
+		return super.func_184996_a(slotId, clickedButton, mode, player);
 	}
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotNumber){

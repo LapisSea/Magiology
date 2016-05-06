@@ -2,7 +2,6 @@ package com.magiology.client.gui.custom.hud;
 
 import static com.magiology.core.MReference.*;
 
-import java.awt.Desktop;
 import java.awt.Rectangle;
 import java.io.File;
 
@@ -12,16 +11,14 @@ import org.lwjgl.opengl.Display;
 
 import com.magiology.client.gui.custom.DownloadingIcon;
 import com.magiology.core.MReference;
-import com.magiology.core.Magiology;
 import com.magiology.handlers.web.DownloadingHandler;
-import com.magiology.io.IOReadableMap;
 import com.magiology.util.renderers.GL11U;
 import com.magiology.util.renderers.OpenGLM;
 import com.magiology.util.renderers.TessUtil;
 import com.magiology.util.renderers.VertexRenderer;
 import com.magiology.util.utilclasses.Get.Render.Font;
 import com.magiology.util.utilclasses.RandUtil;
-import com.magiology.util.utilclasses.UtilM;
+import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilclasses.UtilM.U;
 import com.magiology.util.utilobjects.ColorF;
 import com.magiology.util.utilobjects.DoubleObject;
@@ -80,16 +77,16 @@ public class MainMenuUpdateNotificationHUD extends HUD{
 	
 	private Rectangle getBoundingBox(boolean hasGL11Transformation){
 		float scale=0;
-		if(hasGL11Transformation)scale=UtilM.getGuiScale();
-		else scale=UtilM.getGuiScaleRaw();
+		if(hasGL11Transformation)scale=UtilC.getGuiScale();
+		else scale=UtilC.getGuiScaleRaw();
 		int FH=Font.FR().FONT_HEIGHT;
 		return new Rectangle((int) ((4)*scale),(int) ((4)*scale),(int) ((biggest+4)*scale),(int) ((FH*2+FH*(text.length-2)*backgroundBlue.getPoint()+4)*scale));
 	}
 	
 	private Rectangle getBoundingBoxClick(boolean hasGL11Transformation){
 		float scale=0;
-		if(hasGL11Transformation)scale=UtilM.getGuiScale();
-		else scale=UtilM.getGuiScaleRaw();
+		if(hasGL11Transformation)scale=UtilC.getGuiScale();
+		else scale=UtilC.getGuiScaleRaw();
 		int FH=Font.FR().FONT_HEIGHT;
 		return new Rectangle(
 				(int) ((4+(biggest-lenghts[2])/2+Font.FR().getStringWidth("Click "))*scale),
@@ -203,16 +200,17 @@ public class MainMenuUpdateNotificationHUD extends HUD{
 		if(!isDownloading)try{
 			File updater=new File(UPDATER_DIR);
 			if(updater.exists()){
-				String updaterFolder=UPDATER_DIR.substring(0, UPDATER_DIR.lastIndexOf("/"))+"/";
-				//bridge between the updater app and the mod
-				IOReadableMap config=new IOReadableMap(updaterFolder+"/updaterConfig");
-				config.set("modPos", "mods/"+Magiology.infoFile.getS("modPos",NAME+".jar"));
-				config.set("url", DownloadingHandler.findValue("NEWEST_VERSION_URL"));
-				config.set("appPos", updaterFolder);
-				config.set("isDev", Magiology.isDev());
-				config.writeToFile();
-				Desktop.getDesktop().open(updater);
-				UtilM.exitSoft();
+				//TODO: make this shit!
+//				String updaterFolder=UPDATER_DIR.substring(0, UPDATER_DIR.lastIndexOf("/"))+"/";
+//				//bridge between the updater app and the mod
+//				IOReadableMap config=new IOReadableMap(updaterFolder+"/updaterConfig");
+//				config.set("modPos", "mods/"+Magiology.infoFile.getS("modPos",NAME+".jar"));
+//				config.set("url", DownloadingHandler.findValue("NEWEST_VERSION_URL"));
+//				config.set("appPos", updaterFolder);
+//				config.set("isDev", Magiology.isDev());
+//				config.writeToFile();
+//				Desktop.getDesktop().open(updater);
+//				UtilM.exitSoft();
 			}
 			else DownloadingHandler.downloadUpdater();
 		}catch(Exception e){e.printStackTrace();}

@@ -4,6 +4,7 @@ import com.magiology.mcobjects.blocks.MultiColisionProviderBlock;
 import com.magiology.mcobjects.tileentityes.TileEntityFirePipe;
 
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -116,7 +117,7 @@ public class FirePipe extends MultiColisionProviderBlock{
 //	}
 	
 	@Override
-	public boolean isFullCube(){
+	public boolean isFullCube(IBlockState state){
 		return false;
 	}
 }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.magiology.api.updateable.Updater;
+import com.magiology.util.utilclasses.UtilC;
 
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -21,7 +22,7 @@ public class GuiUpdater{
 		if(player==null)return;
 		List objects=new ArrayList();
 		objects.add(player.openContainer);
-		if(isRemote(player))objects.add(getMC().currentScreen);
+		if(isRemote(player))objects.add(UtilC.getMC().currentScreen);
 		Updater.update(objects);
 	}
 	public GuiUpdater(){instance=this;}

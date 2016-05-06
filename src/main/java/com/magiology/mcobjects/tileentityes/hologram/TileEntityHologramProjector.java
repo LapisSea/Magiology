@@ -10,13 +10,10 @@ import org.lwjgl.util.vector.Vector2f;
 import com.magiology.api.SavableData;
 import com.magiology.api.SavableData.SavableDataHandler;
 import com.magiology.api.network.interfaces.registration.InterfaceBinder;
-import com.magiology.forgepowered.packets.packets.ClickHologramPacket;
-import com.magiology.mcobjects.effect.EntityFacedFX;
-import com.magiology.mcobjects.effect.EntityMovingParticleFX;
+import com.magiology.forgepowered.packets.packets.toserver.ClickHologramPacket;
 import com.magiology.util.renderers.tessellatorscripts.CubeModel;
 import com.magiology.util.utilclasses.RandUtil;
 import com.magiology.util.utilclasses.UtilM;
-import com.magiology.util.utilclasses.UtilM.U;
 import com.magiology.util.utilclasses.math.MathUtil;
 import com.magiology.util.utilclasses.math.PartialTicksUtil;
 import com.magiology.util.utilobjects.m_extension.TileEntityM;
@@ -55,7 +52,7 @@ public class TileEntityHologramProjector extends TileEntityM implements ITickabl
 				RayTraceResult target=player.rayTrace(4, 0);
 				
 				hologramCloserThanHit=hit.conv().distanceTo(player.getLook(0))>target.hitVec.distanceTo(player.getLook(0));
-				miss=target.typeOfHit==MovingObjectType.MISS;
+				miss=target.typeOfHit==RayTraceResult.Type.MISS;
 				if(miss||!hologramCloserThanHit){
 					tile.onPressed(player);
 				}
@@ -138,10 +135,11 @@ public class TileEntityHologramProjector extends TileEntityM implements ITickabl
 			double[] b=MathUtil.circleXZ(a+RandUtil.CRF(16));
 			b[0]*=0.06;
 			b[1]*=0.06;
-			EntityFacedFX part=new EntityFacedFX(worldObj, size.x+offset.x+point.pointedPos.x+x(), size.y+offset.y+point.pointedPos.y+y(), point.pointedPos.z+z()+0.5,
-					b[0], b[1], 0, 200, 0.8, 0, mainColor.x, mainColor.y, mainColor.z, 0.1);
-			UtilM.spawnEntityFX(part);
-			part.rotation.x=180;
+			//TODO: another one
+//			EntityFacedFX part=new EntityFacedFX(worldObj, size.x+offset.x+point.pointedPos.x+x(), size.y+offset.y+point.pointedPos.y+y(), point.pointedPos.z+z()+0.5,
+//					b[0], b[1], 0, 200, 0.8, 0, mainColor.x, mainColor.y, mainColor.z, 0.1);
+//			UtilM.spawnEntityFX(part);
+//			part.rotation.x=180;
 		}
 		
 		boolean changed=false;
@@ -191,24 +189,25 @@ public class TileEntityHologramProjector extends TileEntityM implements ITickabl
 
 	@Override
 	public void update(){
-		if(UtilM.isRemote(this)){
-			UtilM.spawnEntityFX(new EntityMovingParticleFX(worldObj,
-					x()+RandUtil.RF(), y()+U.p*11, z()+RandUtil.RF(), x()+offset.x+size.x*RandUtil.RF(), y()+offset.y, z()+0.5, 200, mainColor.x,mainColor.y,mainColor.z,0.1));
-			switch (RandUtil.RI(3)){
-			case 0:{
-				UtilM.spawnEntityFX(new EntityMovingParticleFX(worldObj,
-						x()+offset.x+size.x*RandUtil.RF(), y()+offset.y+size.y, z()+0.5, x()+offset.x+size.x*RandUtil.RF(), y()+offset.y+size.y, z()+0.5, 200, mainColor.x,mainColor.y,mainColor.z,0.1));
-			}break;
-			case 1:{
-				UtilM.spawnEntityFX(new EntityMovingParticleFX(worldObj,
-						x()+offset.x, y()+offset.y+size.y*RandUtil.RF(), z()+0.5, x()+offset.x, y()+offset.y+size.y*RandUtil.RF(), z()+0.5, 200, mainColor.x,mainColor.y,mainColor.z,0.1));
-			}break;
-			case 2:{
-				UtilM.spawnEntityFX(new EntityMovingParticleFX(worldObj,
-						x()+offset.x+size.x, y()+offset.y+size.y*RandUtil.RF(), z()+0.5, x()+offset.x+size.x, y()+offset.y+size.y*RandUtil.RF(), z()+0.5, 200, mainColor.x,mainColor.y,mainColor.z,0.1));
-			}break;
-			}
-		}
+		//TODO: renew particles
+//		if(UtilM.isRemote(this)){
+//			UtilM.spawnEntityFX(new EntityMovingParticleFX(worldObj,
+//					x()+RandUtil.RF(), y()+U.p*11, z()+RandUtil.RF(), x()+offset.x+size.x*RandUtil.RF(), y()+offset.y, z()+0.5, 200, mainColor.x,mainColor.y,mainColor.z,0.1));
+//			switch (RandUtil.RI(3)){
+//			case 0:{
+//				UtilM.spawnEntityFX(new EntityMovingParticleFX(worldObj,
+//						x()+offset.x+size.x*RandUtil.RF(), y()+offset.y+size.y, z()+0.5, x()+offset.x+size.x*RandUtil.RF(), y()+offset.y+size.y, z()+0.5, 200, mainColor.x,mainColor.y,mainColor.z,0.1));
+//			}break;
+//			case 1:{
+//				UtilM.spawnEntityFX(new EntityMovingParticleFX(worldObj,
+//						x()+offset.x, y()+offset.y+size.y*RandUtil.RF(), z()+0.5, x()+offset.x, y()+offset.y+size.y*RandUtil.RF(), z()+0.5, 200, mainColor.x,mainColor.y,mainColor.z,0.1));
+//			}break;
+//			case 2:{
+//				UtilM.spawnEntityFX(new EntityMovingParticleFX(worldObj,
+//						x()+offset.x+size.x, y()+offset.y+size.y*RandUtil.RF(), z()+0.5, x()+offset.x+size.x, y()+offset.y+size.y*RandUtil.RF(), z()+0.5, 200, mainColor.x,mainColor.y,mainColor.z,0.1));
+//			}break;
+//			}
+//		}
 		boolean contains=false;
 		for(TileEntityHologramProjector a:hologramProjectors){
 			if(a==this){

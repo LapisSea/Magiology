@@ -33,22 +33,15 @@ import com.magiology.forgepowered.packets.core.AbstractToClientMessage;
 import com.magiology.forgepowered.packets.core.AbstractToClientMessage.SendingTarget.TypeOfSending;
 import com.magiology.forgepowered.packets.core.AbstractToServerMessage;
 import com.magiology.mcobjects.tileentityes.hologram.HoloObject;
-import com.magiology.util.renderers.TessUtil;
-import com.magiology.util.utilclasses.Get.Render.Font;
-import com.magiology.util.utilclasses.math.PartialTicksUtil;
 import com.magiology.util.utilobjects.ColorF;
 import com.magiology.util.utilobjects.m_extension.AxisAlignedBBM;
 import com.magiology.util.utilobjects.vectors.Plane;
 import com.magiology.util.utilobjects.vectors.RayDeprecated;
-import com.magiology.util.utilobjects.vectors.Vec2i;
 import com.magiology.util.utilobjects.vectors.Vec3M;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.PropertyInteger;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -68,40 +61,16 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class UtilM{
 	
 	public class U extends UtilM{}
 	
-	
+	@Deprecated
 	public static final PropertyInteger META=PropertyInteger.create("meta", 0, 15);
 	public static final float p=1F/16F;
 	private static long startTime;
-	public static Vec2i[] arrangeStrings(final String[]strings,int lines,int marginX,int marginY){
-		FontRenderer fr=Font.FR();
-		Vec2i[] result=new Vec2i[strings.length];
-		int columns=(int)Math.floor(strings.length/(float)lines)+1;
-		String[][] formattedStrings=new String[columns][lines];
-		
-		
-		int[] longestInColumn=new int[columns],columnOffsets=new int[columns];
-		for(int i=0;i<columns;i++){
-			for(int j=0;j<lines;j++){
-				int id=i*(columns+1)+j;
-				if(id<strings.length)formattedStrings[i][j]=strings[id];
-			}
-		}
-		for(int i=0;i<formattedStrings.length;i++)while(ArrayUtils.contains(formattedStrings[i], null))formattedStrings[i]=ArrayUtils.removeElement(formattedStrings[i], null);
-		for(int i=0;i<columns;i++)for(int j=0;j<formattedStrings[i].length;j++)longestInColumn[i]=Math.max(longestInColumn[i], fr.getStringWidth(formattedStrings[i][j]));
-		for(int i=0;i<columns;i++){
-			columnOffsets[i]=marginX;
-			for(int j=0;j<i;j++)columnOffsets[i]+=longestInColumn[j]+marginX;
-		}
-		
-		for(int i=0;i<strings.length;i++)result[i]=new Vec2i(columnOffsets[(i/lines)%columns], (i%lines)*(fr.FONT_HEIGHT+marginY)+marginY);
-		return result;
-	}
+	
 	public static StringBuilder arrayToString(Object array){
 		StringBuilder print=new StringBuilder();
 		
@@ -176,12 +145,6 @@ public class UtilM{
 		return result;
 	}
 	public static int booleanToInt(boolean bool){if(bool)return 1;return 0;}
-	public static ColorF calculateRenderColor(ColorF prevColor, ColorF color){
-		return new ColorF(PartialTicksUtil.calculatePos(prevColor.r, color.r),
-						  PartialTicksUtil.calculatePos(prevColor.g, color.g),
-						  PartialTicksUtil.calculatePos(prevColor.b, color.b),
-						  PartialTicksUtil.calculatePos(prevColor.a, color.a));
-	}
 	public static ColorF codeToColorF(int code){
 		float[] data=codeToRGBABPercentage(code);
 		return new ColorF(data[0],data[1],data[2],data[3]);
@@ -248,25 +211,8 @@ public class UtilM{
 	public static void exit(int Int){
 		FMLCommonHandler.instance().exitJava(Int, false);
 	}
-	@SideOnly(value=Side.CLIENT)
-	public static void exitSoft(){
-		getMC().shutdown();
-	}
 	public static boolean FALSE(){
 		return false;
-	}
-	@SideOnly(Side.CLIENT)
-	public static float fluctuate(double speed, double offset){
-		long wtt=(long)(getTheWorld().getTotalWorldTime()+offset);
-		double helper=(wtt%speed)/(speed/2F);
-		return (float) (helper>1?2-helper:helper);
-	}
-	@SideOnly(Side.CLIENT)
-	public static float fluctuateSmooth(double speed, double offset){
-		float
-			fluctuate=fluctuate(speed, offset),
-			prevFluctuate=fluctuate(speed, offset-1);
-		return PartialTicksUtil.calculatePos(prevFluctuate, fluctuate);
 	}
 	public static Block getBlock(IBlockAccess world, BlockPos pos){
 		return world.getBlockState(pos).getBlock();
@@ -293,19 +239,6 @@ public class UtilM{
 	public static Vec3M getEyePosition(Entity entity){
 		return getEntityPos(entity).addY(entity.getEyeHeight());
 	}
-	@SideOnly(value=Side.CLIENT)
-	public static int getFPS(){
-		return Minecraft.getDebugFPS();
-	}
-	
-	@SideOnly(value=Side.CLIENT)
-	public static float getGuiScale(){
-		return Math.max(getGuiScaleRaw()/4F,1);
-	}
-	@SideOnly(value=Side.CLIENT)
-	public static int getGuiScaleRaw(){
-		return new ScaledResolution(getMC()).getScaleFactor();
-	}
 	public static <T, E> T getMapKey(Map<T, E> map, E value){
 		for(Entry<T, E> entry : map.entrySet()){
 			if(Objects.equals(value, entry.getValue())){
@@ -322,7 +255,6 @@ public class UtilM{
 			.map(Map.Entry::getKey)
 			.collect(Collectors.toSet());
 	}
-	@SideOnly(value=Side.CLIENT)public static Minecraft getMC(){return Minecraft.getMinecraft();}
 	public static<T>int getPosInArray(T object,T[] array){
 		if(isNull(object,array))return -1;
 		if(array.length==0||isArray(object))return -1;
@@ -350,16 +282,6 @@ public class UtilM{
 		
 		return Return.toString();
 	}
-	public static String getStringForSize(String text, float allowedWidth){
-		if(text.isEmpty())return text;
-		String Return=""+text;
-		while(TessUtil.getFontRenderer().getStringWidth(Return)>allowedWidth){
-			Return=Return.substring(0, Return.length()-1);
-		}
-		return Return;
-	}
-	@SideOnly(value=Side.CLIENT)public static EntityPlayer getThePlayer(){return U.getMC().thePlayer;}
-	@SideOnly(value=Side.CLIENT)public static World getTheWorld(){return U.getMC().theWorld;}
 	public static World getWorld(Object object){
 		if(object instanceof Entity)return((Entity)object).worldObj;
 		if(object instanceof World)return((World)object);
@@ -369,10 +291,6 @@ public class UtilM{
 		if(object instanceof HoloObject)return ((HoloObject)object).host.getWorld();
 		PrintUtil.println("Given object has no data reference to world!");
 		return null;
-	}
-	@SideOnly(Side.CLIENT)
-	public static long getWorldTime(){
-		return getTheWorld().getTotalWorldTime();
 	}
 	public static long getWorldTime(Object worldContainer){
 		return getWorld(worldContainer).getTotalWorldTime();
@@ -385,6 +303,7 @@ public class UtilM{
 	}
 	public static float handleSpeedFolower(float speed, float pos,float wantedPos,float acceleration){
 	return (float)handleSpeedFolower((double)speed, (double)pos, (double)wantedPos, (double)acceleration);}
+	@Deprecated
 	public static boolean hasMetaState(World world, BlockPos pos){
 		ImmutableMap i=world.getBlockState(pos).getProperties();
 		return i.keySet().contains(META);
@@ -523,13 +442,6 @@ public class UtilM{
 		for(Object o:args)result.append(o);
 		return result.toString();
 	}
-//	public static EntityFlameFX marker(double x,double y,double z,double xSpeed,double ySpeed,double zSpeed){
-//		
-//		if(getTheWorld()==null)return null;
-//		EntityFlameFXM flame=new EntityFlameFXM(getTheWorld(), x, y, z, xSpeed, ySpeed, zSpeed);
-//		spawnEntityFX(flame);
-//		return flame;
-//	}
 	public static Object objFromString(String s)throws IOException,ClassNotFoundException{
 		byte[] data=Base64.getDecoder().decode(s);
 		ObjectInputStream ois=new ObjectInputStream(new ByteArrayInputStream(data));
@@ -547,6 +459,9 @@ public class UtilM{
 	public static boolean playerEqual(EntityPlayer player, EntityPlayer player2){
 		if(player==null||player2==null)return false;
 		return player.getGameProfile().getId().equals(player2.getGameProfile().getId());
+	}
+	public static void playSoundAtEntity(SoundM sound, Entity entity,float volume,float pitch){
+		playSoundAtEntity(sound, entity.worldObj, getEntityPos(entity), volume, pitch);
 	}
 	public static void playSoundAtEntity(SoundM sound, World world, Vec3M pos,float volume,float pitch){
 		if(world.isRemote)return;
@@ -582,9 +497,11 @@ public class UtilM{
 	public static void setBlock(World world, BlockPos pos,Block block){
 		world.setBlockState(pos, block.getDefaultState(), 3);
 	}
+	@Deprecated
 	public static void setBlock(World world, BlockPos pos, Block block, int meta){
 		world.setBlockState(pos, block.getDefaultState().withProperty(META, meta), 3);
 	}
+	@Deprecated
 	public static void setMetadata(World world, BlockPos pos,int meta){
 		if(hasMetaState(world, pos))world.setBlockState(pos, world.getBlockState(pos).withProperty(META, meta), 3);
 	}
@@ -604,17 +521,38 @@ public class UtilM{
 			e.printStackTrace();
 		}
 	}
-	public static ColorF slowlyEqalizeColor(ColorF variable, ColorF goal, float speed){
-		return new ColorF(slowlyEqualize(variable.r, goal.r, speed),
-						  slowlyEqualize(variable.g, goal.g, speed),
-						  slowlyEqualize(variable.b, goal.b, speed),
-						  slowlyEqualize(variable.a, goal.a, speed));
+	public static ColorF graduallyEqualize(ColorF variable, ColorF goal, float speed){
+		return new ColorF(graduallyEqualize(variable.r, goal.r, speed),
+						  graduallyEqualize(variable.g, goal.g, speed),
+						  graduallyEqualize(variable.b, goal.b, speed),
+						  graduallyEqualize(variable.a, goal.a, speed));
 	}
-
-	public static double slowlyEqualize(double variable, double goal, double speed){
-		return slowlyEqualize((float)variable, (float)goal, (float)speed);
+	
+	public static float[] exponentiallyEqualize(float[] variable, float[] goal, float speed){
+		float[] result=new float[variable.length];
+		for(int i=0;i<result.length;i++)result[i]=exponentiallyEqualize(variable[i], goal[i], speed);
+		return result;
 	}
-	public static float slowlyEqualize(float variable, float goal, float speed){
+	public static float exponentiallyEqualize(float variable, float goal, float speed){
+		return (float)exponentiallyEqualize((double)variable, (double)goal, (double)speed);
+	}
+	public static double exponentiallyEqualize(double variable, double goal, double speed){
+		if(speed==0)return variable;
+		speed=Math.abs(speed);
+		
+		return (variable*speed+goal)/(speed+1);
+	}
+	
+	public static float[] graduallyEqualize(float[] variable, float[] goal, float speed){
+		float[] result=new float[variable.length];
+		for(int i=0;i<result.length;i++)result[i]=graduallyEqualize(variable[i], goal[i], speed);
+		return result;
+	}
+	
+	public static float graduallyEqualize(float variable, float goal, float speed){
+		return (float)exponentiallyEqualize((double)variable, (double)goal, (double)speed);
+	}
+	public static double graduallyEqualize(double variable, double goal, double speed){
 		if(speed==0)return variable;
 		speed=Math.abs(speed);
 		if(variable+speed>goal&&(Math.abs((variable+speed)-goal)<speed*1.001))return goal;
@@ -630,39 +568,6 @@ public class UtilM{
 		entity.forceSpawn=true;
 		return entity;
 	}
-	
-//	@SideOnly(value=Side.CLIENT)
-//	public static void spawnEntityFX(EntityFX particleFX){
-//		
-//		if(isRemote(particleFX)){
-//			Minecraft mc=U.getMC();
-//			Entity ent=mc.getRenderViewEntity();
-//			
-//			if(ent!=null&&mc.effectRenderer!=null){
-//				int i=mc.gameSettings.particleSetting;
-//				double d6=ent.posX-particleFX.posX,d7=ent.posY-particleFX.posY,d8=ent.posZ-particleFX.posZ,d9=Math.sqrt(mc.gameSettings.renderDistanceChunks)*45;
-//				if(!(i>1)&&!(d6*d6+d7*d7+d8*d8>d9*d9)&&RandUtil.RB(Config.getParticleAmount()))Get.Render.ER().addEffect(particleFX);
-//			}
-//		}
-//	}
-//	@SideOnly(value=Side.CLIENT)
-//	public static void spawnEntityFX(EntityFX particleFX,int distance){
-//		if(particleFX.worldObj.isRemote){
-//			Minecraft mc=U.getMC();
-//			Entity ent=mc.getRenderViewEntity();
-//			if(ent!=null&&mc.effectRenderer!=null){
-//				int i=mc.gameSettings.particleSetting;
-//				double d6=ent.posX-particleFX.posX,d7=ent.posY-particleFX.posY,d8=ent.posZ-particleFX.posZ;
-//				if(!(i>1)&&!(d6*d6+d7*d7+d8*d8>distance*distance)&&RandUtil.RB(Config.getParticleAmount()))Get.Render.ER().addEffect(particleFX);
-//			}
-//		}
-//	}
-//	public static void spawnEntityFXAt(TileEntity tileEntity, EntityFX entityFX){
-//		entityFX.posX+=x(tileEntity);
-//		entityFX.posY+=y(tileEntity);
-//		entityFX.posZ+=z(tileEntity);
-//		spawnEntityFX(entityFX);
-//	}
 	
 	public static void startTime(){
 		startTime=System.currentTimeMillis();

@@ -19,8 +19,8 @@ public class MathUtil{
 	public static double[] circleXZ(double angle){
 		double[] result={0,0};
 		int intAngle=(int)angle;
-		result[0]=CricleUtil.sin(intAngle);//-X-
-		result[1]=CricleUtil.cos(intAngle);//-Z-
+		result[0]=MathUtil.sin(intAngle);//-X-
+		result[1]=MathUtil.cos(intAngle);//-Z-
 		return result;
 	}
 
@@ -38,15 +38,15 @@ public class MathUtil{
 	public static double[] createBallXYZ(double ballSize, boolean hasSecondPos){
 		int xRot=RandUtil.RI(360),yRot=RandUtil.RI(360);
 		double[] result=new double[3*(hasSecondPos?2:1)];
-		result[0]=CricleUtil.sin(xRot)*CricleUtil.cos(yRot);//-X-
-		result[1]=CricleUtil.sin(yRot);//-Y-
-		result[2]=CricleUtil.cos(xRot)*CricleUtil.cos(yRot);//-Z-
+		result[0]=MathUtil.sin(xRot)*MathUtil.cos(yRot);//-X-
+		result[1]=MathUtil.sin(yRot);//-Y-
+		result[2]=MathUtil.cos(xRot)*MathUtil.cos(yRot);//-Z-
 		if(hasSecondPos){
 			xRot+=RandUtil.CRI(50);
 			yRot+=RandUtil.CRI(50);
-			result[3]=CricleUtil.sin(xRot)*CricleUtil.cos(yRot);//-X-
-			result[4]=CricleUtil.sin(yRot);//-Y-
-			result[5]=CricleUtil.cos(xRot)*CricleUtil.cos(yRot);//-Z-
+			result[3]=MathUtil.sin(xRot)*MathUtil.cos(yRot);//-X-
+			result[4]=MathUtil.sin(yRot);//-Y-
+			result[5]=MathUtil.cos(xRot)*MathUtil.cos(yRot);//-Z-
 		}
 		for(int a=0;a<result.length;a++)result[a]*=ballSize;
 		return result;
@@ -56,8 +56,8 @@ public class MathUtil{
 		double[] result={0,0};
 		angle+=offset;
 		int intAngle=(int)angle;
-		result[0]=CricleUtil.sin(intAngle);//-X-
-		result[1]=CricleUtil.cos(intAngle);//-Z-
+		result[0]=MathUtil.sin(intAngle);//-X-
+		result[1]=MathUtil.cos(intAngle);//-Z-
 		return result;
 	}
 
@@ -65,12 +65,12 @@ public class MathUtil{
 		double[] result={0,0,0,0};
 		{
 			int intAngle=(int)angle;
-			result[0]=CricleUtil.sin(intAngle);//-X-
-			result[1]=CricleUtil.cos(intAngle);//-Z-
+			result[0]=MathUtil.sin(intAngle);//-X-
+			result[1]=MathUtil.cos(intAngle);//-Z-
 			angle+=offset;}{
 			int intAngle=(int)angle;
-			result[0]=CricleUtil.sin(intAngle);//-X-
-			result[1]=CricleUtil.cos(intAngle);//-Z-
+			result[0]=MathUtil.sin(intAngle);//-X-
+			result[1]=MathUtil.cos(intAngle);//-Z-
 		}
 		return result;
 	}
@@ -164,6 +164,16 @@ public class MathUtil{
 	}
 	public static int snap(int value,int min,int max){
 		return (int)snap((double)value, (double)min, (double)max);
+	}
+
+	public static double sq(double var){
+		return var*var;
+	}
+	public static int sq(int var){
+		return var*var;
+	}
+	public static float sq(float var){
+		return var*var;
 	}
 
 }

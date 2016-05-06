@@ -38,7 +38,7 @@ public class ColoredGuiButton extends GuiButton{
 	public void drawButton(Minecraft v1, int v2, int v3){
 		if (this.visible)
 		{
-			float r=PartialTicksUtil.calculatePos(prevR, this.r),g=PartialTicksUtil.calculatePos(prevG, this.g),b=PartialTicksUtil.calculatePos(prevB, this.b),alpha=PartialTicksUtil.calculatePos(prevAlpha, this.alpha);
+			float r=PartialTicksUtil.calculate(prevR, this.r),g=PartialTicksUtil.calculate(prevG, this.g),b=PartialTicksUtil.calculate(prevB, this.b),alpha=PartialTicksUtil.calculate(prevAlpha, this.alpha);
 			FontRenderer fontrenderer = v1.fontRendererObj;
 			v1.getTextureManager().bindTexture(buttonTextures);
 			OpenGLM.color(r,g,b,alpha);
@@ -83,10 +83,10 @@ public class ColoredGuiButton extends GuiButton{
 		prevB=b;
 		prevAlpha=alpha;
 		
-		r=(float)UtilM.slowlyEqualize(r, wantedR, 0.1);
-		g=(float)UtilM.slowlyEqualize(g, wantedG, 0.1);
-		b=(float)UtilM.slowlyEqualize(b, wantedB, 0.1);
-		alpha=(float)UtilM.slowlyEqualize(prevAlpha, wantedAlpha, 0.2);
+		r=(float)UtilM.graduallyEqualize(r, wantedR, 0.1);
+		g=(float)UtilM.graduallyEqualize(g, wantedG, 0.1);
+		b=(float)UtilM.graduallyEqualize(b, wantedB, 0.1);
+		alpha=(float)UtilM.graduallyEqualize(prevAlpha, wantedAlpha, 0.2);
 	}
 
 }

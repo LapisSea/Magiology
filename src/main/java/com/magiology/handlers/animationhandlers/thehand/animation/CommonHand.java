@@ -3,18 +3,149 @@ package com.magiology.handlers.animationhandlers.thehand.animation;
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.magiology.client.render.itemrender.ItemRendererTheHand;
-import com.magiology.forgepowered.packets.packets.HandActionPacket;
+import com.magiology.forgepowered.packets.packets.toserver.HandActionPacket;
 import com.magiology.handlers.animationhandlers.thehand.HandData;
 import com.magiology.handlers.animationhandlers.thehand.HandPosition;
 import com.magiology.handlers.animationhandlers.thehand.TheHandHandler;
 import com.magiology.handlers.animationhandlers.thehand.animation.LinearHandAnimProgressHandler.LinearHandAnimProgressHandlerClassic;
+import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilclasses.UtilM;
 import com.magiology.util.utilclasses.math.MathUtil;
 import com.magiology.util.utilobjects.codeinsert.ObjectProcessor;
 import com.magiology.util.utilobjects.codeinsert.ObjectReturn;
 import com.magiology.util.utilobjects.vectors.Vec3M;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+@SideOnly(Side.CLIENT)
 public class CommonHand{
+	
+	public static HandPosition
+		errorPos=new HandPosition(new HandData(),"errorPos"),
+		closedFist=new HandPosition(new ObjectProcessor<HandData>(){@Override public HandData pocess(HandData object, Object...objects){
+			object.base[0]=0;
+			object.base[1]=0;
+			object.base[2]=0;
+			
+			object.base[3]=0;
+			object.base[4]=0;
+			object.base[5]=0;
+			
+			object.thumb[0]=28;
+			object.thumb[1]=10;
+			object.thumb[2]=20;
+			object.thumb[3]=-20;
+			object.thumb[4]=-90;
+			
+			object.fingers[0][1]=80;
+			object.fingers[0][2]=110;
+			object.fingers[0][3]=75;
+			
+			object.fingers[1][1]=80;
+			object.fingers[1][2]=100;
+			object.fingers[1][3]=90;
+			
+			object.fingers[2][1]=85;
+			object.fingers[2][2]=95;
+			object.fingers[2][3]=80;
+			
+			object.fingers[3][1]=95;
+			object.fingers[3][2]=80;
+			object.fingers[3][3]=110;
+			return object;
+		}}.pocess(new HandData()),"closedFist"),
+		weaponHolder=new HandPosition(new ObjectProcessor<HandData>(){@Override public HandData pocess(HandData data, Object...objects){
+			data.base[1]=-p*3;
+			data.base[3]=-30;
+			data.base[4]=-5;
+			
+			data.thumb[0]=60;
+			data.thumb[1]=10;
+			data.thumb[2]=10;
+			data.thumb[3]=-5;
+			data.thumb[4]=-20;
+			
+			data.fingers[0][0]=-10;
+			data.fingers[0][1]=3;
+			data.fingers[0][2]=65;
+			data.fingers[0][3]=10;
+			
+			data.fingers[1][0]=5;
+			data.fingers[1][1]=20;
+			data.fingers[1][2]=45;
+			data.fingers[1][3]=20;
+			
+			data.fingers[2][0]=15;
+			data.fingers[2][1]=25;
+			data.fingers[2][2]=35;
+			data.fingers[2][3]=15;
+			
+			data.fingers[3][0]=20;
+			data.fingers[3][1]=25;
+			data.fingers[3][2]=20;
+			data.fingers[3][3]=20;
+			return data;
+		}}.pocess(new HandData()),"weaponHolder"),
+		lookAtSomething=new HandPosition(new ObjectProcessor<HandData>(){@Override public HandData pocess(HandData data, Object...objects){
+			data.base[0]=p*11;
+			data.base[1]=-p*8;
+			data.base[2]=-0.1F;
+			data.base[3]=-15;
+			data.base[4]=0;
+			data.base[5]=170;
+			
+			data.thumb[0]=15;
+			data.thumb[1]=40;
+			data.thumb[2]=15;
+			data.thumb[3]=-10;
+			data.thumb[4]=-25;
+			
+			data.fingers[0][1]=15;
+			data.fingers[0][2]=55;
+			data.fingers[0][3]=5;
+			
+			data.fingers[1][1]=40;
+			data.fingers[1][2]=25;
+			data.fingers[1][3]=5;
+			
+			data.fingers[2][1]=35;
+			data.fingers[2][2]=30;
+			data.fingers[2][3]=7;
+			
+			data.fingers[3][1]=50;
+			data.fingers[3][2]=15;
+			data.fingers[3][3]=5;
+			return data;
+		}}.pocess(new HandData()),"lookAtSomething"),
+		naturalPosition=new HandPosition(new ObjectProcessor<HandData>(){@Override public HandData pocess(HandData data, Object...objects){
+			data.base[1]=-p*7;
+			data.base[3]=-15;
+			data.base[4]=0;
+			data.base[5]=5;
+	
+			data.thumb[0]=22;
+			data.thumb[1]=32;
+			data.thumb[3]=-15;
+			data.thumb[4]=-30;
+			
+			data.fingers[0][1]=12;
+			data.fingers[0][2]=40;
+			data.fingers[0][3]=5;
+			
+			data.fingers[1][1]=17;
+			data.fingers[1][2]=20;
+			data.fingers[1][3]=2;
+			
+			data.fingers[2][1]=17;
+			data.fingers[2][2]=23;
+			data.fingers[2][3]=2;
+			
+			data.fingers[3][1]=24;
+			data.fingers[3][2]=15;
+			data.fingers[3][3]=2;
+			return data;
+		}}.pocess(new HandData()),"naturalPosition");
 	
 	public static LinearHandAnimation chargeUp=new LinearHandAnimation(3,weaponHolder,new LinearHandAnimProgressHandlerClassic(){
 		@Override
@@ -83,7 +214,7 @@ public class CommonHand{
 	public static LinearHandAnimation chargeUpRelease=new LinearHandAnimation(3,chargeUpEnd,new LinearHandAnimProgressHandler(){
 		protected AnimationEvent shootEvent=new AnimationEvent(()->{
 			Vec3M pos=ItemRendererTheHand.getPalmMiddle();
-			TheHandHandler.shoot(UtilM.getThePlayer(),pos);
+			TheHandHandler.shoot(UtilC.getThePlayer(),pos);
 			UtilM.sendMessage(new HandActionPacket(0,pos));
 		},()->timeHeld==10);
 		
@@ -229,132 +360,6 @@ public class CommonHand{
 			return animData;
 		}
 	}.process(),"chargeUpRelease");
-	
-	public static HandPosition
-		errorPos=new HandPosition(new HandData(),"errorPos"),
-		closedFist=new HandPosition(new ObjectProcessor<HandData>(){@Override public HandData pocess(HandData object, Object...objects){
-			object.base[0]=0;
-			object.base[1]=0;
-			object.base[2]=0;
-			
-			object.base[3]=0;
-			object.base[4]=0;
-			object.base[5]=0;
-			
-			object.thumb[0]=28;
-			object.thumb[1]=10;
-			object.thumb[2]=20;
-			object.thumb[3]=-20;
-			object.thumb[4]=-90;
-			
-			object.fingers[0][1]=80;
-			object.fingers[0][2]=110;
-			object.fingers[0][3]=75;
-			
-			object.fingers[1][1]=80;
-			object.fingers[1][2]=100;
-			object.fingers[1][3]=90;
-			
-			object.fingers[2][1]=85;
-			object.fingers[2][2]=95;
-			object.fingers[2][3]=80;
-			
-			object.fingers[3][1]=95;
-			object.fingers[3][2]=80;
-			object.fingers[3][3]=110;
-			return object;
-		}}.pocess(new HandData()),"closedFist"),
-		weaponHolder=new HandPosition(new ObjectProcessor<HandData>(){@Override public HandData pocess(HandData data, Object...objects){
-			data.base[1]=-p*3;
-			data.base[3]=-30;
-			data.base[4]=-5;
-			
-			data.thumb[0]=60;
-			data.thumb[1]=10;
-			data.thumb[2]=10;
-			data.thumb[3]=-5;
-			data.thumb[4]=-20;
-			
-			data.fingers[0][0]=-10;
-			data.fingers[0][1]=3;
-			data.fingers[0][2]=65;
-			data.fingers[0][3]=10;
-			
-			data.fingers[1][0]=5;
-			data.fingers[1][1]=20;
-			data.fingers[1][2]=45;
-			data.fingers[1][3]=20;
-			
-			data.fingers[2][0]=15;
-			data.fingers[2][1]=25;
-			data.fingers[2][2]=35;
-			data.fingers[2][3]=15;
-			
-			data.fingers[3][0]=20;
-			data.fingers[3][1]=25;
-			data.fingers[3][2]=20;
-			data.fingers[3][3]=20;
-			return data;
-		}}.pocess(new HandData()),"weaponHolder"),
-		lookAtSomething=new HandPosition(new ObjectProcessor<HandData>(){@Override public HandData pocess(HandData data, Object...objects){
-			data.base[0]=p*11;
-			data.base[1]=-p*8;
-			data.base[2]=-0.1F;
-			data.base[3]=-15;
-			data.base[4]=0;
-			data.base[5]=170;
-			
-			data.thumb[0]=15;
-			data.thumb[1]=40;
-			data.thumb[2]=15;
-			data.thumb[3]=-10;
-			data.thumb[4]=-25;
-			
-			data.fingers[0][1]=15;
-			data.fingers[0][2]=55;
-			data.fingers[0][3]=5;
-			
-			data.fingers[1][1]=40;
-			data.fingers[1][2]=25;
-			data.fingers[1][3]=5;
-			
-			data.fingers[2][1]=35;
-			data.fingers[2][2]=30;
-			data.fingers[2][3]=7;
-			
-			data.fingers[3][1]=50;
-			data.fingers[3][2]=15;
-			data.fingers[3][3]=5;
-			return data;
-		}}.pocess(new HandData()),"lookAtSomething"),
-		naturalPosition=new HandPosition(new ObjectProcessor<HandData>(){@Override public HandData pocess(HandData data, Object...objects){
-			data.base[1]=-p*7;
-			data.base[3]=-15;
-			data.base[4]=0;
-			data.base[5]=5;
-	
-			data.thumb[0]=22;
-			data.thumb[1]=32;
-			data.thumb[3]=-15;
-			data.thumb[4]=-30;
-			
-			data.fingers[0][1]=12;
-			data.fingers[0][2]=40;
-			data.fingers[0][3]=5;
-			
-			data.fingers[1][1]=17;
-			data.fingers[1][2]=20;
-			data.fingers[1][3]=2;
-			
-			data.fingers[2][1]=17;
-			data.fingers[2][2]=23;
-			data.fingers[2][3]=2;
-			
-			data.fingers[3][1]=24;
-			data.fingers[3][2]=15;
-			data.fingers[3][3]=2;
-			return data;
-		}}.pocess(new HandData()),"naturalPosition");
 	
 	
 	private static float p=1F/16F;

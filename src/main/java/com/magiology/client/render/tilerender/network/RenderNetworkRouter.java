@@ -282,7 +282,7 @@ public class RenderNetworkRouter extends TileEntitySpecialRendererM{
 			GL11.glColor3f(1,1,1);
 			TessUtil.bindTexture(new ResourceLocation(MReference.MODID,"textures/models/network_router.png"));
 			for(int i=0;i<3;i++)for(int j=0;j<3;j++){
-				Vec3M rots=insertionAnimation.get(curentTile.animationos[j+i*3].get())[0];
+				Vec3M rots=insertionAnimation.get(curentTile.animationos[j+i*3].get().value)[0];
 				
 				rots.y*=rots.y;
 				

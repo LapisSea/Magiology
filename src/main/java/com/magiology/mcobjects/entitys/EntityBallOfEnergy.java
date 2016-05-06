@@ -2,8 +2,7 @@ package com.magiology.mcobjects.entitys;
 
 import com.magiology.util.utilclasses.RandUtil;
 import com.magiology.util.utilclasses.UtilM;
-import com.magiology.util.utilclasses.math.CricleUtil;
-import com.magiology.util.utilobjects.m_extension.effect.EntitySmokeFXM;
+import com.magiology.util.utilclasses.math.MathUtil;
 import com.magiology.util.utilobjects.vectors.Vec3M;
 
 import net.minecraft.block.Block;
@@ -12,6 +11,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
@@ -29,15 +29,14 @@ public class EntityBallOfEnergy extends Entity implements IProjectile{
 	
 	public EntityBallOfEnergy(EntityLivingBase entity, float speed,int time){
 		super(entity.worldObj);
-		this.renderDistanceWeight = 10.0D;
 		this.shootingEntity = entity;
 		this.setSize(1F/8, 1F/8);
 		this.time=time;
 		this.setLocationAndAngles(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ, entity.rotationYaw, entity.rotationPitch);
 		
-		motionX=-CricleUtil.sin((int)this.rotationYaw)*CricleUtil.cos((int)this.rotationPitch)*speed;
-		motionY=-CricleUtil.sin((int) this.rotationPitch)*speed;
-		motionZ= CricleUtil.cos((int) this.rotationYaw)*CricleUtil.cos((int)(this.rotationPitch))*speed;
+		motionX=-MathUtil.sin((int)this.rotationYaw)*MathUtil.cos((int)this.rotationPitch)*speed;
+		motionY=-MathUtil.sin((int) this.rotationPitch)*speed;
+		motionZ= MathUtil.cos((int) this.rotationYaw)*MathUtil.cos((int)(this.rotationPitch))*speed;
 		
 		this.posX -= MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F;
         this.posY -= 0.10000000149011612D;
@@ -51,7 +50,6 @@ public class EntityBallOfEnergy extends Entity implements IProjectile{
 	public EntityBallOfEnergy(World world)
 	{
 		super(world);
-		this.renderDistanceWeight = 10.0D;
 		this.setSize(0.5F, 0.5F);
 	}
 	
@@ -66,10 +64,7 @@ public class EntityBallOfEnergy extends Entity implements IProjectile{
 	@Override
 	protected boolean canTriggerWalking(){return false;}
 	@Override
-	protected void entityInit()
-	{
-		this.dataWatcher.addObject(16, (byte)0);
-	}
+	protected void entityInit(){}
 	@Override
 	@SideOnly(Side.CLIENT)
 	public int getBrightnessForRender(float var1){
@@ -95,7 +90,7 @@ public class EntityBallOfEnergy extends Entity implements IProjectile{
 		RayTraceResult MOP=worldObj.rayTraceBlocks(vec31.conv(), Vec3M.conv(), true,true,false);
 		pos=new BlockPos(posX, posY, posZ);
 		block=UtilM.getBlock(worldObj, pos);
-		if(MOP!=null&&MOP.typeOfHit!=MovingObjectType.MISS){
+		if(MOP!=null&&MOP.typeOfHit!=RayTraceResult.Type.MISS){
 			
 			if(MOP.hitVec!=null){
 				posX=MOP.hitVec.xCoord;
@@ -104,7 +99,7 @@ public class EntityBallOfEnergy extends Entity implements IProjectile{
 				setDead();
 			}
 			 
-			if(MOP.typeOfHit==MovingObjectType.ENTITY){
+			if(MOP.typeOfHit==RayTraceResult.Type.ENTITY){
 				
 				
 				
@@ -112,7 +107,7 @@ public class EntityBallOfEnergy extends Entity implements IProjectile{
 		}else if(MOP!=null){
 		 	pos=MOP.getBlockPos();
 		}
-		UtilM.spawnEntityFX(new EntitySmokeFXM(worldObj, posX, posY, posZ, 0, 0, 0));
+		worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, posX, posY, posZ, 0, 0, 0);
 		motionX*=0.99;
 		motionY*=0.99;
 		motionZ*=0.99;

@@ -72,37 +72,29 @@ public class NBTUtil{
 		NBTTC.setTag(baseName+"Slots", list);
 	}
 	public static void setBoolean(ItemStack stack, String key, boolean keyValue){
-		createNBT(stack);
-		getNBT(stack).setBoolean(key, keyValue);
+		createNBT(stack).setBoolean(key, keyValue);
 	}
 	public static void setByte(ItemStack stack, String key, byte keyValue){
-		createNBT(stack);
-		getNBT(stack).setByte(key, keyValue);
+		createNBT(stack).setByte(key, keyValue);
 	}
 	public static void setDouble(ItemStack stack, String key, double keyValue){
-		createNBT(stack);
-		getNBT(stack).setDouble(key, keyValue);
+		createNBT(stack).setDouble(key, keyValue);
 	}
 	
 	public static void setFloat(ItemStack stack, String key, float keyValue){
-		createNBT(stack);
-		getNBT(stack).setFloat(key, keyValue);
+		createNBT(stack).setFloat(key, keyValue);
 	}
 	public static void setInt(ItemStack stack, String key, int keyValue){
-		createNBT(stack);
-		getNBT(stack).setInteger(key, keyValue);
+		createNBT(stack).setInteger(key, keyValue);
 	}
 	public static void setLong(ItemStack stack, String key, long keyValue){
-		createNBT(stack);
-		getNBT(stack).setLong(key, keyValue);
+		createNBT(stack).setLong(key, keyValue);
 	}
 	public static void setShort(ItemStack stack, String key, short keyValue){
-		createNBT(stack);
-		getNBT(stack).setShort(key, keyValue);
+		createNBT(stack).setShort(key, keyValue);
 	}
 	public static void setString(ItemStack stack, String key, String keyValue){
-		createNBT(stack);
-		getNBT(stack).setString(key, keyValue);
+		createNBT(stack).setString(key, keyValue);
 	}
 	@Deprecated
 	public void readNbtFromPacketBuffer(NBTTagCompound nbt, PacketBuffer buff){

@@ -4,9 +4,10 @@ import com.magiology.client.gui.GuiUpdater.Updateable;
 import com.magiology.client.gui.container.CommandCenterContainer;
 import com.magiology.core.MReference;
 import com.magiology.core.init.MItems;
-import com.magiology.forgepowered.packets.packets.OpenProgramContainerInGui;
+import com.magiology.forgepowered.packets.packets.toserver.OpenProgramContainerInGui;
 import com.magiology.mcobjects.tileentityes.network.TileEntityNetworkProgramHolder;
 import com.magiology.util.renderers.TessUtil;
+import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilclasses.UtilM;
 import com.magiology.util.utilobjects.NBTUtil;
 
@@ -31,7 +32,7 @@ public class GuiCenterContainer extends GuiContainer implements Updateable{
 	protected void actionPerformed(GuiButton b){
 		switch(b.id){
 		case 0:{
-			EntityPlayer player=UtilM.getThePlayer();
+			EntityPlayer player=UtilC.getThePlayer();
 			if(player.openContainer instanceof CommandCenterContainer){
 				CommandCenterContainer container=((CommandCenterContainer)player.openContainer);
 				int id=container.selectedSlotId+36;
@@ -60,7 +61,7 @@ public class GuiCenterContainer extends GuiContainer implements Updateable{
 	}
 	
 	private int getSelectedSlotId(){
-		EntityPlayer player=UtilM.getThePlayer();
+		EntityPlayer player=UtilC.getThePlayer();
 		if(player.openContainer instanceof CommandCenterContainer){
 			CommandCenterContainer container=((CommandCenterContainer)player.openContainer);
 			int id=container.selectedSlotId;

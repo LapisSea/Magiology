@@ -21,7 +21,7 @@ public abstract class TileEntityPowGen extends TileEntityPow implements PowerPro
 		return canGeneratePowerAddon()&&(getMaxEnergy()>=getEnergy()+Add?true:false);
 	}
 	@Override public abstract boolean canGeneratePowerAddon();
-	@Override public abstract void generateFunction();
+	@Override public abstract void onGenerateEnergy();
 	@Override
 	public int getFuel(){
 		return fuel;

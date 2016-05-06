@@ -8,6 +8,7 @@ import org.lwjgl.util.vector.Vector2f;
 import com.magiology.util.renderers.GL11U;
 import com.magiology.util.renderers.TessUtil;
 import com.magiology.util.utilclasses.UtilM.U;
+import com.magiology.util.utilclasses.math.PartialTicksUtil;
 import com.magiology.util.utilobjects.ColorF;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -46,7 +47,7 @@ public class TextBox extends HoloObject implements StringContainer{
 	}
 	@Override
 	public void render(ColorF color){
-		GL11U.glColor(U.calculateRenderColor(prevColor, this.color));
+		GL11U.glColor(PartialTicksUtil.calculate(prevColor, this.color));
 		GL11U.glCulFace(false);
 		checkHighlight();
 		GL11U.glScale(-scale*U.p);
@@ -64,8 +65,8 @@ public class TextBox extends HoloObject implements StringContainer{
 	public void update(){
 		prevColor=color.copy();
 		size=new Vector2f(originalSize);
-		if(isHighlighted||moveMode)color=U.slowlyEqalizeColor(color, new ColorF(1,1,1,0.6).mix(setColor), 0.15F);
-		else color=U.slowlyEqalizeColor(color, setColor, 0.15F);
+		if(isHighlighted||moveMode)color=U.graduallyEqualize(color, new ColorF(1,1,1,0.6).mix(setColor), 0.15F);
+		else color=U.graduallyEqualize(color, setColor, 0.15F);
 		
 		size.x=TessUtil.getFontRenderer().getStringWidth(txt)*scale*U.p;
 		size.y=TessUtil.getFontRenderer().FONT_HEIGHT*scale*U.p;

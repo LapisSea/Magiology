@@ -114,9 +114,9 @@ public class ModelWingsFromTheBlackFire extends ModelBiped{
 		CyborgWingsFromTheBlackFireData data=validateForRender(player);
 		if(data==null)return;
 		float rotation=0;
-		rotation=PartialTicksUtil.calculatePos(data.prevPlayerAngle, data.playerAngle);
+		rotation=PartialTicksUtil.calculate(data.prevPlayerAngle, data.playerAngle);
 		float[][] renderRotations=new float[7][3];
-		for(int a=0;a<data.calcRotationAnglesBase.length;a++)for(int a1=0;a1<data.calcRotationAnglesBase[a].length;a1++)renderRotations[a][a1]=PartialTicksUtil.calculatePos(data.calcPrevRotationAnglesBase[a][a1],data.calcRotationAnglesBase[a][a1]);
+		for(int a=0;a<data.calcRotationAnglesBase.length;a++)for(int a1=0;a1<data.calcRotationAnglesBase[a].length;a1++)renderRotations[a][a1]=PartialTicksUtil.calculate(data.calcPrevRotationAnglesBase[a][a1],data.calcRotationAnglesBase[a][a1]);
 		if(models==null)init(renderRotations);
 		//rendering
 		GL11U.protect();

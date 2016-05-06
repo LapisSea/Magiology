@@ -4,15 +4,10 @@ import java.util.List;
 
 import com.magiology.api.network.NetworkInterface;
 import com.magiology.api.power.PowerCore;
-import com.magiology.client.render.aftereffect.LongAfterRenderRenderer;
-import com.magiology.client.render.aftereffect.RenderNetworkPointerContainerHighlight;
 import com.magiology.core.init.MItems;
 import com.magiology.mcobjects.items.NetworkPointer;
-import com.magiology.mcobjects.tileentityes.TileEntityBFCPowerOut;
 import com.magiology.mcobjects.tileentityes.TileEntityBateryGeneric;
-import com.magiology.mcobjects.tileentityes.TileEntityBigFurnaceCore;
 import com.magiology.mcobjects.tileentityes.TileEntityFireLamp;
-import com.magiology.mcobjects.tileentityes.TileEntityFireMatrixReceaver;
 import com.magiology.mcobjects.tileentityes.corecomponents.multibox.MultiColisionProvider;
 import com.magiology.mcobjects.tileentityes.corecomponents.multibox.MultiColisionProviderHandler;
 import com.magiology.mcobjects.tileentityes.hologram.TileEntityHologramProjector;
@@ -21,6 +16,7 @@ import com.magiology.util.renderers.GL11U;
 import com.magiology.util.renderers.OpenGLM;
 import com.magiology.util.renderers.Renderer;
 import com.magiology.util.utilclasses.CollectionConverter;
+import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilclasses.UtilM;
 import com.magiology.util.utilclasses.math.PartialTicksUtil;
 import com.magiology.util.utilobjects.ColorF;
@@ -34,6 +30,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -45,12 +42,12 @@ public class HighlightEvent {
 	
 	float p=1F/16F;
 	private void doMultiColision(BlockPos pos, ItemStack item, DrawBlockHighlightEvent event){
-		MultiColisionProvider colisionProvider=(MultiColisionProvider)event.player.worldObj.getTileEntity(pos);
+		MultiColisionProvider colisionProvider=(MultiColisionProvider)event.getPlayer().worldObj.getTileEntity(pos);
 		double ex=0.002;
 		int DFPBBwidth=2;
 		double DFPBBalpha=0.6;
 		
-		Vec3M off=PartialTicksUtil.calculatePos(event.player).mul(-1).add(new Vec3M(pos));
+		Vec3M off=PartialTicksUtil.calculate(event.getPlayer()).mul(-1).add(new Vec3M(pos));
 		OpenGLM.pushMatrix();
 		GL11U.glTranslate(off);
 		
@@ -58,7 +55,7 @@ public class HighlightEvent {
 			mainBox=colisionProvider.getMainBox().box,
 			pointedBox=colisionProvider.getBoxes().get(colisionProvider.getPointedBoxID()).box;
 		
-		long wtt=event.player.worldObj.getTotalWorldTime();
+		long wtt=event.getPlayer().worldObj.getTotalWorldTime();
 		double centerAlphaHelper=(wtt%80.0)/40.0,centerAlpha=centerAlphaHelper>1?2-centerAlphaHelper:centerAlphaHelper;
 		OpenGLM.disableLighting();
 		OpenGLM.depthMask(false);
@@ -77,13 +74,13 @@ public class HighlightEvent {
 		event.setCanceled(true);
 		
 		double selectionAlphaHelper=(wtt%120.0)/60.0,selectionAlpha=selectionAlphaHelper>1?2-selectionAlphaHelper:selectionAlphaHelper;
-		if(UtilM.isItemInStack(MItems.fireHammer, UtilM.getThePlayer().getHeldItemMainhand()))drawBox(mainBox.minX-ex,mainBox.maxX+ex,mainBox.minY-ex,mainBox.maxY+ex,mainBox.minZ-ex,mainBox.maxZ+ex,0.9, 0.1, 0.2, 0.1+0.05*centerAlpha);
+		if(UtilM.isItemInStack(MItems.fireHammer, UtilC.getThePlayer().getHeldItemMainhand()))drawBox(mainBox.minX-ex,mainBox.maxX+ex,mainBox.minY-ex,mainBox.maxY+ex,mainBox.minZ-ex,mainBox.maxZ+ex,0.9, 0.1, 0.2, 0.1+0.05*centerAlpha);
 		
 		
 		if(UtilM.isItemInStack(MItems.fireHammer,item)){
 			drawBox(pointedBox.minX-ex*2,pointedBox.maxX+ex*2,pointedBox.minY-ex*2,pointedBox.maxY+ex*2,pointedBox.minZ-ex*2,pointedBox.maxZ+ex*2, 0.1, 0.1, 0.9, 0.1+0.2*selectionAlpha);
 			GL11U.setUpOpaqueRendering(1);
-			drawSelectionBox(pointedBox.minX-ex*2,pointedBox.maxX+ex*2,pointedBox.minY-ex*2,pointedBox.maxY+ex*2,pointedBox.minZ-ex*2,pointedBox.maxZ+ex*2,UtilM.fluctuateSmooth(11, 21)/4, UtilM.fluctuateSmooth(16, 45)/4, 0.7+UtilM.fluctuateSmooth(36, 74)*0.3, 2.5, 0.5);
+			drawSelectionBox(pointedBox.minX-ex*2,pointedBox.maxX+ex*2,pointedBox.minY-ex*2,pointedBox.maxY+ex*2,pointedBox.minZ-ex*2,pointedBox.maxZ+ex*2,UtilC.fluctuateSmooth(11, 21)/4, UtilC.fluctuateSmooth(16, 45)/4, 0.7+UtilC.fluctuateSmooth(36, 74)*0.3, 2.5, 0.5);
 		}
 		else GL11U.setUpOpaqueRendering(1);
 		
@@ -199,17 +196,15 @@ public class HighlightEvent {
 		if(boundedInterface==null)return;
 		
 		OpenGLM.pushMatrix();
-		GL11U.glTranslate(UtilM.getEntityPos(event.player).mul(-1));
-		World world=event.player.worldObj;
+		GL11U.glTranslate(UtilM.getEntityPos(event.getPlayer()).mul(-1));
+		World world=event.getPlayer().worldObj;
 		GL11U.texture(false);
 		GL11U.setUpOpaqueRendering(1);
 		Block sb1=tile.getBlockType();
-		sb1.setBlockBoundsBasedOnState(world, tile.getPos());
-		AxisAlignedBB source1=sb1.getSelectedBoundingBox(world, tile.getPos());
+		AxisAlignedBB source1=sb1.getSelectedBoundingBox(world.getBlockState(tile.getPos()), world, tile.getPos());
 		for(TileEntityNetworkRouter i:tile.getBoundedInterface().getPointerContainers()){
 			Block sb=i.getBlockType();
-			sb.setBlockBoundsBasedOnState(world, i.getPos());
-			AxisAlignedBB source=sb.getSelectedBoundingBox(world, i.getPos());
+			AxisAlignedBB source=sb.getSelectedBoundingBox(world.getBlockState(tile.getPos()), world, i.getPos());
 			
 			if(i!=tile){
 				GL11U.glDepth(false);
@@ -224,7 +219,7 @@ public class HighlightEvent {
 			
 			for(ItemStack j:i.slots){
 				if(j!=null&&j.hasTagCompound()){
-					if(event.player.isSneaking())for(int k=0;k<2;k++){
+					if(event.getPlayer().isSneaking())for(int k=0;k<2;k++){
 						if(k==0){
 							GL11U.glDepth(false);
 							drawHighlightToBlock(i.getPos(), NetworkPointer.getTarget(j), new ColorF(0,0,0,0.6), 1);
@@ -245,33 +240,13 @@ public class HighlightEvent {
 		int currentEn=0,maxEn=0;
 		boolean okBlock=true;
 		NBTTagCompound PC=item.getTagCompound();
-		TileEntity tile=event.player.worldObj.getTileEntity(pos);
-		PC.setString("block", UtilM.getBlock(event.player.worldObj,pos).getLocalizedName());
+		TileEntity tile=event.getPlayer().worldObj.getTileEntity(pos);
+		PC.setString("block", UtilM.getBlock(event.getPlayer().worldObj,pos).getLocalizedName());
 		
 		if(tile instanceof PowerCore){
 			powerBar=(float)((PowerCore)tile).getEnergy()/(float)((PowerCore)tile).getMaxEnergy();
 			currentEn=((PowerCore)tile).getEnergy();
 			maxEn=((PowerCore)tile).getMaxEnergy();
-		}else if(tile instanceof TileEntityBigFurnaceCore){
-			powerBar=(float)((TileEntityBigFurnaceCore)tile).getEnergy()/(float)((TileEntityBigFurnaceCore)tile).getMaxEnergy();
-			
-			currentEn=((TileEntityBigFurnaceCore)tile).getEnergy();
-			maxEn=((TileEntityBigFurnaceCore)tile).getMaxEnergy();
-		}else if(tile instanceof TileEntityBFCPowerOut){
-			int x1=0;int y1=1000;int z1=0;
-				
-				 if(((TileEntityBFCPowerOut)tile).CallDir[0]!=null){x1=pos.getX()-2;y1=pos.getY()-1;z1=pos.getZ();}
-			else if(((TileEntityBFCPowerOut)tile).CallDir[1]!=null){x1=pos.getX()+2;y1=pos.getY()-1;z1=pos.getZ();}
-			else if(((TileEntityBFCPowerOut)tile).CallDir[2]!=null){x1=pos.getX();y1=pos.getY()-1;z1=pos.getZ()-2;}
-			else if(((TileEntityBFCPowerOut)tile).CallDir[3]!=null){x1=pos.getX();y1=pos.getY()-1;z1=pos.getZ()+2;}
-			
-			if(y1!=1000){
-				pos=new BlockPos(x1, y1, z1);
-				tile= event.player.worldObj.getTileEntity(pos);
-				powerBar=(float)((TileEntityBigFurnaceCore)tile).getEnergy()/(float)((TileEntityBigFurnaceCore)tile).getMaxEnergy();
-				currentEn=((TileEntityBigFurnaceCore)tile).getEnergy();
-				maxEn=((TileEntityBigFurnaceCore)tile).getMaxEnergy();
-			}
 		}else if(tile instanceof TileEntityBateryGeneric){
 			powerBar=(float)((TileEntityBateryGeneric)tile).getEnergy()/(float)((TileEntityBateryGeneric)tile).getMaxEnergy();
 			currentEn=((TileEntityBateryGeneric)tile).getEnergy();
@@ -316,8 +291,8 @@ public class HighlightEvent {
 
 	private void drawHighlightToBlock(BlockPos posStart,BlockPos posTarget,ColorF color, double lineWidth){
 		BlockPos targetPos=posTarget;
-		AxisAlignedBB bounds=UtilM.getBlock(UtilM.getTheWorld(),targetPos).getSelectedBoundingBox(UtilM.getTheWorld(), targetPos).expand(0.003, 0.003, 0.003);
-		AxisAlignedBB bounds2=UtilM.getBlock(UtilM.getTheWorld(),posStart).getSelectedBoundingBox(UtilM.getTheWorld(), posStart).expand(0.003, 0.003, 0.003);
+		AxisAlignedBB bounds=UtilM.getBlock(UtilC.getTheWorld(),targetPos).getSelectedBoundingBox(UtilC.getTheWorld().getBlockState(targetPos), UtilC.getTheWorld(), targetPos).expand(0.003, 0.003, 0.003);
+		AxisAlignedBB bounds2=UtilM.getBlock(UtilC.getTheWorld(),posStart).getSelectedBoundingBox(UtilC.getTheWorld().getBlockState(posStart), UtilC.getTheWorld(), posStart).expand(0.003, 0.003, 0.003);
 		drawSelectionBox(bounds.minX, bounds.maxX, bounds.minY, bounds.maxY, bounds.minZ, bounds.maxZ,color.r,color.g,color.b,lineWidth,color.a);
 		GL11U.texture(false);
 		Renderer.LINES.begin();
@@ -474,11 +449,11 @@ public class HighlightEvent {
 		drawRawSelectionBox(xpoints, ypoints, zpoints, rColor, gColor, bColor, thickens,alpha,bs[0]);
 	}
 	public void onDrawHFireReceaver(DrawBlockHighlightEvent event,TileEntity tile,BlockPos pos){
-		double x1=(event.player.lastTickPosX+(event.player.posX-event.player.lastTickPosX)*event.partialTicks);
-		double y1=(event.player.lastTickPosY+(event.player.posY-event.player.lastTickPosY)*event.partialTicks);
-		double z1=(event.player.lastTickPosZ+(event.player.posZ-event.player.lastTickPosZ)*event.partialTicks);
-		AxisAlignedBB bounds=UtilM.getBlock(event.player.worldObj,pos).getSelectedBoundingBox(event.player.worldObj, pos).expand(0.003, 0.003, 0.003).offset(-x1, -y1, -z1);
-		AxisAlignedBB bounds2=UtilM.getBlock(event.player.worldObj,event.target.getBlockPos()).getSelectedBoundingBox(event.player.worldObj, event.target.getBlockPos()).expand(0.003, 0.003, 0.003).offset(-x1, -y1, -z1);
+		double x1=(event.getPlayer().lastTickPosX+(event.getPlayer().posX-event.getPlayer().lastTickPosX)*event.getPartialTicks());
+		double y1=(event.getPlayer().lastTickPosY+(event.getPlayer().posY-event.getPlayer().lastTickPosY)*event.getPartialTicks());
+		double z1=(event.getPlayer().lastTickPosZ+(event.getPlayer().posZ-event.getPlayer().lastTickPosZ)*event.getPartialTicks());
+		AxisAlignedBB bounds=UtilM.getBlock(event.getPlayer().worldObj,pos).getSelectedBoundingBox(event.getPlayer().worldObj.getBlockState(pos), event.getPlayer().worldObj, pos).expand(0.003, 0.003, 0.003).offset(-x1, -y1, -z1);
+		AxisAlignedBB bounds2=UtilM.getBlock(event.getPlayer().worldObj,event.getTarget().getBlockPos()).getSelectedBoundingBox(event.getPlayer().worldObj.getBlockState(pos), event.getPlayer().worldObj, pos).expand(0.003, 0.003, 0.003).offset(-x1, -y1, -z1);
 		
 		OpenGLM.disableTexture2D();
 		OpenGLM.lineWidth(2F);
@@ -502,13 +477,12 @@ public class HighlightEvent {
 	
 	@SubscribeEvent
 	public void onDrawHighlight(DrawBlockHighlightEvent event){
-		
-		BlockPos pos=event.target.getBlockPos();
-		ItemStack item=event.currentItem;
-		EntityPlayer player=event.player;
+		BlockPos pos=event.getTarget().getBlockPos();
+		EntityPlayer player=event.getPlayer();
+		ItemStack item=player.getHeldItemMainhand();
 		World world=player.worldObj;
 		if(world==null)return;
-		try{if(event.target.typeOfHit!=MovingObjectType.ENTITY){
+		try{if(event.getTarget().typeOfHit!=RayTraceResult.Type.ENTITY){
 			TileEntity tileEn=player.worldObj.getTileEntity(pos);
 			
 			Object[][] rayTraceResult=TileEntityHologramProjector.rayTraceHolograms(player, 7);
@@ -526,8 +500,8 @@ public class HighlightEvent {
 				TileEntityHologramProjector tile=(TileEntityHologramProjector)rayTraceResult[1][id];
 				
 				boolean
-					hologramCloserThanHit=hit.conv().distanceTo(player.getLook(event.partialTicks))>event.target.hitVec.distanceTo(player.getLook(event.partialTicks)),
-					miss=event.target.typeOfHit==MovingObjectType.MISS;
+					hologramCloserThanHit=hit.conv().distanceTo(player.getLook(event.getPartialTicks()))>event.getTarget().hitVec.distanceTo(player.getLook(event.getPartialTicks())),
+					miss=event.getTarget().typeOfHit==RayTraceResult.Type.MISS;
 				if(miss||!hologramCloserThanHit){
 					tile.point.isPointing=true;
 					tile.point.pointedPos=hit.add(
@@ -549,8 +523,8 @@ public class HighlightEvent {
 			}
 			
 			
-			if(event.target.typeOfHit==MovingObjectType.BLOCK){
-				if(event.target.hitVec==null)return;
+			if(event.getTarget().typeOfHit==RayTraceResult.Type.BLOCK){
+				if(event.getTarget().hitVec==null)return;
 				
 //				if(tileEn instanceof TileEntityFirePipe){
 //					TileEntityFirePipe ti=((TileEntityFirePipe)tileEn);
@@ -568,36 +542,9 @@ public class HighlightEvent {
 						TileEntityFireLamp tile=(TileEntityFireLamp)tileEn;
 						onDrawHlFireLmap(event,tile,tile.getPos());
 					}
-					if(tileEn instanceof TileEntityFireMatrixReceaver){
-						TileEntityFireMatrixReceaver tile=(TileEntityFireMatrixReceaver) tileEn;
-						try{
-							onDrawHlFireLmap(event,tile,tile.transferp);
-						}catch(Exception e){
-							e.printStackTrace();
-						}
-					}
 				}
 				if(item!=null&&item.getTagCompound()!=null&&item.getItem().equals(MItems.powerCounter))doPowerCounterDisplay(pos,item,event);
-				try{
-					if(tileEn instanceof MultiColisionProvider){
-						doMultiColision(pos, item, event);
-						if(tileEn instanceof TileEntityNetworkRouter){
-							int curentHighlight=((MultiColisionProvider)tileEn).getPointedBoxID();
-							boolean contains=false;
-							for(LongAfterRenderRenderer part:RenderEvents.universalLongRender){
-								if(part instanceof RenderNetworkPointerContainerHighlight){
-									RenderNetworkPointerContainerHighlight Part=(RenderNetworkPointerContainerHighlight) part;
-									if(!Part.isDead()&&Part.tile.getPos().equals(pos)&&Part.highlightedBoxId==curentHighlight){
-										contains=true;
-									}
-								}
-							}
-							if(!contains&&curentHighlight-7>=0)RenderEvents.spawnLARR(new RenderNetworkPointerContainerHighlight((TileEntityNetworkRouter) tileEn));
-						}
-					}
-				}catch(Exception e){
-					e.printStackTrace();
-				}
+				if(tileEn instanceof MultiColisionProvider)doMultiColision(pos, item, event);
 			}
 		}else{
 			
@@ -608,8 +555,8 @@ public class HighlightEvent {
 	
 	public void onDrawHlFireLmap(DrawBlockHighlightEvent event,TileEntity tile,BlockPos pos){
 		
-		Vec3M off=PartialTicksUtil.calculatePos(event.player);
-		AxisAlignedBB bounds=UtilM.getBlock(event.player.worldObj,pos).getSelectedBoundingBox(event.player.worldObj, pos).expand(0.003, 0.003, 0.003).offset(-off.x, -off.y, -off.z);
+		Vec3M off=PartialTicksUtil.calculate(event.getPlayer());
+		AxisAlignedBB bounds=UtilM.getBlock(event.getPlayer().worldObj,pos).getSelectedBoundingBox(event.getPlayer().worldObj.getBlockState(pos), event.getPlayer().worldObj, pos).expand(0.003, 0.003, 0.003).offset(-off.x, -off.y, -off.z);
 		
 		OpenGLM.disableTexture2D();
 		OpenGLM.disableDepth();

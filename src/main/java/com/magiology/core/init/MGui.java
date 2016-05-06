@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 public class MGui{
 	public static final byte
-		GuiControlBock=0,
+		PLACEHOLDER1=0,
 		GuiArmor=1,
 		GuiUpgrade=2,
 		GuiStats=3,

@@ -46,6 +46,9 @@ public class BlockPosM extends BlockPos{
 	public BlockPos conv(){
 		return new BlockPos(getX(), getY(), getZ());
 	}
+	public IBlockState getBlockState(IBlockAccess world){
+		return world.getBlockState(this);
+	}
 	public Block getBlock(IBlockAccess world){
 		return UtilM.getBlock(world, this);
 	}

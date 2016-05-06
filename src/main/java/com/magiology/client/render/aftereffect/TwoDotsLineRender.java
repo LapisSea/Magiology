@@ -6,8 +6,8 @@ import com.magiology.util.renderers.GL11U;
 import com.magiology.util.renderers.OpenGLM;
 import com.magiology.util.renderers.TessUtil;
 import com.magiology.util.utilclasses.RandUtil;
+import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilclasses.UtilM;
-import com.magiology.util.utilclasses.UtilM.U;
 import com.magiology.util.utilclasses.math.MathUtil;
 import com.magiology.util.utilclasses.math.PartialTicksUtil;
 import com.magiology.util.utilobjects.vectors.TwoDots;
@@ -18,7 +18,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class TwoDotsLineRender extends LongAfterRenderRendererBase{
 
-	private static EntityPlayer player=U.getMC().thePlayer;
+	private static EntityPlayer player=UtilC.getMC().thePlayer;
 	public  double alpha=0,prevAlpha;
 	TwoDots td;
 	public TileEntity tile;
@@ -34,8 +34,8 @@ public class TwoDotsLineRender extends LongAfterRenderRendererBase{
 		GL11U.setUpOpaqueRendering(1);
 		TessUtil.getVB().cleanUp();
 		
-		int tim=(int)((UtilM.getTheWorld().getTotalWorldTime())%20);
-		float st=PartialTicksUtil.calculatePos(tim, tim+1)/10F;
+		int tim=(int)((UtilC.getTheWorld().getTotalWorldTime())%20);
+		float st=PartialTicksUtil.calculate(tim, tim+1)/10F;
 		for(int a=0;a<(upgraded?6:2);a++){
 			float width=1;
 			{
@@ -51,7 +51,7 @@ public class TwoDotsLineRender extends LongAfterRenderRendererBase{
 				}break;
 				}
 				TessUtil.drawLine(td.x1, td.y1, td.z1, td.x2, td.y2, td.z2, width/20, true,TessUtil.getVB(),st,1);
-				OpenGLM.color(0.7+RandUtil.RF()*0.2, RandUtil.RF()*0.1, RandUtil.RF()*0.1, (upgraded?0.14:0.09)*PartialTicksUtil.calculatePos(prevAlpha,alpha));
+				OpenGLM.color(0.7+RandUtil.RF()*0.2, RandUtil.RF()*0.1, RandUtil.RF()*0.1, (upgraded?0.14:0.09)*PartialTicksUtil.calculate(prevAlpha,alpha));
 				OpenGLM.depthMask(false);
 				OpenGLM.disableCull();
 				TessUtil.bindTexture(new ResourceLocation(MReference.MODID,"textures/models/visual_connection.png"));
@@ -65,7 +65,7 @@ public class TwoDotsLineRender extends LongAfterRenderRendererBase{
 	}
 	@Override
 	public void update(){
-		player=UtilM.getThePlayer();
+		player=UtilC.getThePlayer();
 		if(player==null)return;
 		
 		prevAlpha=alpha;

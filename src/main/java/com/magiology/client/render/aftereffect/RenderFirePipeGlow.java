@@ -9,8 +9,8 @@ import com.magiology.util.renderers.VertexModel;
 import com.magiology.util.renderers.VertexRenderer;
 import com.magiology.util.renderers.tessellatorscripts.CubeModel;
 import com.magiology.util.utilclasses.PowerUtil;
+import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilclasses.UtilM;
-import com.magiology.util.utilclasses.UtilM.U;
 import com.magiology.util.utilclasses.math.MathUtil;
 import com.magiology.util.utilclasses.math.PartialTicksUtil;
 
@@ -21,7 +21,7 @@ public class RenderFirePipeGlow extends LongAfterRenderRendererBase{
 	
 	private static VertexModel connectorGlowModel;
 	private static VertexModel coreGlowModel;
-	private static EntityPlayer player=U.getMC().thePlayer;
+	private static EntityPlayer player=UtilC.getMC().thePlayer;
 	private static VertexModel strateCoreModel;
 	public  double alpha=0,prevAlpha;
 	
@@ -175,10 +175,10 @@ public class RenderFirePipeGlow extends LongAfterRenderRendererBase{
 			OpenGLM.disableTexture2D();
 			GL11U.setUpOpaqueRendering(1);
 			
-			double var1=UtilM.fluctuate(20,(pipe.x()+pipe.y()+pipe.z())*4),
-				   var2=UtilM.fluctuate(47,(pipe.x()+pipe.y()+pipe.z())*4);
+			double var1=UtilC.fluctuate(20,(pipe.x()+pipe.y()+pipe.z())*4),
+				   var2=UtilC.fluctuate(47,(pipe.x()+pipe.y()+pipe.z())*4);
 			
-			OpenGLM.color(0.9, 0.1*var1, 0.15*var2, 0.6*fc*PartialTicksUtil.calculatePos(prevAlpha, alpha));
+			OpenGLM.color(0.9, 0.1*var1, 0.15*var2, 0.6*fc*PartialTicksUtil.calculate(prevAlpha, alpha));
 			OpenGLM.depthMask(true);
 			if(!pipe.isStrate(null)){
 				for(int i=0; i< pipe.connections.length; i++)if(pipe.connections[i].getMain()&&pipe.connections[i].willRender())drawConnectorGlow(pipe.connections[i].getFaceEF());
@@ -201,7 +201,7 @@ public class RenderFirePipeGlow extends LongAfterRenderRendererBase{
 	
 	@Override
 	public void update(){
-		player=UtilM.getThePlayer();
+		player=UtilC.getThePlayer();
 		if(player==null)return;
 		
 		prevAlpha=alpha;

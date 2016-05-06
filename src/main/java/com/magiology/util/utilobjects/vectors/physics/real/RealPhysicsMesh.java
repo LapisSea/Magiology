@@ -184,9 +184,9 @@ public class RealPhysicsMesh{
 			float mul=world.isThundering()?0.1F:world.isRaining()?0.05F:0;
 			if(mul>0){
 				BlockPosM pos=new BlockPosM(originPos);
-				BiomeGenBase chunk=world.getChunkFromBlockCoords(pos).getBiome(pos, world.getWorldChunkManager());
+				BiomeGenBase chunk=world.getChunkFromBlockCoords(pos).getBiome(pos, world.getBiomeProvider());
 				
-				if(world.canBlockSeeSky(pos))noise=mul*chunk.rainfall;
+				if(world.canBlockSeeSky(pos))noise=mul*chunk.getRainfall();
 				
 			}
 			else noise=0;

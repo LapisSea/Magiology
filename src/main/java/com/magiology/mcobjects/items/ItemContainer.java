@@ -6,6 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.Constants;
 
 public class ItemContainer extends Item implements IInventory{
@@ -46,8 +47,7 @@ public class ItemContainer extends Item implements IInventory{
 	}
 
 	@Override
-	public IChatComponent getDisplayName() {
-		// TODO Auto-generated method stub
+	public ITextComponent getDisplayName(){
 		return null;
 	}
 

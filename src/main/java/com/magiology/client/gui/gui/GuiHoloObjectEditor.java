@@ -19,8 +19,8 @@ import com.magiology.client.gui.GuiUpdater.Updateable;
 import com.magiology.client.gui.container.GuiObjectCustomizeContainer;
 import com.magiology.client.gui.guiutil.gui.GuiTextEditor;
 import com.magiology.client.gui.guiutil.gui.buttons.CleanButton;
-import com.magiology.core.Magiology;
-import com.magiology.forgepowered.packets.packets.HoloObjectUploadPacket;
+import com.magiology.forgepowered.packets.packets.toserver.HoloObjectUploadPacket;
+import com.magiology.forgepowered.proxy.ClientProxy;
 import com.magiology.mcobjects.tileentityes.hologram.HoloObject;
 import com.magiology.mcobjects.tileentityes.hologram.StringContainer;
 import com.magiology.mcobjects.tileentityes.hologram.TileEntityHologramProjector;
@@ -28,6 +28,7 @@ import com.magiology.mcobjects.tileentityes.network.TileEntityNetworkProgramHold
 import com.magiology.util.renderers.GL11U;
 import com.magiology.util.renderers.OpenGLM;
 import com.magiology.util.utilclasses.Get.Render.Font;
+import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilclasses.UtilM;
 import com.magiology.util.utilclasses.UtilM.U;
 import com.magiology.util.utilobjects.ColorF;
@@ -85,7 +86,7 @@ public class GuiHoloObjectEditor extends GuiContainerM implements Updateable{
 						e.printStackTrace();
 					}
 					holoObj.moveMode=true;
-					Magiology.ROBOT.clickKeyKeyboard(KeyEvent.VK_ESCAPE);
+					ClientProxy.ROBOT.clickKeyKeyboard(KeyEvent.VK_ESCAPE);
 				}}).start();
 				
 			}break;
@@ -274,14 +275,14 @@ public class GuiHoloObjectEditor extends GuiContainerM implements Updateable{
 					deleteStarted=false;
 					if(Char==13){
 						holoObj.kill();
-						Magiology.ROBOT.clickKeyKeyboard(KeyEvent.VK_ESCAPE);
+						ClientProxy.ROBOT.clickKeyKeyboard(KeyEvent.VK_ESCAPE);
 					}
 				}
 				return;
 			}
 			if(!commandIn.keyTyped(id,Char)){
 				if(Char==13){
-					Magiology.ROBOT.clickKeyKeyboard(KeyEvent.VK_ESCAPE);
+					ClientProxy.ROBOT.clickKeyKeyboard(KeyEvent.VK_ESCAPE);
 					return;
 				}
 				super.keyTyped(Char, id);
@@ -289,7 +290,7 @@ public class GuiHoloObjectEditor extends GuiContainerM implements Updateable{
 			
 			if(textLenght!=txt.getText().length()){
 				handleSpaces();
-				txt.setText(UtilM.getStringForSize(txt.getText(),textLimitedToObj?holoObj.originalSize.x/UtilM.p:hologramProjector.size.x/UtilM.p));
+				txt.setText(UtilC.getStringForSize(txt.getText(),textLimitedToObj?holoObj.originalSize.x/UtilM.p:hologramProjector.size.x/UtilM.p));
 				txt.setCursorPosition(pos-textLenght+txt.getText().length());
 			}
 			int WHITE=Color.WHITE.hashCode(),RED=Color.RED.hashCode();
@@ -352,7 +353,7 @@ public class GuiHoloObjectEditor extends GuiContainerM implements Updateable{
 				comName.setTextColor(target.isEmpty()?RED:isCommandFound?WHITE:Color.YELLOW.hashCode());
 			}
 			if(suportsText&&!holoText.isTextLimitedToObj()){
-				holoText.setString(UtilM.getStringForSize(txt.getText(),textLimitedToObj?holoObj.originalSize.x/UtilM.p:hologramProjector.size.x/UtilM.p).trim());
+				holoText.setString(UtilC.getStringForSize(txt.getText(),textLimitedToObj?holoObj.originalSize.x/UtilM.p:hologramProjector.size.x/UtilM.p).trim());
 				if(textLenght!=txt.getText().length())txt.setCursorPosition(pos-textLenght+txt.getText().length());
 			}
 		}catch(Exception e){
@@ -374,7 +375,7 @@ public class GuiHoloObjectEditor extends GuiContainerM implements Updateable{
 	public void onGuiClosed(){
 		super.onGuiClosed();
 		Keyboard.enableRepeatEvents(false);
-		txt.setText(UtilM.getStringForSize(txt.getText(),textLimitedToObj?holoObj.originalSize.x/UtilM.p:hologramProjector.size.x/UtilM.p).trim());
+		txt.setText(UtilC.getStringForSize(txt.getText(),textLimitedToObj?holoObj.originalSize.x/UtilM.p:hologramProjector.size.x/UtilM.p).trim());
 		if(suportsText){
 			holoText.setString(txt.getText());
 			if(holoText.getString().isEmpty())holoText.setString("   ");

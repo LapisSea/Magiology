@@ -51,6 +51,9 @@ public class IndexedModel{
 		int offse1=(int)offset;
 		for(int index:indices)this.indices.add(index+offse1);
 	}
+	public void addIndices(Integer...indices){
+		for(int index:indices)this.indices.add(index);
+	}
 	public void addIndices(int...indices){
 		for(int index:indices)this.indices.add(index);
 	}

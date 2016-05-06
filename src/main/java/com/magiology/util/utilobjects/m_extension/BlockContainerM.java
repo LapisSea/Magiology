@@ -37,6 +37,9 @@ public abstract class BlockContainerM extends BlockContainer{
 	public void setBlockBounds(double x1, double y1, double z1, double x2, double y2, double z2){
 		setBlockBounds(new AxisAlignedBB(x1, y1, z1, x2, y2, z2));
 	}
+	public void setBlockBounds(AxisAlignedBBM box){
+		this.boundingBox=box.conv();
+	}
 	public void setBlockBounds(AxisAlignedBB box){
 		this.boundingBox=box;
 	}

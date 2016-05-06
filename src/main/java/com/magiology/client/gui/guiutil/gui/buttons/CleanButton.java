@@ -6,7 +6,7 @@ import com.magiology.client.gui.GuiUpdater.Updateable;
 import com.magiology.util.renderers.GL11U;
 import com.magiology.util.renderers.Renderer;
 import com.magiology.util.utilclasses.Get.Render.Font;
-import com.magiology.util.utilclasses.UtilM.U;
+import com.magiology.util.utilclasses.math.PartialTicksUtil;
 import com.magiology.util.utilobjects.ColorF;
 import com.magiology.util.utilobjects.vectors.physics.PhysicsFloat;
 
@@ -36,7 +36,7 @@ public class CleanButton extends GuiButton implements Updateable{
 		this.hovered=mouseX>=this.xPosition&&mouseY>=this.yPosition&&mouseX<this.xPosition+this.width&&mouseY<this.yPosition+this.height;
 		this.getHoverState(this.hovered);
 		GL11U.setUpOpaqueRendering(1);
-		ColorF color=U.calculateRenderColor(prevColor, this.color).mul(highlight.getPoint()+1);
+		ColorF color=PartialTicksUtil.calculate(prevColor, this.color).mul(highlight.getPoint()+1);
 		if(!enabled)color=color.mix(color.blackNWhite(),1,2);
 		GL11U.glColor(color);
 		GL11U.texture(false);

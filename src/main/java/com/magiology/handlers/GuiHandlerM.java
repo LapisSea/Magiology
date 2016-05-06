@@ -3,12 +3,10 @@ package com.magiology.handlers;
 import com.magiology.client.gui.container.ArmorContainer;
 import com.magiology.client.gui.container.CommandCenterContainer;
 import com.magiology.client.gui.container.ContainerEmpty;
-import com.magiology.client.gui.container.ControlBockContainer;
 import com.magiology.client.gui.container.ISidedPowerInstructorContainer;
 import com.magiology.client.gui.container.UpgradeContainer;
 import com.magiology.client.gui.gui.GuiArmor;
 import com.magiology.client.gui.gui.GuiCenterContainer;
-import com.magiology.client.gui.gui.GuiControlBock;
 import com.magiology.client.gui.gui.GuiHoloObjectEditor;
 import com.magiology.client.gui.gui.GuiHologramProjectorMain;
 import com.magiology.client.gui.gui.GuiISidedPowerInstructor;
@@ -16,7 +14,6 @@ import com.magiology.client.gui.gui.GuiJSProgramEditor;
 import com.magiology.client.gui.gui.GuiUpgrade;
 import com.magiology.core.Magiology;
 import com.magiology.core.init.MGui;
-import com.magiology.mcobjects.tileentityes.TileEntityControlBlock;
 import com.magiology.mcobjects.tileentityes.corecomponents.powertiles.TileEntityPow;
 import com.magiology.mcobjects.tileentityes.hologram.TileEntityHologramProjector;
 import com.magiology.mcobjects.tileentityes.network.TileEntityNetworkProgramHolder;
@@ -64,9 +61,6 @@ public class GuiHandlerM implements IGuiHandler{
 		case MGui.GuiUpgrade:
 			if(tile instanceof TileEntityPow)		 
 				return new GuiUpgrade(player.inventory, (TileEntityPow)tile);
-		case MGui.GuiControlBock:
-			if(tile instanceof TileEntityControlBlock)
-				return new GuiControlBock(player.inventory, (TileEntityControlBlock)tile);
 		case MGui.GuiArmor:
 			return new GuiArmor(player, player.inventory.armorInventory);
 		case MGui.GuiISidedPowerInstructor:										  
@@ -92,8 +86,6 @@ public class GuiHandlerM implements IGuiHandler{
 		switch (ID){
 		case MGui.GuiUpgrade:			  if(tile instanceof TileEntityPow)		 
 			return new UpgradeContainer(player.inventory, (TileEntityPow)tile);
-		case MGui.GuiControlBock:		  if(tile instanceof TileEntityControlBlock)
-			return new ControlBockContainer(player.inventory, (TileEntityControlBlock)tile);
 		case MGui.GuiArmor:														  
 			return new ArmorContainer(player, player.inventory.armorInventory);
 		case MGui.GuiISidedPowerInstructor:										  

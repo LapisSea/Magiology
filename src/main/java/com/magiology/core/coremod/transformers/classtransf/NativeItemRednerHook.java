@@ -18,52 +18,7 @@ import com.magiology.core.coremod.transformers.CodeWrapper.InvokeStatic;
 import com.magiology.util.utilclasses.PrintUtil;
 
 public class NativeItemRednerHook extends ClassTransformerBase{
-	
-	private void addItemRenderingHook(ClassNode classByte){
-		PrintUtil.println("Starting to insert item rendering hook.");
-		
-		MethodNode renderItemMethod=findMethod(classByte, renderItem_renderItem);
-		if(renderItemMethod==null)throw new IllegalStateException("Failed! Reason: Unable to find RenderItem#renderItem");
-		
-		InsnList ifCondition=new InsnList();
-		ifCondition.add(new VarInsnNode(ALOAD, 1));
-		ifCondition.add(generateStaticCall(ClientHooksM.class, "renderItem"));
-		
-		
-		boolean sucess=CodeWrapper.ifWrapper(renderItemMethod, ifCondition, 
-			new CodeAction[]{
-				new Aload(2),
-				new InvokeInterface(iBakedModel_isBuiltInRenderer)
-			},0,
-			new CodeAction[]{
-				new InvokeStatic(glStateManager_popMatrix)
-			},-1
-		);
-		if(!sucess)throw new IllegalStateException("Failed! Reason: unable to find start and end of code to wrapp! Is there any other core-mods that modify function RenderItem#renderItem?\n Start shoud be: ");
-		PrintUtil.println("Rendering hook was sucessfuly inserted!");
-	}
-	private void addLine(StringBuilder result, String line){
-		result.append(line).append("\n");
-	}
-	private void addTransformTypeAbsorber(ClassNode classByte){
-		
-		PrintUtil.println("Starting to insert transform type hook.");
-		
-		MethodNode func=findMethod(classByte, handleCameraTransforms);
-		if(func==null)throw new IllegalStateException("Failed! Reason: Unable to find ForgeHooksClient#handleCameraTransforms");
-		
-		InsnList hook=new InsnList();
-		hook.add(new VarInsnNode(ALOAD, 1));
-		hook.add(generateStaticCall(ClientHooksM.class, "addTransformType"));
-		AbstractInsnNode line=CodeWrapper.find(func, new CodeAction[]{
-				anyAload,
-				anyInstaiceof
-			});
-		if(line==null)throw new IllegalStateException("Failed! Reason: unable to find start of the function????");
-		func.instructions.insertBefore(line, hook);
-		
-		PrintUtil.println("Rendering hook was sucessfuly inserted!");
-	}
+
 	@Override
 	public String getDebudInfo(){
 		StringBuilder result=new StringBuilder();
@@ -90,24 +45,73 @@ public class NativeItemRednerHook extends ClassTransformerBase{
 		addLine(result, "	}");
 		addLine(result, "");
 		addLine(result, "with:");
-		addLine(result, "if(ClientHooksM.renderItem(stack)){");
-		addLine(result, "...");
-		addLine(result, "}");
+		addLine(result, "	if(ClientHooksM.renderItem(stack)){");
+		addLine(result, "		...");
+		addLine(result, "	}");
 		addLine(result, "");
 		addLine(result, "And adding:");
-		addLine(result, "\tClientHooksM.addTransformType(transform);");
+		addLine(result, "	ClientHooksM.addTransformType(transform);");
 		addLine(result, "to");
-		addLine(result, "\tForgeHooksClient#handleCameraTransforms");
+		addLine(result, "	ForgeHooksClient#handleCameraTransforms");
 		
 		String res=result.toString();
 		return res.substring(0, res.length()-1);
 	}
+	
 	@Override
 	public String[] getTransformingClasses(){
 		return new String[]{
-				"net.minecraft.client.renderer.entity.RenderItem",
+				"net.minecraft.client.renderer.RenderItem",
 				"net.minecraftforge.client.ForgeHooksClient"
 		};
+	}
+	
+	private void addItemRenderingHook(ClassNode classByte){
+		PrintUtil.println("Starting to insert item rendering hook.");
+		
+		MethodNode renderItemMethod=findMethod(classByte, renderItem_renderItem);
+		if(renderItemMethod==null)throw new IllegalStateException("Failed! Reason: Unable to find RenderItem#renderItem");
+		
+		InsnList ifCondition=new InsnList();
+		ifCondition.add(new VarInsnNode(ALOAD, 1));
+		ifCondition.add(generateStaticCall(ClientHooksM.class, "renderItem"));
+		
+		boolean sucess=CodeWrapper.ifWrapper(renderItemMethod, ifCondition, 
+			new CodeAction[]{
+				new Aload(2),
+				new InvokeInterface(iBakedModel_isBuiltInRenderer)
+			},0,
+			new CodeAction[]{
+				new InvokeStatic(glStateManager_popMatrix)
+			},-1
+		);
+		if(!sucess)throw new IllegalStateException("Failed! Reason: unable to find start and end of code to wrapp! Is there any other core-mods that modify function RenderItem#renderItem?\n Start shoud be: ");
+		PrintUtil.println("Rendering hook was sucessfuly inserted!");
+	}
+	private void addLine(StringBuilder result, String line){
+		result.append(line).append("\n");
+	}
+	private void addTransformTypeAbsorber(ClassNode classByte){
+		
+		PrintUtil.println("Starting to insert transform type hook.");
+		
+		MethodNode func=findMethod(classByte, handleCameraTransforms);
+		if(func==null)throw new IllegalStateException("Failed! Reason: Unable to find ForgeHooksClient#handleCameraTransforms");
+
+		AbstractInsnNode 
+			line=CodeWrapper.find(func, new CodeAction[]{
+				anyAload,
+				anyInstaiceof
+			});
+		if(line==null)throw new IllegalStateException("Failed! Reason: unable to find start of the function????");
+		
+		InsnList hook1=new InsnList();
+		hook1.add(new VarInsnNode(ALOAD, 1));
+		hook1.add(new VarInsnNode(ILOAD, 2));
+		hook1.add(generateStaticCall(ClientHooksM.class, "addTransformType"));
+		func.instructions.insertBefore(line, hook1);
+		
+		PrintUtil.println("Rendering hook was sucessfuly inserted!");
 	}
 	@Override
 	public void transform(ClassNode classByte, int classID){

@@ -9,8 +9,8 @@ import org.lwjgl.util.vector.Vector2f;
 import com.magiology.api.SavableData;
 import com.magiology.core.MReference;
 import com.magiology.core.Magiology;
+import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilclasses.UtilM;
-import com.magiology.util.utilclasses.UtilM.U;
 import com.magiology.util.utilobjects.ColorF;
 import com.magiology.util.utilobjects.m_extension.BlockPosM;
 import com.magiology.util.utilobjects.m_extension.SimpleNetworkWrapperM;
@@ -31,9 +31,9 @@ public abstract class AbstractPacket<T extends AbstractPacket<T>> implements IMe
 	public static int registrationId=0;
 	
 	
-	public static void registerNewMessage(Class<? extends AbstractPacket> serverMessage){
-		if(UtilM.instanceOf(serverMessage, AbstractToServerMessage.class))registerPacket(serverMessage, Side.SERVER);
-		else if(UtilM.instanceOf(serverMessage, AbstractToClientMessage.class))registerPacket(serverMessage, Side.CLIENT);
+	public static void registerNewMessage(Class<? extends AbstractPacket> message){
+		if(UtilM.instanceOf(message, AbstractToServerMessage.class))registerPacket(message, Side.SERVER);
+		else if(UtilM.instanceOf(message, AbstractToClientMessage.class))registerPacket(message, Side.CLIENT);
 	}
 	
 	private static <T extends IMessage & IMessageHandler<T, IMessage>> void registerPacket(Class<T> clazz, Side side){
@@ -55,7 +55,7 @@ public abstract class AbstractPacket<T extends AbstractPacket<T>> implements IMe
 	@Override
 	public final IMessage onMessage(T message, MessageContext ctx){
 		try{
-			return message.process(ctx.side.isServer()?ctx.getServerHandler().playerEntity:U.getMC().thePlayer,ctx.side);
+			return message.process(ctx.side.isServer()?ctx.getServerHandler().playerEntity:UtilC.getThePlayer(),ctx.side);
 		}catch(Exception e){
 			e.printStackTrace();
 			return null;

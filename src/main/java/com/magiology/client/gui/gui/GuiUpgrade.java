@@ -7,14 +7,14 @@ import org.lwjgl.input.Mouse;
 import com.magiology.client.gui.container.UpgradeContainer;
 import com.magiology.client.gui.custom.guiparticels.GuiStandardFX;
 import com.magiology.core.MReference;
-import com.magiology.mcobjects.effect.GuiParticle;
+import com.magiology.mcobjects.particles.GuiParticle;
 import com.magiology.mcobjects.tileentityes.corecomponents.powertiles.TileEntityPow;
 import com.magiology.util.renderers.GL11U;
 import com.magiology.util.renderers.OpenGLM;
 import com.magiology.util.renderers.TessUtil;
 import com.magiology.util.utilclasses.RandUtil;
+import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilclasses.UtilM;
-import com.magiology.util.utilclasses.UtilM.U;
 import com.magiology.util.utilclasses.math.MathUtil;
 
 import net.minecraft.client.gui.GuiButton;
@@ -52,7 +52,7 @@ public class GuiUpgrade extends GuiContainerAndGuiParticles{
 	protected void drawGuiContainerBackgroundLayer(float v1, int x, int y){
 		mouseX=x;
 		mouseY=y;
-		TessUtil.getWR();
+		TessUtil.getWB();
 		this.renderParticles(v1);
 		
 		double GL11alpha=1;
@@ -77,13 +77,13 @@ public class GuiUpgrade extends GuiContainerAndGuiParticles{
 			guiAlpha+=0.06+RandUtil.CRF(0.05);
 			if(guiAlpha>1)guiAlpha=1;
 		}
-		for(int ad=0;ad<30;ad++)guiAlpha=UtilM.slowlyEqualize(guiAlpha, GL11alpha, 0.001);
+		for(int ad=0;ad<30;ad++)guiAlpha=UtilM.graduallyEqualize(guiAlpha, GL11alpha, 0.001);
 		if(guiAlpha<1){
 			OpenGLM.enableBlend();
 			GL11U.blendFunc(1);
 		}
 		OpenGLM.color(1, 1, 1, guiAlpha);
-		U.getMC().getTextureManager().bindTexture(main);
+		UtilC.getMC().getTextureManager().bindTexture(main);
 		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, 6);
 		this.drawTexturedModalRect(guiLeft, guiTop+6, 0, 7, xSize, 17);
 		this.drawTexturedModalRect(guiLeft, guiTop+23, 0, 25, xSize, ySize);

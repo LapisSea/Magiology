@@ -49,7 +49,7 @@ public class PhysicsFloat{
 		return Math.abs(point-wantedPoint);
 	}
 	public float getPoint(){
-		return PartialTicksUtil.calculatePos(prevPoint, point);
+		return PartialTicksUtil.calculate(prevPoint, point);
 	}
 	public Object[] removeWall(String key){
 		Object[] Return=new Object[2];
@@ -64,7 +64,7 @@ public class PhysicsFloat{
 	public void update(){
 		prevPoint=point;
 		if(simpleVersion){
-			point=UtilM.slowlyEqualize(point, wantedPoint, acceleration);
+			point=UtilM.graduallyEqualize(point, wantedPoint, acceleration);
 		}else{
 			speed=UtilM.handleSpeedFolower(speed, point, wantedPoint, acceleration);
 			speed*=friction;

@@ -1,7 +1,7 @@
 package com.magiology.client.render.shaders;
 
 import com.magiology.client.render.shaders.core.ShaderAspectRenderer;
-import com.magiology.util.utilclasses.UtilM;
+import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilclasses.math.PartialTicksUtil;
 
 public class ColorRenderer extends ShaderAspectRenderer{
@@ -20,7 +20,7 @@ public class ColorRenderer extends ShaderAspectRenderer{
 	
 	@Override
 	public void redner(){
-		ShaderAspectRenderer.setUniform(uniforms.get(0), PartialTicksUtil.calculatePos(rPrev, r),PartialTicksUtil.calculatePos(gPrev, g),PartialTicksUtil.calculatePos(bPrev, b));
+		ShaderAspectRenderer.setUniform(uniforms.get(0), PartialTicksUtil.calculate(rPrev, r),PartialTicksUtil.calculate(gPrev, g),PartialTicksUtil.calculate(bPrev, b));
 	}
 	
 	@Override
@@ -28,8 +28,8 @@ public class ColorRenderer extends ShaderAspectRenderer{
 		rPrev=r;
 		gPrev=g;
 		bPrev=b;
-		r=UtilM.fluctuate(30, 78)*0.5F+0.5F;
-		g=UtilM.fluctuate(74, 752)*0.5F+0.5F;
-		b=UtilM.fluctuate(50, 0)*0.5F+0.5F;
+		r=UtilC.fluctuate(30, 78)*0.5F+0.5F;
+		g=UtilC.fluctuate(74, 752)*0.5F+0.5F;
+		b=UtilC.fluctuate(50, 0)*0.5F+0.5F;
 	}
 }

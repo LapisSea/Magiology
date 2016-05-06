@@ -3,8 +3,12 @@ package com.magiology.handlers.animationhandlers.thehand.animation;
 import com.magiology.handlers.animationhandlers.thehand.HandData;
 import com.magiology.handlers.animationhandlers.thehand.HandPosition;
 import com.magiology.handlers.animationhandlers.thehand.TheHandHandler;
-import com.magiology.util.utilclasses.UtilM;
+import com.magiology.util.utilclasses.UtilC;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+@SideOnly(Side.CLIENT)
 public abstract class HandAnimationBase{
 	
 	public final String name;
@@ -17,7 +21,7 @@ public abstract class HandAnimationBase{
 	}
 	
 	public boolean canStart(){
-		return TheHandHandler.getActivePosition(UtilM.getThePlayer()).name.equals(start.name);
+		return TheHandHandler.getActivePosition(UtilC.getThePlayer()).name.equals(start.name);
 	}
 	
 	public abstract HandData getWantedPos();

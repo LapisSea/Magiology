@@ -13,12 +13,14 @@ import com.magiology.util.utilobjects.m_extension.BlockPosM;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
@@ -35,8 +37,8 @@ public class NetworkRouter extends MultiColisionProviderBlock{
 	
 	
 	@Override 
-	protected BlockState createBlockState(){
-		return new BlockState(this,new IProperty[]{U.META});
+	protected BlockStateContainer createBlockState(){
+		return new BlockStateContainer(this,new IProperty[]{U.META});
 	}
 	@Override
 	public TileEntity createNewTileEntity(World var0, int var1){
@@ -47,15 +49,15 @@ public class NetworkRouter extends MultiColisionProviderBlock{
 		return state.getValue(U.META).intValue();
 	}
 	@Override
-	public ItemStack getPickBlock(RayTraceResult target, World world, BlockPosM pos, EntityPlayer player){
+	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPosM pos, EntityPlayer player){
 		TileEntityNetworkRouter tile=pos.getTile(world, TileEntityNetworkRouter.class);
-		if(tile==null)return super.getPickBlock(target, world, pos, player);
+		if(tile==null)return super.getPickBlock(state, target, world, pos, player);
 		
 		int id=tile.getPointedBoxID()-7;
-		if(id<0)return super.getPickBlock(target, world, pos, player);
+		if(id<0)return super.getPickBlock(state, target, world, pos, player);
 		
 		ItemStack stack=tile.getStackInSlot(id);
-		return stack!=null?stack:super.getPickBlock(target, world, pos, player);
+		return stack!=null?stack:super.getPickBlock(state, target, world, pos, player);
 	}
 	
 	@Override
@@ -63,9 +65,8 @@ public class NetworkRouter extends MultiColisionProviderBlock{
 		return getDefaultState().withProperty(U.META, Integer.valueOf(meta));
 	}
 	
-	
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ){
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ){
 		TileEntityNetworkRouter tile=(TileEntityNetworkRouter) world.getTileEntity(pos);
 		int id=tile.getPointedBoxID()-7;
 		if(id<0)return false;

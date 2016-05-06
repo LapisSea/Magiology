@@ -11,6 +11,7 @@ import com.magiology.util.utilclasses.PrintUtil;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -116,7 +117,7 @@ public class ArmorContainer extends Container implements Updateable{
 	}
 	
 	@Override
-	public ItemStack slotClick(int slotid, int x, int y, EntityPlayer player){
+	public ItemStack func_184996_a(int slotid, int x, ClickType y, EntityPlayer player){
 		PrintUtil.println(slotid);
 		int id=slotid-36;
 		if(id>=0&&id<=3)sliderVantedPos=-id*16;
@@ -131,7 +132,7 @@ public class ArmorContainer extends Container implements Updateable{
 //			UtilM.println("Side: "+(player.worldObj.isRemote?"CLIENT":"SERVER")+", clicked slot id: "+slotid+", "+(slot!=null?("slot number: "+slot.slotNumber+", Stack in slot: "+(slot.getStack()!=null?slot.getStack().getDisplayName():"null")+", Inventory name of the slot: "+slot.inventory.getInventoryName()):"slot is null")+"\n");
 //			if(!player.worldObj.isRemote)UtilM.println("\n");
 			if(slot instanceof OnlyShiftClickSlot)return null;
-			ItemStack result=super.slotClick(slotid, x, y, player);
+			ItemStack result=super.func_184996_a(slotid, x, y, player);
 			
 			refreshSlotLists();
 			

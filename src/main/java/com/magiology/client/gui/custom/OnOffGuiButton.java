@@ -8,7 +8,9 @@ import com.magiology.util.renderers.GL11U;
 import com.magiology.util.renderers.OpenGLM;
 import com.magiology.util.renderers.TessUtil;
 import com.magiology.util.renderers.VertexRenderer;
+import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilclasses.UtilM;
+import com.magiology.util.utilclasses.math.PartialTicksUtil;
 import com.magiology.util.utilobjects.ColorF;
 import com.magiology.util.utilobjects.vectors.physics.PhysicsFloat;
 
@@ -28,7 +30,7 @@ public class OnOffGuiButton extends GuiButton implements Updateable{
 		private GuiButtonClickEvent(){}
 		@SubscribeEvent
 		public void onClickPre(ActionPerformedEvent.Pre e){
-			if(e.button.visible&&e.button instanceof OnOffGuiButton)e.setCanceled(!((OnOffGuiButton)e.button).onClicked());
+			if(e.getButton().visible&&e.getButton() instanceof OnOffGuiButton)e.setCanceled(!((OnOffGuiButton)e.getButton()).onClicked());
 		}
 	}
 	protected boolean isOn;
@@ -59,7 +61,7 @@ public class OnOffGuiButton extends GuiButton implements Updateable{
 			buff.addVertexWithUV(xPosition + width, yPosition + height, zLevel, 0,0);
 			buff.addVertexWithUV(xPosition + width, yPosition + 0, zLevel,0,0);
 			buff.addVertexWithUV(xPosition + 0, yPosition + 0, zLevel,0,0);
-			ColorF color=UtilM.calculateRenderColor(prevColor, this.color);
+			ColorF color=PartialTicksUtil.calculate(prevColor, this.color);
 			OpenGLM.lineWidth(1);
 			GL11U.glColor(color.mix(ColorF.BLACK,1,0.3F));
 			buff.setClearing(false);
@@ -71,14 +73,14 @@ public class OnOffGuiButton extends GuiButton implements Updateable{
 			buff.setDrawAsWire(false);
 			
 			int width=this.width/2;
-			float scale=UtilM.getGuiScaleRaw();
+			float scale=UtilC.getGuiScaleRaw();
 			buff.addVertexWithUV(xPosition + 1.1/scale, yPosition + height-1/scale, zLevel, 0,0);
 			buff.addVertexWithUV(xPosition + width-1/scale, yPosition + height-1/scale, zLevel, 0,0);
 			buff.addVertexWithUV(xPosition + width-1/scale, yPosition + 1.1/scale, zLevel,0,0);
 			buff.addVertexWithUV(xPosition + 1.1/scale, yPosition + 1.1/scale, zLevel,0,0);
 			buff.pushMatrix();
 			buff.translate(width*pos.getPoint(), 0, 0);
-			ColorF selectionColor=UtilM.calculateRenderColor(prevSelectionColor, this.selectionColor);
+			ColorF selectionColor=PartialTicksUtil.calculate(prevSelectionColor, this.selectionColor);
 			OpenGLM.lineWidth(1);
 			GL11U.glColor(selectionColor.mix(ColorF.WHITE,1,0.6F));
 			buff.setClearing(false);
@@ -103,7 +105,7 @@ public class OnOffGuiButton extends GuiButton implements Updateable{
 		return pos.wantedPoint==1;
 	}
 	public boolean onClicked(){
-		int mouseX=Mouse.getX()/UtilM.getGuiScaleRaw(),mouseY=(-Mouse.getY()+Display.getHeight())/UtilM.getGuiScaleRaw(),xPosition=(int) (this.xPosition+(width/2)*pos.getPoint());
+		int mouseX=Mouse.getX()/UtilC.getGuiScaleRaw(),mouseY=(-Mouse.getY()+Display.getHeight())/UtilC.getGuiScaleRaw(),xPosition=(int) (this.xPosition+(width/2)*pos.getPoint());
 		boolean selected=mouseX >= xPosition&& mouseY >= this.yPosition && mouseX < xPosition + this.width/2 && mouseY < this.yPosition + this.height;
 		if(!selected)return false;
 		pos.wantedPoint=pos.wantedPoint==0?1:0;
@@ -118,10 +120,10 @@ public class OnOffGuiButton extends GuiButton implements Updateable{
 		pos.bounciness=Math.abs(pos.speed*1.5F);
 		prevSelectionColor=selectionColor.copy();
 		prevColor=color.copy();
-		int mouseX=Mouse.getX()/UtilM.getGuiScaleRaw(),mouseY=(-Mouse.getY()+Display.getHeight())/UtilM.getGuiScaleRaw(),xPosition=(int)(this.xPosition+(width/2)*pos.getPoint());
+		int mouseX=Mouse.getX()/UtilC.getGuiScaleRaw(),mouseY=(-Mouse.getY()+Display.getHeight())/UtilC.getGuiScaleRaw(),xPosition=(int)(this.xPosition+(width/2)*pos.getPoint());
 		this.hovered=mouseX>=this.xPosition&&mouseY>=this.yPosition&&mouseX<this.xPosition+this.width&&mouseY<this.yPosition+this.height;
-		color=UtilM.slowlyEqalizeColor(color, setColor.mul(hovered?1:0.9), 0.05F);
-		if(mouseX>=xPosition&&mouseY>=this.yPosition&&mouseX<xPosition+this.width/2&&mouseY<this.yPosition+this.height)selectionColor=UtilM.slowlyEqalizeColor(selectionColor, color.mix(ColorF.WHITE), 0.05F);
-		else selectionColor=UtilM.slowlyEqalizeColor(selectionColor, color, 0.05F);
+		color=UtilM.graduallyEqualize(color, setColor.mul(hovered?1:0.9), 0.05F);
+		if(mouseX>=xPosition&&mouseY>=this.yPosition&&mouseX<xPosition+this.width/2&&mouseY<this.yPosition+this.height)selectionColor=UtilM.graduallyEqualize(selectionColor, color.mix(ColorF.WHITE), 0.05F);
+		else selectionColor=UtilM.graduallyEqualize(selectionColor, color, 0.05F);
 	}
 }

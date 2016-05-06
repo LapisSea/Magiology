@@ -8,8 +8,8 @@ import com.magiology.client.gui.GuiUpdater.Updateable;
 import com.magiology.util.renderers.GL11U;
 import com.magiology.util.renderers.OpenGLM;
 import com.magiology.util.utilclasses.Get.Render.Font;
-import com.magiology.util.utilclasses.UtilM;
 import com.magiology.util.utilclasses.math.MathUtil;
+import com.magiology.util.utilclasses.math.PartialTicksUtil;
 import com.magiology.util.utilobjects.ColorF;
 import com.magiology.util.utilobjects.vectors.physics.PhysicsFloat;
 
@@ -35,7 +35,7 @@ public class FakeMessageHUD extends HUD{
 			return this.id.equals(msg.id);
 		}
 		public void redner(){
-			ColorF color=UtilM.calculateRenderColor(prevColor, this.color);
+			ColorF color=PartialTicksUtil.calculate(prevColor, this.color);
 			int sw=Font.FR().getStringWidth(text);
 			float animation=(color.a-1);
 			OpenGLM.pushMatrix();

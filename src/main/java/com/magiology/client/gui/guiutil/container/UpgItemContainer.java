@@ -7,6 +7,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 
 public class UpgItemContainer implements IInventory{
 	
@@ -65,8 +67,8 @@ public class UpgItemContainer implements IInventory{
 	}
 
 	@Override
-	public IChatComponent getDisplayName(){
-		return new ChatComponentText(this.getName());
+	public ITextComponent getDisplayName(){
+		return new TextComponentString(this.getName());
 	}
 
 	@Override

@@ -1,15 +1,12 @@
 package com.magiology.client.render.aftereffect;
 
-import com.magiology.mcobjects.effect.EntitySmoothBubleFX;
 import com.magiology.mcobjects.tileentityes.network.TileEntityNetworkRouter;
 import com.magiology.util.renderers.GL11U;
 import com.magiology.util.renderers.OpenGLM;
 import com.magiology.util.renderers.TessUtil;
 import com.magiology.util.renderers.VertexRenderer;
-import com.magiology.util.utilclasses.RandUtil;
-import com.magiology.util.utilclasses.UtilM;
+import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilclasses.UtilM.U;
-import com.magiology.util.utilclasses.math.CricleUtil;
 import com.magiology.util.utilclasses.math.MathUtil;
 import com.magiology.util.utilclasses.math.PartialTicksUtil;
 import com.magiology.util.utilobjects.ColorF;
@@ -21,7 +18,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class RenderNetworkPointerContainerHighlight extends LongAfterRenderRendererBase{
 	private static final float p= 1F/16F;
-	private static EntityPlayer player=U.getMC().thePlayer;
+	private static EntityPlayer player=UtilC.getMC().thePlayer;
 	public int highlightedBoxId;
 	public PhysicsFloat progress;
 	public String text;
@@ -87,9 +84,9 @@ public class RenderNetworkPointerContainerHighlight extends LongAfterRenderRende
 		float
 			point=progress.getPoint(),
 			point2=MathUtil.snap(point, 0, 1),
-			playerX=PartialTicksUtil.calculatePosX(player),
-			playerY=PartialTicksUtil.calculatePosY(player)+player.getEyeHeight(),
-			playerZ=PartialTicksUtil.calculatePosZ(player),
+			playerX=(float)PartialTicksUtil.calculateX(player),
+			playerY=(float)PartialTicksUtil.calculateY(player)+player.getEyeHeight(),
+			playerZ=(float)PartialTicksUtil.calculateZ(player),
 			txtX=tile.x()+0.5F+off.getX(),
 			txtY=tile.y()+0.5F+off.getY(),
 			txtZ=tile.z()+0.5F+off.getZ(),
@@ -99,7 +96,7 @@ public class RenderNetworkPointerContainerHighlight extends LongAfterRenderRende
 			camPich=(float)Math.toDegrees(Math.atan2(difY,Math.sqrt(difX*difX+difZ*difZ))),
 			camYaw=(float)Math.toDegrees(Math.atan2(difZ,difX))+90;
 		int time360=(int)((tile.getWorld().getTotalWorldTime()+highlightedBoxId*20)%360);
-		double time=PartialTicksUtil.calculatePos(time360, time360+1);
+		double time=PartialTicksUtil.calculate(time360, time360+1);
 		
 		//rotation
 		GL11U.glRotate(0					 , -camYaw-80+80*point2,				   0);
@@ -108,7 +105,7 @@ public class RenderNetworkPointerContainerHighlight extends LongAfterRenderRende
 		//center string
 		OpenGLM.translate(-TessUtil.getFontRenderer().getStringWidth(text)/2, -TessUtil.getFontRenderer().FONT_HEIGHT/2, 0);
 		
-		float r=0.8F,g=UtilM.fluctuateSmooth(20, 0)*0.15F+0.15F,b=0.1F;
+		float r=0.8F,g=UtilC.fluctuateSmooth(20, 0)*0.15F+0.15F,b=0.1F;
 		//draw in front
 		TessUtil.getFontRenderer().drawString(text, 0, 0, new ColorF(r,g,b,(point-0.4)).toCode());
 		//draw behind block
@@ -131,7 +128,7 @@ public class RenderNetworkPointerContainerHighlight extends LongAfterRenderRende
 		buff.setDrawAsWire(true);
 		buff.draw();
 		buff.setDrawAsWire(false);
-		OpenGLM.color(0, 0.4F+U.fluctuateSmooth(50, 0)*0.6F, 0.6F+U.fluctuateSmooth(97, 61)*0.4F, 0.01F);
+		OpenGLM.color(0, 0.4F+UtilC.fluctuateSmooth(50, 0)*0.6F, 0.6F+UtilC.fluctuateSmooth(97, 61)*0.4F, 0.01F);
 		buff.draw();
 		buff.setClearing(true);
 		OpenGLM.enableDepth();
@@ -144,7 +141,7 @@ public class RenderNetworkPointerContainerHighlight extends LongAfterRenderRende
 	}
 	@Override
 	public void update(){
-		player=UtilM.getThePlayer();
+		player=UtilC.getThePlayer();
 		if(player==null)return;
 		progress.update();
 		if(tile.getPointedBoxID()==highlightedBoxId)progress.wantedPoint=1;
@@ -174,25 +171,5 @@ public class RenderNetworkPointerContainerHighlight extends LongAfterRenderRende
 				text="target = ["+x+", "+y+", "+z+"]";
 			}
 		}else text="empty";
-		
-		Vec3M off=getOffset();
-		float
-			point=progress.getPoint(),
-			playerX=(float)player.posX,
-			playerZ=(float)player.posZ,
-			txtX=tile.x()+0.5F+off.getX(),
-			txtZ=tile.z()+0.5F+off.getZ(),
-			difX=playerX-txtX,
-			difZ=playerZ-txtZ,
-			camYaw=(float)Math.toDegrees(Math.atan2(difZ,difX))+90,
-			width=TessUtil.getFontRenderer().getStringWidth(text)*U.p/4;
-		TessUtil.getFontRenderer();
-		float leftX=CricleUtil.sin(-camYaw+90)*width/2, leftZ=CricleUtil.cos(-camYaw+90)*width/2, rand=RandUtil.CRF(1);
-		
-		
-		float r=0.8F,g=UtilM.fluctuate(20, 0)*0.15F+0.15F,b=0.1F;
-		UtilM.spawnEntityFX(new EntitySmoothBubleFX(player.worldObj,
-				tile.x()+0.5+off.x+leftX*rand+RandUtil.CRF(0.1), tile.y()+0.5+off.y+RandUtil.CRF(0.1), tile.z()+0.5+off.z+leftZ*rand+RandUtil.CRF(0.1),
-				RandUtil.CRF(0.01), RandUtil.CRF(0.01), RandUtil.CRF(0.01), 100, 25, -RandUtil.RF(0.1), r,g,b,0.05*point));
 	}
 }

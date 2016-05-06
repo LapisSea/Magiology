@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.magiology.util.utilclasses.DataStalker;
-import com.magiology.util.utilclasses.UtilM;
+import com.magiology.util.utilclasses.UtilC;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.shader.Shader;
@@ -25,7 +25,7 @@ public abstract class ShaderAspectRenderer{
 		return ShaderAspectRenderer.getUniform(uniform);
 	}
 	protected static final float[] getUniform(ShaderUniform uniform){
-		FloatBuffer values=DataStalker.getVariable(ShaderUniform.class, "field_148098_f", uniform);
+		FloatBuffer values=DataStalker.getVariable(ShaderUniform.class, "uniformFloatBuffer", uniform);
 		if(values==null)return null;
 		return values.array();
 	}
@@ -37,15 +37,15 @@ public abstract class ShaderAspectRenderer{
 	protected static final void setUniform(ShaderUniform uniform,float... values){
 		uniform.set(values);
 	}
-	protected Minecraft mc=UtilM.getMC();
-	protected EntityPlayer player=UtilM.getThePlayer();
+	protected Minecraft mc=UtilC.getMC();
+	protected EntityPlayer player=UtilC.getThePlayer();
 	private final int shaderId;
 	
 	private final ResourceLocation shaderLocation;
 	private final String[] uniformNames;
 
 	protected List<ShaderUniform> uniforms=new ArrayList<ShaderUniform>();
-	protected World world=UtilM.getTheWorld();
+	protected World world=UtilC.getTheWorld();
 	public ShaderAspectRenderer(String shaderName,int shaderId,String... uniformNames){
 		shaderLocation=new ResourceLocation("shaders/post/"+shaderName+".json");
 		this.uniformNames=uniformNames;

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.magiology.client.gui.GuiUpdater.Updateable;
-import com.magiology.mcobjects.effect.GuiParticle;
+import com.magiology.mcobjects.particles.GuiParticle;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;

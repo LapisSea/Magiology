@@ -4,7 +4,7 @@ import com.magiology.mcobjects.entitys.EntityBallOfEnergy;
 import com.magiology.util.renderers.GL11U;
 import com.magiology.util.renderers.OpenGLM;
 import com.magiology.util.renderers.TessUtil;
-import com.magiology.util.utilclasses.UtilM.U;
+import com.magiology.util.utilclasses.UtilC;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.Render;
@@ -24,7 +24,7 @@ public class BallOfEnergyRenderer extends Render{
 	@Override
 	public void doRender(Entity en, double var1, double var2, double var3, float var4,float partialTicks){
 		EntityBallOfEnergy entity=(EntityBallOfEnergy)en;
-		EntityPlayer player=U.getMC().thePlayer;
+		EntityPlayer player=UtilC.getMC().thePlayer;
 		int time360=entity.age%90*4,offs=25,many=1;
 		OpenGLM.pushMatrix();
 		OpenGLM.translate(-(float)(player.lastTickPosX+(player.posX-player.lastTickPosX)*partialTicks),

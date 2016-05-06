@@ -323,7 +323,7 @@ public class RenderNetworkController extends TileEntitySpecialRendererM{
 	private void animate(TileEntity tile0, double x, double y, double z){
 		TileEntityNetworkController tile=(TileEntityNetworkController)tile0;
 		double tim=tile.getWorld().getTotalWorldTime()+(x+y+z)*30;
-		float anim=(PartialTicksUtil.calculatePos(tim-1, tim)/3)%360;
+		float anim=(float)((PartialTicksUtil.calculate(tim-1, tim)/3)%360);
 		
 		double upDown=Math.sin(Math.toRadians(anim)*4)*UtilM.p/2;
 		

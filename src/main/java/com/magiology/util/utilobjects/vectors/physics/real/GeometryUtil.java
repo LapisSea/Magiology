@@ -13,7 +13,6 @@ import com.magiology.util.utilobjects.vectors.Vec3M;
 
 import net.minecraft.client.model.PositionTextureVertex;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -222,7 +221,7 @@ public class GeometryUtil{
 			d0=entity.posX,
 			d1=entity.posY+entity.getEyeHeight(),
 			d2=entity.posZ,
-			d3=entity instanceof EntityPlayerMP?((EntityPlayerMP)entity).theItemInWorldManager.getBlockReachDistance():5.0D;
+			d3=5;
 		Vec3d 
 			start=new Vec3d(d0,d1,d2),
 			end=start.addVector(f6*d3,f5*d3,f7*d3);

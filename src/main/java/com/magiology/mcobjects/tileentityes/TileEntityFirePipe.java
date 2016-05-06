@@ -19,7 +19,6 @@ import com.magiology.util.utilclasses.UtilM.U;
 import com.magiology.util.utilobjects.DoubleObject;
 import com.magiology.util.utilobjects.SlowdownUtil;
 import com.magiology.util.utilobjects.m_extension.AxisAlignedBBM;
-import com.magiology.util.utilobjects.m_extension.effect.EntitySmokeFXM;
 import com.magiology.util.utilobjects.vectors.Vec3M;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -52,7 +51,6 @@ public class TileEntityFirePipe extends TileEntityPow implements MultiColisionPr
 	private List<Integer> ghostHits=new ArrayList<>(),prevGhostHits=new ArrayList<>();
 	
 	SlowdownUtil optimizer=new SlowdownUtil(40);
-	SlowdownUtil optimizer2=new SlowdownUtil(6);
 	PowerUtil PH=new PowerUtil();
 	
 	public int texAnim=0,pointId,prevPointId;
@@ -164,13 +162,6 @@ public class TileEntityFirePipe extends TileEntityPow implements MultiColisionPr
 		return false;
 	}
 	
-	public boolean isTRand(BlockPos pos){
-		boolean is=false;
-		TileEntity tile1=worldObj.getTileEntity(pos);
-		if(tile1 instanceof TileEntityBFCPowerOut)is=true;
-		
-		return is;
-	}
 	@Override
 	public boolean onGhostHit(EntityPlayer entity, ItemStack stack, boolean isRightClick, int id, EnumFacing side, Vec3M hitPos){
 		if(id>5)return false;
@@ -248,19 +239,6 @@ public class TileEntityFirePipe extends TileEntityPow implements MultiColisionPr
 		return true;
 	}
 	
-	public void spawnParticles(){
-		if(RandUtil.RB(0.2)&&currentEnergy+100>maxEnergyBuffer){
-			if(!connections[0].hasOpposite()&&!connections[2].hasOpposite()&&!connections[4].hasOpposite()){
-				if(RandUtil.RB(0.33)&&isSolidDown==false&&connections[1]==null)UtilM.spawnEntityFX(new EntitySmokeFXM(worldObj, pos.getX()+0.5, pos.getY()+0.5-p*2, pos.getZ()+0.5, 0, -0.1, 0));
-				if(RandUtil.RB(0.33)&&isSolidUp==false&&connections[0]==null)UtilM.spawnEntityFX(new EntitySmokeFXM(worldObj, pos.getX()+0.5, pos.getY()+0.5+p*2, pos.getZ()+0.5, 0, 0.05, 0));
-				if(RandUtil.RB(0.33)&&connections[2]==null)UtilM.spawnEntityFX(new EntitySmokeFXM(worldObj, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5-p*2, 0, 0, -0.1));
-				if(RandUtil.RB(0.33)&&connections[4]==null)UtilM.spawnEntityFX(new EntitySmokeFXM(worldObj, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5+p*2, 0, 0, 0.1));
-				if(RandUtil.RB(0.33)&&connections[3]==null)UtilM.spawnEntityFX(new EntitySmokeFXM(worldObj, pos.getX()+0.5+p*2, pos.getY()+0.5, pos.getZ()+0.5, 0.1, 0, 0));
-				if(RandUtil.RB(0.33)&&connections[5]==null)UtilM.spawnEntityFX(new EntitySmokeFXM(worldObj, pos.getX()+0.5-p*2, pos.getY()+0.5, pos.getZ()+0.5, -0.1, 0, 0));
-			}
-		}
-	}
-	
 	public void texAnimation(){
 		if(texAnimP2)texAnim++;
 		else texAnim--;
@@ -287,9 +265,6 @@ public class TileEntityFirePipe extends TileEntityPow implements MultiColisionPr
 		
 		if(optimizer.isTimeWithAddProgress()){
 			updateConnections();
-		}
-		if(optimizer2.isTimeWithAddProgress()&&worldObj.isRemote){
-			spawnParticles();
 		}
 //		if(worldObj.isRemote)for(int i=0;i<containerItems.length;i++)if(containerItems[i]!=null){
 //			Helper.spawnEnitiyFX(new EntitySmokeFXM(worldObj, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, 0, 0.2, 0));
@@ -326,12 +301,12 @@ public class TileEntityFirePipe extends TileEntityPow implements MultiColisionPr
 			}
 		}
 		
-		connections[0].setMain(isTPipe(0)||isTRand(SideUtil.offsetNew(0, pos)));
-		connections[1].setMain(isTPipe(1)||isTRand(SideUtil.offsetNew(1, pos)));
-		connections[2].setMain(isTPipe(2)||isTRand(SideUtil.offsetNew(2, pos)));
-		connections[3].setMain(isTPipe(3)||isTRand(SideUtil.offsetNew(3, pos)));
-		connections[4].setMain(isTPipe(4)||isTRand(SideUtil.offsetNew(4, pos)));
-		connections[5].setMain(isTPipe(5)||isTRand(SideUtil.offsetNew(5, pos)));
+		connections[0].setMain(isTPipe(0));
+		connections[1].setMain(isTPipe(1));
+		connections[2].setMain(isTPipe(2));
+		connections[3].setMain(isTPipe(3));
+		connections[4].setMain(isTPipe(4));
+		connections[5].setMain(isTPipe(5));
 		
 		connections[0].setOut(out1[0]);
 		connections[1].setOut(out1[1]);

@@ -12,7 +12,8 @@ import com.magiology.core.init.MItems;
 import com.magiology.mcobjects.items.NetworkPointer;
 import com.magiology.mcobjects.tileentityes.corecomponents.multibox.CollisionBox;
 import com.magiology.mcobjects.tileentityes.corecomponents.multibox.DefaultMultiColisionProvider;
-import com.magiology.util.renderers.PartialTicks1F;
+import com.magiology.util.renderers.FloatCalc;
+import com.magiology.util.renderers.ValueWithPrev;
 import com.magiology.util.utilclasses.CollectionConverter;
 import com.magiology.util.utilclasses.NetworkUtil;
 import com.magiology.util.utilclasses.SideUtil;
@@ -31,13 +32,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.text.ITextComponent;
 
 public class TileEntityNetworkRouter extends TileEntityNetwork implements ISidedInventory,ITickable{
 	
-	public PartialTicks1F[] animationos={
-		new PartialTicks1F(),new PartialTicks1F(),new PartialTicks1F(),
-		new PartialTicks1F(),new PartialTicks1F(),new PartialTicks1F(),
-		new PartialTicks1F(),new PartialTicks1F(),new PartialTicks1F()
+	public ValueWithPrev<FloatCalc>[] animationos=new ValueWithPrev[]{
+		new ValueWithPrev(),new ValueWithPrev(),new ValueWithPrev(),
+		new ValueWithPrev(),new ValueWithPrev(),new ValueWithPrev(),
+		new ValueWithPrev(),new ValueWithPrev(),new ValueWithPrev()
 	};
 	public List<CollisionBox> collisionBoxesBase=CollisionBox.genColisionBoxList(new DoubleObject[]{
 			new DoubleObject<AxisAlignedBBM, EnumFacing>(new AxisAlignedBBM(0,	   p*6.5F, p*6.5F, p*6.5F, p*9.5F, p*9.5F),EnumFacing.getFront(5)),
@@ -135,7 +137,7 @@ public class TileEntityNetworkRouter extends TileEntityNetwork implements ISided
 	}
 	
 	@Override
-	public IChatComponent getDisplayName(){
+	public ITextComponent getDisplayName(){
 		return null;
 	}
 	@Override
@@ -261,8 +263,8 @@ public class TileEntityNetworkRouter extends TileEntityNetwork implements ISided
 			
 			if(stackNull)extractionActivated[i]=false;
 			
-			animationos[i].update(UtilM.slowlyEqualize(animationos[i].value, extractionActivated[i]?1:0, 0.03F));
-			if(!stackNull&&animationos[i].prevValue>animationos[i].value&&animationos[i].value==0){
+			animationos[i].update(new FloatCalc(UtilM.graduallyEqualize(animationos[i].value.value, extractionActivated[i]?1:0, 0.03F)));
+			if(!stackNull&&animationos[i].prevValue.value>animationos[i].value.value&&animationos[i].value.value==0){
 				EntityItem stack=UtilM.dropBlockAsItem(worldObj, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, getStackInSlot(i));
 				if(stack!=null){
 					stack.motionX=0;

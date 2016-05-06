@@ -4,22 +4,16 @@ import static com.magiology.handlers.KeyHandler.Keys.*;
 
 import org.lwjgl.input.Keyboard;
 
-import com.magiology.client.gui.custom.hud.HandModeChangerHUD;
 import com.magiology.client.gui.custom.hud.StatsDisplayHUD;
 import com.magiology.core.MReference;
 import com.magiology.core.init.MGui;
-import com.magiology.forgepowered.packets.packets.OpenGuiPacket;
-import com.magiology.forgepowered.packets.packets.UploadPlayerDataPacket;
-import com.magiology.forgepowered.packets.packets.generic.GenericServerStringPacket;
-import com.magiology.forgepowered.packets.packets.generic.GenericServerVoidPacket;
-import com.magiology.mcobjects.entitys.ExtendedPlayerData;
+import com.magiology.forgepowered.packets.packets.toserver.OpenGuiPacket;
+import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilclasses.UtilM;
-import com.magiology.util.utilclasses.UtilM.U;
 import com.magiology.util.utilobjects.SimpleCounter;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
-import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -49,7 +43,7 @@ public class KeyHandler{
 	private static String[] keyDesc;
 	private static int[] keyValues;
 	private KeyBinding[] keys;
-	Minecraft mc=U.getMC();
+	Minecraft mc=UtilC.getMC();
 	
 	public KeyHandler(){
 		int lenght=Keys.values().length;
@@ -74,29 +68,12 @@ public class KeyHandler{
 //				Helper.println(iresourcemanager.getResource(Textures.BedrockBreakerBase));
 //			}
 //		} catch (Exception e){e.printStackTrace();}
-		GameSettings gs=U.getMC().gameSettings;
-		boolean[] keys={Keyboard.isKeyDown(gs.keyBindForward.getKeyCode()),Keyboard.isKeyDown(gs.keyBindBack.getKeyCode()),Keyboard.isKeyDown(gs.keyBindJump.getKeyCode()),Keyboard.isKeyDown(gs.keyBindSneak.getKeyCode()),Keyboard.isKeyDown(gs.keyBindRight.getKeyCode()),Keyboard.isKeyDown(gs.keyBindLeft.getKeyCode())};
 		if(Keyboard.getEventKeyState()){
 			for(Keys i:Keys.values()){
 				if(rawKey==keyValues[i.id]){
 					keyInput(i.id);
 					return;
 				}
-			}
-			if(rawKey==gs.keyBindJump.getKeyCode()){
-				int x=0,z=0;
-				if(keys[0])x=1;
-				if(keys[1])x+=2;
-				if(keys[4])z=1;
-				if(keys[5])z+=2;
-				UtilM.sendMessage(new GenericServerStringPacket(0,x+","+z));
-			}
-		}
-		if(rawKey==gs.keyBindForward.getKeyCode()||rawKey==gs.keyBindBack.getKeyCode()||rawKey==gs.keyBindJump.getKeyCode()||rawKey==gs.keyBindSneak.getKeyCode()||rawKey==gs.keyBindRight.getKeyCode()||rawKey==gs.keyBindLeft.getKeyCode()){
-			ExtendedPlayerData data=ExtendedPlayerData.get(UtilM.getThePlayer());
-			if(data!=null){
-				data.keys=keys.clone();
-				UtilM.sendMessage(new UploadPlayerDataPacket(UtilM.getThePlayer()));
 			}
 		}
 	}
@@ -112,9 +89,10 @@ public class KeyHandler{
 			
 		}
 		else if(HandMode.check(keyId)){
-			if(HandModeChangerHUD.instance.handAlpha>0.9){
-				UtilM.sendMessage(new GenericServerVoidPacket(0));
-			}
+			//TODO: what is that?
+//			if(HandModeChangerHUD.instance.handAlpha>0.9){
+//				UtilM.sendMessage(new GenericServerVoidPacket(0));
+//			}
 		}
 //		else if(test.check(keyId)){
 //			FMLClientHandler.instance().showGuiScreen(new GuiContainer(new ContainerEmpty()){

@@ -23,7 +23,7 @@ public class RenderBateryL2 extends TileEntitySpecialRendererM {
 	
 	public void renderConections(EnumFacing dir)
 	{
-		TessUtil.getWR();
+		TessUtil.getWB();
 		this.bindTexture(Textures.BateryL2Core);
 			OpenGLM.translate(0.5F, 0.5F, 0.5F);
 			if(dir.equals(EnumFacing.WEST)){
@@ -171,7 +171,7 @@ public class RenderBateryL2 extends TileEntitySpecialRendererM {
 	
 	public void renderSides() {
 
-		TessUtil.getWR();
+		TessUtil.getWB();
 		this.bindTexture(Textures.BateryL1Core);
 			buf.addVertexWithUV(p*4,  p*12,   p*4,  tW*48, tH*1);
 			buf.addVertexWithUV(p*4,  p*4,	p*4,  tW*48, tH*4);

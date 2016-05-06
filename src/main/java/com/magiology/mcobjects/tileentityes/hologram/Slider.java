@@ -14,6 +14,7 @@ import com.magiology.util.renderers.VertexRenderer;
 import com.magiology.util.renderers.tessellatorscripts.CubeModel;
 import com.magiology.util.utilclasses.UtilM;
 import com.magiology.util.utilclasses.math.MathUtil;
+import com.magiology.util.utilclasses.math.PartialTicksUtil;
 import com.magiology.util.utilobjects.ColorF;
 import com.magiology.util.utilobjects.DoubleObject;
 import com.magiology.util.utilobjects.vectors.physics.PhysicsFloat;
@@ -91,7 +92,7 @@ public class Slider extends HoloObject{
 	@Override
 	public void render(ColorF color){
 		checkHighlight();
-		ColorF col=UtilM.calculateRenderColor(prevColor, this.color);
+		ColorF col=PartialTicksUtil.calculate(prevColor, this.color);
 		
 		if(scroll==null){
 			main=new CubeModel(0, 0, -UtilM.p/2, -size.x, -size.y, UtilM.p/2);
@@ -123,7 +124,7 @@ public class Slider extends HoloObject{
 		size=new Vector2f(originalSize.x*scale, originalSize.y*scale);
 		prevColor=color;
 		
-		color=UtilM.slowlyEqalizeColor(color, setColor, 0.1F);
+		color=UtilM.graduallyEqualize(color, setColor, 0.1F);
 	}
 	@Override
 	public void writeData(List<Integer> integers, List<Boolean> booleans, List<Byte> bytes___, List<Long> longs___, List<Double> doubles_,List<Float> floats__, List<String> strings_, List<Short> shorts__){

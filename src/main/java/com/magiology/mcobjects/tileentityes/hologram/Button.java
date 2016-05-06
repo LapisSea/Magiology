@@ -9,6 +9,7 @@ import com.magiology.util.renderers.tessellatorscripts.CubeModel;
 import com.magiology.util.utilclasses.Get.Render.Font;
 import com.magiology.util.utilclasses.UtilM;
 import com.magiology.util.utilclasses.UtilM.U;
+import com.magiology.util.utilclasses.math.PartialTicksUtil;
 import com.magiology.util.utilobjects.ColorF;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -61,7 +62,7 @@ public class Button extends TextBox{
 	public void render(ColorF color){
 		inColor=color;
 		checkHighlight();
-		ColorF renderColor=UtilM.calculateRenderColor(prevColor,this.color);
+		ColorF renderColor=PartialTicksUtil.calculate(prevColor,this.color);
 		renderColor.bind();
 		if(body==null)body=new CubeModel(0, 0, -UtilM.p/2, -size.x, -size.y, UtilM.p/2);
 		GL11U.texture(false);
@@ -96,8 +97,8 @@ public class Button extends TextBox{
 					if(!((JSProgramContainer)s.getItem()).getProgram(s).getSaveableData().programName.toString().isEmpty())color1=new ColorF(1, 0.2, 0.2, 0.8);
 				}
 			}catch(Exception e){}
-			color=UtilM.slowlyEqalizeColor(color, color1, 0.2F);
+			color=UtilM.graduallyEqualize(color, color1, 0.2F);
 		}
-		else color=UtilM.slowlyEqalizeColor(color, setColor, 0.2F);
+		else color=UtilM.graduallyEqualize(color, setColor, 0.2F);
 	}
 }

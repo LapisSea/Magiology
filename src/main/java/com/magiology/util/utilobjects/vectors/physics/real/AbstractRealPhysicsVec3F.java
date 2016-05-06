@@ -40,10 +40,10 @@ public abstract class AbstractRealPhysicsVec3F{
 		if(isWorldClipping()){
 			if(getWillColideWithBlocks()){
 				RayTraceResult hit=getWorld().rayTraceBlocks(start.conv(), end.conv());
-				if(hit!=null&&hit.typeOfHit!=MovingObjectType.MISS){
+				if(hit!=null&&hit.typeOfHit!=RayTraceResult.Type.MISS){
 					IBlockState state=getWorld().getBlockState(hit.getBlockPos());
 					Block block=state.getBlock();
-					AxisAlignedBB bounding=block.getCollisionBoundingBox(getWorld(), hit.getBlockPos(), state);
+					AxisAlignedBB bounding=block.getCollisionBoundingBox(state, getWorld(), hit.getBlockPos());
 					if(bounding!=null){
 						surfaceHit(new DoubleObject<Vec3M, Vec3M>(Vec3M.conv(hit.hitVec), new Vec3M().offset(hit.sideHit)));
 						Vec3M pos=getPos();

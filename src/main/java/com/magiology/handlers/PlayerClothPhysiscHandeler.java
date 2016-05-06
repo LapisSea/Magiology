@@ -6,16 +6,14 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 
 import com.google.common.collect.Lists;
-import com.magiology.mcobjects.effect.EntitySmoothBubleFX;
 import com.magiology.util.renderers.GL11U;
 import com.magiology.util.renderers.OpenGLM;
 import com.magiology.util.renderers.Renderer;
 import com.magiology.util.renderers.TessUtil;
 import com.magiology.util.renderers.VertexRenderer;
 import com.magiology.util.renderers.VertexRenderer.ShadedQuad;
-import com.magiology.util.utilclasses.RandUtil;
+import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilclasses.UtilM;
-import com.magiology.util.utilclasses.UtilM.U;
 import com.magiology.util.utilclasses.math.PartialTicksUtil;
 import com.magiology.util.utilobjects.ColorF;
 import com.magiology.util.utilobjects.DoubleObject;
@@ -52,7 +50,7 @@ public class PlayerClothPhysiscHandeler{
 	}
 	public static void rednerInstance(RenderPlayerEvent.Pre event){
 		for(PlayerClothPhysiscHandeler instance:instances){
-			if(UtilM.playerEqual(instance.player,event.entityPlayer)){
+			if(UtilM.playerEqual(instance.player,event.getEntityPlayer())){
 				instance.render(event);
 				return;
 			}
@@ -249,9 +247,9 @@ public class PlayerClothPhysiscHandeler{
 					prevTriangle=(Triangle)playerModel.prevTriangles.get(i),
 					triangle1=(Triangle)playerModel.triangles.get(i),
 					triangle=new Triangle(
-						PartialTicksUtil.calculatePos(prevTriangle.pos1, triangle1.pos1),
-						PartialTicksUtil.calculatePos(prevTriangle.pos2, triangle1.pos2),
-						PartialTicksUtil.calculatePos(prevTriangle.pos3, triangle1.pos3)
+						PartialTicksUtil.calculate(prevTriangle.pos1, triangle1.pos1),
+						PartialTicksUtil.calculate(prevTriangle.pos2, triangle1.pos2),
+						PartialTicksUtil.calculate(prevTriangle.pos3, triangle1.pos3)
 					);
 				buff.addVertex(triangle.pos1.x,triangle.pos1.y,triangle.pos1.z);
 				buff.addVertex(triangle.pos2.x,triangle.pos2.y,triangle.pos2.z);
@@ -279,7 +277,7 @@ public class PlayerClothPhysiscHandeler{
 	}
 	public void render(RenderPlayerEvent.Pre event){
 		if(checkForTimeout())return;
-		if(playerModel==null)playerModel=new EntityPlayerModelColider(event.renderer);
+		if(playerModel==null)playerModel=new EntityPlayerModelColider(event.getRenderer());
 		if(!isCapeFunctional())return;
 		
 		
@@ -287,7 +285,7 @@ public class PlayerClothPhysiscHandeler{
 		OpenGLM.pushMatrix();
 		OpenGLM.disableTexture2D();
 		
-		if(UtilM.playerEqual(player,event.entityPlayer)){
+		if(UtilM.playerEqual(player,event.getEntityPlayer())){
 			
 			GL11U.glTranslate(cape.originPos.mul(-1));
 			boolean debudDraw=UtilM.FALSE()&&playerModel.prevTriangles!=null;
@@ -370,7 +368,7 @@ public class PlayerClothPhysiscHandeler{
 					
 					Renderer.POS_UV_COLOR_NORMAL.addVertex(
 							pos.xCoord,pos.yCoord,pos.zCoord, shadedQuad.pos4[b].texturePositionX, shadedQuad.pos4[b].texturePositionY,
-							new ColorF(UtilM.fluctuateSmooth(120, pos1),UtilM.fluctuateSmooth(45, pos1),UtilM.fluctuateSmooth(67, pos1),1), 
+							new ColorF(UtilC.fluctuateSmooth(120, pos1),UtilC.fluctuateSmooth(45, pos1),UtilC.fluctuateSmooth(67, pos1),1), 
 							shadedQuad.normal1);
 				}
 			}
@@ -392,7 +390,7 @@ public class PlayerClothPhysiscHandeler{
 			cape.coliders.add(playerModel);
 		}
 		
-		if(UtilM.playerEqual(UtilM.getThePlayer(), player))player=UtilM.getThePlayer();
+		if(UtilM.playerEqual(UtilC.getThePlayer(), player))player=UtilC.getThePlayer();
 		
 		cape.originPos=UtilM.getEntityPos(player);
 		playerModel.updateMesh(player);
@@ -405,16 +403,16 @@ public class PlayerClothPhysiscHandeler{
 			handEndGloweThingys[0].update();
 			handEndGloweThingys[1].update();
 		}
-		if(player==UtilM.getThePlayer()?U.getMC().gameSettings.thirdPersonView!=0:true)for(int i=32;i<35;i++){
-			AbstractRealPhysicsVec3F pos1=cape.getVertices().get(i),pos2=cape.getVertices().get(i+1);
-			Vec3M 
-				posDiff=pos2.getPos().sub(pos1.getPos()),
-				pos=pos1.getPos().add(posDiff.mul(RandUtil.RF())),
-				speed=pos1.getVelocity().add(pos2.getVelocity().sub(pos1.getVelocity()).mul(RandUtil.RF())).mul(0.3);
-			UtilM.spawnEntityFX(new EntitySmoothBubleFX(player.worldObj, 
-					pos.x, pos.y, pos.z, 
-					speed.x, speed.y, speed.z,
-					(int)(1500*posDiff.lengthVector()), 2, 0, !RandUtil.RB(0.1)?1:2, RandUtil.RF(),RandUtil.RF(),RandUtil.RF(), 0.2));
-		}
+//		if(player==UtilM.getThePlayer()?U.getMC().gameSettings.thirdPersonView!=0:true)for(int i=32;i<35;i++){
+//			AbstractRealPhysicsVec3F pos1=cape.getVertices().get(i),pos2=cape.getVertices().get(i+1);
+//			Vec3M 
+//				posDiff=pos2.getPos().sub(pos1.getPos()),
+//				pos=pos1.getPos().add(posDiff.mul(RandUtil.RF())),
+//				speed=pos1.getVelocity().add(pos2.getVelocity().sub(pos1.getVelocity()).mul(RandUtil.RF())).mul(0.3);
+//			UtilM.spawnEntityFX(new EntitySmoothBubleFX(player.worldObj, 
+//					pos.x, pos.y, pos.z, 
+//					speed.x, speed.y, speed.z,
+//					(int)(1500*posDiff.lengthVector()), 2, 0, !RandUtil.RB(0.1)?1:2, RandUtil.RF(),RandUtil.RF(),RandUtil.RF(), 0.2));
+//		}
 	}
 }

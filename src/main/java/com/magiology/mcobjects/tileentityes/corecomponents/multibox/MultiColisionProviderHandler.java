@@ -59,7 +59,7 @@ public class MultiColisionProviderHandler{
 				block.setBlockBounds((float)box.minX,(float)box.minY,(float)box.minZ,(float)box.maxX,(float)box.maxY,(float)box.maxZ);
 				hits[i]=block.superCollisionRayTrace(tile.getWorld(), tile.getPos(), startVec, endVec);
 			}
-			combineNormal(tile).setBlockBounds(tile.getBlockType());
+			block.setBlockBounds(combineNormal(tile));
 			
 			int    closestID=-1;
 			double closestDistance=Double.MAX_VALUE;

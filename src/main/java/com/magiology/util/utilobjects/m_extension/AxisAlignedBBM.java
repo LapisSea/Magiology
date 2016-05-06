@@ -1,10 +1,8 @@
 package com.magiology.util.utilobjects.m_extension;
 
-import com.magiology.util.utilclasses.UtilM;
 import com.magiology.util.utilclasses.math.MathUtil;
 import com.magiology.util.utilobjects.vectors.Vec3M;
 
-import net.minecraft.block.Block;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -382,9 +380,6 @@ public class AxisAlignedBBM{
 	}
 	public AxisAlignedBBM offset(Vec3M vec){
 		return offset(vec.x, vec.y, vec.z);
-	}
-	public <block extends Block> void setBlockBounds(block block){
-		UtilM.setBlockBounds(block,this);
 	}
 	@Override
 	public String toString(){

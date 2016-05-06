@@ -8,7 +8,7 @@ import com.magiology.handlers.animationhandlers.thehand.HandData;
 import com.magiology.handlers.animationhandlers.thehand.HandPosition;
 import com.magiology.handlers.animationhandlers.thehand.TheHandHandler;
 import com.magiology.util.utilclasses.PrintUtil;
-import com.magiology.util.utilclasses.UtilM;
+import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilobjects.DoubleObject;
 import com.magiology.util.utilobjects.LinearAnimation;
 
@@ -40,7 +40,7 @@ public class HandAnimation extends HandAnimationBase{
 		return super.canStart()&&!isRunning;
 	}
 	private void end(){
-		TheHandHandler.setActivePositionId(UtilM.getThePlayer(), end.posInRegistry());
+		TheHandHandler.setActivePositionId(UtilC.getThePlayer(), end.posInRegistry());
 	}
 	@Override
 	public HandData getWantedPos(){
@@ -53,7 +53,7 @@ public class HandAnimation extends HandAnimationBase{
 	public void start(){
 		if(!canStart())return;
 		wantedPos.set(start.data);
-		timeStarted=UtilM.getWorldTime();
+		timeStarted=UtilC.getWorldTime();
 		isRunning=true;
 	}
 	

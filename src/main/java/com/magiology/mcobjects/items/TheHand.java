@@ -2,6 +2,7 @@ package com.magiology.mcobjects.items;
 
 import java.util.List;
 
+import com.magiology.client.render.itemrender.ItemRendererTheHand;
 import com.magiology.forgepowered.events.client.CustomRenderedItem;
 import com.magiology.handlers.animationhandlers.thehand.HandPosition;
 import com.magiology.handlers.animationhandlers.thehand.TheHandHandler;
@@ -9,12 +10,18 @@ import com.magiology.handlers.animationhandlers.thehand.animation.CommonHand;
 import com.magiology.util.utilobjects.NBTUtil;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TheHand extends Item implements CustomRenderedItem{
 	
@@ -33,39 +40,38 @@ public class TheHand extends Item implements CustomRenderedItem{
 	public int getMaxItemUseDuration(ItemStack p_77626_1_){return 100000;}
 	
 	@Override
+	@SideOnly(Side.CLIENT)
 	public CustomRenderedItemRenderer getRenderer(ItemStack stack){
-		return TheHandHandler.getRenderer();
+		return ItemRendererTheHand.get();
 	}
 	
 	@Override
 	public void onCreated(ItemStack itemStack, World world, EntityPlayer player){
 		NBTUtil.createNBT(itemStack);
 	}
-	
 	@Override
-	public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer player){
+	public ActionResult<ItemStack> onItemRightClick(ItemStack itemstack, World world, EntityPlayer player, EnumHand hand){
 		
 		HandPosition ap=TheHandHandler.getActivePosition(player);
 		if(ap==CommonHand.weaponHolder){
 			TheHandHandler.actionAnimation(player);
-			player.setItemInUse(itemstack, getMaxItemUseDuration(itemstack));
+			player.setActiveHand(hand);
 		}else if(ap==CommonHand.naturalPosition){
 			TheHandHandler.handUseAnimation(player);
 		}
-		return itemstack;
+		return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemstack);
 	}
-	
 	@Override
-	public boolean onItemUseFirst(ItemStack itemstack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ){
+	public EnumActionResult onItemUseFirst(ItemStack itemstack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand){
 		TheHandHandler.handUseAnimation(player);
 		HandPosition ap=TheHandHandler.getActivePosition(player);
 		if(ap==CommonHand.weaponHolder){
 			TheHandHandler.actionAnimation(player);
-			player.setItemInUse(itemstack, getMaxItemUseDuration(itemstack));
+			player.setActiveHand(hand);
 		}else if(ap==CommonHand.naturalPosition){
 			TheHandHandler.handUseAnimation(player);
 		}
-		return false;
+		return EnumActionResult.FAIL;
 	}
 	
 	@Override
@@ -78,7 +84,7 @@ public class TheHand extends Item implements CustomRenderedItem{
 		return false;
 	}
 	@Override
-	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityPlayer player, int timeHeld){
+	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase entity, int timeHeld){
 		timeHeld-=100000;
 		timeHeld*=-1;
 		if(timeHeld<10)return;

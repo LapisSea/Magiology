@@ -189,7 +189,7 @@ public class Vec3M extends Vector implements Serializable, ReadableVector, Reada
 	}
 	@Override
 	public float lengthSquared(){
-		return (float)(x*x+y*y+z*z);
+		return (float)(this.x * this.x + this.y * this.y + this.z * this.z);
 	}
 	public double lengthVector(){
 		return MathHelper.sqrt_double(this.x * this.x + this.y * this.y + this.z * this.z);

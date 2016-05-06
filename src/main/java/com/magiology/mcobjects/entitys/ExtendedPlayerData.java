@@ -1,100 +1,177 @@
 package com.magiology.mcobjects.entitys;
 
-import com.magiology.forgepowered.packets.packets.SendPlayerDataPacket;
-import com.magiology.forgepowered.packets.packets.UploadPlayerDataPacket;
-import com.magiology.util.utilclasses.UtilM;
+import com.magiology.core.MReference;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.Capability.IStorage;
+import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-//props to coolAlias on mc forums for teaching me this! :D
-public class ExtendedPlayerData implements IExtendedEntityProperties{
-	public final static String EXT_PROP_NAME = "ExtendedPlayerData";
-	public static void enshure(EntityPlayer player){if(get(player)==null)register(player);}
-	public static ExtendedPlayerData get(EntityPlayer player){return player==null?null:(ExtendedPlayerData)player.getExtendedProperties(EXT_PROP_NAME);}
-	public static ExtendedPlayerData register(EntityPlayer player){
-		player.registerExtendedProperties(ExtendedPlayerData.EXT_PROP_NAME, new ExtendedPlayerData(player));
-		return ExtendedPlayerData.get(player);
-	}
-	public boolean isFlappingDown;
-	private int jumpCount;
-	public boolean[] keys=new boolean[6];
-	
-	public final EntityPlayer player;
-	
-	private float reducedFallDamage;
+public class ExtendedPlayerData{
 
-	public int soulFlame,maxSoulFlame;
-	public ExtendedPlayerData(EntityPlayer player){
-		this.player=player;
-		this.maxSoulFlame=5000;
-	}
-	public int getJupmCount(){return jumpCount;}
+	@CapabilityInject(IMagiologyPlayerData.class)
+	private static final Capability<IMagiologyPlayerData> MAGIOLOGY_PLAYER_DATA=null;
 	
-	public int getKeysX(){
-		int x=0;if(keys[0])x++;
-		if(keys[1])x--;return x;
-	}
-	public int getKeysY(){
-		int y=0;if(keys[2])y++;
-		if(keys[3])y--;return y;
-	}
-
-	public int getKeysZ(){
-		int z=0;if(keys[4])z++;
-		if(keys[5])z--;return z;
-	}
-	public float getReducedFallDamage(){return reducedFallDamage;}
-	//------------------------
-	@Override public void init(Entity entity, World world){}
-	@Override
-	public void loadNBTData(NBTTagCompound Nbt){
-		NBTTagCompound NBT=(NBTTagCompound)Nbt.getTag(EXT_PROP_NAME);
-		this.soulFlame=NBT.getInteger("SF");
-		this.maxSoulFlame=NBT.getInteger("MSF");
-		this.jumpCount=NBT.getInteger("JC");
-		this.reducedFallDamage=NBT.getFloat("RFD");
+	public void register(){
+		CapabilityManager.INSTANCE.register(IMagiologyPlayerData.class, new Storage(), DefaultMagiologyPlayerData.class);
+		MinecraftForge.EVENT_BUS.register(this);
 	}
 	
-	public boolean onJump(){
-		boolean change=false;
-		int prevJupmCount=jumpCount;
-		jumpCount++;
-		change=prevJupmCount!=jumpCount;
-		if(change||true)sendData();
-		return change;
-	}public boolean onLand(boolean isSurvival){
-		boolean change=false;
-		int prevJupmCount=jumpCount;
-		jumpCount=0;
-		change=prevJupmCount!=jumpCount;
-		reducedFallDamage=0;
-		if(change)sendData();
-		return change;
-	}@Override
-	public void saveNBTData(NBTTagCompound Nbt){
-		NBTTagCompound NBT=new NBTTagCompound();
-		NBT.setInteger("SF", soulFlame);
-		NBT.setInteger("MSF", maxSoulFlame);
-		NBT.setInteger("JC", jumpCount);
-		NBT.setFloat("RFD", reducedFallDamage);
-		Nbt.setTag(EXT_PROP_NAME, NBT);
+	@CapabilityInject(IMagiologyPlayerData.class)
+	private static void capRegistered(Capability<IMagiologyPlayerData> cap){
+		System.out.println("IExampleCapability was registered wheeeeee!");
+	}
+	
+	
+	private static IMagiologyPlayerData getData(EntityPlayer player){
+		return player.getCapability(MAGIOLOGY_PLAYER_DATA, EnumFacing.DOWN);
+	}
+	
+	public static int getEnergy(EntityPlayer player){
+		return getData(player).getEnergy();
+	}
+	public static void setEnergy(EntityPlayer player, int energy){
+		getData(player).setEnergy(energy);
+	}
+	public static int getMaxEnergy(EntityPlayer player){
+		return getData(player).getMaxEnergy();
+	}
+	public static void setMaxEnergy(EntityPlayer player, int maxEnergy){
+		getData(player).setMaxEnergy(maxEnergy);
+	}
+	
+	public static boolean isFlappingDown(EntityPlayer player){
+		return getData(player).isFlappingDown();
+	}
+	public static void setFlappingDown(EntityPlayer player, boolean flappingDown){
+		getData(player).setFlappingDown(flappingDown);
+	}
+	
+	
+	
+	public static interface IMagiologyPlayerData{
+		public int getEnergy();
+		public void setEnergy(int energy);
+		public int getMaxEnergy();
+		public void setMaxEnergy(int energy);
+		
+		public boolean isFlappingDown();
+		public void setFlappingDown(boolean flappingDown);
 	}
 
-	public void sendData(){
-		if(player.worldObj.isRemote||player==null)return;
-		try{UtilM.sendMessage(new SendPlayerDataPacket(player));}catch(Exception e){e.printStackTrace();}
+	public static class Storage implements IStorage<IMagiologyPlayerData>{
+		
+		@Override
+		public NBTBase writeNBT(Capability<IMagiologyPlayerData> capability, IMagiologyPlayerData instance, EnumFacing side){
+			NBTTagCompound nbt=new NBTTagCompound();
+			nbt.setInteger("en", instance.getEnergy());
+			nbt.setBoolean("fd", instance.isFlappingDown());
+			return nbt;
+		}
+		
+		@Override
+		public void readNBT(Capability<IMagiologyPlayerData> capability, IMagiologyPlayerData instance, EnumFacing side, NBTBase nbtBase){
+			NBTTagCompound nbt=(NBTTagCompound)nbtBase;
+			instance.setEnergy(nbt.getInteger("en"));
+			instance.setFlappingDown(nbt.getBoolean("fd"));
+		}
+		
 	}
-	public void setJupmCount(int count){jumpCount=count;}
-	public boolean setReducedFallDamage(float ReducedFallDamage){
-		float prevReducedFallDamage=reducedFallDamage;
-		reducedFallDamage=ReducedFallDamage;
-		return prevReducedFallDamage!=reducedFallDamage;
+	
+	public static class DefaultMagiologyPlayerData implements IMagiologyPlayerData{
+		
+		private DefaultMagiologyPlayerData(){}
+		
+		@Override
+		public int getEnergy(){
+			return -1;
+		}
+
+		@Override
+		public void setEnergy(int energy){
+			
+		}
+
+		@Override
+		public boolean isFlappingDown(){
+			return false;
+		}
+
+		@Override
+		public void setFlappingDown(boolean flappingDown){
+			
+		}
+
+		@Override
+		public int getMaxEnergy(){
+			return 0;
+		}
+
+		@Override
+		public void setMaxEnergy(int energy){
+			
+		}
 	}
-	public void uploadData(){
-		if(!player.worldObj.isRemote||player==null)return;
-		try{UtilM.sendMessage(new UploadPlayerDataPacket(player));}catch(Exception e){e.printStackTrace();}
+	
+	public class MagiologyPlayerData implements ICapabilityProvider, IMagiologyPlayerData{
+		
+		private int energy,maxEnergy;
+		private boolean flappingDown;
+		
+		private MagiologyPlayerData(){}
+		
+		@Override
+		public boolean hasCapability(Capability<?> capability, EnumFacing facing){
+			return capability!=null&&capability==MAGIOLOGY_PLAYER_DATA;
+		}
+		
+		@Override
+		public <T> T getCapability(Capability<T> capability, EnumFacing facing){
+			return capability==MAGIOLOGY_PLAYER_DATA?(T)this:null;
+		}
+		
+		@Override
+		public int getEnergy(){
+			return energy;
+		}
+		@Override
+		public void setEnergy(int energy){
+			this.energy=energy;
+		}
+		@Override
+		public int getMaxEnergy(){
+			return maxEnergy;
+		}
+		@Override
+		public void setMaxEnergy(int maxEnergy){
+			this.maxEnergy=maxEnergy;
+		}
+		
+		@Override
+		public boolean isFlappingDown(){
+			return flappingDown;
+		}
+		@Override
+		public void setFlappingDown(boolean flappingDown){
+			this.flappingDown=flappingDown;
+		}
+
 	}
+
+	@SubscribeEvent
+	public void onPlayerLoad(AttachCapabilitiesEvent.Entity event){
+		if(!(event.getEntity()instanceof EntityPlayer))return;
+		
+		event.addCapability(new ResourceLocation(MReference.MODID+":MagiologyData"), new MagiologyPlayerData());
+	}
+
 }

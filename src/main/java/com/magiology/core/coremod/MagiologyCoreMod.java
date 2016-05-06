@@ -21,7 +21,11 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions
 public class MagiologyCoreMod implements IFMLLoadingPlugin{
 	
 	public static File location;
-
+	
+	public MagiologyCoreMod(){
+		
+	}
+	
 	@Override
 	public String getAccessTransformerClass(){
 		return null;
@@ -29,7 +33,7 @@ public class MagiologyCoreMod implements IFMLLoadingPlugin{
 	
 	@Override
 	public String[] getASMTransformerClass(){
-		return CollectionConverter.convAr(ClassList.getImplementations().get(IClassTransformer.class), String.class, (c)->{return c.getName();});
+		return CollectionConverter.convAr(ClassList.getImplementations(IClassTransformer.class), String.class, c->c.getName());
 	}
 
 	@Override

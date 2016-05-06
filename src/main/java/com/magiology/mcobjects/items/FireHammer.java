@@ -4,8 +4,6 @@ import java.util.List;
 
 import com.magiology.api.power.ISidedPower;
 import com.magiology.api.power.PowerCore;
-import com.magiology.mcobjects.tileentityes.TileEntityControlBlock;
-import com.magiology.mcobjects.tileentityes.TileEntityFireLamp;
 import com.magiology.registry.WrenchRegistry;
 import com.magiology.util.utilclasses.PowerUtil;
 import com.magiology.util.utilclasses.UtilM;
@@ -49,13 +47,11 @@ public class FireHammer extends ItemM{
 	}
 	
 	@Override
-	public EnumActionResult onItemUse(ItemStack itemstack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float x2, float y2, float z2){
+	public EnumActionResult onItemUse(ItemStack itemstack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float x, float y, float z){
 		if(itemstack.getTagCompound()==null)itemstack.setTagCompound(new NBTTagCompound());
 		boolean isit=false;
 		boolean isit2=false;
 		TileEntity tile1=world.getTileEntity(pos);
-		
-		
 		
 		if(player.isSneaking()){
 			UtilM.getBlock(world, pos);
@@ -67,11 +63,6 @@ public class FireHammer extends ItemM{
 		int inorout=-1;
 		TileEntity tile;
 		tile=world.getTileEntity(pos);
-		if(tile instanceof TileEntityFireLamp){
-			isit2=true;
-			BlockPos bPos=new BlockPos(itemstack.getTagCompound().getInteger("CX"), itemstack.getTagCompound().getInteger("CY"), itemstack.getTagCompound().getInteger("CZ"));
-			if(world.getTileEntity(bPos)instanceof TileEntityControlBlock)((TileEntityFireLamp)tile).control=bPos;
-		}
 		
 		if(tile instanceof ISidedPower){
 			ISidedPower isTile=(ISidedPower)tile;

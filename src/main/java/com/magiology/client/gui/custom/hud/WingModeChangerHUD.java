@@ -5,30 +5,32 @@ import java.awt.Color;
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.opengl.GL11;
 
-import com.magiology.forgepowered.packets.packets.generic.GenericServerIntPacket;
+import com.magiology.forgepowered.packets.packets.toserver.SendWingModePacket;
 import com.magiology.handlers.animationhandlers.WingsFromTheBlackFireHandler;
 import com.magiology.handlers.animationhandlers.WingsFromTheBlackFireHandler.Positions;
 import com.magiology.mcobjects.entitys.ComplexPlayerRenderingData;
-import com.magiology.mcobjects.entitys.ExtendedPlayerData;
 import com.magiology.util.renderers.GL11U;
 import com.magiology.util.renderers.OpenGLM;
 import com.magiology.util.renderers.Renderer;
 import com.magiology.util.renderers.TessUtil;
 import com.magiology.util.utilclasses.RandUtil;
+import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilclasses.UtilM;
 import com.magiology.util.utilclasses.math.MathUtil;
 import com.magiology.util.utilclasses.math.PartialTicksUtil;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class WingModeChangerHUD extends HUD{
 	public static WingModeChangerHUD instance=new WingModeChangerHUD();
 	float[][] backgroundColor,prevBackgroundColor;
 	double[][] criclePoss={MathUtil.circleXZ(0),MathUtil.circleXZ(60),MathUtil.circleXZ(120),MathUtil.circleXZ(180),MathUtil.circleXZ(240),MathUtil.circleXZ(300),MathUtil.circleXZ(0)};
 	Positions curentPoss;
 	private ComplexPlayerRenderingData data;
-	private ExtendedPlayerData extendedData;
 	FontRenderer fr;
 	private boolean isExited=true;
 	private int selectionId;
@@ -40,7 +42,7 @@ public class WingModeChangerHUD extends HUD{
 		if(!isExited)sliderWantedPos-=width/2+fr.FONT_HEIGHT;
 	}
 	private void onExit(){
-		if(WingsFromTheBlackFireHandler.getIsActive(player))UtilM.sendMessage(new GenericServerIntPacket(6, validPoss[selectionId].id));
+		if(WingsFromTheBlackFireHandler.getIsActive(player))UtilM.sendMessage(new SendWingModePacket(validPoss[selectionId].id));
 	}
 	private void onOpen(){}
 	public void prev(){
@@ -50,8 +52,7 @@ public class WingModeChangerHUD extends HUD{
 	public void render(int xScreen, int yScreen, float partialTicks){
 		Positions[] poss=Positions.values();
 		//loading up
-		if(UtilM.isNull(extendedData,data,fr,validPoss,UtilM.getTheWorld(),backgroundColor)){
-			if(extendedData==null)extendedData=ExtendedPlayerData.get(player);
+		if(UtilM.isNull(data,fr,validPoss,UtilC.getTheWorld(),backgroundColor)){
 			if(data==null)data=ComplexPlayerRenderingData.get(player);
 			fr=TessUtil.getFontRenderer();
 			if(validPoss==null)for(int a=0;a<poss.length;a++)if(poss[a].wanted&&poss[a]!=Positions.FlyBackvardPos&&poss[a]!=Positions.FlyForvardPos)validPoss=ArrayUtils.add(validPoss, poss[a]);
@@ -59,30 +60,17 @@ public class WingModeChangerHUD extends HUD{
 			prevBackgroundColor=backgroundColor.clone();
 			return;
 		}if(player==null)return;
-		if(data.player!=player){
-			extendedData=ExtendedPlayerData.get(player);
-		}
-		if(extendedData==null)return;
 		for(Positions poz:poss)width=Math.max(width, fr.getStringWidth(poz.name()));
 		//end
-		player=UtilM.getThePlayer();
-		float calcAlpha=PartialTicksUtil.calculatePos(prevAlpha, alpha);
+		player=UtilC.getThePlayer();
+		float calcAlpha=PartialTicksUtil.calculate(prevAlpha, alpha);
 		GL11U.setUpOpaqueRendering(1);
-		if(WingsFromTheBlackFireHandler.getIsActive(player)){
-			String poz=WingsFromTheBlackFireHandler.getPos(player)+"/"+Positions.get(WingsFromTheBlackFireHandler.getPosId(player));
-			OpenGLM.pushMatrix();
-			OpenGLM.translate(xScreen-fr.getStringWidth(poz)*0.7, yScreen-fr.FONT_HEIGHT*0.7,0);
-			GL11U.glScale(0.7);
-			Color c=new Color(255,255,255,(int)(255*MathUtil.snap(calcAlpha+0.25, 0, 1)));
-			fr.drawStringWithShadow(poz, -1,-1, c.hashCode());
-			OpenGLM.popMatrix();
-		}
 		
 		if(calcAlpha<0.01){
 			GL11U.endOpaqueRendering();
 			return;
 		}
-		double slide=PartialTicksUtil.calculatePos(prevSliderPos, sliderPos);
+		double slide=PartialTicksUtil.calculate(prevSliderPos, sliderPos);
 		
 		float offset=calcAlpha*10-10;
 		float reducedScale=1,clipping=275-yScreen;
@@ -101,7 +89,7 @@ public class WingModeChangerHUD extends HUD{
 		GL11U.endOpaqueRendering();
 	}
 	private void renderSlider(){
-		float calcAlpha=PartialTicksUtil.calculatePos(prevAlpha, alpha),mainAlpha=255*calcAlpha;
+		float calcAlpha=PartialTicksUtil.calculate(prevAlpha, alpha),mainAlpha=255*calcAlpha;
 		if(calcAlpha<=0.01)return;
 		int id=0;
 		int nextLineOffset=width/2+fr.FONT_HEIGHT/2;
@@ -111,7 +99,7 @@ public class WingModeChangerHUD extends HUD{
 			criclePoss[a][b]+=RandUtil.CRF(0.01);
 		}
 		for(int a=0;a<calcBackgroundColor.length;a++)for(int b=0;b<3;b++){
-			calcBackgroundColor[a][b]=PartialTicksUtil.calculatePos(backgroundColor[a][b], prevBackgroundColor[a][b]);
+			calcBackgroundColor[a][b]=PartialTicksUtil.calculate(backgroundColor[a][b], prevBackgroundColor[a][b]);
 		}
 		for(int nj=0;nj<3;nj++)for(int pozId=0;pozId<validPoss.length;pozId++){
 			Positions poz=validPoss[pozId];
@@ -156,7 +144,7 @@ public class WingModeChangerHUD extends HUD{
 	}
 	@Override
 	public void update(){
-		if(UtilM.isNull(extendedData,data,player,validPoss,UtilM.getTheWorld()))return;
+		if(UtilM.isNull(data,player,validPoss,UtilC.getTheWorld()))return;
 		int nextLineOffset=width/2+fr.FONT_HEIGHT;
 		prevBackgroundColor=backgroundColor.clone();
 		prevSliderPos=sliderPos;
@@ -177,13 +165,13 @@ public class WingModeChangerHUD extends HUD{
 		double noise=0.05,speed=0.15;
 		for(int a=0;a<backgroundColor.length;a++){
 			if(a==selectionId){
-				backgroundColor[a][0]=(float)UtilM.slowlyEqualize(backgroundColor[a][0], 1+RandUtil.CRF(noise),speed);
-				backgroundColor[a][1]=(float)UtilM.slowlyEqualize(backgroundColor[a][1], 0.2+RandUtil.CRF(noise),speed);
-				backgroundColor[a][2]=(float)UtilM.slowlyEqualize(backgroundColor[a][2], 0.2+RandUtil.CRF(noise),speed);
+				backgroundColor[a][0]=(float)UtilM.graduallyEqualize(backgroundColor[a][0], 1+RandUtil.CRF(noise),speed);
+				backgroundColor[a][1]=(float)UtilM.graduallyEqualize(backgroundColor[a][1], 0.2+RandUtil.CRF(noise),speed);
+				backgroundColor[a][2]=(float)UtilM.graduallyEqualize(backgroundColor[a][2], 0.2+RandUtil.CRF(noise),speed);
 			}else{
-				backgroundColor[a][0]=(float)UtilM.slowlyEqualize(backgroundColor[a][0], 0.2+RandUtil.CRF(noise),speed);
-				backgroundColor[a][1]=(float)UtilM.slowlyEqualize(backgroundColor[a][1], 0.2+RandUtil.CRF(noise),speed);
-				backgroundColor[a][2]=(float)UtilM.slowlyEqualize(backgroundColor[a][2], 0.2+RandUtil.CRF(noise),speed);
+				backgroundColor[a][0]=(float)UtilM.graduallyEqualize(backgroundColor[a][0], 0.2+RandUtil.CRF(noise),speed);
+				backgroundColor[a][1]=(float)UtilM.graduallyEqualize(backgroundColor[a][1], 0.2+RandUtil.CRF(noise),speed);
+				backgroundColor[a][2]=(float)UtilM.graduallyEqualize(backgroundColor[a][2], 0.2+RandUtil.CRF(noise),speed);
 			}
 			
 			backgroundColor[a][0]=MathUtil.snap(backgroundColor[a][0], 0, 1);

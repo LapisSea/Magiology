@@ -10,31 +10,27 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.magiology.client.render.Textures;
 import com.magiology.client.render.font.FontRendererMBase;
-import com.magiology.core.MReference;
-import com.magiology.handlers.obj.handler.revived.yayformc1_8.AdvancedModelLoader;
-import com.magiology.handlers.obj.handler.revived.yayformc1_8.IModelCustom;
-import com.magiology.mcobjects.effect.EntityFXM;
 import com.magiology.util.renderers.tessellatorscripts.CubeModel;
+import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilclasses.UtilM;
-import com.magiology.util.utilclasses.UtilM.U;
-import com.magiology.util.utilclasses.math.CricleUtil;
+import com.magiology.util.utilclasses.math.MathUtil;
 import com.magiology.util.utilclasses.math.MatrixUtil;
 import com.magiology.util.utilclasses.math.PartialTicksUtil;
 import com.magiology.util.utilobjects.m_extension.AxisAlignedBBM;
 import com.magiology.util.utilobjects.vectors.QuadUV;
 import com.magiology.util.utilobjects.vectors.Vec3M;
 
-import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
@@ -46,8 +42,6 @@ import net.minecraft.util.math.MathHelper;
  */
 public class TessUtil{
 	
-	private static IModelCustom arrowModel;
-	private static IModelCustom ballModel;
 	private static CubeModel brainC1,brainC2;
 	private static VertexRenderer buf=new VertexRenderer();
 	static Field equippedProgress,prevEquippedProgress;
@@ -55,32 +49,15 @@ public class TessUtil{
 	
 	
 	static final ResourceLocation inventoryPict = new ResourceLocation("textures/gui/container/inventory.png");
-	private static IModelCustom SV98;
 	static{
 		QuadUV uv=new QuadUV(0, 0, 1, 0, 1, 1, 0, 1);
 		brainC1=new CubeModel(-UtilM.p, -UtilM.p, -UtilM.p, 0, 0, 0,new QuadUV[]{uv},new ResourceLocation[]{Textures.Brain});
 		brainC2=new CubeModel(0, 0, 0 , UtilM.p, UtilM.p, UtilM.p,new QuadUV[]{uv},new ResourceLocation[]{Textures.Brain});
 	}
-	public static void bindTexture(ResourceLocation texture){U.getMC().getTextureManager().bindTexture(texture);}
+	public static void bindTexture(ResourceLocation texture){UtilC.getMC().getTextureManager().bindTexture(texture);}
 	public static float[] calculateRenderPos(Entity entity){
-		Vec3M pos=PartialTicksUtil.calculatePos(entity);
+		Vec3M pos=PartialTicksUtil.calculate(entity);
 		return new float[]{pos.getX(),pos.getY(),pos.getZ()};
-	}
-	public static void drawArrow(){
-		if(arrowModel==null)arrowModel=AdvancedModelLoader.loadModel(new ResourceLocation(MReference.MODID,"/models/arrow.obj"));
-		else{ 
-			OpenGLM.pushMatrix();
-			OpenGLM.translate(0.6F, -0.03F, 0.52F);
-			GL11U.glRotate(0, 45, 0);
-			arrowModel.renderAll();
-			OpenGLM.popMatrix();
-		}
-	}
-	public static void drawBall(){
-		if(ballModel==null)ballModel=AdvancedModelLoader.loadModel(new ResourceLocation(MReference.MODID,"/models/ball.obj"));
-		else{
-			ballModel.renderAll();
-		}
 	}
 	public static void drawBlurredCube(int x,int y,int z,AxisAlignedBB cube,int blurQuality,double resolution,double r,double g,double b,double alpha){
 		if(blurQuality<1||cube==null)return;
@@ -157,7 +134,7 @@ public class TessUtil{
 		double[][] xy=new double[2][Math.abs(endAngle-startAngle)];
 		for(int xory=0;xory<xy.length;xory++){
 			for(int index=0;index<xy[xory].length;index++){
-				xy[xory][index]=xory==0?CricleUtil.sin(index+startAngle):CricleUtil.cos(index+startAngle);
+				xy[xory][index]=xory==0?MathUtil.sin(index+startAngle):MathUtil.cos(index+startAngle);
 				xy[xory][index]*=scale;
 			}
 		}
@@ -187,7 +164,7 @@ public class TessUtil{
 		double[][] xy=new double[2][Math.abs(endAngle-startAngle)];
 		for(int xory=0;xory<xy.length;xory++){
 			for(int index=0;index<xy[xory].length;index++){
-				xy[xory][index]=xory==0?CricleUtil.sin(index+startAngle):CricleUtil.cos(index+startAngle);
+				xy[xory][index]=xory==0?MathUtil.sin(index+startAngle):MathUtil.cos(index+startAngle);
 				xy[xory][index]*=scale;
 			}
 		}
@@ -218,7 +195,7 @@ public class TessUtil{
 		double[][] xy=new double[2][Math.abs(endAngle-startAngle)];
 		for(int xory=0;xory<xy.length;xory++){
 			for(int index=0;index<xy[xory].length;index++){
-				xy[xory][index]=xory==0?CricleUtil.sin(index+startAngle):CricleUtil.cos(index+startAngle);
+				xy[xory][index]=xory==0?MathUtil.sin(index+startAngle):MathUtil.cos(index+startAngle);
 				xy[xory][index]*=scale;
 			}
 		}
@@ -347,7 +324,8 @@ public class TessUtil{
 		}
 		OpenGLM.translate(0.0F, (float)player.getYOffset(), 0.0F);
 		getRM().playerViewY = 180.0F;
-		getRM().renderEntityWithPosYaw(player, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
+		//TODO: do this shit!
+//		getRM().renderEntityWithPosYaw(player, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
 		player.renderYawOffset = f2;
 		player.rotationYaw = f3;
 		player.rotationPitch = f4;
@@ -425,14 +403,6 @@ public class TessUtil{
 		OpenGLM.popMatrix();
 		GL11U.endOpaqueRendering();
 	}
-	public static void drawSV98(){
-		if(SV98==null)SV98=AdvancedModelLoader.loadModel(new ResourceLocation(MReference.MODID,"/models/SV98.obj"));
-		else{
-			GL11U.texture(false);
-			SV98.renderAll();
-			GL11U.texture(true);
-		}
-	}
 	public static void drawTri(double[] X, double[] Y,double[] Z, double[] U, double[] V){
 		int hi=max(max(max(max(X.length,Y.length),Z.length),U.length),V.length);
 		if(hi%3!=0||X.length<hi||Y.length<hi||Z.length<hi||U.length<hi||V.length<hi)return;
@@ -440,7 +410,7 @@ public class TessUtil{
 		for (int i = 0; i < X.length; i++)buf.addVertexWithUV(X[i], Y[i], Z[i], U[i], V[i]);
 		buf.draw();
 	}
-	private static void func_178098_a(float p_178098_1_,AbstractClientPlayer clientPlayer){
+	private static void func_178098_a(float p_178098_1_,EntityPlayer clientPlayer){
 		MatrixUtil.instance.rotateZ(-18.0F).rotateY(-12.0F).rotateX(-8.0F).translate(-0.9F,0.2F,0.0F);
 		float f=clientPlayer.getHeldItemMainhand().getMaxItemUseDuration()-(clientPlayer.getItemInUseCount()-p_178098_1_+1.0F);
 		float f1=f/20.0F;
@@ -462,7 +432,7 @@ public class TessUtil{
 	private static void func_178103_d(){
 		MatrixUtil.instance.translate(-0.5F,0.2F,0.0F).rotateY(30.0F).rotateX(-80.0F).rotateY(60.0F);
 	}
-	private static void func_178104_a(AbstractClientPlayer clientPlayer,float p_178104_2_){
+	private static void func_178104_a(EntityPlayer clientPlayer,float p_178104_2_){
 		float f=clientPlayer.getItemInUseCount()-p_178104_2_+1.0F;
 		float f1=f/clientPlayer.getHeldItemMainhand().getMaxItemUseDuration();
 		float f2=MathHelper.abs(MathHelper.cos(f/4.0F*(float)Math.PI)*0.1F);
@@ -478,14 +448,14 @@ public class TessUtil{
 		return fontRendererMBase;
 	}
 	public static FontRenderer getFontRenderer(){
-		return UtilM.getMC().fontRendererObj;
+		return UtilC.getMC().fontRendererObj;
 	}
 	public static Matrix4f getItemPos(){
-		EntityPlayerSP player=(EntityPlayerSP)UtilM.getThePlayer();
+		EntityPlayer player=UtilC.getThePlayer();
 		
 		float partialTicks=PartialTicksUtil.partialTicks;
 		
-		MatrixUtil.createMatrix(PartialTicksUtil.calculatePos(player).add(0,player.getEyeHeight(),0)).rotateY(-player.rotationYaw+180).rotateX(-player.rotationPitch);
+		MatrixUtil.createMatrix(PartialTicksUtil.calculate(player).add(0,player.getEyeHeight(),0)).rotateY(-player.rotationYaw+180).rotateX(-player.rotationPitch);
 		
 		if(player.getItemInUseCount()>0){
 			switch(player.getHeldItemMainhand().getItemUseAction()){
@@ -510,37 +480,19 @@ public class TessUtil{
 		return MatrixUtil.instance.finish();
 	}
 	
-	public static RenderManager getRM(){return UtilM.getMC().getRenderManager();}
+	public static RenderManager getRM(){return UtilC.getMC().getRenderManager();}
 	
 	public static Tessellator getT(){return Tessellator.getInstance();}
 	
 	public static VertexRenderer getVB(){return buf;}
 
-	public static WorldRenderer getWR(){return Tessellator.getInstance().getWorldRenderer();}
+	public static VertexBuffer getWB(){return Tessellator.getInstance().getBuffer();}
 	
-	public static void renderParticle(){
-		boolean isFP=U.getMC().gameSettings.thirdPersonView==2;
-		OpenGLM.depthMask(false);
-		OpenGLM.enableBlend();
-		if(isFP)OpenGLM.disableCull();
-		GL11U.blendFunc(2);
-		OpenGLM.alphaFunc(GL11.GL_GREATER, 0.003921569F);
-		
-		EntityFXM.renderBufferedParticle();
-		
-		
-		GL11U.allOpacityIs(true);
-		OpenGLM.disableBlend();
-		if(isFP)OpenGLM.enableCull();
-		OpenGLM.depthMask(true);
-		
-	}
-
 	public static void setItemRendererEquippProgress(float From0To1,boolean isSmooth){
-		ItemRenderer IR=U.getMC().entityRenderer.itemRenderer;
+		ItemRenderer IR=UtilC.getMC().entityRenderer.itemRenderer;
 		if(IR!=null)try{
 			if(!isSmooth){
-				if(prevEquippedProgress==null)prevEquippedProgress = ItemRenderer.class.getDeclaredField("prevEquippedProgress");
+				if(prevEquippedProgress==null)prevEquippedProgress=ItemRenderer.class.getDeclaredField("prevEquippedProgress");
 				prevEquippedProgress.setAccessible(true);
 				prevEquippedProgress.setFloat(IR,From0To1);
 			}

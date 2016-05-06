@@ -4,6 +4,7 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 
 public class EntityPlayerModelColider<T extends EntityPlayer> extends EntityModelColider<T>{
 	
@@ -43,6 +44,7 @@ public class EntityPlayerModelColider<T extends EntityPlayer> extends EntityMode
 	    }
 		
 		
+		@Override
 		public void render(Entity entityIn, float p_78088_2_, float p_78088_3_, float p_78088_4_, float p_78088_5_, float p_78088_6_, float scale){
 			setModelAttributes(EntityPlayerModelColider.this.getMainModel());
 			this.isChild=false;
@@ -52,11 +54,7 @@ public class EntityPlayerModelColider<T extends EntityPlayer> extends EntityMode
 				matrix.translate(0.0F, 3F, 0.0F);
 			}
 			EntityPlayer player=((EntityPlayer)entityIn);
-			boolean 
-				hasHelmet=player.getCurrentArmor(3)!=null,
-				hasCheastpeace=player.getCurrentArmor(2)!=null,
-				hasLegings=player.getCurrentArmor(1)!=null,
-				hasBoots=player.getCurrentArmor(0)!=null;
+			boolean hasHelmet=player.getItemStackFromSlot(EntityEquipmentSlot.HEAD)!=null;
 			if(this.isChild){
 				float f=2.0F;
 				matrix.scale(1.5F/f, 1.5F/f, 1.5F/f);

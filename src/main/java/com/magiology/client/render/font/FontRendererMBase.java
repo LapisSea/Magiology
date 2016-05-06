@@ -18,6 +18,7 @@ import com.ibm.icu.text.Bidi;
 import com.magiology.util.renderers.OpenGLM;
 import com.magiology.util.renderers.Renderer;
 import com.magiology.util.utilclasses.Get.Render.Font;
+import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilobjects.ColorF;
 
 import net.minecraft.client.gui.FontRenderer;
@@ -72,8 +73,8 @@ public class FontRendererMBase extends FontRenderer{
 	protected final TextureManager renderEngine;
 
 	public FontRendererMBase(ResourceLocation res){
-		super(getMC().gameSettings, res, getMC().renderEngine, false);
-		renderEngine=getMC().renderEngine;
+		super(UtilC.getMC().gameSettings, res, UtilC.getMC().renderEngine, false);
+		renderEngine=UtilC.getMC().renderEngine;
 		bindTexture(locationFontTexture);
 		for(int i=0;i<32;++i){
 			int j=(i>>3&1)*85;
@@ -83,7 +84,7 @@ public class FontRendererMBase extends FontRenderer{
 			if(i==6){
 				k+=85;
 			}
-			if(getMC().gameSettings.anaglyph){
+			if(UtilC.getMC().gameSettings.anaglyph){
 				int j1=(k*30+l*59+i1*11)/100;
 				int k1=(k*30+l*70)/100;
 				int l1=(k*30+i1*70)/100;
@@ -298,7 +299,7 @@ public class FontRendererMBase extends FontRenderer{
 	protected void readFontTexture(){
 		BufferedImage bufferedimage;
 		try{
-			bufferedimage=TextureUtil.readBufferedImage(getResourceInputStream(locationFontTexture));
+			bufferedimage=TextureUtil.readBufferedImage(getResource(locationFontTexture).getInputStream());
 		}catch(IOException ioexception){
 			throw new RuntimeException(ioexception);
 		}
@@ -344,7 +345,7 @@ public class FontRendererMBase extends FontRenderer{
 	protected void readGlyphSizes(){
 		InputStream inputstream=null;
 		try{
-			inputstream=getResourceInputStream(new ResourceLocation("font/glyph_sizes.bin"));
+			inputstream=getResource(new ResourceLocation("font/glyph_sizes.bin")).getInputStream();
 			inputstream.read(glyphWidth);
 		}catch(IOException ioexception){
 			throw new RuntimeException(ioexception);

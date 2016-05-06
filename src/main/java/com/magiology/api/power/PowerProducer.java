@@ -10,7 +10,7 @@ public interface PowerProducer extends PowerCore{
 	 */
 	public boolean canGeneratePowerAddon();
 	/**used every time a generator spends fuel to work*/
-	public void generateFunction();
+	public void onGenerateEnergy();
 	/**returns power of the object*/
 	public int getFuel();
 	/**returns maximal possible amount of the power in the fuel buffer*/

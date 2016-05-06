@@ -7,8 +7,10 @@ import com.magiology.util.utilobjects.ColorF;
 import com.magiology.util.utilobjects.vectors.Vec3M;
 
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.util.math.Vec3d;
 
 public class Renderer{
 	
@@ -30,11 +32,13 @@ public class Renderer{
 			super.begin(type);
 		}
 		
+		@Override
 		@Deprecated
 		public void beginQuads(){
 			begin();
 		}
 		
+		@Override
 		public VertexFormat getVertexFormat(){
 			return DefaultVertexFormats.POSITION;
 		}
@@ -52,9 +56,13 @@ public class Renderer{
 		public void addVertex(Vec3M pos, float u, float v, ColorF color, int xLight, int yLight){
 			addVertex(pos.x, pos.y, pos.z, u, v, color.r, color.g, color.b, color.a, xLight, yLight);
 		}
+		public void addVertex(Vec3d pos, float u, float v, ColorF color, int xLight, int yLight){
+			addVertex(pos.xCoord, pos.yCoord, pos.zCoord, u, v, color.r, color.g, color.b, color.a, xLight, yLight);
+		}
 		public void addVertex(Vec3M pos, float u, float v, float red, float green, float blue, float alpha, int xLight, int yLight){
 			addVertex(pos.x, pos.y, pos.z, u, v, red, green, blue, alpha, xLight, yLight);
 		}
+		@Override
 		public VertexFormat getVertexFormat(){
 			return DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP;
 		}
@@ -75,6 +83,7 @@ public class Renderer{
 		public void addVertex(Vec3M pos, float r, float g, float b, float a){
 			instance.addPos(pos.x, pos.y, pos.z).addColor(r, g, b, a).endVertex();
 		}
+		@Override
 		public VertexFormat getVertexFormat(){
 			return DefaultVertexFormats.POSITION_TEX_COLOR;
 		}
@@ -89,6 +98,7 @@ public class Renderer{
 			instance.addPos(pos.x, pos.y, pos.z);
 		}
 		
+		@Override
 		public VertexFormat getVertexFormat(){
 			return DefaultVertexFormats.POSITION;
 		}
@@ -120,6 +130,7 @@ public class Renderer{
 		public void addVertex(Vec3M pos, float u, float v, float r, float g, float b, float a, Vec3M normal){
 			instance.addVertexData(pos.x, pos.y, pos.z, u, v).addColor(r,g,b,a).addNormal((float)normal.x, (float)normal.y, (float)normal.z).endVertex();
 		}
+		@Override
 		public VertexFormat getVertexFormat(){
 			return DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL;
 		}
@@ -141,6 +152,7 @@ public class Renderer{
 			instance.addVertexData(pos.x, pos.y, pos.z, u, v).addColor(r, g, b, a).endVertex();
 		}
 		
+		@Override
 		public VertexFormat getVertexFormat(){
 			return DefaultVertexFormats.POSITION_TEX_COLOR;
 		}
@@ -161,6 +173,7 @@ public class Renderer{
 			instance.addVertexData(pos.x, pos.y, pos.z, u, v, (float)normal.x, (float)normal.y, (float)normal.z);
 		}
 		
+		@Override
 		public VertexFormat getVertexFormat(){
 			return DefaultVertexFormats.POSITION_TEX_NORMAL;
 		}
@@ -175,6 +188,7 @@ public class Renderer{
 			instance.addVertexData(pos.x, pos.y, pos.z, u, v).endVertex();
 		}
 		
+		@Override
 		public VertexFormat getVertexFormat(){
 			return DefaultVertexFormats.POSITION_TEX_NORMAL;
 		}
@@ -222,7 +236,7 @@ public class Renderer{
 	
 	public static final PosUVNormalRenderer POS_UV_NORMAL=new PosUVNormalRenderer();
 	
-	private static WorldRenderer renderer=TessUtil.getWR();
+	private static VertexBuffer renderer=TessUtil.getWB();
 
 	private static Tessellator tessellator=TessUtil.getT();
 	

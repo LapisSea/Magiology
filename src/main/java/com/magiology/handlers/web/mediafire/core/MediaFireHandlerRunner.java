@@ -21,9 +21,10 @@ public class MediaFireHandlerRunner{
 	private static void sleep(long time){
 		try{Thread.sleep(time);}catch(Exception e){}
 	}
-	public Runnable changeHook=()->{System.out.println(changeObj.toString());};
 	private Object changeObj;
 	private boolean isRunning,mfWorking=false,isConnected;
+	
+	public Runnable changeHook=()->{System.out.println(changeObj.toString());};
 	
 	private long lastInteractionTime;
 	private ServerSocket server;
@@ -123,7 +124,7 @@ public class MediaFireHandlerRunner{
 			
 			System.out.println(args);
 			
-			Process mf=rt.exec("java -jar "+file+" "+args);
+			rt.exec("java -jar "+file+" "+args);
 			comunicate();
 			
 		}catch(Exception e){

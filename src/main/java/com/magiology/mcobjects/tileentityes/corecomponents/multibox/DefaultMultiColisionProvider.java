@@ -3,7 +3,7 @@ package com.magiology.mcobjects.tileentityes.corecomponents.multibox;
 import java.util.List;
 
 import com.magiology.api.connection.IConnection;
-import com.magiology.forgepowered.packets.packets.NotifyPointedBoxChangePacket;
+import com.magiology.forgepowered.packets.packets.toserver.NotifyPointedBoxChangePacket;
 import com.magiology.mcobjects.tileentityes.corecomponents.UpdateableTile;
 import com.magiology.util.utilclasses.UtilM;
 import com.magiology.util.utilclasses.UtilM.U;

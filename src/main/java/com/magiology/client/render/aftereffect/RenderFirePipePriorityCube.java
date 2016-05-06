@@ -6,8 +6,8 @@ import com.magiology.util.renderers.GL11U;
 import com.magiology.util.renderers.OpenGLM;
 import com.magiology.util.renderers.Renderer;
 import com.magiology.util.utilclasses.RandUtil;
+import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilclasses.UtilM;
-import com.magiology.util.utilclasses.UtilM.U;
 import com.magiology.util.utilobjects.m_extension.AxisAlignedBBM;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,7 +15,7 @@ import net.minecraft.util.math.BlockPos;
 
 public class RenderFirePipePriorityCube implements LongAfterRenderRenderer{
 	
-	private static EntityPlayer player=U.getMC().thePlayer;
+	private static EntityPlayer player=UtilC.getMC().thePlayer;
 	public  double alpha=0;
 	private final AxisAlignedBBM box;
 	private boolean isDead=false;

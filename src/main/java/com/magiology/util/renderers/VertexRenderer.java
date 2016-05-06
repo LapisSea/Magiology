@@ -18,8 +18,12 @@ import com.magiology.util.utilobjects.vectors.Vec3M;
 import com.magiology.util.utilobjects.vectors.physics.real.GeometryUtil;
 
 import net.minecraft.client.model.PositionTextureVertex;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class VertexRenderer{
 	
 	public static class ShadedQuad{
@@ -349,7 +353,7 @@ public class VertexRenderer{
 		Renderer.POS_UV_NORMAL.addVertex(pos[0], triangle.pos4[0].texturePositionX, triangle.pos4[0].texturePositionY,finalNormal2);
 	}
 	public ByteBuffer toByteBuffer(){
-		WorldRenderer wr=TessUtil.getWR();
+		VertexBuffer wr=TessUtil.getWB();
 		wr.begin(7, Renderer.POS_UV_NORMAL.getVertexFormat());
 		pasteToTesselator(!willDrawAsAWireFrame);
 		wr.finishDrawing();

@@ -1,7 +1,7 @@
 package com.magiology.util.utilobjects;
 
 import com.magiology.util.utilclasses.RandUtil;
-import com.magiology.util.utilclasses.UtilM.U;
+import com.magiology.util.utilclasses.UtilC;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -38,7 +38,7 @@ public class EntityPosAndBB{
 		return isDead;
 		}
 	public boolean isRendering(){
-		EntityPlayer p=U.getMC().thePlayer;
+		EntityPlayer p=UtilC.getMC().thePlayer;
 		isRendering=entity.isInRangeToRender3d(p.posX, p.posY, p.posZ);
 		return isRendering;
 		}

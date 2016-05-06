@@ -12,21 +12,21 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ClientHooksM extends CommonHooksM{
 	private static TransformType cameraTransformType;
-	public static void addTransformType(TransformType cameraTransformType1){
+	private static boolean leftHandy;//Is there a left handy? 
+	public static void addTransformType(TransformType cameraTransformType1, boolean handSnoopDoggery/*IF FORGE CAN JOKE WITH THE NAME SO CAN I!! xD*/){
 		cameraTransformType=cameraTransformType1;
+		leftHandy=handSnoopDoggery;
+//		PrintUtil.println(leftHandy, cameraTransformType);
 	}
 	public static boolean renderItem(ItemStack stack){
 		Item item=stack.getItem();
 		if(item instanceof CustomRenderedItem){
-			
 			CustomRenderedItemRenderer renderer=((CustomRenderedItem)item).getRenderer(stack);
-			
-			if(renderer.shouldRenderSpecial(stack,cameraTransformType)){
-				renderer.renderItem(stack,cameraTransformType);
+			if(renderer.shouldRenderSpecial(stack,cameraTransformType, leftHandy)){
+				renderer.renderItem(stack,cameraTransformType, leftHandy);
 				cameraTransformType=null;
 				return false;
 			}
-			
 		}
 		return true;
 	}

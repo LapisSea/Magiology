@@ -14,7 +14,7 @@ import com.magiology.client.render.shaders.ColorCutRenderer;
 import com.magiology.client.render.shaders.ColorRenderer;
 import com.magiology.core.Config;
 import com.magiology.util.renderers.OpenGLM;
-import com.magiology.util.utilclasses.UtilM;
+import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilclasses.UtilM.U;
 
 import net.minecraft.client.Minecraft;
@@ -33,8 +33,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ShaderRunner{
 	
 	public List<ShaderAspectRenderer> handlers=new ArrayList<ShaderAspectRenderer>();
-	Minecraft mc=UtilM.getMC();
-	EntityPlayer player=UtilM.getThePlayer();
+	Minecraft mc=UtilC.getMC();
+	EntityPlayer player=UtilC.getThePlayer();
 	
 	public boolean redrawShaders=false,inited=false;
 	
@@ -71,14 +71,14 @@ public class ShaderRunner{
 	}
 	@SubscribeEvent
 	public void renderShaders(RenderGameOverlayEvent.Pre event){
-		if(Config.isShadersEnabled()&&event.type==ElementType.ALL&&OpenGlHelper.shadersSupported/*&&!shaderGroups.isEmpty()*/){
+		if(Config.isShadersEnabled()&&event.getType()==ElementType.ALL&&OpenGlHelper.shadersSupported/*&&!shaderGroups.isEmpty()*/){
 			for(ShaderAspectRenderer handler:handlers){
 				if(handler.uniforms.isEmpty())handler.init(this);
 			}
 			
-			player=U.getThePlayer();
+			player=UtilC.getThePlayer();
 			updateFrameBuffers();
-			World w=UtilM.getTheWorld();
+			World w=UtilC.getTheWorld();
 			for(int i=0;i<handlers.size();i++){
 				ShaderAspectRenderer shaderAspect=handlers.get(i);
 				shaderAspect.player=player;
@@ -90,7 +90,7 @@ public class ShaderRunner{
 			GL11.glLoadIdentity();
 			for(ShaderGroup sg:shaderGroups.values()){
 				OpenGLM.pushMatrix();
-				try{sg.loadShaderGroup(event.partialTicks);}catch(Exception e){e.printStackTrace();}
+				try{sg.loadShaderGroup(event.getPartialTicks());}catch(Exception e){e.printStackTrace();}
 				OpenGLM.popMatrix();
 			}
 			mc.getFramebuffer().bindFramebuffer(true);
@@ -132,11 +132,11 @@ public class ShaderRunner{
 	@SideOnly(value=Side.CLIENT)
 	@SubscribeEvent
 	public void updateShaders(LivingUpdateEvent event){
-		if(!Config.isShadersEnabled()||!U.isRemote(event.entity)||event.entity!=U.getThePlayer())return;
-		player=U.getThePlayer();
+		if(!Config.isShadersEnabled()||!U.isRemote(event.getEntity())||event.getEntity()!=UtilC.getThePlayer())return;
+		player=UtilC.getThePlayer();
 		if(handlers.isEmpty())init();
 		Map<Integer, Boolean> enabledMap=new HashMap<Integer, Boolean>();
-		World w=UtilM.getTheWorld();
+		World w=UtilC.getTheWorld();
 		for(int i=0;i<handlers.size();i++){
 			ShaderAspectRenderer shaderAspect=handlers.get(i);
 			shaderAspect.player=player;

@@ -14,7 +14,7 @@ public class StatsDisplayHUD extends HUD{
 	@Override
 	public void update(){
 		prevStatsAlpha=statsAlpha;
-		statsAlpha=(float)UtilM.slowlyEqualize(statsAlpha, statsWantedAlpha, 0.1);
+		statsAlpha=(float)UtilM.graduallyEqualize(statsAlpha, statsWantedAlpha, 0.1);
 		statsWantedAlpha=isStatsShowed?1:0.2F;
 	}
 }

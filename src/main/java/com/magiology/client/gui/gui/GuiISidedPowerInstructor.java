@@ -3,22 +3,19 @@ package com.magiology.client.gui.gui;
 import java.awt.Rectangle;
 import java.io.IOException;
 
-import org.lwjgl.opengl.GL11;
-
 import com.magiology.api.power.ISidedPower;
 import com.magiology.client.gui.GuiUpdater.Updateable;
 import com.magiology.client.gui.container.ISidedPowerInstructorContainer;
 import com.magiology.client.gui.guiutil.gui.buttons.ColoredGuiButton;
 import com.magiology.client.gui.guiutil.gui.buttons.TexturedColoredButton;
 import com.magiology.client.render.Textures;
-import com.magiology.forgepowered.packets.packets.generic.GenericServerIntPacket;
 import com.magiology.util.renderers.GL11U;
 import com.magiology.util.renderers.OpenGLM;
 import com.magiology.util.renderers.Renderer;
 import com.magiology.util.renderers.TessUtil;
 import com.magiology.util.renderers.tessellatorscripts.CubeModel;
 import com.magiology.util.utilclasses.RandUtil;
-import com.magiology.util.utilclasses.UtilM;
+import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilclasses.UtilM.U;
 import com.magiology.util.utilclasses.math.PartialTicksUtil;
 import com.magiology.util.utilobjects.SimpleCounter;
@@ -27,6 +24,7 @@ import com.magiology.util.utilobjects.vectors.physics.PhysicsFloat;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager.CullFace;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -34,6 +32,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 
 public class GuiISidedPowerInstructor extends GuiContainer implements Updateable{
 	
@@ -62,8 +61,8 @@ public class GuiISidedPowerInstructor extends GuiContainer implements Updateable
 		yRotation.wantedPoint=-player.rotationYaw;
 		zRotation.wantedPoint=0;
 		
-		Block aa=U.getBlock(player.worldObj,tile.getPos());
-		cube=new CubeModel((float)aa.getBlockBoundsMinX(), (float)aa.getBlockBoundsMinY(), (float)aa.getBlockBoundsMinZ(), (float)aa.getBlockBoundsMaxX(), (float)aa.getBlockBoundsMaxY(), (float)aa.getBlockBoundsMaxZ());
+		AxisAlignedBB aa=U.getBlock(player.worldObj,tile.getPos()).getBoundingBox(tile.getWorld().getBlockState(tile.getPos()), tile.getWorld(), tile.getPos());
+		cube=new CubeModel((float)aa.minX, (float)aa.minY, (float)aa.minZ, (float)aa.maxX, (float)aa.maxY, (float)aa.maxZ);
 	}
 	
 	
@@ -73,14 +72,14 @@ public class GuiISidedPowerInstructor extends GuiContainer implements Updateable
 		if(id<6){
 			buttonId=id;
 		}
-		int side=convert(buttonId);
-		if(id==6){
-			UtilM.sendMessage(new GenericServerIntPacket(7, side));
-		}else if(id==7){
-			UtilM.sendMessage(new GenericServerIntPacket(8, side));
-		}else if(id==8){
-			UtilM.sendMessage(new GenericServerIntPacket(9, side));
-		}
+//		int side=convert(buttonId);
+//		if(id==6){
+//			UtilM.sendMessage(new GenericServerIntPacket(7, side));
+//		}else if(id==7){
+//			UtilM.sendMessage(new GenericServerIntPacket(8, side));
+//		}else if(id==8){
+//			UtilM.sendMessage(new GenericServerIntPacket(9, side));
+//		}
 		if(b instanceof ColoredGuiButton)((ColoredGuiButton)b).blink(1);
 	}
 	private int convert(int id){
@@ -151,14 +150,13 @@ public class GuiISidedPowerInstructor extends GuiContainer implements Updateable
 			GL11U.glRotate(xRot,yRot,zRot);
 			OpenGLM.scale((-1), 1, 1);
 			if(renderer!=null){
-				OpenGLM.cullFace(GL11.GL_FRONT);
+				OpenGLM.cullFace(CullFace.FRONT);
 				renderer.renderTileEntityAt(tile, -0.5, -0.5, -0.5, PartialTicksUtil.partialTicks,0);
-				OpenGLM.cullFace(GL11.GL_BACK);
+				OpenGLM.cullFace(CullFace.BACK);
 				renderer.renderTileEntityAt(tile, -0.5, -0.5, -0.5, PartialTicksUtil.partialTicks,0);
 			}
 			Block block=U.getBlock(tile.getWorld(), tile.getPos());
 			if(block!=null){
-				block.getRenderType();
 				OpenGLM.pushMatrix();
 				try{
 					TessUtil.bindTexture(TextureMap.locationBlocksTexture);
@@ -198,9 +196,9 @@ public class GuiISidedPowerInstructor extends GuiContainer implements Updateable
 				GL11U.glScale(1.001);
 				OpenGLM.translate(-0.5, -0.5, -0.5);
 				double 
-				r=UtilM.fluctuate(9, 0)*0.4,
-				g=0.5-UtilM.fluctuate(17, 0)*0.3,
-				b=1-UtilM.fluctuate(27, 0)*0.2;
+				r=UtilC.fluctuate(9, 0)*0.4,
+				g=0.5-UtilC.fluctuate(17, 0)*0.3,
+				b=1-UtilC.fluctuate(27, 0)*0.2;
 				OpenGLM.color(r,g,b, 0.4);
 				OpenGLM.disableLighting();
 				cube.draw();
@@ -229,13 +227,10 @@ public class GuiISidedPowerInstructor extends GuiContainer implements Updateable
 		OpenGLM.pushMatrix();
 		OpenGLM.enableLighting();
 		
-		OpenGLM.color(0.65F+UtilM.fluctuate(41, 0)*0.1,0.65+UtilM.fluctuate(25, 0)*0.05,0.65+UtilM.fluctuate(73, 0)*0.15,1);
+		OpenGLM.color(0.65F+UtilC.fluctuate(41, 0)*0.1,0.65+UtilC.fluctuate(25, 0)*0.05,0.65+UtilC.fluctuate(73, 0)*0.15,1);
 		GL11U.glScale(12.9);
-		GL11U.glRotate(UtilM.fluctuate(164, 0)*180+xRot/4, UtilM.fluctuate(84, 0)*60+yRot/4, UtilM.fluctuate(508, 0)*360+zRot/4);
+		GL11U.glRotate(UtilC.fluctuate(164, 0)*180+xRot/4, UtilC.fluctuate(84, 0)*60+yRot/4, UtilC.fluctuate(508, 0)*360+zRot/4);
 
-		OpenGLM.enableDepth();
-		TessUtil.drawBall();
-		OpenGLM.enableCull();
 		OpenGLM.disableLighting();
 		
 		OpenGLM.popMatrix();
@@ -278,40 +273,6 @@ public class GuiISidedPowerInstructor extends GuiContainer implements Updateable
 		GL11U.endOpaqueRendering();
 		OpenGLM.popMatrix();
 
-		OpenGLM.enableLighting();
-		OpenGLM.pushMatrix();
-		OpenGLM.translate(guiLeft+82, guiTop+35, 120);
-		GL11U.glScale(11);
-		GL11U.glRotate(xRot,yRot,zRot);
-		OpenGLM.translate(0.55,-0.55,-0.55);
-		
-		
-		
-		OpenGLM.disableTexture2D();
-		OpenGLM.scale((-1), 1, 1);
-		OpenGLM.color(0.2F, 0.1F, 1, 1);
-		TessUtil.drawArrow();
-		OpenGLM.enableTexture2D();
-		
-		
-		OpenGLM.popMatrix();
-		
-		OpenGLM.pushMatrix();
-		OpenGLM.translate(guiLeft+152, guiTop+19+buttonId*22, 120);
-		GL11U.glScale(12);
-		GL11U.glRotate(0, 30, 90);
-		GL11U.glRotate(0, UtilM.fluctuate(1600, 0)*3600,0);
-		OpenGLM.translate(0.375,-0.375,-0.375);
-		
-		OpenGLM.disableTexture2D();
-		OpenGLM.scale(-0.75F, 1, 0.75F);
-		OpenGLM.color(0.5F, 0.4F, 1, 1);
-		TessUtil.drawArrow();
-		OpenGLM.enableTexture2D();
-		
-		
-		OpenGLM.popMatrix();
-		
 		OpenGLM.disableLighting();
 		
 		for(int k=0;k<buttonList.size();++k){this.buttonList.get(k).drawButton(mc, x, y);}

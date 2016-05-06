@@ -8,6 +8,9 @@ import com.magiology.util.utilobjects.m_extension.ItemM;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 public class PowerCounter extends ItemM{
 	public PowerCounter(){
@@ -24,9 +27,8 @@ public class PowerCounter extends ItemM{
 	@Override
 	public boolean isFull3D(){return true;}
 	
-	
 	@Override
-	public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer player){
+	public ActionResult<ItemStack> onItemRightClick(ItemStack itemstack, World world, EntityPlayer player, EnumHand hand){
 		boolean state=itemstack.getTagCompound().getBoolean("state");
 		boolean notDone=true;
 		RenderEvents.disabledEquippItemAnimationTime=2;
@@ -41,7 +43,7 @@ public class PowerCounter extends ItemM{
 			}
 		}
 		itemstack.getTagCompound().setBoolean("state", state);
-		return itemstack;
+		return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemstack);
 	}
 	
 	@Override

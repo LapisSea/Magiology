@@ -27,9 +27,9 @@ public class GameEvents{
 	
 	@SubscribeEvent
 	public void onBlockBreak(BlockEvent.BreakEvent e){
-		BlockPos pos=e.pos;
+		BlockPos pos=e.getPos();
 		EntityPlayer player=e.getPlayer();
-		World world=e.world;
+		World world=e.getWorld();
 		world.getTileEntity(pos);
 		if(player.capabilities.isCreativeMode){
 			
@@ -39,9 +39,9 @@ public class GameEvents{
 	}
 	@SubscribeEvent
 	public void onBlockPlace(BlockEvent.PlaceEvent e){
-		BlockPos pos=e.pos;
-		EntityPlayer player=e.player;
-		World world=e.world;
+		BlockPos pos=e.getPos();
+		EntityPlayer player=e.getPlayer();
+		World world=e.getWorld();
 		TileEntity tile=world.getTileEntity(pos);
 		if(tile instanceof PowerCore)PowerCore.SavePowerToItemEvents.onPowerCorePlaced(pos, player, world, tile);
 	}

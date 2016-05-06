@@ -9,6 +9,7 @@ import com.magiology.util.utilclasses.UtilM;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -20,7 +21,7 @@ public class CustomButton extends GuiButton{
 	public double[] one2={1,0},one2Goal={1,0};
 	public double r=1,g=1,b=1,rGoal=0.9,gGoal=0.9,bGoal=0.9;
 	public int state=0;
-	WorldRenderer tess=TessUtil.getWR();
+	VertexBuffer tess=TessUtil.getWB();
 	
 	
 	public CustomButton(int id, int x, int y,int width, int height, String text,String resouce){
@@ -107,9 +108,9 @@ public class CustomButton extends GuiButton{
 		if(b>1)b=1;
 		else if(b<0)b=0;
 		double Cspeed=0.04;
-		r=UtilM.slowlyEqualize(r, rGoal, Cspeed+RandUtil.CRD(Cspeed/2));
-		g=UtilM.slowlyEqualize(g, gGoal, Cspeed+RandUtil.CRD(Cspeed/2));
-		b=UtilM.slowlyEqualize(b, bGoal, Cspeed+RandUtil.CRD(Cspeed/2));
-		for(int a=0;a<one2.length;a++)if(Math.abs(one2[a]-one2Goal[a])>0.1)one2[a]=UtilM.slowlyEqualize(one2[a], one2Goal[a], Cspeed*3+RandUtil.CRD(Cspeed));
+		r=UtilM.graduallyEqualize(r, rGoal, Cspeed+RandUtil.CRD(Cspeed/2));
+		g=UtilM.graduallyEqualize(g, gGoal, Cspeed+RandUtil.CRD(Cspeed/2));
+		b=UtilM.graduallyEqualize(b, bGoal, Cspeed+RandUtil.CRD(Cspeed/2));
+		for(int a=0;a<one2.length;a++)if(Math.abs(one2[a]-one2Goal[a])>0.1)one2[a]=UtilM.graduallyEqualize(one2[a], one2Goal[a], Cspeed*3+RandUtil.CRD(Cspeed));
 	}
 }

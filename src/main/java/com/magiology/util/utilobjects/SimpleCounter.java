@@ -1,8 +1,15 @@
 package com.magiology.util.utilobjects;
 
-public class SimpleCounter {
-	private boolean isFirst=true;
+public class SimpleCounter{
 	private int var=0;
+	
+	public SimpleCounter(int start){
+		var=start;
+	}
+	public SimpleCounter(){
+		this(-1);
+	}
+	
 	public void add(){
 		var++;
 	}
@@ -10,8 +17,7 @@ public class SimpleCounter {
 		return var;
 	}
 	public int getAndAdd(){
-		if(isFirst)isFirst=false;
-		else add();
+		add();
 		return var;
 	}
 }

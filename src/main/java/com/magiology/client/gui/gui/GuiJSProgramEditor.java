@@ -21,8 +21,8 @@ import com.magiology.client.gui.guiutil.gui.GuiTextEditor;
 import com.magiology.client.gui.guiutil.gui.buttons.CleanButton;
 import com.magiology.client.render.Textures;
 import com.magiology.client.render.font.FontRendererMBase;
-import com.magiology.core.Magiology;
-import com.magiology.forgepowered.packets.packets.OpenProgramContainerInGui;
+import com.magiology.forgepowered.packets.packets.toserver.OpenProgramContainerInGui;
+import com.magiology.forgepowered.proxy.ClientProxy;
 import com.magiology.io.WorldData;
 import com.magiology.io.WorldData.FileContent;
 import com.magiology.util.renderers.GL11U;
@@ -30,6 +30,7 @@ import com.magiology.util.renderers.OpenGLM;
 import com.magiology.util.renderers.Renderer;
 import com.magiology.util.renderers.TessUtil;
 import com.magiology.util.utilclasses.Get;
+import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilclasses.UtilM;
 import com.magiology.util.utilobjects.ColorF;
 import com.magiology.util.utilobjects.m_extension.BlockPosM;
@@ -41,8 +42,8 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 
 public class GuiJSProgramEditor extends GuiContainerM implements Updateable{
@@ -97,7 +98,7 @@ public class GuiJSProgramEditor extends GuiContainerM implements Updateable{
 		else if(b.id==recommendCode.id)settingsData.addFile("recommendCode", useColors.isOn()+"");
 		else if(b.id==4){
 			UtilM.sendMessage(new OpenProgramContainerInGui.ExitGui(slotId, programSrc.getText(), textFieldList.get(1).getText(),tilePos));
-			settingsData.saveFromWorld(UtilM.getTheWorld());
+			settingsData.saveFromWorld(UtilC.getTheWorld());
 		}
 	}
 	@Override
@@ -275,7 +276,7 @@ public class GuiJSProgramEditor extends GuiContainerM implements Updateable{
 			boolean active=getEditor().active;
 			if(settingsActive?true:!active)super.keyTyped(typedChar, keyCode);
 			if(!settingsActive?true:!superClicked)if(!getEditor().keyTyped(keyCode, typedChar));
-			if(active&&!getEditor().active)Magiology.ROBOT.clickKeyKeyboard(KeyEvent.VK_ESCAPE);
+			if(active&&!getEditor().active)ClientProxy.ROBOT.clickKeyKeyboard(KeyEvent.VK_ESCAPE);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -285,7 +286,7 @@ public class GuiJSProgramEditor extends GuiContainerM implements Updateable{
 				float time=Float.parseFloat(compileAfter.getText());
 				compileAfter.setTextColor(time==0?Color.YELLOW.hashCode():Color.WHITE.hashCode());
 				settingsData.addFile("compileAfter", compileAfter.getText());
-				settingsData.saveFromWorld(UtilM.getTheWorld());
+				settingsData.saveFromWorld(UtilC.getTheWorld());
 			}catch(Exception e){
 				compileAfter.setTextColor(Color.RED.hashCode());
 			}
@@ -304,8 +305,7 @@ public class GuiJSProgramEditor extends GuiContainerM implements Updateable{
 		}
 		if(compile.wantedPoint==1){
 			UtilM.sendMessage(new OpenProgramContainerInGui.ExitGui(slotId, programSrc.getText(), textFieldList.get(1).getText(),tilePos));
-			UtilM.getMC().getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
-			
+			UtilC.getMC().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
 		}else if(settings.wantedPoint==1){
 			settingsActive=!settingsActive;
 			saveOnExit.visible=settingsActive;
@@ -316,7 +316,7 @@ public class GuiJSProgramEditor extends GuiContainerM implements Updateable{
 			buttonList.get(4).visible=settingsActive;
 			textFieldList.get(1).setVisible(settingsActive);
 			
-			UtilM.getMC().getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
+			UtilC.getMC().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
 			
 		}else if(log.wantedPoint==1){
 			logActive=!logActive;
@@ -330,7 +330,7 @@ public class GuiJSProgramEditor extends GuiContainerM implements Updateable{
 			}
 			programLog.setText(UtilM.join("\n",logDataNew.toArray()));
 			programLog.getSlideableOffset().y=1;
-			UtilM.getMC().getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
+			UtilC.getMC().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
 			
 		}else if(selected){
 			getEditor().active=false;
@@ -349,7 +349,7 @@ public class GuiJSProgramEditor extends GuiContainerM implements Updateable{
 				compileAfter.setTextColor(time==0?Color.YELLOW.hashCode():Color.WHITE.hashCode());
 				compileAfter.setText((""+time).endsWith(".0")?(""+time).substring(0, (""+time).length()-2):""+time);
 				settingsData.addFile("compileAfter", compileAfter.getText());
-				settingsData.saveFromWorld(UtilM.getTheWorld());
+				settingsData.saveFromWorld(UtilC.getTheWorld());
 			}catch(Exception e){
 				compileAfter.setTextColor(Color.RED.hashCode());
 			}

@@ -15,6 +15,7 @@ import com.magiology.util.renderers.glstates.GlState;
 import com.magiology.util.renderers.glstates.GlStateCell;
 import com.magiology.util.renderers.tessellatorscripts.CubeModel;
 import com.magiology.util.renderers.tessellatorscripts.SidedModel;
+import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilclasses.UtilM;
 import com.magiology.util.utilclasses.math.PartialTicksUtil;
 import com.magiology.util.utilobjects.ColorF;
@@ -84,7 +85,7 @@ public class RenderNetworkInterface extends RenderNetworkConductor{
 		plate.glStateCell=new GlStateCell(new GlState(()->{
 
 			long offset=curentTile.x()*7-curentTile.y()*15+curentTile.z()*9;
-			GL11.glColor3f(UtilM.fluctuateSmooth(80, offset), UtilM.fluctuateSmooth(134, 40+offset), UtilM.fluctuateSmooth(156, 56+offset));
+			GL11.glColor3f(UtilC.fluctuateSmooth(80, offset), UtilC.fluctuateSmooth(134, 40+offset), UtilC.fluctuateSmooth(156, 56+offset));
 			
 			if(curentTile.getBrain()!=null){
 				OpenGLM.pushMatrix();

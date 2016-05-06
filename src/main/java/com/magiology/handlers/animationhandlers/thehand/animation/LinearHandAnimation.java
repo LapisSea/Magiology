@@ -5,6 +5,10 @@ import com.magiology.handlers.animationhandlers.thehand.HandPosition;
 import com.magiology.util.utilclasses.math.MathUtil;
 import com.magiology.util.utilobjects.LinearAnimation;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+@SideOnly(Side.CLIENT)
 public class LinearHandAnimation extends HandAnimationBase{
 	
 	public LinearAnimation<HandData> data;

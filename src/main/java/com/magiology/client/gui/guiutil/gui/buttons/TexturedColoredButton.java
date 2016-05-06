@@ -22,7 +22,7 @@ public class TexturedColoredButton extends ColoredGuiButton{
 	@Override
 	public void drawButton(Minecraft p_146112_1_, int x, int y){
 		if (this.visible){
-			float r=PartialTicksUtil.calculatePos(prevR, this.r),g=PartialTicksUtil.calculatePos(prevG, this.g),b=PartialTicksUtil.calculatePos(prevB, this.b),alpha=PartialTicksUtil.calculatePos(prevAlpha, this.alpha);
+			float r=PartialTicksUtil.calculate(prevR, this.r),g=PartialTicksUtil.calculate(prevG, this.g),b=PartialTicksUtil.calculate(prevB, this.b),alpha=PartialTicksUtil.calculate(prevAlpha, this.alpha);
 			FontRenderer fr = TessUtil.getFontRenderer();
 			p_146112_1_.getTextureManager().bindTexture(Textures.ISidedIns);
 			this.hovered=x>=this.xPosition&&y>=this.yPosition&&x<this.xPosition+this.width&&y<this.yPosition+this.height;
@@ -63,12 +63,12 @@ public class TexturedColoredButton extends ColoredGuiButton{
 		prevB=b;
 		prevAlpha=alpha;
 		
-		r=(float)UtilM.slowlyEqualize(r, wantedR, 0.1);
-		g=(float)UtilM.slowlyEqualize(g, wantedG, 0.1);
-		b=(float)UtilM.slowlyEqualize(b, wantedB, 0.1);
+		r=(float)UtilM.graduallyEqualize(r, wantedR, 0.1);
+		g=(float)UtilM.graduallyEqualize(g, wantedG, 0.1);
+		b=(float)UtilM.graduallyEqualize(b, wantedB, 0.1);
 		wantedAlpha=UtilM.booleanToInt(hovered);
 		alpha+=0.03;
-		alpha=(float)UtilM.slowlyEqualize(prevAlpha, wantedAlpha, 0.17);
+		alpha=(float)UtilM.graduallyEqualize(prevAlpha, wantedAlpha, 0.17);
 		
 		
 	}
