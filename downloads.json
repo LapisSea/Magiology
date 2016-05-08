@@ -14,5 +14,21 @@
 				"Not available":"no"
 			}
 		}
+	},
+	"pvp hud++":{
+		"1.8":{
+			"latest":"",
+			"recommended":"",
+			"all":{
+				"Not available":""
+			}
+		},
+		"1.9":{
+			"latest":"yay!",
+			"recommended":"lol",
+			"all":{
+				"Not available":"no"
+			}
+		}
 	}
 }
