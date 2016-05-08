@@ -1,16 +1,18 @@
 {
-	"1.8":{
-		"latest":"",
-		"recommended":"",
-		"all":{
-			"Not available":""
-		}
-	},
-	"1.9":{
-		"latest":"",
-		"recommended":"",
-		"all":{
-			"Not available":"no"
+	"magiology":{
+		"1.8":{
+			"latest":"",
+			"recommended":"",
+			"all":{
+				"Not available":""
+			}
+		},
+		"1.9":{
+			"latest":"",
+			"recommended":"",
+			"all":{
+				"Not available":"no"
+			}
 		}
 	}
 }
