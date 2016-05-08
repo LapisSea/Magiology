@@ -8,10 +8,10 @@
 			}
 		},
 		"1.9":{
-			"latest":"yay!",
-			"recommended":"lol",
+			"latest":"",
+			"recommended":"",
 			"all":{
-				"Not available":"no"
+				"Not available":""
 			}
 		}
 	},
@@ -24,10 +24,10 @@
 			}
 		},
 		"1.9":{
-			"latest":"yay!",
-			"recommended":"lol",
+			"latest":"",
+			"recommended":"",
 			"all":{
-				"Not available":"no"
+				"Not available":""
 			}
 		}
 	}
