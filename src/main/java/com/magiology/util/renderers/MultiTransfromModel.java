@@ -64,7 +64,9 @@ public class MultiTransfromModel{
 		return model.getIndices();
 	}
 	public List<Vec3M> getTransfromed(final List<Matrix4f> transformations){
-		if(matrices.size()!=transformations.size())throw new IllegalStateException("incorrect matrix list sizes! "+matrices.size()+" vs "+transformations.size());
+		if(matrices.size()!=transformations.size()){
+			throw new IllegalStateException("incorrect matrix list sizes! Required:"+matrices.size()+", given:"+transformations.size());
+		}
 		
 		List<Vec3M> vertices=new ArrayList<>();
 		model.getVertices().forEach(vertex->vertices.add(vertex.copy()));
@@ -96,5 +98,8 @@ public class MultiTransfromModel{
 			buff.addVertexWithUV(vertices.get(index), uv.x, uv.y);
 		});
 		return this;
+	}
+	public List<int[]> getMatrices(){
+		return matrices;
 	}
 }

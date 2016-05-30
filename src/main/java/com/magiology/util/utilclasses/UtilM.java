@@ -550,7 +550,7 @@ public class UtilM{
 	}
 	
 	public static float graduallyEqualize(float variable, float goal, float speed){
-		return (float)exponentiallyEqualize((double)variable, (double)goal, (double)speed);
+		return (float)graduallyEqualize((double)variable, (double)goal, (double)speed);
 	}
 	public static double graduallyEqualize(double variable, double goal, double speed){
 		if(speed==0)return variable;
@@ -615,5 +615,8 @@ public class UtilM{
 	}
 	public static EnumActionResult booleanToActionResult(boolean b){
 		return b?EnumActionResult.SUCCESS:EnumActionResult.FAIL;
+	}
+	public static boolean isIdInArray(Object[] array, int id){
+		return array.length>0&&id>=0&&id<array.length;
 	}
 }

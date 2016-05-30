@@ -22,7 +22,7 @@ public class GuiSlider{
 			this.margin=margin;
 		}
 		@Override
-		public Vec2i pocess(Vec2i object, Object... objects){
+		public Vec2i process(Vec2i object, Object... objects){
 			return new Vec2i(margin, margin);
 		}
 	}
@@ -32,7 +32,7 @@ public class GuiSlider{
 			this.margin=margin;
 		}
 		@Override
-		public Vec2i pocess(Vec2i object, Object... objects){
+		public Vec2i process(Vec2i object, Object... objects){
 			return object.mul(margin);
 		}
 	}
@@ -316,8 +316,8 @@ private void snapToParent(){
 		
 		if(snapToParentSize){
 			Vec2i 
-				m1=margin1.pocess(getParentSize()),
-				m2=margin2.pocess(getParentSize()),
+				m1=margin1.process(getParentSize()),
+				m2=margin2.process(getParentSize()),
 				newSize=getParentSize().sub(m1).sub(m2);
 			if(isHorisontal){
 				width=newSize.x;

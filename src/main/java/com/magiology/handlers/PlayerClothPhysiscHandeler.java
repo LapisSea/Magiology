@@ -74,7 +74,7 @@ public class PlayerClothPhysiscHandeler{
 	private ObjectProcessor<Vec3M> 
 		shouldersBack=new ObjectProcessor<Vec3M>(){
 			@Override
-			public Vec3M pocess(Vec3M object, Object... objects){
+			public Vec3M process(Vec3M object, Object... objects){
 				int id=(int)objects[2];
 				if(playerModel.quads==null)return object;
 				
@@ -99,7 +99,7 @@ public class PlayerClothPhysiscHandeler{
 			}
 		},rightArmEnd=new ObjectProcessor<Vec3M>(){
 			@Override
-			public Vec3M pocess(Vec3M object, Object... objects){
+			public Vec3M process(Vec3M object, Object... objects){
 				int id=(int)objects[2];
 				if(playerModel.quads==null)return object;
 				
@@ -122,7 +122,7 @@ public class PlayerClothPhysiscHandeler{
 			}
 		},leftArmEnd=new ObjectProcessor<Vec3M>(){
 			@Override
-			public Vec3M pocess(Vec3M object, Object... objects){
+			public Vec3M process(Vec3M object, Object... objects){
 				int id=(int)objects[2];
 				if(playerModel.quads==null)return object;
 				
@@ -199,8 +199,8 @@ public class PlayerClothPhysiscHandeler{
 		float lenght=2F/16F;
 		try{
 			for(int i=0;i<4;i++){
-				ends[0][0][i]=leftArmEnd.pocess(new Vec3M(), null,null,i);
-				ends[1][0][i]=rightArmEnd.pocess(new Vec3M(), null,null,i);
+				ends[0][0][i]=leftArmEnd.process(new Vec3M(), null,null,i);
+				ends[1][0][i]=rightArmEnd.process(new Vec3M(), null,null,i);
 			}
 			Vec3M normal1=GeometryUtil.getNormal(ends[0][0][2], ends[0][0][1], ends[0][0][0]).mul(lenght);
 			Vec3M normal2=GeometryUtil.getNormal(ends[1][0][2], ends[1][0][1], ends[1][0][0]).mul(lenght);

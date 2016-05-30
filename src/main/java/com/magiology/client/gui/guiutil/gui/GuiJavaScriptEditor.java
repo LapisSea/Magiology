@@ -50,7 +50,7 @@ public class GuiJavaScriptEditor extends GuiTextEditor{
 				this.action=action;
 			}
 			public void click(){
-				action.pocess(ErrorMarker.this);
+				action.process(ErrorMarker.this);
 				timeSelected=0;
 			}
 			public void render(){
@@ -592,12 +592,12 @@ public class GuiJavaScriptEditor extends GuiTextEditor{
 					.toString()));
 			
 			if(error!=null){
-				error.addQuickFix("Replace with expected.", new ObjectProcessor<ErrorMarker>(){@Override public ErrorMarker pocess(ErrorMarker error, Object...objects){
+				error.addQuickFix("Replace with expected.", new ObjectProcessor<ErrorMarker>(){@Override public ErrorMarker process(ErrorMarker error, Object...objects){
 					Vec2i pos=error.physicalPos;
 					getLine(pos.y).replace(pos.x, pos.x+error.physicalLenght, error.message.subSequence(error.message.indexOf('<')+3, error.message.indexOf('>')-2).toString());
 					return null;
 				}});
-				error.addQuickFix("Create local variable.", new ObjectProcessor<ErrorMarker>(){@Override public ErrorMarker pocess(ErrorMarker error, Object...objects){
+				error.addQuickFix("Create local variable.", new ObjectProcessor<ErrorMarker>(){@Override public ErrorMarker process(ErrorMarker error, Object...objects){
 					Vec2i pos=error.physicalPos;
 					addLine(
 						new StringBuilder()
@@ -608,7 +608,7 @@ public class GuiJavaScriptEditor extends GuiTextEditor{
 					pos.y);
 					return null;
 				}});
-				error.addQuickFix("Create global variable.", new ObjectProcessor<ErrorMarker>(){@Override public ErrorMarker pocess(ErrorMarker error, Object...objects){
+				error.addQuickFix("Create global variable.", new ObjectProcessor<ErrorMarker>(){@Override public ErrorMarker process(ErrorMarker error, Object...objects){
 					addLine(new StringBuilder("var ").append(error.message.subSequence(error.message.lastIndexOf('<')+3, error.message.lastIndexOf('>')-2)).append("=\"undefined\";"), 0);
 					return null;
 				}});

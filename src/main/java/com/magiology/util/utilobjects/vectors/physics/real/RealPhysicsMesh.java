@@ -19,10 +19,10 @@ import net.minecraft.world.biome.BiomeGenBase;
 public class RealPhysicsMesh{
 	
 	public static enum MaterialStrategy{
-		NO_INTERACTION(          new ObjectProcessor<Boolean>(){@Override public Boolean pocess(Boolean object, Object... objects){return false;}},false),
-		ONLY_BIGGER_SUPPRESSING( new ObjectProcessor<Boolean>(){@Override public Boolean pocess(Boolean object, Object... objects){return ((Float)objects[0])>0;}},true),
-		ONLY_SMALLER_SUPPRESSING(new ObjectProcessor<Boolean>(){@Override public Boolean pocess(Boolean object, Object... objects){return ((Float)objects[0])<0;}},true),
-		STATIC_DISTANCE(         new ObjectProcessor<Boolean>(){@Override public Boolean pocess(Boolean object, Object... objects){return true;}},true);
+		NO_INTERACTION(          new ObjectProcessor<Boolean>(){@Override public Boolean process(Boolean object, Object... objects){return false;}},false),
+		ONLY_BIGGER_SUPPRESSING( new ObjectProcessor<Boolean>(){@Override public Boolean process(Boolean object, Object... objects){return ((Float)objects[0])>0;}},true),
+		ONLY_SMALLER_SUPPRESSING(new ObjectProcessor<Boolean>(){@Override public Boolean process(Boolean object, Object... objects){return ((Float)objects[0])<0;}},true),
+		STATIC_DISTANCE(         new ObjectProcessor<Boolean>(){@Override public Boolean process(Boolean object, Object... objects){return true;}},true);
 		
 		private final ObjectProcessor<Boolean> check;
 		public final boolean shouldCheck;
@@ -33,7 +33,7 @@ public class RealPhysicsMesh{
 		}
 		
 		public boolean shouldInteract(float difference){
-			return check.pocess(false, difference);
+			return check.process(false, difference);
 		}
 	}
 	
@@ -48,7 +48,7 @@ public class RealPhysicsMesh{
 		}
 		
 		private DoubleObject<Vec3M, Integer> getHook(){
-			return new DoubleObject<Vec3M, Integer>(hook.pocess(vertices.get(vertexID).getPos(), RealPhysicsMesh.this,this,vertexID), vertexID);
+			return new DoubleObject<Vec3M, Integer>(hook.process(vertices.get(vertexID).getPos(), RealPhysicsMesh.this,this,vertexID), vertexID);
 		}
 	}
 	public static DoubleObject<List<Vec3M>, List<Vec2i>> create2DPlane(int xCubes, int yCubes ,float xSize, float ySize){

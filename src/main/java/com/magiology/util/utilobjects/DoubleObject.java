@@ -10,6 +10,9 @@ public class DoubleObject <Obj1,Obj2>{
 		this.obj1=obj1;
 		this.obj2=obj2;
 	}
+	public Object get(boolean firstObj){
+		return firstObj?obj1:obj2;
+	}
 	@Override
 	public boolean equals(Object obj){
 		if(!(obj instanceof DoubleObject))return false;

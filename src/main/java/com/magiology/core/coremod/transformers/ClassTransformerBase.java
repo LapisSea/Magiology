@@ -106,7 +106,7 @@ public abstract class ClassTransformerBase{
 		for(int i=0;i<param.length;i++)param[i]=new ASMClass("", fixName(Type.getInternalName(params[i])));
 		
 		ASMFuncDesc desc=new ASMFuncDesc(returnTypeS, param);
-		PrintUtil.println(desc);
+		
 		return new MethodInsnNode(INVOKESTATIC, Type.getInternalName(clazz), method.getName(), desc.get(),false);
 	}
 	private String classToString(Class clazz){

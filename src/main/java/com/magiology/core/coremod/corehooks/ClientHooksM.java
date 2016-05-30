@@ -13,10 +13,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ClientHooksM extends CommonHooksM{
 	private static TransformType cameraTransformType;
 	private static boolean leftHandy;//Is there a left handy? 
-	public static void addTransformType(TransformType cameraTransformType1, boolean handSnoopDoggery/*IF FORGE CAN JOKE WITH THE NAME SO CAN I!! xD*/){
+	public static void addTransformType(TransformType cameraTransformType1, boolean handSnoopDoggery){
 		cameraTransformType=cameraTransformType1;
 		leftHandy=handSnoopDoggery;
-//		PrintUtil.println(leftHandy, cameraTransformType);
 	}
 	public static boolean renderItem(ItemStack stack){
 		Item item=stack.getItem();

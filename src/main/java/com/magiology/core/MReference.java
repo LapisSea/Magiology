@@ -11,7 +11,7 @@ public class MReference{
 		NAME= "Magiology",
 		CHANNEL_NAME= "magicpackets",
 		MOD_START_FOLDER= "com.",
-		PROXY_LOCATION=MOD_START_FOLDER+MODID+".forgepowered.proxy",
+		PROXY_LOCATION=MOD_START_FOLDER+MODID+".core.proxy",
 		ClIENT_PROXY_LOCATION=PROXY_LOCATION+".ClientProxy",
 		SERVER_PROXY_LOCATION=PROXY_LOCATION+".ServerProxy",
 		MC_VERSION= "1.9",

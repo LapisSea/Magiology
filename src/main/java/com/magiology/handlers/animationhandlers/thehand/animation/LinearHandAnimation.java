@@ -18,8 +18,7 @@ public class LinearHandAnimation extends HandAnimationBase{
 	public LinearHandAnimation(int quality,HandPosition start, HandPosition end, LinearHandAnimProgressHandler progressHandler, AnimationPart[] animationData, String name){
 		super(start, end, name);
 		this.progressHandler=progressHandler;
-		HandAnimation anim=new HandAnimation(start, end, animationData,"");
-		this.data=anim.toLinearAnimation(quality);
+		this.data=new HandAnimation(start, end, animationData,"").toLinearAnimation(quality);
 	}
 	public LinearHandAnimation(int quality,HandPosition startEnd, LinearHandAnimProgressHandler progressHandler, AnimationPart[] animationData, String name){
 		this(quality, startEnd, startEnd, progressHandler, animationData ,name);

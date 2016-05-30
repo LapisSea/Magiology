@@ -25,6 +25,6 @@ public class ValueWithPrev<T extends Calculable<T>>{
 		value=newValue;
 	}
 	public void update(){
-		prevValue=value;
+		prevValue=value.add(0);
 	}
 }

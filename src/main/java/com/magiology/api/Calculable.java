@@ -10,4 +10,6 @@ public interface Calculable<T extends Calculable>{
 	public T mul(T var);
 	public T sub(float var);
 	public T sub(T var);
+	
+	public T copy();
 }

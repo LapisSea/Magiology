@@ -86,5 +86,10 @@ public class Matrix4fM extends Matrix4f implements Calculable<Matrix4fM>{
 	public Matrix4fM sub(Matrix4fM var){
 		return (Matrix4fM)sub(this,var,new Matrix4fM());
 	}
+
+	@Override
+	public Matrix4fM copy(){
+		return (Matrix4fM)load(this, null);
+	}
 	
 }

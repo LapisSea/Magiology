@@ -2,9 +2,14 @@ package com.magiology.handlers.animationhandlers.thehand;
 
 import com.magiology.client.render.itemrender.ItemRendererTheHand;
 import com.magiology.core.init.MItems;
-import com.magiology.handlers.animationhandlers.thehand.animation.CommonHand;
+import com.magiology.forgepowered.packets.packets.toserver.HandActionPacket;
+import com.magiology.handlers.animationhandlers.thehand.animation.AnimationEvent;
+import com.magiology.handlers.animationhandlers.thehand.animation.AnimationPart;
+import com.magiology.handlers.animationhandlers.thehand.animation.AnimationPart.AnimationFactory;
+import com.magiology.handlers.animationhandlers.thehand.animation.HandAnimData;
 import com.magiology.handlers.animationhandlers.thehand.animation.HandAnimation;
 import com.magiology.handlers.animationhandlers.thehand.animation.HandAnimationBase;
+import com.magiology.handlers.animationhandlers.thehand.animation.LinearHandAnimProgressHandler;
 import com.magiology.handlers.animationhandlers.thehand.animation.LinearHandAnimation;
 import com.magiology.mcobjects.entitys.EntityBallOfEnergy;
 import com.magiology.util.renderers.ValueWithPrev;
@@ -12,9 +17,11 @@ import com.magiology.util.utilclasses.RandUtil;
 import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilclasses.UtilM;
 import com.magiology.util.utilclasses.math.ArrayMath;
+import com.magiology.util.utilclasses.math.MathUtil;
 import com.magiology.util.utilclasses.math.PartialTicksUtil;
 import com.magiology.util.utilobjects.DoubleObject;
 import com.magiology.util.utilobjects.codeinsert.ObjectProcessor;
+import com.magiology.util.utilobjects.codeinsert.ObjectReturn;
 import com.magiology.util.utilobjects.vectors.Vec3M;
 import com.magiology.util.utilobjects.vectors.physics.PhysicsVec3F;
 
@@ -29,11 +36,8 @@ public class TheHandHandler{
 	
 //	private static Map<String, HandData> handData[]=new HashMap[2];
 	@SideOnly(Side.CLIENT)
-	private static HandDataCollection leftHand=new HandDataCollection(),rightHand=new HandDataCollection();
+	private static HandDataCollection rightHand=new HandDataCollection();
 	
-	public static HandDataCollection getHand(boolean handLeft){
-		return handLeft?leftHand:rightHand;
-	}
 	
 	@SideOnly(Side.CLIENT)
 	protected static class HandDataCollection{
@@ -55,19 +59,6 @@ public class TheHandHandler{
 				
 				cubes[i].obj1.y.addWall("hand",0, false);
 			}
-			cubes[1].obj1.x.wantedPoint=p*0.75F;
-			cubes[2].obj1.x.wantedPoint=p*0.75F;
-			cubes[2].obj1.z.wantedPoint=p*0.75F;
-			cubes[3].obj1.z.wantedPoint=p*0.75F;
-			
-			cubes[4].obj1.x.wantedPoint=p*0.75F;
-			cubes[4].obj1.y.wantedPoint=p*0.75F;
-			cubes[5].obj1.x.wantedPoint=p*0.75F;
-			cubes[5].obj1.z.wantedPoint=p*0.75F;
-			cubes[5].obj1.y.wantedPoint=p*0.75F;
-			cubes[6].obj1.z.wantedPoint=p*0.75F;
-			cubes[6].obj1.y.wantedPoint=p*0.75F;
-			cubes[7].obj1.y.wantedPoint=p*0.75F;
 
 			for(int i=0;i<cubes.length;i++){
 				cubes[i].obj1.x.point=cubes[i].obj1.x.prevPoint=cubes[i].obj1.x.wantedPoint;
@@ -88,7 +79,7 @@ public class TheHandHandler{
 	@SideOnly(Side.CLIENT)
 	public static void actionAnimation(EntityPlayer player){
 		if(activeAnimation!=null)return;
-		activeAnimation=CommonHand.chargeUp;
+		activeAnimation=HandAnimData.chargeUp;
 	}
 	@SideOnly(Side.CLIENT)
 	public static void animate(EntityPlayer player){
@@ -97,13 +88,106 @@ public class TheHandHandler{
 //		PrintUtil.println(pos.name);
 		ItemRendererTheHand.get().secure();
 		
-		animateHand(player, leftHand);
 		animateHand(player, rightHand);
 		
 	}
 	
 	@SideOnly(Side.CLIENT)
 	private static void animateHand(EntityPlayer player, HandDataCollection hand){
+		try {
+			HandAnimData.chargeUpRelease=new LinearHandAnimation(3,HandAnimData.chargeUpEnd,new LinearHandAnimProgressHandler(){
+				protected AnimationEvent shootEvent=new AnimationEvent(()->{
+					Vec3M pos=ItemRendererTheHand.getPalmMiddle();
+					TheHandHandler.shoot(UtilC.getThePlayer(),pos);
+					UtilM.sendMessage(new HandActionPacket(0,pos));
+				},()->timeHeld==10);
+				
+				protected int timeMul=1;
+				
+				@Override
+				public float getProgress(){
+					return UtilC.fluctuate(80, 0)-0.001F;//progress;//
+				}
+				@Override
+				public boolean isInactive(){
+					boolean inactive=getProgress()==1;
+					if(inactive){
+						timeHeld=0;
+						shootEvent.called=false;
+					}
+					return inactive;
+				}
+				
+				@Override
+				public void onHoldingEnd(){
+					timeMul=1;
+				}
+
+				@Override
+				public void onHoldingStart(){
+					timeMul=1;
+				}
+
+				@Override
+				public void update(){
+					timeHeld=MathUtil.snap(timeHeld+timeMul, 0, 20);
+					progress=timeHeld/(float)20;
+					if(shootEvent.getShouldCall().get()){
+						shootEvent.called=true;
+						shootEvent.getOnEvent().run();
+					}
+				}
+				@Override
+				public boolean willRestrictItemSwitching(){
+					return true;
+				}
+			}, new ObjectReturn<AnimationPart[]>(){
+				@Override
+				public AnimationPart[] process(){
+					//close fist
+					AnimationFactory factory=new AnimationFactory();
+					factory.setGroup(2)
+						.gen(0,  2,6)
+						.gen(1,  2,23F)
+						.gen(2,  2,9)
+						.gen(3,  2,22);
+					
+					factory.setGroup(3)
+						.gen(0,  2,1F)
+						.gen(1,  2,20)
+						.gen(2,  2,14)
+						.gen(3,  2,24);
+
+					factory.setGroup(4)
+						.gen(0,  3,-1F)
+						.gen(1,  3,11)
+						.gen(2,  3,12)
+						.gen(3,  3,20);
+					
+					factory.setGroup(5)
+						.gen(0,  3,-4F)
+						.gen(1,  3,8)
+						.gen(2,  3,7)
+						.gen(3,  3,20);
+					
+					factory.setGroup(1)
+						.setDelay(1)
+						.gen(0,  2,-3F)
+						.gen(1,  2,-5F)
+						.gen(3,  2,-6F)
+						.gen(4,  2,-7F)
+						.setDelay(0);
+					
+					return factory.compile();
+				}
+			}.process(),"chargeUpRelease");
+			activeAnimation=HandAnimData.chargeUpRelease;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		
 		hand.updatePrev();
 		
 		HandData wanted=null;
@@ -125,10 +209,9 @@ public class TheHandHandler{
 		}
 		if(wanted==null)wanted=getActivePosition(player).data;
 		
-		handleSpeed(hand.pos, wanted, 2);
+		handleSpeed(hand.pos, wanted, 0.8F);
 		updateNoise();
 		
-		updateCubes(leftHand);
 		updateCubes(rightHand);
 		
 		hand.calculated.value.base=ArrayMath.calc(hand.pos.base, hand.noise.base, '+');
@@ -141,6 +224,21 @@ public class TheHandHandler{
 	@SideOnly(Side.CLIENT)
 	private static void updateCubes(HandDataCollection hand){
 		float globalDist=0;
+		if(hand.cubes[0].obj1.x.wantedPoint==0){
+			hand.cubes[1].obj1.x.wantedPoint=p*0.75F;
+			hand.cubes[2].obj1.x.wantedPoint=p*0.75F;
+			hand.cubes[2].obj1.z.wantedPoint=p*0.75F;
+			hand.cubes[3].obj1.z.wantedPoint=p*0.75F;
+			
+			hand.cubes[4].obj1.x.wantedPoint=p*0.75F;
+			hand.cubes[4].obj1.y.wantedPoint=p*0.75F;
+			hand.cubes[5].obj1.x.wantedPoint=p*0.75F;
+			hand.cubes[5].obj1.z.wantedPoint=p*0.75F;
+			hand.cubes[5].obj1.y.wantedPoint=p*0.75F;
+			hand.cubes[6].obj1.z.wantedPoint=p*0.75F;
+			hand.cubes[6].obj1.y.wantedPoint=p*0.75F;
+			hand.cubes[7].obj1.y.wantedPoint=p*0.75F;
+		}
 		for(DoubleObject<PhysicsVec3F,PhysicsVec3F> obj:hand.cubes){
 			obj.obj1.x.acceleration=0.006F;
 			obj.obj1.y.acceleration=0.006F;
@@ -191,40 +289,34 @@ public class TheHandHandler{
 			}
 			return data;
 		};
-		leftHand.wantedNoise=gen.pocess(leftHand.wantedNoise);
-		rightHand.wantedNoise=gen.pocess(rightHand.wantedNoise);
+		rightHand.wantedNoise=gen.process(rightHand.wantedNoise);
 		
 	}
 	
 	public static HandPosition getActivePosition(EntityPlayer player){
 		if(!isActive(player))return null;
 		int id=player.getHeldItemMainhand().getTagCompound().getInteger("AP");
-		if(id<0)return CommonHand.errorPos;
-		if(id>=HandPosition.values().length)return CommonHand.errorPos;
+		if(id<0)return HandAnimData.errorPos;
+		if(id>=HandPosition.values().length)return HandAnimData.errorPos;
 		return HandPosition.values()[id];
 	}
 	public static HandPosition getLastActivePosition(EntityPlayer player){
 		if(!isActive(player))return null;
 		int id=player.getHeldItemMainhand().getTagCompound().getInteger("LAP");
-		if(id<0)return CommonHand.errorPos;
-		if(id>=HandPosition.values().length)return CommonHand.errorPos;
+		if(id<0)return HandAnimData.errorPos;
+		if(id>=HandPosition.values().length)return HandAnimData.errorPos;
 		return HandPosition.values()[id];
 	}
 	
-	public static HandData getRenderLeftHandData(){
-		return getRenderHandData(leftHand);
-	}
-	public static HandData getRenderRightHandData(){
-		return getRenderHandData(rightHand);
-	}
-	private static HandData getRenderHandData(HandDataCollection hand){
+	public static HandData getRenderHandData(){
+		HandDataCollection hand=rightHand;
 		if(hand.calculated.prevValue.fingers[0].length==0)hand.calculated.prevValue.set(hand.calculated.value);
 		
 		HandData result=new HandData(false);
 		result.base=PartialTicksUtil.calculate(hand.calculated.prevValue.base,hand.calculated.value.base);
 		result.thumb=PartialTicksUtil.calculate(hand.calculated.prevValue.thumb,hand.calculated.value.thumb);
 		result.fingers=PartialTicksUtil.calculate(hand.calculated.prevValue.fingers,hand.calculated.value.fingers);
-		result.cubes=hand.calculated.value.cubes;
+		result.cubes=hand.cubes;
 		result.cubeGlowPrecentage=hand.calculated.value.cubeGlowPrecentage;
 		result.calciferiumPrecentage=hand.calculated.value.calciferiumPrecentage;
 		return result;
@@ -232,23 +324,23 @@ public class TheHandHandler{
 	
 	private static void handleSpeed(HandData pos,HandData wantedPos, float speed){
 		
-		pos.base=UtilM.exponentiallyEqualize(pos.base, wantedPos.base, 1F);
+		pos.base=UtilM.exponentiallyEqualize(pos.base, wantedPos.base, speed);
 		
-		pos.thumb=UtilM.exponentiallyEqualize(pos.thumb, wantedPos.thumb, 1F);
+		pos.thumb=UtilM.exponentiallyEqualize(pos.thumb, wantedPos.thumb, speed);
 		for(int i=0;i<pos.fingers.length;i++){
-			pos.fingers[i]=UtilM.exponentiallyEqualize(pos.fingers[i], wantedPos.fingers[i], 1F);
+			pos.fingers[i]=UtilM.exponentiallyEqualize(pos.fingers[i], wantedPos.fingers[i], speed);
 		}
 	}
 	
 	@SideOnly(Side.CLIENT)
 	public static void handUseAnimation(EntityPlayer player){
 		if(activeAnimation!=null)return;
-		activeAnimation=CommonHand.rightClickAnimation;
-		CommonHand.rightClickAnimation.start();
+		activeAnimation=HandAnimData.rightClickAnimation;
+		HandAnimData.rightClickAnimation.start();
 	}
 	@SideOnly(Side.CLIENT)
 	public static void init(){
-		CommonHand.load();
+		HandAnimData.load();
 		HandPosition.compile();
 	}
 	public static boolean isActive(EntityPlayer player){
@@ -262,9 +354,9 @@ public class TheHandHandler{
 		int now=UtilM.getPosInArray(TheHandHandler.getActivePosition(player), values);
 		now++;
 		if(now==values.length)now=0;
-		if(values[now]==CommonHand.errorPos)now++;
+		if(values[now]==HandAnimData.errorPos)now++;
 		if(now==values.length)now=0;
-		TheHandHandler.setActivePositionId(player, now);
+		setActivePositionId(player, now);
 		return values[now];
 	}
 	public static void setActivePositionId(EntityPlayer player,int id){
@@ -295,7 +387,7 @@ public class TheHandHandler{
 	
 	
 	public static void unsettleCubes(float ammount, boolean handLeft){
-		for(DoubleObject<PhysicsVec3F,PhysicsVec3F> obj:getHand(handLeft).cubes){
+		for(DoubleObject<PhysicsVec3F,PhysicsVec3F> obj:rightHand.cubes){
 			obj.obj1.x.speed+=RandUtil.CRF(ammount);
 			obj.obj1.y.speed+=RandUtil.CRF(ammount*1.5);
 			obj.obj1.z.speed+=RandUtil.CRF(ammount);
@@ -307,7 +399,7 @@ public class TheHandHandler{
 		if(!isActive(player))return;
 		
 		HandPosition handPos=getActivePosition(player);
-		if(handPos==CommonHand.errorPos)setActivePositionId(player, 3);
+		if(handPos==HandAnimData.errorPos)setActivePositionId(player, 3);
 		
 		if(UtilM.isRemote(player))animate(player);
 	}
@@ -315,19 +407,26 @@ public class TheHandHandler{
 		if(UtilC.getWorldTime()%40==0)generateNewNoiseValue();
 		
 		ObjectProcessor<HandDataCollection> update=(hand,spee)->{
-			hand.noiseSpeed.base=UtilM.graduallyEqualize(hand.noiseSpeed.base, hand.wantedNoise.base, 0.01F);
-			
-			hand.noiseSpeed.thumb=UtilM.graduallyEqualize(hand.noiseSpeed.thumb, hand.wantedNoise.thumb, 0.01F);
-			for(int i=0;i<hand.noiseSpeed.fingers.length;i++){
-				hand.noiseSpeed.fingers[i]=UtilM.graduallyEqualize(hand.noiseSpeed.fingers[i], hand.wantedNoise.fingers[i], 0.01F);
+//			hand.noiseSpeed=new HandData();
+//			hand.noise=new HandData();
+			for(int i=0;i<hand.noiseSpeed.base.length;i++){
+				hand.noiseSpeed.base[i]=UtilM.handleSpeedFolower(hand.noiseSpeed.base[i], hand.noise.base[i], hand.wantedNoise.base[i], 0.001F*(i<3?0.002F:1))*0.98F;
+			}
+			for(int i=0;i<hand.noiseSpeed.thumb.length;i++){
+				hand.noiseSpeed.thumb[i]=UtilM.handleSpeedFolower(hand.noiseSpeed.thumb[i], hand.noise.thumb[i], hand.wantedNoise.thumb[i], 0.001F)*0.98F;
 			}
 			
+			
+			for(int i=0;i<hand.noiseSpeed.fingers.length;i++){
+				for(int j=0;j<hand.noiseSpeed.fingers[i].length;j++){
+					hand.noiseSpeed.fingers[i][j]=UtilM.handleSpeedFolower(hand.noiseSpeed.fingers[i][j], hand.noise.fingers[i][j], hand.wantedNoise.fingers[i][j], 0.001F)*0.98F;
+				}
+			}
+			hand.noise.set(hand.noise.add(hand.noiseSpeed));
 			return null;
 		};
 		
-//		handleSpeed(noiseSpeed, noise, noiseWanted, 0.01F, 0.00001F, 0.95F);
-		update.pocess(leftHand);
-		update.pocess(rightHand);
+		update.process(rightHand);
 	}
 	
 }

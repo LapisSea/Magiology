@@ -1,4 +1,4 @@
-package com.magiology.forgepowered.proxy;
+package com.magiology.core.proxy;
 
 import com.magiology.api.lang.program.ProgramDataBase;
 import com.magiology.core.MUpdater;

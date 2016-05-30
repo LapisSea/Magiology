@@ -76,14 +76,14 @@ public class ShinySurfaceRenderer extends VertexRenderer{
 		for(int i=0;i<lights.size();i++){
 			
 			double diff=usesFilters?
-				lightStrenghtFilter.pocess(reflectionVects.get(i).lightProduct(toCameraVec)):
+				lightStrenghtFilter.process(reflectionVects.get(i).lightProduct(toCameraVec)):
 				reflectionVects.get(i).lightProduct(toCameraVec);
 				
 			if(diff>0){
 				SpecularLight light=lights.get(i);
 				
 				ColorF specular=usesFilters?
-					lightColorFilter.pocess(light.getColor().mul(Math.pow(diff,light.getPow()))):
+					lightColorFilter.process(light.getColor().mul(Math.pow(diff,light.getPow()))):
 					light.getColor().mul(Math.pow(diff,light.getPow()));
 				color.r+=specular.r;
 				color.g+=specular.g;

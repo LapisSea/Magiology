@@ -1,4 +1,4 @@
-package com.magiology.forgepowered.proxy;
+package com.magiology.core.proxy;
 
 import static com.magiology.core.MReference.*;
 

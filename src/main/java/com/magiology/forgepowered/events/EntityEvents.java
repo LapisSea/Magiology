@@ -33,7 +33,6 @@ public class EntityEvents{
 	@SubscribeEvent
 	public void onLivingUpdateEvent(LivingUpdateEvent event){
 		World world=event.getEntity().worldObj;
-		double x=event.getEntity().posX,y=event.getEntity().posY,z=event.getEntity().posZ,xv=event.getEntity().motionX,yv=event.getEntity().motionY,zv=event.getEntity().motionZ;
 		
 		
 		if(event.getEntity() instanceof EntityPlayer){
@@ -47,7 +46,7 @@ public class EntityEvents{
 			if(world.isRemote)if(ComplexPlayerRenderingData.get(player)==null)ComplexPlayerRenderingData.registerEntityPlayerRenderer(player);
 			
 			if(WingsFromTheBlackFireHandler.getIsActive(player))SpecialMovmentEvents.instance.handleWingPhysics(player);
-			if(TheHandHandler.isActive(player))TheHandHandler.update(player);
+			TheHandHandler.update(player);
 			
 			//---------------------
 		}

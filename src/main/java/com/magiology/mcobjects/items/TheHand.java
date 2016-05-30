@@ -1,12 +1,15 @@
 package com.magiology.mcobjects.items;
 
+import java.util.ArrayDeque;
+import java.util.Collection;
 import java.util.List;
+import java.util.Queue;
 
 import com.magiology.client.render.itemrender.ItemRendererTheHand;
 import com.magiology.forgepowered.events.client.CustomRenderedItem;
 import com.magiology.handlers.animationhandlers.thehand.HandPosition;
 import com.magiology.handlers.animationhandlers.thehand.TheHandHandler;
-import com.magiology.handlers.animationhandlers.thehand.animation.CommonHand;
+import com.magiology.handlers.animationhandlers.thehand.animation.HandAnimData;
 import com.magiology.util.utilobjects.NBTUtil;
 
 import net.minecraft.entity.Entity;
@@ -19,6 +22,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -34,6 +38,26 @@ public class TheHand extends Item implements CustomRenderedItem{
 //					 );
 //		}
 //		list.add("hold ");
+	}
+	
+	public Collection<BlockPos> getBlocksAroundEntity(Entity entity, int xRadius,int yRadius, int zRadius,Collection<Vec3i> forbidenPositionsFromEntity){
+		final BlockPos entityBlock=new BlockPos(entity.posX, entity.posY, entity.posZ);
+		Queue<BlockPos> listOfBlocks=new ArrayDeque<>(),translated=new ArrayDeque<>();
+		
+		for(int x=-xRadius;x<xRadius+1;x++){
+			for(int y=-yRadius;y<yRadius+1;y++){
+				for(int z=-zRadius;z<zRadius+1;z++){
+					listOfBlocks.add(new BlockPos(x, y, z));
+				}
+			}
+		}
+		
+		listOfBlocks.stream()
+			.filter(pos->!forbidenPositionsFromEntity.contains(pos))
+			.forEach(pos->{
+				translated.add(pos.add(entityBlock));
+			});
+		return translated;
 	}
 	
 	@Override
@@ -53,10 +77,10 @@ public class TheHand extends Item implements CustomRenderedItem{
 	public ActionResult<ItemStack> onItemRightClick(ItemStack itemstack, World world, EntityPlayer player, EnumHand hand){
 		
 		HandPosition ap=TheHandHandler.getActivePosition(player);
-		if(ap==CommonHand.weaponHolder){
+		if(ap==HandAnimData.weaponHolder){
 			TheHandHandler.actionAnimation(player);
 			player.setActiveHand(hand);
-		}else if(ap==CommonHand.naturalPosition){
+		}else if(ap==HandAnimData.naturalPosition){
 			TheHandHandler.handUseAnimation(player);
 		}
 		return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemstack);
@@ -65,10 +89,10 @@ public class TheHand extends Item implements CustomRenderedItem{
 	public EnumActionResult onItemUseFirst(ItemStack itemstack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand){
 		TheHandHandler.handUseAnimation(player);
 		HandPosition ap=TheHandHandler.getActivePosition(player);
-		if(ap==CommonHand.weaponHolder){
+		if(ap==HandAnimData.weaponHolder){
 			TheHandHandler.actionAnimation(player);
 			player.setActiveHand(hand);
-		}else if(ap==CommonHand.naturalPosition){
+		}else if(ap==HandAnimData.naturalPosition){
 			TheHandHandler.handUseAnimation(player);
 		}
 		return EnumActionResult.FAIL;
@@ -76,7 +100,7 @@ public class TheHand extends Item implements CustomRenderedItem{
 	
 	@Override
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity){
-		if(TheHandHandler.getActivePosition(player)==CommonHand.closedFist){
+		if(TheHandHandler.getActivePosition(player)==HandAnimData.closedFist){
 			
 			player.worldObj.createExplosion(player, entity.posX, entity.posY-0.0005, entity.posZ, 0.01F, false);
 			return true;

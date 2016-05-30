@@ -45,14 +45,7 @@ public class HandData implements Calculable<HandData>{
 	}
 	@Override
 	public Object clone(){
-		HandData result=new HandData(false);
-		result.base=base.clone();
-		result.thumb=thumb.clone();
-		result.fingers=new float[fingers.length][0];
-		for(int i=0;i<fingers.length;i++)result.fingers[i]=Arrays.copyOf(fingers[i], fingers[i].length);
-		result.calciferiumPrecentage=calciferiumPrecentage;
-		result.cubeGlowPrecentage=cubeGlowPrecentage;
-		return result;
+		return copy();
 	}
 	
 	public HandData Clone(){
@@ -128,5 +121,16 @@ public class HandData implements Calculable<HandData>{
 			.append(UtilM.arrayToString(fingers))
 			.append("]")
 		.toString();
+	}
+	@Override
+	public HandData copy(){
+		HandData result=new HandData(false);
+		result.base=base.clone();
+		result.thumb=thumb.clone();
+		result.fingers=new float[fingers.length][0];
+		for(int i=0;i<fingers.length;i++)result.fingers[i]=Arrays.copyOf(fingers[i], fingers[i].length);
+		result.calciferiumPrecentage=calciferiumPrecentage;
+		result.cubeGlowPrecentage=cubeGlowPrecentage;
+		return result;
 	}
 }

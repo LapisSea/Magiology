@@ -52,5 +52,9 @@ public class FloatCalc implements Calculable<FloatCalc>{
 	public FloatCalc sub(FloatCalc var){
 		return null;
 	}
+	@Override
+	public FloatCalc copy(){
+		return new FloatCalc(value);
+	}
 
 }

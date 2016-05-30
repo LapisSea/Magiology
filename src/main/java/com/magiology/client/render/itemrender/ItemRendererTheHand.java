@@ -12,7 +12,7 @@ import com.magiology.client.render.Textures;
 import com.magiology.forgepowered.events.client.CustomRenderedItem.CustomRenderedItemRenderer;
 import com.magiology.handlers.animationhandlers.thehand.HandData;
 import com.magiology.handlers.animationhandlers.thehand.TheHandHandler;
-import com.magiology.handlers.animationhandlers.thehand.animation.CommonHand;
+import com.magiology.handlers.animationhandlers.thehand.animation.HandAnimData;
 import com.magiology.util.renderers.GL11U;
 import com.magiology.util.renderers.MultiTransfromModel;
 import com.magiology.util.renderers.OpenGLM;
@@ -24,7 +24,6 @@ import com.magiology.util.renderers.glstates.GlStateCell;
 import com.magiology.util.renderers.tessellatorscripts.CubeModel;
 import com.magiology.util.utilclasses.PrintUtil;
 import com.magiology.util.utilclasses.RandUtil;
-import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilclasses.UtilM;
 import com.magiology.util.utilclasses.math.MatrixUtil;
 import com.magiology.util.utilobjects.ColorF;
@@ -60,7 +59,7 @@ public class ItemRendererTheHand implements CustomRenderedItemRenderer{
 	
 	private VertexModel defultModel;
 	
-	private static HandData lastDataRight,lastDataLeft;
+	private static HandData lastData;
 	public MultiTransfromModel handModelSolidRight,handModelOpaque,handModelGlow;
 	
 	
@@ -81,7 +80,7 @@ public class ItemRendererTheHand implements CustomRenderedItemRenderer{
 		secure();
 		OpenGLM.pushMatrix();
 		if(defultModel==null){
-			HandData data=CommonHand.naturalPosition.data.Clone();
+			HandData data=HandAnimData.naturalPosition.data.Clone();
 			switch(position){
 			case GROUND:{
 				data.base[0]=0.20976496F;
@@ -97,8 +96,7 @@ public class ItemRendererTheHand implements CustomRenderedItemRenderer{
 			}break;
 			}
 			
-			render(data,false);
-			render(data,true);
+			render(data);
 		}
 //		PrintUtil.println(position);
 		if(position!=TransformType.FIRST_PERSON_RIGHT_HAND&&position!=TransformType.FIRST_PERSON_LEFT_HAND){
@@ -136,13 +134,12 @@ public class ItemRendererTheHand implements CustomRenderedItemRenderer{
 			TessUtil.bindTexture(Textures.handTexture);
 			defultModel.draw();
 		}else{
-			leftHand=UtilC.getThePlayer().getHeldItemOffhand()==stack;
-			render(leftHand?(lastDataLeft=TheHandHandler.getRenderLeftHandData()):(lastDataRight=TheHandHandler.getRenderRightHandData()),leftHand);
+			render(lastData=TheHandHandler.getRenderHandData());
 		}
 		OpenGLM.popMatrix();
 	}
 	
-	private void render(HandData hand, boolean leftHand){
+	private void render(HandData hand){
 		worldMat=null;
 		OpenGLM.pushMatrix();
 		try{
@@ -163,7 +160,7 @@ public class ItemRendererTheHand implements CustomRenderedItemRenderer{
 			
 			ColorF.WHITE.bind();
 			TessUtil.bindTexture(Textures.handTexture);
-			OpenGLM.translate(p*13, p*3, 0);
+			OpenGLM.translate(p*21, p*2, 0);
 			GL11U.glRotate(0, 180, 0);
 			OpenGLM.translate(hand.base[0]+p*3, hand.base[1]+p*4, hand.base[2]-p*1);
 			if(hand.calciferiumPrecentage>0.7){
@@ -173,7 +170,7 @@ public class ItemRendererTheHand implements CustomRenderedItemRenderer{
 				GL11U.glRotate(RandUtil.CRF(noise), RandUtil.CRF(noise), RandUtil.CRF(noise));
 			}
 			
-			GL11U.glRotate(hand.base[3], hand.base[4], hand.base[5],p*4,p,0);
+			GL11U.glRotate(hand.base[3], hand.base[4], hand.base[5]-5,p*4,p,0);
 			transformations.addAll(transformationsCube);
 			if(defultModel==null)complieDefultModel(transformations,transformationsCube);
 			handModelSolidRight.draw(transformations);
@@ -407,7 +404,7 @@ public class ItemRendererTheHand implements CustomRenderedItemRenderer{
 			OpenGLM.enableLightmap();
 			GL11U.endOpaqueRendering();
 		}));
-		handModelGlow.cell.willRender=()->lastDataRight.cubeGlowPrecentage>1F/256;
+		handModelGlow.cell.willRender=()->lastData.cubeGlowPrecentage>1F/256;
 		
 		handModelOpaque.cell=new GlStateCell(new GlState(()->{
 			GL11U.setUpOpaqueRendering(1);
@@ -417,7 +414,7 @@ public class ItemRendererTheHand implements CustomRenderedItemRenderer{
 			OpenGLM.enableLightmap();
 			GL11U.endOpaqueRendering();
 		}));
-		handModelOpaque.cell.willRender=()->lastDataRight.calciferiumPrecentage>1F/256;
+		handModelOpaque.cell.willRender=()->lastData.calciferiumPrecentage>1F/256;
 		
 	}
 	

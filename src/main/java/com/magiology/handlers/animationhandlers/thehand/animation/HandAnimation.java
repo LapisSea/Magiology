@@ -7,7 +7,6 @@ import java.util.List;
 import com.magiology.handlers.animationhandlers.thehand.HandData;
 import com.magiology.handlers.animationhandlers.thehand.HandPosition;
 import com.magiology.handlers.animationhandlers.thehand.TheHandHandler;
-import com.magiology.util.utilclasses.PrintUtil;
 import com.magiology.util.utilclasses.UtilC;
 import com.magiology.util.utilobjects.DoubleObject;
 import com.magiology.util.utilobjects.LinearAnimation;
@@ -77,7 +76,6 @@ public class HandAnimation extends HandAnimationBase{
 			count++;
 		}
 		data.add((HandData)wantedPos.clone());
-		PrintUtil.println(data.size());
 		DoubleObject<HandData[], Float>[] data1=new DoubleObject[data.size()];
 		Iterator<HandData> data2=data.iterator();
 		for(int i=0;i<data1.length;i++)data1[i]=new DoubleObject<HandData[], Float>(new HandData[]{data2.next()}, (i+0F)/data1.length);
@@ -94,7 +92,7 @@ public class HandAnimation extends HandAnimationBase{
 		boolean noInvoke=true;
 		for(AnimationPart animationPart:animationData)if(animationPart.isActive(timeRunning)){
 			noInvoke=false;
-			animationPart.runner.pocess(speed, animationPart);
+			animationPart.runner.process(speed, animationPart);
 		}
 		if(noInvoke)isRunning=false;
 		wantedPos.set(wantedPos.add(speed));

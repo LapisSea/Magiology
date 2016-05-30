@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.common.eventbus.EventBus;
-import com.magiology.forgepowered.proxy.CommonProxy;
+import com.magiology.core.proxy.CommonProxy;
 import com.magiology.util.utilclasses.PrintUtil;
 
 import net.minecraftforge.fml.common.LoadController;
