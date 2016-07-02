@@ -1,0 +1,7 @@
+{
+   "swing1": {"category": "master","sounds": [{"name": "swing1","stream": false}]},
+   "swing2": {"category": "master","sounds": [{"name": "swing2","stream": false}]},
+   "wind":   {"category": "master","sounds": [{"name": "wind","stream": false}]},
+   "poop":   {"category": "master","sounds": [{"name": "poop","stream": false}]},
+   "weird":  {"category": "master","sounds": [{"name": "weird","stream": false}]}
+}

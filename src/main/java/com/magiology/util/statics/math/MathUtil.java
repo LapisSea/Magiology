@@ -176,4 +176,8 @@ public class MathUtil{
 		return var*var;
 	}
 
+	public static float sqrt(float value){
+		return (float)Math.sqrt(value);
+	}
+
 }

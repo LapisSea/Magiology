@@ -1,52 +1,36 @@
-Working on:
-	Fancy rendering
-	
-In plans:
-	Animated model renderer
-	json models
-	reimplement IItemRenderer (as much as possible)
-	Standardize gui style
-	Ingame mod book
-	repeating crossbow
-	--------> whole fudging machine system <--------
-	Config for all the things!
-	
-Abandoned for other projects:
-	The hand functionality 
-	Rare space pipes (item pipes)
-	Ore structure crusher
-	Particle launcher
-	
-To improve:
-	The wings animation/physics
-	The hand better model
-	Power system (low priority)
-	JavaScript editor
-	text editor
-	THE PREFORMANCE OF THE MOD!! 
-	
-For scraping and reusing:
-	Disco floor
-	Epic particle effects
 
-
-possible fire essence names (mod power unit and main item)
-hot fire
-calidus ignis (to Latin)
-Caligni
-
-fire power
-virtutem ignis (to Latin)
-Virtugni
-
-movie: Moving tower 
-Calcifer (movie character)
-Calciferium 
-
-hot juice
-calidus sucus (to Latin)
-Caliducus
-
-Ignia
-
-for now it is Calciferium
+Optimize particles
+Make basic spirit entity
+make a 50blocks big spider entity
+create custom player data
+Fuck the police --DONE
+wait what?
+sync player data accross world via mediafire servers
+encrypt synced data to prevent cheating
+Create coupted versions of mobs
+create spider biome
+make complex spirits with traits and relationships with players
+make 7 elements
+make fluid and item pipes
+create energy lasers
+create crystals
+create multiblock machines
+create boss mobs
+implement shaders on spirits
+do nothing and rest a little bit for fucks sake!
+crete a death entity
+make the under betrock world
+make the spirit wepons
+create ore crystals
+create other random ores
+create mereors
+create hudhe casels
+create a special gigantic building at xz=0,0
+make fancy wings with cool physics
+create realisic grappling hook
+create ultima armor
+create some other armor
+create world coruption
+create mind controlling worms
+make shitting mechanics --DONE
+reamke everythign above because it is horibly coded and i should throw my pc in a lake. ok no i love my pc.

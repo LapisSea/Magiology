@@ -3,6 +3,7 @@ package com.magiology.util.statics.math;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import com.magiology.handlers.particle.IParticle;
 import com.magiology.util.interf.Calculable;
 import com.magiology.util.objs.ColorF;
 import com.magiology.util.objs.Vec3M;
@@ -76,6 +77,9 @@ public class PartialTicksUtil{
 						  calculate(prevColor.g, color.g),
 						  calculate(prevColor.b, color.b),
 						  calculate(prevColor.a, color.a));
+	}
+	public static Vec3M calculate(IParticle particle){
+		return calculate(particle.getPrevPos(),particle.getPos());
 	}
 	
 }

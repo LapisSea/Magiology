@@ -1,8 +1,6 @@
 package com.magiology.handlers.particle;
 
-import java.util.ArrayDeque;
-import java.util.Queue;
-
+import com.magiology.client.Renderer;
 import com.magiology.util.objs.BlockPosM;
 import com.magiology.util.objs.ColorF;
 import com.magiology.util.objs.QuadUV;
@@ -10,7 +8,6 @@ import com.magiology.util.objs.Vec2i;
 import com.magiology.util.objs.Vec3M;
 import com.magiology.util.statics.math.PartialTicksUtil;
 
-import net.minecraft.client.model.PositionTextureVertex;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
@@ -156,36 +153,31 @@ public abstract class ParticleM extends IParticle{
 	}
 
 	@Override
-	public Queue<PositionTextureVertex> renderModel(float xRotation, float zRotation, float yzRotation, float xyRotation, float xzRotation){
+	public void renderModel(float xRotation, float zRotation, float yzRotation, float xyRotation, float xzRotation){
 		float renderSize=PartialTicksUtil.calculate(getPrevSize(), getSize());
-		return renderStandardModel(xRotation, zRotation, yzRotation, xyRotation, xzRotation, renderSize);
+		renderStandardModel(xRotation, zRotation, yzRotation, xyRotation, xzRotation, renderSize);
 	}
-	protected Queue<PositionTextureVertex> renderStandardModel(float xRotation, float zRotation, float yzRotation, float xyRotation, float xzRotation, float size){
-		return renderStandardModel(xRotation, zRotation, yzRotation, xyRotation, xzRotation, size, allUV);
+	protected void renderStandardModel(float xRotation, float zRotation, float yzRotation, float xyRotation, float xzRotation, float size){
+		renderStandardModel(xRotation, zRotation, yzRotation, xyRotation, xzRotation, size, allUV);
 	}
-	protected Queue<PositionTextureVertex> renderStandardModel(float xRotation, float zRotation, float yzRotation, float xyRotation, float xzRotation, float size, QuadUV uv){
-		Queue<PositionTextureVertex> data=new ArrayDeque<>();
-		data.add(new PositionTextureVertex(-xRotation*size-xyRotation*size, -zRotation*size, -yzRotation*size-xzRotation*size, uv.x1, uv.y1));
-		data.add(new PositionTextureVertex(-xRotation*size+xyRotation*size,  zRotation*size, -yzRotation*size+xzRotation*size, uv.x2, uv.y2));
-		data.add(new PositionTextureVertex( xRotation*size+xyRotation*size,  zRotation*size,  yzRotation*size+xzRotation*size, uv.x3, uv.y3));
-		data.add(new PositionTextureVertex( xRotation*size-xyRotation*size, -zRotation*size,  yzRotation*size-xzRotation*size, uv.x4, uv.y4));
-		return data;
+	protected void renderStandardModel(float xRotation, float zRotation, float yzRotation, float xyRotation, float xzRotation, float size, QuadUV uv){
+		Renderer.POS_UV.addVertex(-xRotation*size-xyRotation*size, -zRotation*size, -yzRotation*size-xzRotation*size, uv.x1, uv.y1);
+		Renderer.POS_UV.addVertex(-xRotation*size+xyRotation*size,  zRotation*size, -yzRotation*size+xzRotation*size, uv.x2, uv.y2);
+		Renderer.POS_UV.addVertex( xRotation*size+xyRotation*size,  zRotation*size,  yzRotation*size+xzRotation*size, uv.x3, uv.y3);
+		Renderer.POS_UV.addVertex( xRotation*size-xyRotation*size, -zRotation*size,  yzRotation*size-xzRotation*size, uv.x4, uv.y4);
 	}
-	protected Queue<PositionTextureVertex> renderStandardModel(float xRotation, float zRotation, float yzRotation, float xyRotation, float xzRotation, float size, QuadUV... textureUVs){
-		Queue<PositionTextureVertex> data=new ArrayDeque<>();
+	protected void renderStandardModel(float xRotation, float zRotation, float yzRotation, float xyRotation, float xzRotation, float size, QuadUV... textureUVs){
 		Vec3M pos1=new Vec3M(-xRotation*size-xyRotation*size, -zRotation*size, -yzRotation*size-xzRotation*size);
 		Vec3M pos2=new Vec3M(-xRotation*size+xyRotation*size,  zRotation*size, -yzRotation*size+xzRotation*size);
 		Vec3M pos3=new Vec3M( xRotation*size+xyRotation*size,  zRotation*size,  yzRotation*size+xzRotation*size);
 		Vec3M pos4=new Vec3M( xRotation*size-xyRotation*size, -zRotation*size,  yzRotation*size-xzRotation*size);
 		
 		for(QuadUV uv:textureUVs){
-			data.add(new PositionTextureVertex(pos1.conv(), uv.x1, uv.y1));
-			data.add(new PositionTextureVertex(pos2.conv(), uv.x2, uv.y2));
-			data.add(new PositionTextureVertex(pos3.conv(), uv.x3, uv.y3));
-			data.add(new PositionTextureVertex(pos4.conv(), uv.x4, uv.y4));
+			Renderer.POS_UV.addVertex(pos1, uv.x1, uv.y1);
+			Renderer.POS_UV.addVertex(pos2, uv.x2, uv.y2);
+			Renderer.POS_UV.addVertex(pos3, uv.x3, uv.y3);
+			Renderer.POS_UV.addVertex(pos4, uv.x4, uv.y4);
 		}
-		
-		return data;
 	}
 	
 	@Override

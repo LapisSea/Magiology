@@ -1,12 +1,13 @@
 package com.magiology.mc_objects.particles;
 
-import java.util.Queue;
-
 import com.magiology.handlers.particle.ParticleM;
 import com.magiology.util.objs.ColorF;
 import com.magiology.util.objs.Vec3M;
+import com.magiology.util.statics.OpenGLM;
+import com.magiology.util.statics.UtilC;
+import com.magiology.util.statics.math.PartialTicksUtil;
 
-import net.minecraft.client.model.PositionTextureVertex;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -15,6 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ParticleMistBubble extends ParticleM{
 	
 	protected float lifeTime,originalSize,originalAlpha;
+	
 	
 	protected ParticleMistBubble(Vec3M pos, Vec3M speed, float size, float lifeTime, Vec3M gravity, ColorF color){
 		super(pos, speed);
@@ -41,17 +43,24 @@ public class ParticleMistBubble extends ParticleM{
 	}
 	
 	@Override
+	public void renderModel(float xRotation, float zRotation, float yzRotation, float xyRotation, float xzRotation){}
+
+	@Override
 	public void setUpOpenGl(){
-//		OpenGLM.bindTexture(Textures.SmoothBuble1);
-//		GL11U.blendFunc(2);
-		//TODO: fix this shit
+		EntityPlayer player=UtilC.getThePlayer();
+		float s=PartialTicksUtil.calculate(getPrevSize(), getSize());
+		ColorF color=getColor();
+		
+		OpenGLM.translate(PartialTicksUtil.calculate(this));
+		OpenGLM.rotate(-player.rotationYaw+90, 0, 1, 0);
+		OpenGLM.rotate(player.rotationPitch, 0, 0, 1);
+		OpenGLM.scale(s,s,s);
+			
+		OpenGLM.color(color.r, color.g, color.b, color.a);
 	}
+
 	@Override
-	public Queue<PositionTextureVertex> renderModel(float xRotation, float zRotation, float yzRotation, float xyRotation, float xzRotation){
-		return super.renderModel(xRotation, zRotation, yzRotation, xyRotation, xzRotation);
-	}
-	@Override
-	public void resetOpenGl(){
-//		GL11U.blendFunc(1);
+	public int[] getModelIds(){
+		return ParticleMistBubbleFactory.defultModel;
 	}
 }

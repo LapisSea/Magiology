@@ -8,6 +8,7 @@ import com.magiology.util.statics.math.PartialTicksUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -38,7 +39,7 @@ public class UtilC{
 	}
 
 	public static float fluctuate(double speed, double offset){
-		long wtt=(long)(getTheWorld().getTotalWorldTime()+offset);
+		double wtt=getWorldTime()+offset;
 		double helper=(wtt%speed)/(speed/2F);
 		return (float) (helper>1?2-helper:helper);
 	}
@@ -103,6 +104,9 @@ public class UtilC{
 
 	public static Entity getViewEntity(){
 		return getMC().getRenderViewEntity();
+	}
+	public static EntityRenderer getER(){
+		return Minecraft.getMinecraft().entityRenderer;
 	}
 
 }

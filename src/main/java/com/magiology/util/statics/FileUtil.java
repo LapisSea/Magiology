@@ -31,17 +31,20 @@ public class FileUtil{
 	}
 	
 	public static StringBuilder getFileTxt(File file){
+		StringBuilder result=new StringBuilder();
+		BufferedReader br = null;
 		try{
-			BufferedReader br=new BufferedReader(new FileReader(file));
-			StringBuilder result=new StringBuilder();
+			br=new BufferedReader(new FileReader(file));
 			String line=null;
 			while((line=br.readLine())!=null)result.append(line).append("\n");
 			br.close();
-			return result;
 		}catch(Exception e){
 			e.printStackTrace();
+			if(br!=null)try{
+				br.close();
+			}catch(Exception e1){}
 		}
-		return null;
+		return result;
 	}
 	public static void setFileObj(File file,Serializable content){
 		try{

@@ -1,8 +1,10 @@
 package com.magiology.util.objs;
 
-import org.lwjgl.util.vector.Vector2f;
+import com.magiology.util.interf.Calculable;
 
-public class Vec2FM extends Vector2f{
+public class Vec2FM implements Calculable<Vec2FM>{
+	
+	public float x,y;
 	
 	public Vec2FM(){
 		
@@ -10,9 +12,50 @@ public class Vec2FM extends Vector2f{
 	public Vec2FM(float x, float y){
 		set(x, y);
 	}
-	@Override
+
+	public float length(){
+		return (float)Math.sqrt(x*x+y*y);
+	}
+	
 	public void set(float x, float y){
 		this.x = x;
 		this.y = y;
 	}
+	@Override
+	public Vec2FM add(float var){
+		return new Vec2FM(x+var, y+var);
+	}
+	@Override
+	public Vec2FM add(Vec2FM var){
+		return new Vec2FM(x+var.x, y+var.y);
+	}
+	@Override
+	public Vec2FM div(float var){
+		return new Vec2FM(x/var, y/var);
+	}
+	@Override
+	public Vec2FM div(Vec2FM var){
+		return new Vec2FM(x/var.x, y/var.y);
+	}
+	@Override
+	public Vec2FM mul(float var){
+		return new Vec2FM(x*var, y*var);
+	}
+	@Override
+	public Vec2FM mul(Vec2FM var){
+		return new Vec2FM(x*var.x, y*var.y);
+	}
+	@Override
+	public Vec2FM sub(float var){
+		return new Vec2FM(x-var, y-var);
+	}
+	@Override
+	public Vec2FM sub(Vec2FM var){
+		return new Vec2FM(x-var.x, y-var.y);
+	}
+	@Override
+	public Vec2FM copy(){
+		return new Vec2FM(x,y);
+	}
+	
 }

@@ -10,6 +10,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.nio.FloatBuffer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -59,6 +60,20 @@ public class UtilM{
 	public static final PropertyInteger META=PropertyInteger.create("meta", 0, 15);
 	public static final float p=1F/16F;
 	private static long startTime;
+	
+	public static String floatBufferToString(FloatBuffer buff){
+		StringBuilder print=new StringBuilder("Buffer{");
+		buff=buff.duplicate();
+		if(buff.capacity()>0){
+			int j=0;
+			print.append(buff.get(j));
+			for(j=1;j<buff.capacity();j++){
+				print.append(", ").append(buff.get(j));
+			}
+		}
+		print.append('}');
+		return print.toString();
+	}
 	
 	public static StringBuilder arrayToString(Object array){
 		StringBuilder print=new StringBuilder();
@@ -416,8 +431,8 @@ public class UtilM{
 		int r1=(int)(255*r), g1=(int)(255*g), b1=(int)(255*b), alpha1=(int)(255*alpha);
 		return rgbByteToCode(r1, g1, b1, alpha1);
 	}
-	public static float round(float d, int decimalPlace){
-		return BigDecimal.valueOf(d).setScale(decimalPlace,BigDecimal.ROUND_HALF_UP).floatValue();
+	public static float round(float decimal, int decimalPlace){
+		return BigDecimal.valueOf(decimal).setScale(decimalPlace,BigDecimal.ROUND_HALF_UP).floatValue();
 	}
 	
 	public static void setBlock(World world, BlockPos pos,Block block){
@@ -511,6 +526,7 @@ public class UtilM{
 		if(objs!=null)for(int i=0;i<objs.length;i++){
 			Object a=objs[i];
 			if(isArray(a))print.append(arrayToString(a));
+			else if(a instanceof FloatBuffer)print.append(floatBufferToString((FloatBuffer)a));
 			else print.append(toString(a)+(i==objs.length-1?"":" "));
 		}else print.append("null");
 		
@@ -521,6 +537,7 @@ public class UtilM{
 		
 		if(obj!=null){
 			if(isArray(obj))print.append(arrayToString(obj));
+			else if(obj instanceof FloatBuffer)print.append(floatBufferToString((FloatBuffer)obj));
 			else print.append(obj.toString());
 		}else print.append("null");
 		
