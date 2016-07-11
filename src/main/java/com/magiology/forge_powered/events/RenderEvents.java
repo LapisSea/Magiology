@@ -43,7 +43,7 @@ public class RenderEvents{
 				OpenGLM.pushMatrix();
 				shader.activate();
 				OpenGLM.translate(PartialTicksUtil.calculate(UtilC.getViewEntity()).mul(-1));
-				//				OpenGLM.disableLightmap();
+//				OpenGLM.disableLightmap();
 				for(EntityLivingBase entity:invisibleEntitys){
 					Vec3M pos=PartialTicksUtil.calculate(entity);
 					OpenGLM.enableBlend();
@@ -54,7 +54,7 @@ public class RenderEvents{
 					entity.setInvisible(true);
 				}
 				OpenGLM.disableBlend();
-				//				OpenGLM.enableLightmap();
+//				OpenGLM.enableLightmap();
 				invisibleEntitys.clear();
 				shader.deactivate();
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);

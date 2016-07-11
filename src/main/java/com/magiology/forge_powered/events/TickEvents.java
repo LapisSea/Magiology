@@ -1,6 +1,10 @@
 package com.magiology.forge_powered.events;
 
 import com.magiology.handlers.particle.ParticleHandler;
+import com.magiology.handlers.particle.Particles;
+import com.magiology.util.objs.ColorF;
+import com.magiology.util.objs.Vec3M;
+import com.magiology.util.statics.RandUtil;
 import com.magiology.util.statics.UtilC;
 import com.magiology.util.statics.math.PartialTicksUtil;
 
@@ -20,18 +24,22 @@ public class TickEvents{
 	public void onClientTick(TickEvent.ClientTickEvent event){
 		if(event.phase!=Phase.START){
 			if(!UtilC.getMC().isGamePaused()&&UtilC.isWorldOpen()){
-//				Vec3M pos=Vec3M.conv(UtilC.getThePlayer().getLook(0).add(UtilC.getThePlayer().getPositionEyes(0)));
-//				for(int i=0;i<1;i++)Particles.MIST_BUBBLE.spawn(pos,
-//						new Vec3M(RandUtil.CRF(0.01), RandUtil.CRF(0.01), RandUtil.CRF(0.01)),
-//						2F+RandUtil.CRF(1),
-//						60,
-//						new Vec3M(RandUtil.CRF(0.001), RandUtil.CRF(0.001), RandUtil.CRF(0.001)),
-//						new ColorF(RandUtil.RF(),RandUtil.RF(),RandUtil.RF(),0.05));
+				if(UtilC.getWorldTime()%40!=0){
+//					PrintUtil.println(ParticleHandler.instance.getCount());
+					Vec3M pos=Vec3M.conv(UtilC.getThePlayer().getLook(0).add(UtilC.getThePlayer().getPositionEyes(0)));
+					float color=RandUtil.RB()?0.85F:0.15F;
+						Particles.CUBE.spawn(pos,
+							new Vec3M(RandUtil.CRF(0.01), RandUtil.CRF(0.01), RandUtil.CRF(0.01)),
+							1/16F,
+							120,
+							-0.005F,
+							new ColorF(color,color,color,1));
+				}
 				ParticleHandler.instance.updateParticles();
-				//				if(UtilC.getWorldTime()%60==0){
-				//					ShaderHandler.get().load();
-				//					PrintUtil.println("shaders reloaded");
-				//				}
+//				if(UtilC.getWorldTime()%60==0){
+//					ShaderHandler.get().load();
+//					PrintUtil.println("shaders reloaded");
+//				}
 			}
 			return;
 		}

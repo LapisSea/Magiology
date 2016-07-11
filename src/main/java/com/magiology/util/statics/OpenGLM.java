@@ -2,6 +2,9 @@ package com.magiology.util.statics;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import org.lwjgl.opengl.GL11;
+
+import com.magiology.util.objs.ColorF;
 import com.magiology.util.objs.Vec3M;
 
 import net.minecraft.client.renderer.GlStateManager;
@@ -74,7 +77,7 @@ public class OpenGLM extends GlStateManager{
 	}
 	
 	public static void rotate(double angle, double x, double y, double z){
-		rotate((float)angle, (float)x, (float)y, (float)z);
+		GL11.glRotated(angle, x, y, z);
 	}
 	
 	public static void disableLightmap(){
@@ -104,7 +107,7 @@ public class OpenGLM extends GlStateManager{
 		AlphaFunc.ALL.bind();
 		disableAlphaTest();
 	}
-	
+
 	public static void endOpaqueRendering(){
 		disableBlend();
 		enableAlphaTest();
@@ -112,4 +115,30 @@ public class OpenGLM extends GlStateManager{
 		BlendFunc.NORMAL.bind();
 		AlphaFunc.NORMAL.bind();
 	}
+	
+	public static void rotate(Vec3M rot){
+		if(rot.x!=0)rotateX(rot.x);
+		if(rot.y!=0)rotateY(rot.y);
+		if(rot.z!=0)rotateZ(rot.z);
+	}
+	public static void rotateX(double rot){
+		rotate(rot, 1, 0, 0);
+	}
+	public static void rotateY(double rot){
+		rotate(rot, 0, 1, 0);
+	}
+	public static void rotateZ(double rot){
+		rotate(rot, 0, 0, 1);
+	}
+
+	public static void scale(double scale){
+		scale(scale, scale, scale);
+	}
+	public static void scale(float scale){
+		scale(scale, scale, scale);
+	}
+	public static void color(ColorF color){
+		color(color.r, color.g, color.b, color.a);
+	}
+	
 }

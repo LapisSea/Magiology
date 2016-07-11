@@ -33,6 +33,8 @@ public abstract class IParticle{
 	
 	public abstract void kill();
 	
+	public abstract void onDeath();
+	
 	public abstract Vec3M getPos();
 	
 	public abstract Vec3M getPrevPos();
@@ -40,6 +42,12 @@ public abstract class IParticle{
 	public abstract Vec3M getSpeed();
 	
 	public abstract void setPos(Vec3M pos);
+	
+	public abstract void setPosX(double x);
+	
+	public abstract void setPosY(double y);
+	
+	public abstract void setPosZ(double z);
 	
 	public abstract void setPrevPos(Vec3M prevPos);
 	
@@ -104,22 +112,13 @@ public abstract class IParticle{
 		boundingBoxes.forEach(box->speed.z=box.calculateZOffset(getBoundingBox(),speed.z));
 		setBoundingBox(getBoundingBox().offset(0.0D,0.0D,speed.z));
 		setPosFromBoundingBox();
-		boolean xColided=originalSpeed.x!=speed.x,yColided=originalSpeed.y!=speed.y,zColided=originalSpeed.z!=speed.z;
+		final boolean xColided=originalSpeed.x!=speed.x,yColided=originalSpeed.y!=speed.y,zColided=originalSpeed.z!=speed.z;
 		setCollided(xColided||yColided||zColided);
 		if(isCollided()){
 			int x=0,y=0,z=0;
-			if(xColided){
-				if(getSpeed().x!=0) x=MathUtil.getNumPrefix(getSpeed().x);
-				getSpeed().x=0;
-			}
-			if(yColided){
-				if(getSpeed().y!=0) y=MathUtil.getNumPrefix(getSpeed().y);
-				getSpeed().y=0;
-			}
-			if(zColided){
-				if(getSpeed().z!=0) z=MathUtil.getNumPrefix(getSpeed().z);
-				getSpeed().z=0;
-			}
+			if(xColided&&getSpeed().x!=0)x=MathUtil.getNumPrefix(getSpeed().x);
+			if(yColided&&getSpeed().y!=0)y=MathUtil.getNumPrefix(getSpeed().y);
+			if(zColided&&getSpeed().z!=0)z=MathUtil.getNumPrefix(getSpeed().z);
 			onCollided(new Vec3i(x,y,z));
 		}
 	}
@@ -162,5 +161,67 @@ public abstract class IParticle{
 	@Override
 	public String toString(){
 		return getClass().getSimpleName();
+	}
+	
+	public void pushOutOfBlocks(){
+		float growth=getSize()-getPrevSize();
+		if(growth<=0)return;
+		growth/=2;
+		
+		//get world intersection
+		List<AxisAlignedBB> boundingBoxes=getWorld().getCubes(null,getBoundingBox());
+		//exit if nothing to process
+		if(boundingBoxes.isEmpty())return;
+		
+		Vec3M pos=getPos();
+		
+		//pos = position of the entity and center position of bounding box 
+		
+		AxisAlignedBB bb=getBoundingBox();
+		
+		//how much the bounding box has grown on a side
+		
+		//total movement for bounding box to exit any colliding boxes
+		Vec3M push=new Vec3M();
+		
+		if(boundingBoxes.size()==1){
+			
+			AxisAlignedBB box=boundingBoxes.get(0);
+			
+			if((box.minX+box.maxX)/2<pos.x)push.x=box.maxX-bb.minX+growth;
+			else push.x=box.maxX-bb.minX-growth;
+			
+			if((box.minY+box.maxY)/2<pos.y)push.y=box.maxY-bb.minY+growth;
+			else push.y=box.minY-bb.maxY-growth;
+			
+			if((box.minZ+box.maxZ)/2<pos.z)push.z=box.maxZ-bb.minZ+growth;
+			else push.z=box.minZ-bb.maxZ-growth;
+			
+		}else for(AxisAlignedBB box:boundingBoxes){
+			
+			if((box.minX+box.maxX)/2<pos.x)push.x=Math.max(push.x, box.maxX-bb.minX+growth);
+			else push.x=Math.min(push.x, box.maxX-bb.minX-growth);
+			
+			if((box.minY+box.maxY)/2<pos.y)push.y=Math.max(push.y, box.maxY-bb.minY+growth);
+			else push.y=Math.min(push.y, box.minY-bb.maxY-growth);
+			
+			if((box.minZ+box.maxZ)/2<pos.z)push.z=Math.max(push.z, box.maxZ-bb.minZ+growth);
+			else push.z=Math.min(push.z, box.minZ-bb.maxZ-growth);
+		}
+		
+		//absolute vector of push used to determine that plane should be used to minimize distance pushed
+		Vec3M absPush=push.abs();
+		
+		if(absPush.x<absPush.y&&absPush.x<absPush.z){
+			setPosX(pos.x+push.x*1.01);
+			return;
+		}
+		if(absPush.y<absPush.x&&absPush.y<absPush.z){
+			setPosY(pos.y+push.y*1.01);
+			return;
+		}
+		if(absPush.z<absPush.x&&absPush.z<absPush.x){
+			setPosZ(pos.z+push.z*1.01);
+		}
 	}
 }

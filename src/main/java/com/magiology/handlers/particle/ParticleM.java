@@ -114,8 +114,8 @@ public abstract class ParticleM extends IParticle{
 	
 	@Override
 	public void setSize(float size){
-		if(this.size!=size){
-			this.size=Math.max(0, size);
+		if(size==size&&this.size!=size){
+			this.size=size;
 			Vec3M pos=getPos().sub(size/2);
 			this.setBoundingBox(new AxisAlignedBB(pos.x, pos.y, pos.z, pos.x+size, pos.y+size, pos.z+size));
 		}
@@ -132,7 +132,9 @@ public abstract class ParticleM extends IParticle{
 
 	@Override
 	public void onCollided(Vec3i direction){
-		
+		if(direction.getX()!=0)getSpeed().x=0;
+		if(direction.getY()!=0)getSpeed().y=0;
+		if(direction.getZ()!=0)getSpeed().z=0;
 	}
 
 	@Override
@@ -207,8 +209,23 @@ public abstract class ParticleM extends IParticle{
 	public void update(){
 		updatePrev();
 		addParticleAge();
-//		PrintUtil.println(getSpeed());
 		setSpeed(getSpeed().mul(friction).add(getGravity()));
-		this.moveEntity(getSpeed());
+	}
+
+	@Override
+	public void onDeath(){
+		
+	}
+	@Override
+	public void setPosX(double x){
+		pos.x=x;
+	}
+	@Override
+	public void setPosY(double y){
+		pos.y=y;
+	}
+	@Override
+	public void setPosZ(double z){
+		pos.z=z;
 	}
 }

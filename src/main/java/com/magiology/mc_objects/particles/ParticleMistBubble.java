@@ -55,7 +55,7 @@ public class ParticleMistBubble extends ParticleM{
 		OpenGLM.rotate(-player.rotationYaw+90, 0, 1, 0);
 		OpenGLM.rotate(player.rotationPitch, 0, 0, 1);
 		OpenGLM.scale(s,s,s);
-			
+		
 		OpenGLM.color(color.r, color.g, color.b, color.a);
 	}
 

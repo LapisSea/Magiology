@@ -17,21 +17,19 @@ import net.minecraft.util.ResourceLocation;
 
 public class ParticleMistBubbleFactory extends ParticleFactory<ParticleMistBubble>{
 	
-	
-	public static int[] defultModel={
-			-1
-	};
+	public static final ResourceLocation MIST=new ResourceLocation(MReference.MODID,"/textures/particle/smooth_buble1.png");
+	public static int[] defultModel={-1};
 	
 	public void spawn(Vec3M pos, Vec3M speed, float size, float lifeTime, float gravity, ColorF color){
 		spawn(pos, speed, size, lifeTime, new Vec3M(0, gravity, 0), color);
 	}
 	
 	public void spawn(Vec3M pos, Vec3M speed, float size, float lifeTime, Vec3M gravity, ColorF color){
-		if(!shouldSpawn(pos)||!UtilM.isRemote())return;
+		if(!UtilM.isRemote()||!shouldSpawn(pos))return;
 		addParticle(new ParticleMistBubble(pos, speed, size, lifeTime, gravity, color));
-		if(UtilC.getThePlayer().isSneaking()&&UtilC.getWorldTime()%20==0){
-			compileDisplayList();
-		}
+//		if(UtilC.getThePlayer().isSneaking()&&UtilC.getWorldTime()%20==0){
+//			compileDisplayList();
+//		}
 	}
 	
 	@Override
@@ -52,7 +50,7 @@ public class ParticleMistBubbleFactory extends ParticleFactory<ParticleMistBubbl
 	@Override
 	public void setUpOpenGl(){
 		OpenGLM.setUpOpaqueRendering(BlendFunc.ADD);
-		UtilC.getMC().getTextureManager().bindTexture(new ResourceLocation(MReference.MODID,"/textures/particle/smooth_buble1.png"));
+		UtilC.getMC().getTextureManager().bindTexture(MIST);
 	}
 	
 	@Override
@@ -66,10 +64,10 @@ public class ParticleMistBubbleFactory extends ParticleFactory<ParticleMistBubbl
 		startList();
 		
 		Renderer.POS_UV.beginQuads();
-		Renderer.POS_UV.addVertex(0, -0.5, -0.5,0,0);
-		Renderer.POS_UV.addVertex(0,  0.5, -0.5,0,1);
-		Renderer.POS_UV.addVertex(0,  0.5,  0.5,1,1);
-		Renderer.POS_UV.addVertex(0, -0.5,  0.5,1,0);
+		Renderer.POS_UV.addVertex(0, -0.5, -0.5, 0,0);
+		Renderer.POS_UV.addVertex(0,  0.5, -0.5, 0,1);
+		Renderer.POS_UV.addVertex(0,  0.5,  0.5, 1,1);
+		Renderer.POS_UV.addVertex(0, -0.5,  0.5, 1,0);
 		Renderer.POS_UV.draw();
 		
 		defultModel[0]=endList();
