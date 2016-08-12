@@ -7,6 +7,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.tileentity.TileEntity;
+<<<<<<< HEAD
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -54,6 +55,15 @@ public class DimensionStabiliserBlock extends BlockContainerM{
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer(){
 		return BlockRenderLayer.CUTOUT;
+=======
+import net.minecraft.world.World;
+
+public class DummyBlock extends BlockContainerM{
+
+	public DummyBlock(){
+		super(Material.iron);
+		setCreativeTab(CreativeTabs.tabAllSearch);
+>>>>>>> 1.9
 	}
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state){
