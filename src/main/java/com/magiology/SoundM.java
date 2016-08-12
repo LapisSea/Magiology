@@ -40,6 +40,6 @@ public enum SoundM{
 	
 	private static void registerSound(String soundNameIn){
 		ResourceLocation resourcelocation=new ResourceLocation(soundNameIn);
-		SoundEvent.soundEventRegistry.register(SoundEvent.soundEventRegistry.getKeys().size(), resourcelocation, new SoundEvent(resourcelocation));
+		SoundEvent.REGISTRY.register(SoundEvent.REGISTRY.getKeys().size(), resourcelocation, new SoundEvent(resourcelocation));
 	}
 }

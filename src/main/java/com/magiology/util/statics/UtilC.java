@@ -60,7 +60,7 @@ public class UtilC{
 	}
 
 	public static float getGuiScale(){
-		return Math.max(UtilC.getGuiScaleRaw()/4F,1);
+		return Math.max(getGuiScaleRaw()/4F,1);
 	}
 
 	public static int getGuiScaleRaw(){
@@ -109,4 +109,7 @@ public class UtilC{
 		return Minecraft.getMinecraft().entityRenderer;
 	}
 
+	public static boolean peridOf(int period){
+		return UtilM.peridOf(getTheWorld(), period);
+	}
 }

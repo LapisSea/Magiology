@@ -1,11 +1,15 @@
 package com.magiology.forge_powered.proxy;
 
+import com.magiology.core.MReference;
 import com.magiology.forge_powered.events.TickEvents;
-import com.magiology.mc_objects.blocks.DummyBlock;
+import com.magiology.mc_objects.MBlocks;
 import com.magiology.mc_objects.tileentitys.DummyTileEntity;
 import com.magiology.util.m_extensions.TileEntityM;
+import com.magiology.util.statics.UtilM;
 
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraft.block.Block;
+import net.minecraft.item.ItemBlock;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class CommonProxy{
@@ -20,7 +24,7 @@ public class CommonProxy{
 	}
 	
 	public void init(){
-		FMLCommonHandler.instance().bus().register(TickEvents.instance);
+		MinecraftForge.EVENT_BUS.register(TickEvents.instance);
 	}
 	
 	public void postInit(){
@@ -32,12 +36,26 @@ public class CommonProxy{
 	}
 	
 	private void loadBlocks(){
-		GameRegistry.registerBlock(new DummyBlock());
+		for(Block block:MBlocks.allBlocks())registerBlock(block);
 	}
+	private ItemBlock registerBlock(Block block){
+		return registerBlock(block,block.getClass().getSimpleName());
+	}
+	private ItemBlock registerBlock(Block block,String name){
+		name=UtilM.standardizeName(UtilM.removeMcObjectEnd(name));
+		block.setRegistryName(MReference.MODID, name);
+		block.setUnlocalizedName(name);
+		ItemBlock ib=new ItemBlock(block);
+		GameRegistry.register(block);
+		GameRegistry.register(ib.setRegistryName(MReference.MODID, name));
+		return ib;
+	}
+	
+	
 	private void loadTileEntitys(){
 		register(DummyTileEntity.class);
 	}
-	private static<T extends TileEntityM> void register(Class<T> clazz){
+	private static void register(Class<? extends TileEntityM> clazz){
 		String name=clazz.getSimpleName().substring("TileEntity".length());
 		GameRegistry.registerTileEntity(clazz, "TE"+name);
 	}

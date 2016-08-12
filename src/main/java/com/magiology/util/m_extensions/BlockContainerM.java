@@ -1,6 +1,5 @@
 package com.magiology.util.m_extensions;
 
-import com.magiology.core.MReference;
 import com.magiology.util.statics.PrintUtil;
 import com.magiology.util.statics.UtilM;
 
@@ -21,7 +20,6 @@ public abstract class BlockContainerM extends BlockContainer{
 	protected boolean isNullTileEntityOk=false;
 	protected BlockContainerM(Material material){
 		super(material);
-		setRegistryName(MReference.MODID, this.getClass().getSimpleName());
 	}
 	
 	protected AxisAlignedBB boundingBox=new AxisAlignedBB(p*6, p*6, p*6, p*10, p*10, p*10);

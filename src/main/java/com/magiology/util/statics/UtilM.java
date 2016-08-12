@@ -276,18 +276,56 @@ public class UtilM{
 		
 		return Return.toString();
 	}
-	public static World getWorld(Object object){
+	
+	public static World world(Entity object){return object.worldObj;}
+	public static World world(TileEntity object){return object.getWorld();}
+	public static World world(EntityEvent object){return object.getEntity().worldObj;}
+	public static World world(BlockEvent object){return object.getWorld();}
+	public static World world(World object){return object;}
+	@Deprecated
+	public static World world(Object object){
 		if(object instanceof Entity)return((Entity)object).worldObj;
 		if(object instanceof World)return((World)object);
 		if(object instanceof TileEntity)return((TileEntity)object).getWorld();
 		if(object instanceof EntityEvent)return((EntityEvent)object).getEntity().worldObj;
 		if(object instanceof BlockEvent)return((BlockEvent)object).getWorld();
-		PrintUtil.println("Given object has no data reference to world!");
+		
 		return null;
 	}
-	public static long getWorldTime(Object worldContainer){
-		return getWorld(worldContainer).getTotalWorldTime();
+
+	public static long worldTime(Entity worldContainer){return world(worldContainer).getTotalWorldTime();}
+	public static long worldTime(World worldContainer){return world(worldContainer).getTotalWorldTime();}
+	public static long worldTime(TileEntity worldContainer){return world(worldContainer).getTotalWorldTime();}
+	public static long worldTime(EntityEvent worldContainer){return world(worldContainer).getTotalWorldTime();}
+	public static long worldTime(BlockEvent worldContainer){return world(worldContainer).getTotalWorldTime();}
+	@Deprecated
+	public static long worldTime(Object worldContainer){
+		return world(worldContainer).getTotalWorldTime();
 	}
+
+	public static boolean isRemote(Entity object){return world(object).isRemote;}
+	public static boolean isRemote(TileEntity object){return world(object).isRemote;}
+	public static boolean isRemote(EntityEvent object){return world(object).isRemote;}
+	public static boolean isRemote(BlockEvent object){return world(object).isRemote;}
+	public static boolean isRemote(World object){return world(object).isRemote;}
+	@Deprecated
+	public static boolean isRemote(Object object){
+		World w=world(object);
+		if(w!=null)return w.isRemote;
+		else return isRemote();
+	}
+	public static boolean isRemote(){
+		return FMLCommonHandler.instance().getEffectiveSide()==Side.CLIENT;
+	}
+	
+	public static boolean peridOf(Entity object, int period){return peridOf(world(object), period);}
+	public static boolean peridOf(TileEntity object, int period){return peridOf(world(object), period);}
+	public static boolean peridOf(EntityEvent object, int period){return peridOf(world(object), period);}
+	public static boolean peridOf(BlockEvent object, int period){return peridOf(world(object), period);}
+	public static boolean peridOf(World world, int period){
+		return (world==null?System.currentTimeMillis()/50:worldTime(world))%period==0;
+	}
+	
 	public static double handleSpeedFolower(double speed, double pos,double wantedPos,double acceleration){
 		if(pos==wantedPos)return speed;
 		if(pos>wantedPos)speed-=acceleration;
@@ -311,6 +349,9 @@ public class UtilM{
 	}
 	public static boolean instanceOf(Object tester, Class instance){
 		return instanceOf(tester.getClass(), instance);
+	}
+	public static boolean instanceOf(Class tester, Object instance){
+		return instanceOf(tester, instance.getClass());
 	}
 	public static boolean instanceOf(Object tester, Object instance){
 		return instanceOf(tester.getClass(), instance.getClass());
@@ -374,13 +415,6 @@ public class UtilM{
 	public static boolean isNull(Object...objects){
 		for(Object object:objects)if(object==null)return true;
 		return false;
-	}
-	//
-	public static boolean isRemote(){
-		return FMLCommonHandler.instance().getEffectiveSide()==Side.CLIENT;
-	}
-	public static boolean isRemote(Object object){
-		return getWorld(object).isRemote;
 	}
 	public static boolean isTileInWorld(TileEntity tile){
 		if(!tile.hasWorldObj())return false;
@@ -561,5 +595,38 @@ public class UtilM{
 	}
 	public static boolean isIdInArray(Object[] array, int id){
 		return array.length>0&&id>=0&&id<array.length;
+	}
+	/**
+	 * @param name=ThisIs_A_NOTStandardizedName
+	 * @return this_is_a_not_standardized_name
+	 */
+	public static String standardizeName(String name){
+		StringBuilder result=new StringBuilder();
+		char[] src=name.toCharArray();
+		
+		for(int i=0;i<src.length;i++){
+			char c=src[i];
+			if(i>0&&Character.isUpperCase(c)){
+				char prev=src[i-1];
+				boolean isPrevLower=Character.isLowerCase(prev);
+				
+				if(prev!='_'){
+					if(i+1<src.length&&Character.isLowerCase(src[i+1])&&!isPrevLower)result.append('_');
+					else if(isPrevLower)result.append('_');
+				}
+			}
+			result.append(Character.toLowerCase(c));
+		}
+		
+		return result.toString();
+	}
+
+
+	public static String removeMcObjectEnd(String name){
+		String lower=name.toLowerCase();
+		if(lower.endsWith("block"))return name.substring(0,name.length()-"block".length());
+		if(lower.endsWith("tileentity"))return name.substring(0,name.length()-"tileentity".length());
+		if(lower.endsWith("entity"))return name.substring(0,name.length()-"entity".length());
+		return name;
 	}
 }

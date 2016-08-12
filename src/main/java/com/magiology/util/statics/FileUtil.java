@@ -31,6 +31,7 @@ public class FileUtil{
 	}
 	
 	public static StringBuilder getFileTxt(File file){
+		if(!file.exists()||file.isDirectory())return null;
 		StringBuilder result=new StringBuilder();
 		BufferedReader br = null;
 		try{

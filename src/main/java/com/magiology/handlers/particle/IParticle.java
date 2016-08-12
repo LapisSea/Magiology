@@ -5,10 +5,12 @@ import java.util.List;
 import com.magiology.util.objs.ColorF;
 import com.magiology.util.objs.Vec2i;
 import com.magiology.util.objs.Vec3M;
+import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.UtilC;
 import com.magiology.util.statics.math.MathUtil;
+import com.magiology.util.statics.math.PartialTicksUtil;
 
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
@@ -93,18 +95,18 @@ public abstract class IParticle{
 	
 	public abstract void update();
 	
-	public void moveEntity(double xSpeed, double ySpeed, double zSpeed){
-		moveEntity(new Vec3M(xSpeed,ySpeed,zSpeed));
+	public void moveParticle(double xSpeed, double ySpeed, double zSpeed){
+		moveParticle(new Vec3M(xSpeed,ySpeed,zSpeed));
 	}
 	
-	public void moveEntity(Vec3M speed){
+	public void moveParticle(Vec3M speed){
 		if(noClip()){
 			setBoundingBox(getBoundingBox().offset(speed.x,speed.y,speed.z));
 			setPosFromBoundingBox();
 			return;
 		}
 		Vec3M originalSpeed=speed.copy();
-		List<AxisAlignedBB> boundingBoxes=getWorld().getCubes((Entity)null,getBoundingBox().addCoord(speed.x,speed.y,speed.z));
+		List<AxisAlignedBB> boundingBoxes=getWorld().getCollisionBoxes(getBoundingBox().addCoord(speed.x,speed.y,speed.z));
 		boundingBoxes.forEach(box->speed.x=box.calculateXOffset(getBoundingBox(),speed.x));
 		setBoundingBox(getBoundingBox().offset(speed.x,0.0D,0.0D));
 		boundingBoxes.forEach(box->speed.y=box.calculateYOffset(getBoundingBox(),speed.y));
@@ -155,8 +157,9 @@ public abstract class IParticle{
 	public abstract void renderModel(float xRotation, float zRotation, float yzRotation, float xyRotation, float xzRotation);
 	
 	public abstract void setUpOpenGl();
-	
+
 	public abstract int[] getModelIds();
+	public abstract int getModelId();
 	
 	@Override
 	public String toString(){
@@ -169,7 +172,7 @@ public abstract class IParticle{
 		growth/=2;
 		
 		//get world intersection
-		List<AxisAlignedBB> boundingBoxes=getWorld().getCubes(null,getBoundingBox());
+		List<AxisAlignedBB> boundingBoxes=getWorld().getCollisionBoxes(getBoundingBox());
 		//exit if nothing to process
 		if(boundingBoxes.isEmpty())return;
 		
@@ -223,5 +226,18 @@ public abstract class IParticle{
 		if(absPush.z<absPush.x&&absPush.z<absPush.x){
 			setPosZ(pos.z+push.z*1.01);
 		}
+	}
+
+	protected void transformSimpleParticleColored(){
+		transformSimpleParticle();
+		OpenGLM.color(getColor());
+	}
+	protected void transformSimpleParticle(){
+		EntityPlayer player=UtilC.getThePlayer();
+		
+		OpenGLM.translate(PartialTicksUtil.calculate(this));
+		OpenGLM.rotate(-player.rotationYaw+90, 0, 1, 0);
+		OpenGLM.rotate( player.rotationPitch,  0, 0, 1);
+		OpenGLM.scale(PartialTicksUtil.calculate(getPrevSize(), getSize()));
 	}
 }

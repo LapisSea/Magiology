@@ -3,6 +3,7 @@ package com.magiology.client.shaders;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.magiology.util.statics.PrintUtil;
 import com.magiology.util.statics.classload.ClassList;
 
 public class ShaderHandler{
@@ -28,6 +29,9 @@ public class ShaderHandler{
 				}
 			});
 		}
-		shaders.entrySet().forEach(e->e.getValue().compile());
+		shaders.entrySet().forEach(e->{
+			PrintUtil.println(e.getValue());
+			e.getValue().compile();
+		});
 	}
 }

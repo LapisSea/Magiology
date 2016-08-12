@@ -4,7 +4,7 @@
 !.gitignore
 !gradlew*
 !/gradle/
-!/LICENSE.txt
+!/LICENSE.md
 !/README.md
 !/COPYING.lesser
 !build.gradle

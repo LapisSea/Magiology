@@ -24,17 +24,10 @@ public class TickEvents{
 	public void onClientTick(TickEvent.ClientTickEvent event){
 		if(event.phase!=Phase.START){
 			if(!UtilC.getMC().isGamePaused()&&UtilC.isWorldOpen()){
-				if(UtilC.getWorldTime()%40!=0){
-//					PrintUtil.println(ParticleHandler.instance.getCount());
-					Vec3M pos=Vec3M.conv(UtilC.getThePlayer().getLook(0).add(UtilC.getThePlayer().getPositionEyes(0)));
-					float color=RandUtil.RB()?0.85F:0.15F;
-						Particles.CUBE.spawn(pos,
-							new Vec3M(RandUtil.CRF(0.01), RandUtil.CRF(0.01), RandUtil.CRF(0.01)),
-							1/16F,
-							120,
-							-0.005F,
-							new ColorF(color,color,color,1));
-				}
+				Vec3M pos=Vec3M.conv(UtilC.getThePlayer().getPositionEyes(0));
+				
+				Particles.MISTY_ENERGY.spawn(pos.add(new Vec3M(RandUtil.CRF(10), RandUtil.CRF(10), RandUtil.CRF(10))), new Vec3M(), 0.1F, 0, new ColorF(0.7+RandUtil.RF(0.3),0.4+RandUtil.RF(0.4),0.2+RandUtil.RF(0.1),0.3+RandUtil.CRF(0.7)));
+				//if(UtilC.getThePlayer().isSneaking())Particles.MISTY_ENERGY.compileDisplayList();
 				ParticleHandler.instance.updateParticles();
 //				if(UtilC.getWorldTime()%60==0){
 //					ShaderHandler.get().load();

@@ -60,13 +60,13 @@ public class Magiology implements ModContainer{
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event){
-		
 		commonProxy.loadModFiles();
 		sideProxy.loadModFiles();
 		Runtime.getRuntime().addShutdownHook(new Thread(()->{
 			commonProxy.onExit();
 			sideProxy.onExit();
 		}));
+		
 		PrintUtil.println(NAME+"_"+MC_VERSION+"-"+VERSION+" -> "+"Pre initialization started!");
 		commonProxy.preInit();
 		sideProxy.preInit();
@@ -162,4 +162,8 @@ public class Magiology implements ModContainer{
 	public boolean shouldLoadInEnvironment(){return true;}
 	@Override 
 	public boolean matches(Object mod){return mod==this;}
+	@Override
+	public void setClassVersion(int classVersion){}
+	@Override
+	public int getClassVersion(){return -1;}
 }

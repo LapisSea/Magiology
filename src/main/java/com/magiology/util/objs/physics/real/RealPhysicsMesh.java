@@ -14,7 +14,7 @@ import com.magiology.util.statics.RandUtil;
 import com.magiology.util.statics.math.MathUtil;
 
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 
 public class RealPhysicsMesh{
 	
@@ -184,7 +184,7 @@ public class RealPhysicsMesh{
 			float mul=world.isThundering()?0.1F:world.isRaining()?0.05F:0;
 			if(mul>0){
 				BlockPosM pos=new BlockPosM(originPos);
-				BiomeGenBase chunk=world.getChunkFromBlockCoords(pos).getBiome(pos, world.getBiomeProvider());
+				Biome chunk=world.getChunkFromBlockCoords(pos).getBiome(pos, world.getBiomeProvider());
 				
 				if(world.canBlockSeeSky(pos))noise=mul*chunk.getRainfall();
 				

@@ -8,6 +8,7 @@ import com.magiology.util.objs.ColorF;
 import com.magiology.util.objs.Vec3M;
 
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraftforge.fml.relauncher.Side;
@@ -99,6 +100,9 @@ public class OpenGLM extends GlStateManager{
 	public static Tessellator getT(){
 		return Tessellator.getInstance();
 	}
+	public static RenderItem getRI(){
+		return UtilC.getMC().getRenderItem();
+	}
 	
 	public static void setUpOpaqueRendering(BlendFunc mode){
 		depthMask(false);
@@ -140,5 +144,6 @@ public class OpenGLM extends GlStateManager{
 	public static void color(ColorF color){
 		color(color.r, color.g, color.b, color.a);
 	}
+
 	
 }

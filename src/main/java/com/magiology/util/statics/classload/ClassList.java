@@ -8,6 +8,7 @@ import java.util.Map;
 import com.magiology.client.shaders.ShaderProgram;
 import com.magiology.util.interf.Calculable;
 import com.magiology.util.m_extensions.TileEntityM;
+import com.magiology.util.statics.PrintUtil;
 
 import net.minecraft.launchwrapper.IClassTransformer;
 
@@ -32,6 +33,7 @@ public class ClassList{
 				"com.magiology.client.shaders.upload.UniformUploaderF3",
 				"com.magiology.client.shaders.upload.UniformUploaderF4",
 				"com.magiology.client.shaders.upload.UniformUploaderVec",
+				"com.magiology.client.VertexRenderer",
 				"com.magiology.core.Config",
 				"com.magiology.core.Magiology",
 				"com.magiology.core.MReference",
@@ -45,10 +47,13 @@ public class ClassList{
 				"com.magiology.handlers.particle.ParticleHandler",
 				"com.magiology.handlers.particle.ParticleM",
 				"com.magiology.handlers.particle.Particles",
-				"com.magiology.mc_objects.blocks.DummyBlock",
+				"com.magiology.mc_objects.blocks.DimensionStabiliserBlock",
+				"com.magiology.mc_objects.MBlocks",
+				"com.magiology.mc_objects.MTabs",
+				"com.magiology.mc_objects.particles.ParticleBubbleFactory",
 				"com.magiology.mc_objects.particles.ParticleCubeFactory",
-				"com.magiology.mc_objects.particles.ParticleMistBubble",
 				"com.magiology.mc_objects.particles.ParticleMistBubbleFactory",
+				"com.magiology.mc_objects.particles.ParticleMistyEnergyFactory",
 				"com.magiology.mc_objects.tileentitys.DummyTileEntity",
 				"com.magiology.SoundM",
 				"com.magiology.util.interf.BooleanReturn",
@@ -66,6 +71,7 @@ public class ClassList{
 				"com.magiology.util.objs.AngularVec3",
 				"com.magiology.util.objs.BlockPosM",
 				"com.magiology.util.objs.ColorF",
+				"com.magiology.util.objs.DatabaseStorage",
 				"com.magiology.util.objs.DoubleObject",
 				"com.magiology.util.objs.EnhancedRobot",
 				"com.magiology.util.objs.LinearAnimation",
@@ -130,7 +136,12 @@ public class ClassList{
 	
 	public static <T> List<Class<T>> getImplementations(Class<T> clazz){
 		List<Class<T>> list=new ArrayList<>();
-		getImplementations().get(clazz).forEach(c->list.add((Class<T>)c));
+		try{
+			getImplementations().get(clazz).forEach(c->list.add((Class<T>)c));
+		} catch (Exception e){
+			PrintUtil.println(clazz);
+			throw e;
+		}
 		return list;
 	}
 	public static Map<Class<?>, List<Class<?>>> getImplementations(){
