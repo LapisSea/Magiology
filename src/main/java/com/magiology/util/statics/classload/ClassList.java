@@ -14,9 +14,10 @@ import net.minecraft.launchwrapper.IClassTransformer;
 
 public class ClassList{
 	
-	static final String[]
+	static String[]
 			classes={
-				"com.magiology.client.Renderer",
+				"com.magiology.client.renderers.AdvancedRenderer",
+				"com.magiology.client.renderers.Renderer",
 				"com.magiology.client.rendering.tile_render.DummyTileEntityRenderer",
 				"com.magiology.client.shaders.effects.PositionAwareEffect",
 				"com.magiology.client.shaders.effects.SoftEffectsShader",
@@ -33,10 +34,13 @@ public class ClassList{
 				"com.magiology.client.shaders.upload.UniformUploaderF3",
 				"com.magiology.client.shaders.upload.UniformUploaderF4",
 				"com.magiology.client.shaders.upload.UniformUploaderVec",
-				"com.magiology.client.VertexRenderer",
 				"com.magiology.core.Config",
 				"com.magiology.core.Magiology",
 				"com.magiology.core.MReference",
+				"com.magiology.features.dimension_stabiliser.DimensionStabiliserBlock",
+				"com.magiology.features.dimension_stabiliser.TileEntityDimensionStabiliser",
+				"com.magiology.features.MRegistery",
+				"com.magiology.features.SimpleItems",
 				"com.magiology.forge_powered.events.RenderEvents",
 				"com.magiology.forge_powered.events.TickEvents",
 				"com.magiology.forge_powered.proxy.ClientProxy",
@@ -46,15 +50,13 @@ public class ClassList{
 				"com.magiology.handlers.particle.ParticleFactory",
 				"com.magiology.handlers.particle.ParticleHandler",
 				"com.magiology.handlers.particle.ParticleM",
-				"com.magiology.handlers.particle.Particles",
-				"com.magiology.mc_objects.blocks.DimensionStabiliserBlock",
 				"com.magiology.mc_objects.MBlocks",
 				"com.magiology.mc_objects.MTabs",
 				"com.magiology.mc_objects.particles.ParticleBubbleFactory",
 				"com.magiology.mc_objects.particles.ParticleCubeFactory",
 				"com.magiology.mc_objects.particles.ParticleMistBubbleFactory",
 				"com.magiology.mc_objects.particles.ParticleMistyEnergyFactory",
-				"com.magiology.mc_objects.tileentitys.DummyTileEntity",
+				"com.magiology.mc_objects.particles.Particles",
 				"com.magiology.SoundM",
 				"com.magiology.util.interf.BooleanReturn",
 				"com.magiology.util.interf.Calculable",
@@ -67,6 +69,7 @@ public class ClassList{
 				"com.magiology.util.m_extensions.BlockPosM",
 				"com.magiology.util.m_extensions.GuiContainerM",
 				"com.magiology.util.m_extensions.TileEntityM",
+				"com.magiology.util.m_extensions.TileEntityMTickable",
 				"com.magiology.util.m_extensions.TileEntitySpecialRendererM",
 				"com.magiology.util.objs.AngularVec3",
 				"com.magiology.util.objs.BlockPosM",

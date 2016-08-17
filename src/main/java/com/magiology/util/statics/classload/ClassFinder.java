@@ -12,15 +12,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JOptionPane;
-
-import org.apache.commons.lang3.ArrayUtils;
-
 import com.magiology.core.MReference;
 import com.magiology.core.Magiology;
 import com.magiology.util.statics.FileUtil;
 import com.magiology.util.statics.PrintUtil;
 import com.magiology.util.statics.UtilM;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 
 class ClassFinder{
@@ -44,6 +42,7 @@ class ClassFinder{
 		PrintUtil.println("Starting to load all classes from "+MReference.NAME+"!");
 		UtilM.startTime();
 		List<String> failed=new ArrayList<>();
+		
 		for(String clazz:ClassList.classes){
 			try{
 				ClassList.loadedClasses.add(loader.loadClass(clazz));
@@ -51,6 +50,9 @@ class ClassFinder{
 				if(!ArrayUtils.contains(blacklist, clazz))failed.add(e.getClass().getSimpleName()+": "+clazz);
 			}
 		}
+		//set array to null so garbage collection can free more RAM
+		ClassList.classes=null;
+		
 		PrintUtil.println("Loading of all classes is done in "+UtilM.endTime()+"ms.");
 		if(failed.isEmpty()){
 			PrintUtil.println("No classes have failed to load! ^_^\nStarting to sort classes!");
@@ -120,6 +122,7 @@ class ClassFinder{
 			PrintUtil.println("Failed class list:");
 			for(String string:failed)PrintUtil.println(string);
 			PrintUtil.println("You may want to refresh the class list!");
+			UtilM.exit(360);
 		}
 	}
 	private static void generateAndInject(){
@@ -176,9 +179,9 @@ class ClassFinder{
 				char[] line1=line.toCharArray();
 				
 				newFile.append(tabs);
-				for(int j=0;j<line1.length;j++){
-					if(line1[j]=='\\')newFile.append('.');
-					else newFile.append(line1[j]);
+				for(char element:line1){
+					if(element=='\\')newFile.append('.');
+					else newFile.append(element);
 				}
 				newFile.append("\n");
 			}
@@ -188,8 +191,7 @@ class ClassFinder{
 			if(!newFile.equals(originalFile)){
 				FileUtil.setFileTxt(thisClass, newFile.toString());
 				setError(false);
-				JOptionPane.showMessageDialog(null, MReference.NAME+" compiled list of it's classes!\nMC will now close.");
-				UtilM.exit(404);
+				UtilM.exit(420);
 			}
 			
 		}catch(IOException e){

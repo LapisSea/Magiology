@@ -2,20 +2,21 @@ package com.magiology.util.statics;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import org.lwjgl.opengl.GL11;
-
 import com.magiology.util.objs.ColorF;
 import com.magiology.util.objs.Vec3M;
+
+import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Short for OpenGLM
+ * Short for OpenGL Magiology
  */
 @SideOnly(Side.CLIENT)
 public class OpenGLM extends GlStateManager{
@@ -37,7 +38,7 @@ public class OpenGLM extends GlStateManager{
 		}
 		
 		public void bind(){
-			OpenGLM.blendFunc(sfactor, dfactor);
+			GlStateManager.blendFunc(sfactor, dfactor);
 		}
 	}
 	
@@ -143,6 +144,10 @@ public class OpenGLM extends GlStateManager{
 	}
 	public static void color(ColorF color){
 		color(color.r, color.g, color.b, color.a);
+	}
+
+	public static void bindTexture(ResourceLocation texture){
+		UtilC.getMC().renderEngine.bindTexture(texture);
 	}
 
 	

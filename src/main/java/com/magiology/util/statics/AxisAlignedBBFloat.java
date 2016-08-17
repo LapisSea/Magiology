@@ -273,7 +273,7 @@ public class AxisAlignedBBFloat{
 	 * Returns if the supplied Vec3D is completely inside the bounding box
 	 */
 	public static boolean isVecInside(Vec3d vec){
-		return vec.xCoord>minX(buffer,pointer)&&vec.xCoord<maxX(buffer,pointer)?(vec.yCoord>minY(buffer,pointer)&&vec.yCoord<maxY(buffer,pointer)?vec.zCoord>minZ(buffer,pointer)&&vec.zCoord<maxZ(buffer,pointer):false):false;
+		return vec.xCoord>minX(buffer,pointer)&&vec.xCoord<maxX(buffer,pointer)?vec.yCoord>minY(buffer,pointer)&&vec.yCoord<maxY(buffer,pointer)?vec.zCoord>minZ(buffer,pointer)&&vec.zCoord<maxZ(buffer,pointer):false:false;
 	}
 
 	/**

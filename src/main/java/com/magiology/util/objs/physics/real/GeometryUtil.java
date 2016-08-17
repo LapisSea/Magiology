@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
-
 import com.magiology.util.objs.DoubleObject;
 import com.magiology.util.objs.Vec3M;
 import com.magiology.util.statics.math.MatrixUtil;
+
+import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import net.minecraft.client.model.PositionTextureVertex;
 import net.minecraft.entity.Entity;
@@ -22,7 +22,7 @@ public class GeometryUtil{
 	public static class Quad extends Triangle{
 		public Vec3M pos4;
 		public Quad(PositionTextureVertex[] quad){
-			this(Vec3M.conv(quad[0].vector3D),Vec3M.conv(quad[1].vector3D),Vec3M.conv(quad[2].vector3D),Vec3M.conv(quad[3].vector3D));
+			this(new Vec3M(quad[0].vector3D),new Vec3M(quad[1].vector3D),new Vec3M(quad[2].vector3D),new Vec3M(quad[3].vector3D));
 		}
 		public Quad(Vec3M pos1, Vec3M pos2, Vec3M pos3, Vec3M pos4){
 			super(pos1, pos2, pos3);
@@ -97,7 +97,7 @@ public class GeometryUtil{
 		}
 		public Vec3M getNormal(){
 			if(normal==null){
-				normal=GeometryUtil.getNormal(pos1, pos2, pos3);
+				normal=GeometryUtil.getNormalM(pos1, pos2, pos3);
 			}
 			return normal;
 		}
@@ -196,13 +196,23 @@ public class GeometryUtil{
 
 		return null;
 	}
-	
-	public static Vec3d getNormal(Vec3d pos0,Vec3d pos1, Vec3d pos2){
+
+	public static Vec3d getNormalD(Vec3d pos0,Vec3d pos1, Vec3d pos2){
 		Vec3d vec3  = pos1.subtractReverse(pos0);
 		Vec3d vec31 = pos1.subtractReverse(pos2);
 		return vec31.crossProduct(vec3).normalize();
 	}
-	public static Vec3M getNormal(Vec3M pos0,Vec3M pos1, Vec3M pos2){
+	public static Vec3d getNormalD(Vec3M pos0,Vec3M pos1, Vec3M pos2){
+		Vec3M vec3  = pos1.subtractReverse(pos0);
+		Vec3M vec31 = pos1.subtractReverse(pos2);
+		return vec31.crossProduct(vec3).normalize().conv();
+	}
+	public static Vec3M getNormalM(Vec3d pos0,Vec3d pos1, Vec3d pos2){
+		Vec3d vec3  = pos1.subtractReverse(pos0);
+		Vec3d vec31 = pos1.subtractReverse(pos2);
+		return new Vec3M(vec31.crossProduct(vec3).normalize());
+	}
+	public static Vec3M getNormalM(Vec3M pos0,Vec3M pos1, Vec3M pos2){
 		Vec3M vec3  = pos1.subtractReverse(pos0);
 		Vec3M vec31 = pos1.subtractReverse(pos2);
 		return vec31.crossProduct(vec3).normalize();
@@ -322,15 +332,15 @@ public class GeometryUtil{
 		
 
 		t=(uv*wu-uu*wv)/D;
-		if(t<0.0||(s+t)>1.0)return null;
+		if(t<0.0||s+t>1.0)return null;
 
 		return i;
 	}
 	public static DoubleObject<Vec3M, Integer> intersectRayTriangles(Ray ray, Triangle...triangles){
 		List<Vec3M> results=new ArrayList<>();
 		
-		for(int i=0;i<triangles.length;i++){
-			Vec3M result=intersectRayTriangle(ray, triangles[i]);
+		for(Triangle triangle:triangles){
+			Vec3M result=intersectRayTriangle(ray, triangle);
 			if(result!=null){
 				results.add(result);
 			}

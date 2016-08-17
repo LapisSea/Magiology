@@ -10,6 +10,7 @@ import com.magiology.util.statics.UtilC;
 import com.magiology.util.statics.math.MathUtil;
 import com.magiology.util.statics.math.PartialTicksUtil;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3i;
@@ -236,8 +237,8 @@ public abstract class IParticle{
 		EntityPlayer player=UtilC.getThePlayer();
 		
 		OpenGLM.translate(PartialTicksUtil.calculate(this));
-		OpenGLM.rotate(-player.rotationYaw+90, 0, 1, 0);
-		OpenGLM.rotate( player.rotationPitch,  0, 0, 1);
+		GlStateManager.rotate(-player.rotationYaw+90, 0, 1, 0);
+		GlStateManager.rotate( player.rotationPitch,  0, 0, 1);
 		OpenGLM.scale(PartialTicksUtil.calculate(getPrevSize(), getSize()));
 	}
 }

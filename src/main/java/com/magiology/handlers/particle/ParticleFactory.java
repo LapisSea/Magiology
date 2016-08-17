@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Queue;
 
 import com.magiology.util.objs.Vec3M;
-import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.UtilC;
 
 import net.minecraft.client.renderer.GLAllocation;
@@ -96,19 +95,19 @@ public abstract class ParticleFactory{
 			setUpOpenGl();
 			if(hasStaticModel()){
 				for(IParticle particle:particles){
-					OpenGLM.pushMatrix();
+					GlStateManager.pushMatrix();
 					particle.setUpOpenGl();
 					int[] ids=particle.getModelIds();
 					if(ids==null)GlStateManager.callList(particle.getModelId());
 					else for(int i:ids)GlStateManager.callList(i);
-					OpenGLM.popMatrix();
+					GlStateManager.popMatrix();
 				}
 			}else{
 				for(IParticle particle:particles){
-					OpenGLM.pushMatrix();
+					GlStateManager.pushMatrix();
 					particle.setUpOpenGl();
 					particle.renderModel(xRotation, zRotation, yzRotation, xyRotation, xzRotation);
-					OpenGLM.popMatrix();
+					GlStateManager.popMatrix();
 				}
 			}
 			resetOpenGl();

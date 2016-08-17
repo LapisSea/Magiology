@@ -2,8 +2,6 @@ package com.magiology.forge_powered.events;
 
 import java.util.Queue;
 
-import org.lwjgl.opengl.GL11;
-
 import com.google.common.collect.Queues;
 import com.magiology.client.shaders.ShaderHandler;
 import com.magiology.client.shaders.effects.PositionAwareEffect;
@@ -14,10 +12,14 @@ import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.UtilC;
 import com.magiology.util.statics.math.PartialTicksUtil;
 
+import org.lwjgl.opengl.GL11;
+
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -40,25 +42,25 @@ public class RenderEvents{
 			Template shader=ShaderHandler.getShader(Template.class);
 			if(shader.shouldRender()){
 				RenderManager renderManager=UtilC.getMC().getRenderManager();
-				OpenGLM.pushMatrix();
+				GlStateManager.pushMatrix();
 				shader.activate();
 				OpenGLM.translate(PartialTicksUtil.calculate(UtilC.getViewEntity()).mul(-1));
 //				OpenGLM.disableLightmap();
 				for(EntityLivingBase entity:invisibleEntitys){
 					Vec3M pos=PartialTicksUtil.calculate(entity);
-					OpenGLM.enableBlend();
+					GlStateManager.enableBlend();
 					GL11.glAlphaFunc(GL11.GL_GREATER, 0);
 					GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 					entity.setInvisible(false);
 					renderManager.doRenderEntity(entity, pos.x, pos.y, pos.z, 0, PartialTicksUtil.partialTicks, false);
 					entity.setInvisible(true);
 				}
-				OpenGLM.disableBlend();
+				GlStateManager.disableBlend();
 //				OpenGLM.enableLightmap();
 				invisibleEntitys.clear();
 				shader.deactivate();
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-				OpenGLM.popMatrix();
+				GlStateManager.popMatrix();
 			}
 		}
 		//		EntityPlayer player = UtilC.getThePlayer();
@@ -82,10 +84,96 @@ public class RenderEvents{
 		//		Template.unbind();
 		//		OpenGLM.popMatrix();
 	}
-	
+
 	@SubscribeEvent(priority=EventPriority.HIGHEST)
 	public void renderEntityPre(RenderLivingEvent.Pre e){
 		EntityLivingBase en=e.getEntity();
-		if(en.isInvisibleToPlayer(UtilC.getThePlayer())) invisibleEntitys.add(en);
+		if(en.isInvisibleToPlayer(UtilC.getThePlayer()))invisibleEntitys.add(en);
+	}
+	
+	@SubscribeEvent(priority=EventPriority.HIGHEST)
+	public void renderPlayerPost(RenderPlayerEvent.Post e){
+		
+		
+//		EntityPlayer player=e.getEntityPlayer();
+//		if(player.isInvisibleToPlayer(UtilC.getThePlayer()))return;
+//		
+//		
+//		ModelRenderer box=e.getRenderer().getMainModel().bipedLeftArm;//TODO: get selected box
+//		
+//		
+//		if(!box.isHidden){
+//			EnumFacing face=EnumFacing.DOWN;
+//			
+//			OpenGLM.pushMatrix();
+//			OpenGLM.color(ColorF.WHITE);
+//			OpenGLM.endOpaqueRendering();
+//			OpenGLM.disableTexture2D();
+//			OpenGLM.enableRescaleNormal();
+//			OpenGLM.rotateY(-PartialTicksUtil.calculate(player.prevRenderYawOffset, player.renderYawOffset));
+//			ModelBox lol=box.cubeList.get(0);
+//			OpenGLM.translate(0, player.getEyeHeight()-(player.isSneaking()?5:3)/16F, 0);
+//			GlStateManager.scale(0.94, 0.94, 0.94);
+//			OpenGLM.scale(1, -1, -1);
+//			OpenGLM.scale(1/16F);
+//			OpenGLM.translate(box.offsetX, box.offsetY, box.offsetZ);
+//			OpenGLM.translate(box.rotationPointX, box.rotationPointY, box.rotationPointZ);
+//			
+//			if(box.rotateAngleZ!=0.0F){
+//				GlStateManager.rotate(box.rotateAngleZ*(180F/(float)Math.PI), 0.0F, 0.0F, 1.0F);
+//			}
+//			if(box.rotateAngleY!=0.0F){
+//				GlStateManager.rotate(box.rotateAngleY*(180F/(float)Math.PI), 0.0F, 1.0F, 0.0F);
+//			}
+//			if(box.rotateAngleX!=0.0F){
+//				GlStateManager.rotate(box.rotateAngleX*(180F/(float)Math.PI), 1.0F, 0.0F, 0.0F);
+//			}
+//			
+//			AdvancedRenderer buff=new AdvancedRenderer();
+//			switch(face){
+//			case DOWN:{
+//				buff.addVertexWithUV(lol.posX1, lol.posY2, lol.posZ2, 0, 1);
+//				buff.addVertexWithUV(lol.posX2, lol.posY2, lol.posZ2, 1, 1);
+//				buff.addVertexWithUV(lol.posX2, lol.posY2, lol.posZ1, 1, 0);
+//				buff.addVertexWithUV(lol.posX1, lol.posY2, lol.posZ1, 0, 0);
+//			}break;
+//			case EAST:{
+//				buff.addVertexWithUV(lol.posX1, lol.posY1, lol.posZ2, 0, 0);
+//				buff.addVertexWithUV(lol.posX2, lol.posY1, lol.posZ2, 1, 0);
+//				buff.addVertexWithUV(lol.posX2, lol.posY2, lol.posZ2, 1, 1);
+//				buff.addVertexWithUV(lol.posX1, lol.posY2, lol.posZ2, 0, 1);
+//			}break;
+//			case NORTH:{
+//				buff.addVertexWithUV(lol.posX1, lol.posY1, lol.posZ2, 0, 0);
+//				buff.addVertexWithUV(lol.posX2, lol.posY1, lol.posZ2, 1, 0);
+//				buff.addVertexWithUV(lol.posX2, lol.posY2, lol.posZ2, 1, 1);
+//				buff.addVertexWithUV(lol.posX1, lol.posY2, lol.posZ2, 0, 1);
+//			}break;
+//			case SOUTH:{
+//				buff.addVertexWithUV(lol.posX1, lol.posY1, lol.posZ2, 0, 0);
+//				buff.addVertexWithUV(lol.posX2, lol.posY1, lol.posZ2, 1, 0);
+//				buff.addVertexWithUV(lol.posX2, lol.posY2, lol.posZ2, 1, 1);
+//				buff.addVertexWithUV(lol.posX1, lol.posY2, lol.posZ2, 0, 1);
+//			}break;
+//			case UP:{
+//				buff.addVertexWithUV(lol.posX1, lol.posY1, lol.posZ1, 0, 0);
+//				buff.addVertexWithUV(lol.posX2, lol.posY1, lol.posZ1, 1, 0);
+//				buff.addVertexWithUV(lol.posX2, lol.posY1, lol.posZ2, 1, 1);
+//				buff.addVertexWithUV(lol.posX1, lol.posY1, lol.posZ2, 0, 1);
+//			}break;
+//			case WEST:{
+//				buff.addVertexWithUV(lol.posX1, lol.posY1, lol.posZ2, 0, 0);
+//				buff.addVertexWithUV(lol.posX2, lol.posY1, lol.posZ2, 1, 0);
+//				buff.addVertexWithUV(lol.posX2, lol.posY2, lol.posZ2, 1, 1);
+//				buff.addVertexWithUV(lol.posX1, lol.posY2, lol.posZ2, 0, 1);
+//			}break;
+//			}
+//			buff.draw();
+//			OpenGLM.enableDepth();
+//			OpenGLM.enableTexture2D();
+//			OpenGLM.popMatrix();
+//		}
+//		
+//		
 	}
 }

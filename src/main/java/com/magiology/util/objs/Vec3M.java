@@ -3,16 +3,16 @@ package com.magiology.util.objs;
 import java.io.Serializable;
 import java.nio.FloatBuffer;
 
+import com.magiology.util.interf.Calculable;
+import com.magiology.util.statics.math.MathUtil;
+import com.magiology.util.statics.math.MatrixUtil;
+
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.ReadableVector;
 import org.lwjgl.util.vector.ReadableVector3f;
 import org.lwjgl.util.vector.Vector;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.WritableVector3f;
-
-import com.magiology.util.interf.Calculable;
-import com.magiology.util.statics.math.MathUtil;
-import com.magiology.util.statics.math.MatrixUtil;
 
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -22,14 +22,8 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-/**
- *	Copy of mc Vec3M because mc didn't heard or a word called convenient 
- */
 public class Vec3M extends Vector implements Serializable, ReadableVector, ReadableVector3f, WritableVector3f, Calculable<Vec3M>{
-	
-	public static Vec3M conv(Vec3d vec){
-		return new Vec3M(vec.xCoord, vec.yCoord, vec.zCoord);
-	}
+
 	
 	public double x, y, z;
 	
@@ -47,6 +41,11 @@ public class Vec3M extends Vector implements Serializable, ReadableVector, Reada
 		this.x=vec.getX();
 		this.y=vec.getY();
 		this.z=vec.getZ();
+	}
+	public Vec3M(Vec3d vec){
+		this.x=vec.xCoord;
+		this.y=vec.yCoord;
+		this.z=vec.zCoord;
 	}
 	
 	public Vec3M abs(){

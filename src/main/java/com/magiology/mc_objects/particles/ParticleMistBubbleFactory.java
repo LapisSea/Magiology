@@ -1,8 +1,6 @@
 package com.magiology.mc_objects.particles;
 
-import org.lwjgl.opengl.GL11;
-
-import com.magiology.client.Renderer;
+import com.magiology.client.renderers.Renderer;
 import com.magiology.core.MReference;
 import com.magiology.handlers.particle.ParticleFactory;
 import com.magiology.handlers.particle.ParticleM;
@@ -13,12 +11,18 @@ import com.magiology.util.statics.OpenGLM.BlendFunc;
 import com.magiology.util.statics.UtilC;
 import com.magiology.util.statics.UtilM;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ParticleMistBubbleFactory extends ParticleFactory{
+	
+	private final static ParticleMistBubbleFactory instance=new ParticleMistBubbleFactory();
+	public static ParticleMistBubbleFactory get(){return instance;}
+	private ParticleMistBubbleFactory(){}
 	
 	public static final ResourceLocation MIST=new ResourceLocation(MReference.MODID,"/textures/particle/smooth_buble1.png");
 	public static int defultModel=-1;
@@ -118,4 +122,5 @@ public class ParticleMistBubbleFactory extends ParticleFactory{
 		@Override public int[] getModelIds(){return null;}
 		@Override public void renderModel(float xRotation, float zRotation, float yzRotation, float xyRotation, float xzRotation){}
 	}
+
 }

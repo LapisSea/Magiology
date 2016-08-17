@@ -2,9 +2,9 @@ package com.magiology.util.statics;
 
 import static org.apache.logging.log4j.Level.*;
 
-import org.apache.logging.log4j.Level;
-
 import com.magiology.core.MReference;
+
+import org.apache.logging.log4j.Level;
 
 import net.minecraftforge.fml.common.FMLLog;
 

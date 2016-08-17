@@ -1,12 +1,12 @@
 package com.magiology.util.statics.math;
 
 
-import org.lwjgl.util.vector.Vector2f;
-
 import com.magiology.handlers.particle.IParticle;
 import com.magiology.util.interf.Calculable;
 import com.magiology.util.objs.ColorF;
 import com.magiology.util.objs.Vec3M;
+
+import org.lwjgl.util.vector.Vector2f;
 
 import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.relauncher.Side;
@@ -21,10 +21,10 @@ public class PartialTicksUtil{
 		return prevPos.add(pos.sub(prevPos).mul(partialTicks));
 	}
 	public static double calculate(double prevPos,double pos){
-		return (prevPos+(pos-prevPos)*partialTicks);
+		return prevPos+(pos-prevPos)*partialTicks;
 	}
 	public static float calculate(float prevPos,float pos){
-		return (prevPos+(pos-prevPos)*partialTicks);
+		return prevPos+(pos-prevPos)*partialTicks;
 	}
 
 	public static Vec3M calculate(Entity entity){

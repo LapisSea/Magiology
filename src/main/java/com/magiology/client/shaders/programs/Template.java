@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-import org.lwjgl.opengl.Display;
-
 import com.magiology.client.shaders.ShaderProgram;
 import com.magiology.client.shaders.effects.PositionAwareEffect;
 import com.magiology.client.shaders.effects.SoftEffectsShader;
@@ -13,6 +11,8 @@ import com.magiology.client.shaders.upload.UniformUploaderF1;
 import com.magiology.client.shaders.upload.UniformUploaderF2;
 import com.magiology.util.objs.Vec2FM;
 import com.magiology.util.statics.FileUtil;
+
+import org.lwjgl.opengl.Display;
 
 public class Template extends ShaderProgram{
 	

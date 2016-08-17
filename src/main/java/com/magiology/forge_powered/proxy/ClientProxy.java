@@ -3,10 +3,13 @@ package com.magiology.forge_powered.proxy;
 import com.magiology.client.rendering.tile_render.DummyTileEntityRenderer;
 import com.magiology.client.shaders.ShaderHandler;
 import com.magiology.core.MReference;
+import com.magiology.features.MRegistery;
+import com.magiology.features.dimension_stabiliser.TileEntityDimensionStabiliser;
 import com.magiology.forge_powered.events.RenderEvents;
-import com.magiology.handlers.particle.Particles;
+import com.magiology.handlers.particle.ParticleFactory;
+import com.magiology.handlers.particle.ParticleHandler;
 import com.magiology.mc_objects.MBlocks;
-import com.magiology.mc_objects.tileentitys.DummyTileEntity;
+import com.magiology.util.interf.ObjectProcessor;
 import com.magiology.util.m_extensions.TileEntityM;
 import com.magiology.util.m_extensions.TileEntitySpecialRendererM;
 import com.magiology.util.objs.EnhancedRobot;
@@ -51,7 +54,10 @@ public class ClientProxy extends CommonProxy{
 		MinecraftForge.EVENT_BUS.register(new RenderEvents());
 		registerTileRedners();
 		registerTileJsons();
-		Particles.registerParticles();
+		MRegistery.registerParticles(((ObjectProcessor<ParticleFactory>)(obj,a)->{
+			ParticleHandler.instance.registerParticle(obj);
+			return obj;
+		}));
 	}
 	
 	@Override
@@ -77,7 +83,7 @@ public class ClientProxy extends CommonProxy{
 	}
 	
 	private void registerTileRedners(){
-		bindTileWithRenderer(DummyTileEntity.class, new DummyTileEntityRenderer());
+		bindTileWithRenderer(TileEntityDimensionStabiliser.class, new DummyTileEntityRenderer());
 	}
 	
 	public static void bindTileWithRenderer(Class<?extends TileEntityM>tileEntityClass, TileEntitySpecialRendererM specialRenderer){

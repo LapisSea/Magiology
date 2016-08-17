@@ -1,11 +1,11 @@
-package com.magiology.client;
-
-import org.lwjgl.opengl.GL11;
+package com.magiology.client.renderers;
 
 import com.magiology.util.objs.ColorF;
 import com.magiology.util.objs.Vec3M;
 import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.math.MathUtil;
+
+import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
@@ -13,10 +13,18 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.math.Vec3d;
 
+/**
+ * @author LapisSea
+ * 
+ * @description Basic utility class to make drawing more easy (eliminates things like: correcting type example:"from int to double", forces the user to input all required data parts for a specific format, makes code shorter and cleaner)
+ */
 public class Renderer{
 	
 	
 	private static final Renderer instance=new Renderer();
+	private static VertexBuffer renderer=OpenGLM.getWB();
+	private static Tessellator tessellator=OpenGLM.getT();
+	
 	public static final LineRenderer LINES=new LineRenderer();
 	public static final ParticleRenderer PARTICLE=new ParticleRenderer();
 	public static final PosRenderer POS=new PosRenderer();
@@ -25,8 +33,8 @@ public class Renderer{
 	public static final PosUVColorRenderer POS_UV_COLOR=new PosUVColorRenderer();
 	public static final PosUVColorNormalRenderer POS_UV_COLOR_NORMAL=new PosUVColorNormalRenderer();
 	public static final PosUVNormalRenderer POS_UV_NORMAL=new PosUVNormalRenderer();
-	private static VertexBuffer renderer=OpenGLM.getWB();
-	private static Tessellator tessellator=OpenGLM.getT();
+	
+	
 	
 	public static class LineRenderer extends RendererBase{
 		

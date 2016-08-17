@@ -3,8 +3,6 @@ package com.magiology.client.shaders.effects;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-import org.lwjgl.opengl.Display;
-
 import com.magiology.client.shaders.programs.Template;
 import com.magiology.client.shaders.upload.UniformUploaderColor;
 import com.magiology.client.shaders.upload.UniformUploaderF1;
@@ -13,6 +11,8 @@ import com.magiology.util.objs.ColorF;
 import com.magiology.util.objs.DoubleObject;
 import com.magiology.util.objs.Vec2FM;
 import com.magiology.util.objs.Vec3M;
+
+import org.lwjgl.opengl.Display;
 
 public class SoftEffectsShader extends PositionAwareEffect{
 	

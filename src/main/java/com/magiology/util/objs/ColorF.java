@@ -2,8 +2,9 @@ package com.magiology.util.objs;
 
 import java.awt.Color;
 
-import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.math.MathUtil;
+
+import net.minecraft.client.renderer.GlStateManager;
 
 public class ColorF{
 	public static final ColorF 
@@ -38,7 +39,7 @@ public class ColorF{
 		return new ColorF(color.r+r,color.g+g,color.b+b,color.a+a);
 	}
 	public void bind(){
-		OpenGLM.color(r,g,b,a);
+		GlStateManager.color(r,g,b,a);
 	}
 	public ColorF blackNWhite(){
 		float sum=(r+g+b)/3F;

@@ -24,8 +24,8 @@ public class CollectionConverter{
 	}
 	public static<result> List<result> convLi(char[] collection, Class<result> resultType, ObjectConverter<Character,result>  action){
 		List<result> res=new ArrayList<>();
-		for(int i=0;i<collection.length;i++){
-			res.add(action.convert(collection[i]));
+		for(char element:collection){
+			res.add(action.convert(element));
 		}
 		return res;
 	}

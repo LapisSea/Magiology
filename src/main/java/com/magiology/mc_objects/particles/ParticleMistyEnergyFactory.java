@@ -1,8 +1,6 @@
 package com.magiology.mc_objects.particles;
 
-import org.lwjgl.opengl.GL11;
-
-import com.magiology.client.Renderer;
+import com.magiology.client.renderers.Renderer;
 import com.magiology.core.MReference;
 import com.magiology.handlers.particle.ParticleFactory;
 import com.magiology.handlers.particle.ParticleM;
@@ -15,6 +13,8 @@ import com.magiology.util.statics.UtilC;
 import com.magiology.util.statics.UtilM;
 import com.magiology.util.statics.math.PartialTicksUtil;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.relauncher.Side;
@@ -22,6 +22,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ParticleMistyEnergyFactory extends ParticleFactory{
 
+	private final static ParticleMistyEnergyFactory instance=new ParticleMistyEnergyFactory();
+	public static ParticleMistyEnergyFactory get(){return instance;}
+	private ParticleMistyEnergyFactory(){}
+	
 	public static final ResourceLocation texture=new ResourceLocation(MReference.MODID,"/textures/particle/explosion_stages.png");
 	public static int[] defultModel=new int[32];
 	
@@ -66,7 +70,8 @@ public class ParticleMistyEnergyFactory extends ParticleFactory{
 	@Override
 	public void compileDisplayList(){
 		if(defultModel[0]!=-1){
-			for(int i=0;i<defultModel.length;i++)GL11.glDeleteLists(defultModel[i], 1);
+			for(int element:defultModel)
+				GL11.glDeleteLists(element, 1);
 		}
 		for(int part=0;part<2;part++){
 			for(int x=0;x<4;x++){

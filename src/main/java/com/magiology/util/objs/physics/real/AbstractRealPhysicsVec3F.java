@@ -45,7 +45,7 @@ public abstract class AbstractRealPhysicsVec3F{
 					Block block=state.getBlock();
 					AxisAlignedBB bounding=block.getCollisionBoundingBox(state, getWorld(), hit.getBlockPos());
 					if(bounding!=null){
-						surfaceHit(new DoubleObject<Vec3M, Vec3M>(Vec3M.conv(hit.hitVec), new Vec3M().offset(hit.sideHit)));
+						surfaceHit(new DoubleObject<Vec3M, Vec3M>(new Vec3M(hit.hitVec), new Vec3M().offset(hit.sideHit)));
 						Vec3M pos=getPos();
 						if(bounding.isVecInside(pos.conv())){
 							double 

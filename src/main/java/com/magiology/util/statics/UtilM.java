@@ -23,14 +23,14 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.ArrayUtils;
-
 import com.google.common.collect.ImmutableMap;
 import com.magiology.SoundM;
 import com.magiology.core.MReference;
 import com.magiology.util.objs.ColorF;
 import com.magiology.util.objs.Vec3M;
 import com.mojang.realmsclient.gui.ChatFormatting;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.PropertyInteger;
@@ -157,7 +157,7 @@ public class UtilM{
 	}
 	public static float[] colorToRGBABPercentage(Color color){
 		int[] data=colorToRGBABByte(color);
-		return new float[]{(data[0])/255F,(data[1])/255F,(data[2])/255F,(data[3])/255F};
+		return new float[]{data[0]/255F,data[1]/255F,data[2]/255F,data[3]/255F};
 	}
 	public static float[] countedArray(float start, float end){
 		float[] result=new float[(int)(end-start)];
@@ -285,7 +285,7 @@ public class UtilM{
 	@Deprecated
 	public static World world(Object object){
 		if(object instanceof Entity)return((Entity)object).worldObj;
-		if(object instanceof World)return((World)object);
+		if(object instanceof World)return (World)object;
 		if(object instanceof TileEntity)return((TileEntity)object).getWorld();
 		if(object instanceof EntityEvent)return((EntityEvent)object).getEntity().worldObj;
 		if(object instanceof BlockEvent)return((BlockEvent)object).getWorld();
@@ -530,8 +530,8 @@ public class UtilM{
 	public static double graduallyEqualize(double variable, double goal, double speed){
 		if(speed==0)return variable;
 		speed=Math.abs(speed);
-		if(variable+speed>goal&&(Math.abs((variable+speed)-goal)<speed*1.001))return goal;
-		if(variable-speed<goal&&(Math.abs((variable-speed)-goal)<speed*1.001))return goal;
+		if(variable+speed>goal&&Math.abs(variable+speed-goal)<speed*1.001)return goal;
+		if(variable-speed<goal&&Math.abs(variable-speed-goal)<speed*1.001)return goal;
 		
 		if(variable<goal)variable+=speed;
 		else if(variable>goal)variable-=speed;
@@ -608,9 +608,9 @@ public class UtilM{
 			char c=src[i];
 			if(i>0&&Character.isUpperCase(c)){
 				char prev=src[i-1];
-				boolean isPrevLower=Character.isLowerCase(prev);
 				
 				if(prev!='_'){
+					boolean isPrevLower=Character.isLowerCase(prev);
 					if(i+1<src.length&&Character.isLowerCase(src[i+1])&&!isPrevLower)result.append('_');
 					else if(isPrevLower)result.append('_');
 				}
@@ -624,9 +624,13 @@ public class UtilM{
 
 	public static String removeMcObjectEnd(String name){
 		String lower=name.toLowerCase();
-		if(lower.endsWith("block"))return name.substring(0,name.length()-"block".length());
-		if(lower.endsWith("tileentity"))return name.substring(0,name.length()-"tileentity".length());
-		if(lower.endsWith("entity"))return name.substring(0,name.length()-"entity".length());
+		if(lower.endsWith("block"))name=name.substring(0,name.length()-"block".length());
+		if(lower.endsWith("tileentity"))name=name.substring(0,name.length()-"tileentity".length());
+		if(lower.endsWith("entity"))name=name.substring(0,name.length()-"entity".length());
+		
+		if(lower.startsWith("block"))name=name.substring(name.length()-"block".length());
+		if(lower.startsWith("tileentity"))name=name.substring(name.length()-"tileentity".length());
+		if(lower.startsWith("entity"))name=name.substring(name.length()-"entity".length());
 		return name;
 	}
 }

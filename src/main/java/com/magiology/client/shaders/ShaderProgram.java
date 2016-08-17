@@ -2,13 +2,13 @@ package com.magiology.client.shaders;
 
 import java.nio.FloatBuffer;
 
+import com.magiology.util.objs.ColorF;
+import com.magiology.util.objs.Vec3M;
+
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.vector.Matrix4f;
-
-import com.magiology.util.objs.ColorF;
-import com.magiology.util.objs.Vec3M;
 
 public abstract class ShaderProgram{
 	

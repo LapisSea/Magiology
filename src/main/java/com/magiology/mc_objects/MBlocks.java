@@ -1,6 +1,6 @@
 package com.magiology.mc_objects;
 
-import com.magiology.mc_objects.blocks.DimensionStabiliserBlock;
+import com.magiology.features.dimension_stabiliser.DimensionStabiliserBlock;
 import com.magiology.util.objs.DatabaseStorage;
 
 import net.minecraft.block.Block;

@@ -1,10 +1,10 @@
 package com.magiology.util.statics.math;
 
+import com.magiology.util.objs.Vec3M;
+
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
-
-import com.magiology.util.objs.Vec3M;
 
 import net.minecraft.util.math.Vec3d;
 
@@ -167,7 +167,7 @@ public final class MatrixUtil{
 	}
 	
 	public static Vec3d transformVector(Vec3d vectorForTransformation,Matrix4f transformation){
-		return transformVector(Vec3M.conv(vectorForTransformation), transformation).conv();
+		return transformVector(new Vec3M(vectorForTransformation), transformation).conv();
 	}
 	public static Vec3M transformVector(Vec3M vectorForTransformation,Matrix4f transformation){
 		Vector3f result=transformVector(new Vector3f((float)vectorForTransformation.x, (float)vectorForTransformation.y, (float)vectorForTransformation.z), transformation);
@@ -258,6 +258,30 @@ public final class MatrixUtil{
 	public MatrixUtil translate(float x, float y, float z){
 		matrix.translate(new Vector3f(x, y, z));
 		return instance;
+	}
+
+	public static Matrix4f fromArray(float[] src){
+		return fromArray(src,new Matrix4f());
+	}
+	
+	public static Matrix4f fromArray(float[] src, Matrix4f mat){
+		mat.m00=src[0 ];
+		mat.m01=src[1 ];
+		mat.m02=src[2 ];
+		mat.m03=src[3 ];
+		mat.m10=src[4 ];
+		mat.m11=src[5 ];
+		mat.m12=src[6 ];
+		mat.m13=src[7 ];
+		mat.m20=src[8 ];
+		mat.m21=src[9 ];
+		mat.m22=src[10];
+		mat.m23=src[11];
+		mat.m30=src[12];
+		mat.m31=src[13];
+		mat.m32=src[14];
+		mat.m33=src[15];
+		return mat;
 	}
 	
 }

@@ -1,8 +1,6 @@
 package com.magiology.mc_objects.particles;
 
-import org.lwjgl.opengl.GL11;
-
-import com.magiology.client.VertexRenderer;
+import com.magiology.client.renderers.AdvancedRenderer;
 import com.magiology.handlers.particle.ParticleFactory;
 import com.magiology.handlers.particle.ParticleM;
 import com.magiology.util.objs.ColorF;
@@ -13,6 +11,9 @@ import com.magiology.util.statics.RandUtil;
 import com.magiology.util.statics.UtilM;
 import com.magiology.util.statics.math.PartialTicksUtil;
 
+import org.lwjgl.opengl.GL11;
+
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.relauncher.Side;
@@ -21,6 +22,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ParticleCubeFactory extends ParticleFactory{
 	
 	public static int defultModel=-1;
+	private final static ParticleCubeFactory instance=new ParticleCubeFactory();
+	public static ParticleCubeFactory get(){return instance;}
+	private ParticleCubeFactory(){}
 	
 	public void spawn(Vec3M pos, Vec3M speed, float size, float lifeTime, float gravity, ColorF color){
 		spawn(pos, speed, size, lifeTime, new Vec3M(0, gravity, 0), color);
@@ -50,24 +54,24 @@ public class ParticleCubeFactory extends ParticleFactory{
 	@Override
 	public void setUpOpenGl(){
 		AlphaFunc.ALL.bind();
-		OpenGLM.disableTexture2D();
-		OpenGLM.enableLighting();
+		GlStateManager.disableTexture2D();
+		GlStateManager.enableLighting();
 		RenderHelper.enableStandardItemLighting();
-		OpenGLM.enableRescaleNormal();
+		GlStateManager.enableRescaleNormal();
 	}
 	
 	@Override
 	public void resetOpenGl(){
 		RenderHelper.disableStandardItemLighting();
-		OpenGLM.disableLighting();
-		OpenGLM.enableTexture2D();
+		GlStateManager.disableLighting();
+		GlStateManager.enableTexture2D();
 	}
 	
 	@Override
 	public void compileDisplayList(){
 		if(defultModel!=-1)GL11.glDeleteLists(defultModel, 1);
 		startList();
-		VertexRenderer buff=new VertexRenderer();
+		AdvancedRenderer buff=new AdvancedRenderer();
 		
 		buff.addVertex( 0.5, -0.5, -0.5);
 		buff.addVertex( 0.5,  0.5, -0.5);

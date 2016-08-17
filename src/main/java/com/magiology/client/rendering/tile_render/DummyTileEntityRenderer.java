@@ -1,14 +1,14 @@
 package com.magiology.client.rendering.tile_render;
 
-import com.magiology.mc_objects.tileentitys.DummyTileEntity;
+import com.magiology.features.dimension_stabiliser.TileEntityDimensionStabiliser;
 import com.magiology.util.m_extensions.TileEntitySpecialRendererM;
 import com.magiology.util.objs.Vec3M;
 
-public class DummyTileEntityRenderer extends TileEntitySpecialRendererM<DummyTileEntity>{
+public class DummyTileEntityRenderer extends TileEntitySpecialRendererM<TileEntityDimensionStabiliser>{
 	
 	
 	@Override
-	public void renderTileEntityAt(DummyTileEntity tileEntity, Vec3M renderPos, float partialTicks){
+	public void renderTileEntityAt(TileEntityDimensionStabiliser tileEntity, Vec3M renderPos, float partialTicks){
 		////		PrintUtil.printStackTrace();
 		//		OpenGLM.pushMatrix();
 		////		EntityPlayer player=UtilC.getThePlayer();

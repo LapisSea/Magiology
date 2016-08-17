@@ -20,8 +20,8 @@ public class RealPhysicsMesh{
 	
 	public static enum MaterialStrategy{
 		NO_INTERACTION(          new ObjectProcessor<Boolean>(){@Override public Boolean process(Boolean object, Object... objects){return false;}},false),
-		ONLY_BIGGER_SUPPRESSING( new ObjectProcessor<Boolean>(){@Override public Boolean process(Boolean object, Object... objects){return ((Float)objects[0])>0;}},true),
-		ONLY_SMALLER_SUPPRESSING(new ObjectProcessor<Boolean>(){@Override public Boolean process(Boolean object, Object... objects){return ((Float)objects[0])<0;}},true),
+		ONLY_BIGGER_SUPPRESSING( new ObjectProcessor<Boolean>(){@Override public Boolean process(Boolean object, Object... objects){return (Float)objects[0]>0;}},true),
+		ONLY_SMALLER_SUPPRESSING(new ObjectProcessor<Boolean>(){@Override public Boolean process(Boolean object, Object... objects){return (Float)objects[0]<0;}},true),
 		STATIC_DISTANCE(         new ObjectProcessor<Boolean>(){@Override public Boolean process(Boolean object, Object... objects){return true;}},true);
 		
 		private final ObjectProcessor<Boolean> check;

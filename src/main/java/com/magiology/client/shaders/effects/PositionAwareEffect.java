@@ -2,20 +2,20 @@ package com.magiology.client.shaders.effects;
 
 import java.lang.reflect.Method;
 
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
-
 import com.magiology.util.interf.ObjectReturn;
 import com.magiology.util.objs.DoubleObject;
 import com.magiology.util.objs.Vec2FM;
 import com.magiology.util.objs.Vec3M;
-import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.UtilC;
 import com.magiology.util.statics.UtilM;
 import com.magiology.util.statics.math.MatrixUtil;
 import com.magiology.util.statics.math.PartialTicksUtil;
 
+import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
+
 import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.culling.ClippingHelperImpl;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 
@@ -38,22 +38,22 @@ public abstract class PositionAwareEffect{
 		}
 	}).process();
 	public static void updateViewTransformation(){
-		//Isolate transformation from any outside effects and create a clean camera transformation that is correct for the curent frame
-		OpenGLM.pushMatrix();
-		OpenGLM.loadIdentity();
+		//Isolate transformation from any outside effects and create a clean camera transformation that is correct for the current frame
+		GlStateManager.pushMatrix();
+		GlStateManager.loadIdentity();
 		
 		try{
 			setupCamViewFunc.invoke(UtilC.getER(), PartialTicksUtil.partialTicks,0);
 		}catch(Exception e){e.printStackTrace();}
 		
-		viewTransformation=new net.minecraft.client.renderer.Matrix4f(ClippingHelperImpl.getInstance().clippingMatrix);
+		viewTransformation=MatrixUtil.fromArray(ClippingHelperImpl.getInstance().clippingMatrix);
 		viewTransformation.translate(new Vector3f(
 			-(float)TileEntityRendererDispatcher.staticPlayerX,
 			-(float)TileEntityRendererDispatcher.staticPlayerY,
 			-(float)TileEntityRendererDispatcher.staticPlayerZ
 		));
 		
-		OpenGLM.popMatrix();
+		GlStateManager.popMatrix();
 	}
 	public static DoubleObject<Vec2FM, Float> convertWorldToScreenPos(Vec3M worldPos){
 		Vec3M pos=MatrixUtil.transformVector(worldPos, viewTransformation);

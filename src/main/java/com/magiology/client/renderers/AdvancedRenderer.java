@@ -1,27 +1,33 @@
-package com.magiology.client;
-
+package com.magiology.client.renderers;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
-
-import com.magiology.client.Renderer.RendererBase;
+import com.magiology.client.renderers.Renderer.RendererBase;
 import com.magiology.util.objs.Vec3M;
 import com.magiology.util.objs.physics.real.GeometryUtil;
 import com.magiology.util.statics.PrintUtil;
-import com.magiology.util.statics.UtilM.U;
+import com.magiology.util.statics.UtilM;
 import com.magiology.util.statics.math.MatrixUtil;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import net.minecraft.client.model.PositionTextureVertex;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * 
+ * @author LapisSea
+ * 
+ * @description Provides high flexibility model building. Performance inefficient hence not recommended for "live rendering" aka calling draw every frame instead of building a render list.
+ *
+ */
 @SideOnly(Side.CLIENT)
-public class VertexRenderer{
+public class AdvancedRenderer{
 	
 	public static class ShadedQuad{
 		public Vec3M normal1=null,normal2=null;
@@ -34,7 +40,7 @@ public class VertexRenderer{
 		public void recalculateNormal(){
 			Vec3d vec3 =this.pos4[1].vector3D.subtractReverse(this.pos4[0].vector3D);
 			Vec3d vec31=this.pos4[1].vector3D.subtractReverse(this.pos4[2].vector3D);
-			normal1 = Vec3M.conv(vec31.crossProduct(vec3).normalize());
+			normal1 = new Vec3M(vec31.crossProduct(vec3).normalize());
 		}
 	}
 	protected final static float NULL_UV_ID=123456789;
@@ -46,20 +52,20 @@ public class VertexRenderer{
 	protected List<Vector3f> rotationStacks=new ArrayList<>();
 	
 	protected List<ShadedQuad> shadedTriangles=new ArrayList<>();
-	protected List<VertexRenderer> subBuffers=new ArrayList<>();
+	protected List<AdvancedRenderer> subBuffers=new ArrayList<>();
 	
 	protected Matrix4f transformation=new Matrix4f();
 	protected List<Matrix4f> transformationStacks=new ArrayList<>();
 	
-	protected VertexRenderer transformedBuffer;
+	protected AdvancedRenderer transformedBuffer;
 	protected List<PositionTextureVertex> unfinishedTriangle=new ArrayList<>();
 	
-	public VertexRenderer(){
+	public AdvancedRenderer(){
 		this(true);
 	}
 	
-	public VertexRenderer(boolean hasTransformedBuffer){
-		if(hasTransformedBuffer)transformedBuffer=new VertexRenderer(false);
+	public AdvancedRenderer(boolean hasTransformedBuffer){
+		if(hasTransformedBuffer)transformedBuffer=new AdvancedRenderer(false);
 	}
 	public void addVertex(double x,double y,double z){
 		addVertexWithUV(x,y,z, NULL_UV_ID, NULL_UV_ID);
@@ -80,8 +86,8 @@ public class VertexRenderer{
 		unfinishedTriangle.clear();
 		if(transformedBuffer!=null)transformedBuffer.cleanUp();
 	}
-	public VertexRenderer createNewSubBuffer(){
-		VertexRenderer result=new VertexRenderer();
+	public AdvancedRenderer createNewSubBuffer(){
+		AdvancedRenderer result=new AdvancedRenderer();
 		subBuffers.add(result);
 		result.instantNormalCalculation=instantNormalCalculation;
 		result.willDrawAsAWireFrame=willDrawAsAWireFrame;
@@ -113,8 +119,8 @@ public class VertexRenderer{
 	private ShadedQuad generateShadedQuad(PositionTextureVertex pos0,PositionTextureVertex pos1,PositionTextureVertex pos2,PositionTextureVertex pos3,boolean hasNormal){
 		Vec3M normal1,normal2;
 		if(hasNormal&&instantNormalCalculation){
-			normal1=Vec3M.conv(GeometryUtil.getNormal(pos0.vector3D, pos1.vector3D, pos2.vector3D));
-			normal2=Vec3M.conv(GeometryUtil.getNormal(pos2.vector3D, pos3.vector3D, pos0.vector3D));
+			normal1=new Vec3M(GeometryUtil.getNormalD(pos0.vector3D, pos1.vector3D, pos2.vector3D));
+			normal2=new Vec3M(GeometryUtil.getNormalD(pos2.vector3D, pos3.vector3D, pos0.vector3D));
 		}
 		else {
 			normal1=normal2=new Vec3M(0, 1, 0);
@@ -146,7 +152,7 @@ public class VertexRenderer{
 	}
 	public void pasteToTesselator(boolean type){
 
-		for(VertexRenderer a:subBuffers){
+		for(AdvancedRenderer a:subBuffers){
 			for(ShadedQuad b:a.shadedTriangles){
 				MatrixUtil.transformVector(b.normal1, new Vector3f(),a.rotation.x,a.rotation.y,a.rotation.z,1);
 				for(int b1=0;b1<4;b1++)b.pos4[b1].vector3D=MatrixUtil.transformVector(b.pos4[b1].vector3D, a.transformation);
@@ -169,7 +175,7 @@ public class VertexRenderer{
 	}
 	public void popMatrix(){
 		if(transformationStacks.isEmpty()){
-			PrintUtil.println("Buffer is out of stacks to pop! You need to push before popping!\nFunction aborted.",U.getStackTrace());
+			PrintUtil.println("Buffer is out of stacks to pop! You need to push before popping!\nFunction aborted.",UtilM.getStackTrace());
 			return;
 		}
 		int pos=transformationStacks.size()-1;
@@ -237,10 +243,10 @@ public class VertexRenderer{
 	
 	protected void tesselateLines(ShadedQuad triangle){
 		Vec3M finalVectors[]={
-				MatrixUtil.transformVector(Vec3M.conv(triangle.pos4[0].vector3D), transformation),
-				MatrixUtil.transformVector(Vec3M.conv(triangle.pos4[1].vector3D), transformation),
-				MatrixUtil.transformVector(Vec3M.conv(triangle.pos4[2].vector3D), transformation),
-				MatrixUtil.transformVector(Vec3M.conv(triangle.pos4[3].vector3D), transformation)
+				MatrixUtil.transformVector(new Vec3M(triangle.pos4[0].vector3D), transformation),
+				MatrixUtil.transformVector(new Vec3M(triangle.pos4[1].vector3D), transformation),
+				MatrixUtil.transformVector(new Vec3M(triangle.pos4[2].vector3D), transformation),
+				MatrixUtil.transformVector(new Vec3M(triangle.pos4[3].vector3D), transformation)
 		};
 		Renderer.POS.addVertex(finalVectors[0].x, finalVectors[0].y, finalVectors[0].z);
 		Renderer.POS.addVertex(finalVectors[1].x, finalVectors[1].y, finalVectors[1].z);
@@ -272,7 +278,7 @@ public class VertexRenderer{
 		Matrix4f.mul(transformation, MatrixUtil.createMatrix(new Vector3f((float)x, (float)y, (float)z), (float)rotX, (float)rotY, (float)rotZ, (float)scale).finish(), transformation);
 	}
 	
-	public void transformAndSaveTo(VertexRenderer buff){
+	public void transformAndSaveTo(AdvancedRenderer buff){
 		try{
 			boolean isItself=buff==null||buff==this;
 			List<ShadedQuad> buffer=isItself?new ArrayList<>():buff.shadedTriangles;

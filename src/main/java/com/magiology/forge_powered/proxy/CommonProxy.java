@@ -1,9 +1,9 @@
 package com.magiology.forge_powered.proxy;
 
 import com.magiology.core.MReference;
+import com.magiology.features.MRegistery;
 import com.magiology.forge_powered.events.TickEvents;
-import com.magiology.mc_objects.MBlocks;
-import com.magiology.mc_objects.tileentitys.DummyTileEntity;
+import com.magiology.util.interf.ObjectProcessor;
 import com.magiology.util.m_extensions.TileEntityM;
 import com.magiology.util.statics.UtilM;
 
@@ -19,8 +19,14 @@ public class CommonProxy{
 	}
 	
 	public void preInit(){
-		loadBlocks();
-		loadTileEntitys();
+		MRegistery.registerBlocks(((ObjectProcessor<Block>)(obj,a)->{
+			registerBlock(obj);
+			return obj;
+		}));
+		MRegistery.registerTileEntitys(((ObjectProcessor<Class<? extends TileEntityM>>)(clazz,a)->{
+			GameRegistry.registerTileEntity(clazz, "te_"+UtilM.standardizeName(UtilM.removeMcObjectEnd(clazz.getSimpleName())));
+			return clazz;
+		}));
 	}
 	
 	public void init(){
@@ -35,9 +41,6 @@ public class CommonProxy{
 		
 	}
 	
-	private void loadBlocks(){
-		for(Block block:MBlocks.allBlocks())registerBlock(block);
-	}
 	private ItemBlock registerBlock(Block block){
 		return registerBlock(block,block.getClass().getSimpleName());
 	}
@@ -51,14 +54,6 @@ public class CommonProxy{
 		return ib;
 	}
 	
-	
-	private void loadTileEntitys(){
-		register(DummyTileEntity.class);
-	}
-	private static void register(Class<? extends TileEntityM> clazz){
-		String name=clazz.getSimpleName().substring("TileEntity".length());
-		GameRegistry.registerTileEntity(clazz, "TE"+name);
-	}
 	
 }
 

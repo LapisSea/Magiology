@@ -16,7 +16,7 @@ public class RandUtil{
 	}
 
 	public static int CRI(int scale){
-		return(scale-RI(scale*2));
+		return scale-RI(scale*2);
 	}
 
 	public static boolean RB(){

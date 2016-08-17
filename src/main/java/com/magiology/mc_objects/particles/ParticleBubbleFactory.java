@@ -1,8 +1,6 @@
 package com.magiology.mc_objects.particles;
 
-import org.lwjgl.opengl.GL11;
-
-import com.magiology.client.VertexRenderer;
+import com.magiology.client.renderers.AdvancedRenderer;
 import com.magiology.handlers.particle.ParticleFactory;
 import com.magiology.handlers.particle.ParticleM;
 import com.magiology.util.objs.ColorF;
@@ -11,15 +9,21 @@ import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.OpenGLM.AlphaFunc;
 import com.magiology.util.statics.OpenGLM.BlendFunc;
 import com.magiology.util.statics.RandUtil;
-import com.magiology.util.statics.UtilM;
 import com.magiology.util.statics.math.PartialTicksUtil;
 
+import org.lwjgl.opengl.GL11;
+
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ParticleBubbleFactory extends ParticleFactory{
+
+	private final static ParticleBubbleFactory instance=new ParticleBubbleFactory();
+	public static ParticleBubbleFactory get(){return instance;}
+	private ParticleBubbleFactory(){}
 	
 	public static int defultModel=-1;
 	
@@ -28,7 +32,7 @@ public class ParticleBubbleFactory extends ParticleFactory{
 	}
 	
 	public void spawn(Vec3M pos, Vec3M speed, float size, float lifeTime, Vec3M gravity, ColorF color){
-		if(!UtilM.isRemote()||!shouldSpawn(pos))return;
+		if(!shouldSpawn(pos))return;
 		addParticle(new ParticleBubble(pos, speed, size, lifeTime, gravity, color));
 	}
 	
@@ -50,24 +54,26 @@ public class ParticleBubbleFactory extends ParticleFactory{
 	@Override
 	public void setUpOpenGl(){
 		AlphaFunc.ALL.bind();
-		OpenGLM.disableTexture2D();
-		OpenGLM.enableLighting();
+		GlStateManager.disableTexture2D();
+		GlStateManager.enableLighting();
 		RenderHelper.enableStandardItemLighting();
-		OpenGLM.enableRescaleNormal();
+		GlStateManager.enableRescaleNormal();
+//		if(UtilC.getThePlayer().isSneaking())compileDisplayList();
 	}
 	
 	@Override
 	public void resetOpenGl(){
 		RenderHelper.disableStandardItemLighting();
-		OpenGLM.disableLighting();
-		OpenGLM.enableTexture2D();
+		GlStateManager.disableLighting();
+		GlStateManager.enableTexture2D();
+		OpenGLM.endOpaqueRendering();
 	}
 	
 	@Override
 	public void compileDisplayList(){
 		if(defultModel!=-1)GL11.glDeleteLists(defultModel, 1);
 		startList();
-		VertexRenderer buff=new VertexRenderer();
+		AdvancedRenderer buff=new AdvancedRenderer();
 		
 		buff.addVertex( 0.5, -0.5, -0.5);
 		buff.addVertex( 0.5,  0.5, -0.5);
@@ -118,12 +124,21 @@ public class ParticleBubbleFactory extends ParticleFactory{
 			setGravity(gravity);
 			setColor(color);
 			originalSize=size;
+			originalAlpha=color.a;
 		}
 		
 		@Override
 		public void update(){
 			super.update();
-			float mul=1-Math.abs((getParticleAge()*2-lifeTime)/lifeTime);
+			float mul=1,age=getParticleAge(),age3=age*3;
+			
+			if(age3<lifeTime)mul=age3/lifeTime;
+			else if(age3-lifeTime*2>0){
+				float add=Math.min(1, (age-lifeTime)/lifeTime*-10F/3);
+				getColor().a=originalAlpha*add;
+				mul=2-add;
+				mul*=mul;
+			}
 			setSize(originalSize*(float)Math.sqrt(mul));
 			prevRotation.set(rotation);
 			
@@ -156,6 +171,8 @@ public class ParticleBubbleFactory extends ParticleFactory{
 			OpenGLM.translate(PartialTicksUtil.calculate(this));
 			OpenGLM.rotate(PartialTicksUtil.calculate(prevRotation, rotation));
 			OpenGLM.scale(PartialTicksUtil.calculate(getPrevSize(), getSize()));
+			double angle=(getParticleAge()+PartialTicksUtil.partialTicks)/3,mul=0.15;
+			OpenGLM.scale(1+Math.sin(angle)*mul-mul,1+Math.sin(angle+1.5)*mul-mul,1+Math.sin(angle+3)*mul-mul);
 			ColorF color=getColor();
 			OpenGLM.color(color);
 			if(color.a<254/255F)OpenGLM.setUpOpaqueRendering(BlendFunc.NORMAL);

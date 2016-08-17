@@ -13,6 +13,7 @@ import com.magiology.util.statics.math.PartialTicksUtil;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -70,10 +71,10 @@ public class ParticleHandler{
 		try{
 			interpPos=PartialTicksUtil.calculate(UtilC.getViewEntity()).mul(-1);
 	        
-			OpenGLM.pushMatrix();
+			GlStateManager.pushMatrix();
 			OpenGLM.translate(interpPos);
 			particleFactories.forEach(type->type.render(ActiveRenderInfo.getRotationX(), ActiveRenderInfo.getRotationXZ(), ActiveRenderInfo.getRotationZ(), ActiveRenderInfo.getRotationYZ(), ActiveRenderInfo.getRotationXY()));
-			OpenGLM.popMatrix();
+			GlStateManager.popMatrix();
 			
 		}catch(Exception e){
 			e.printStackTrace();

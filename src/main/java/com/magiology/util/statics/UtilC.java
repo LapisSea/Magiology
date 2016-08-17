@@ -1,9 +1,9 @@
 package com.magiology.util.statics;
 
-import org.apache.commons.lang3.ArrayUtils;
-
 import com.magiology.util.objs.Vec2i;
 import com.magiology.util.statics.math.PartialTicksUtil;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -40,7 +40,7 @@ public class UtilC{
 
 	public static float fluctuate(double speed, double offset){
 		double wtt=getWorldTime()+offset;
-		double helper=(wtt%speed)/(speed/2F);
+		double helper=wtt%speed/(speed/2F);
 		return (float) (helper>1?2-helper:helper);
 	}
 
@@ -88,7 +88,7 @@ public class UtilC{
 			for(int j=0;j<i;j++)columnOffsets[i]+=longestInColumn[j]+marginX;
 		}
 		
-		for(int i=0;i<strings.length;i++)result[i]=new Vec2i(columnOffsets[(i/lines)%columns], (i%lines)*(fr.FONT_HEIGHT+marginY)+marginY);
+		for(int i=0;i<strings.length;i++)result[i]=new Vec2i(columnOffsets[i/lines%columns], i%lines*(fr.FONT_HEIGHT+marginY)+marginY);
 		return result;
 	}
 

@@ -1,8 +1,8 @@
 package com.magiology.util.m_extensions;
 
-import javax.annotation.Nullable;
-
 import com.magiology.util.statics.UtilM;
+
+import javax.annotation.Nullable;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
