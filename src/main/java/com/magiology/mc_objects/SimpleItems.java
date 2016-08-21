@@ -1,4 +1,4 @@
-package com.magiology.features;
+package com.magiology.mc_objects;
 
 import net.minecraft.item.Item;
 

@@ -1,6 +1,6 @@
 package com.magiology.client.rendering.tile_render;
 
-import com.magiology.features.dimension_stabiliser.TileEntityDimensionStabiliser;
+import com.magiology.mc_objects.features.dimension_stabiliser.TileEntityDimensionStabiliser;
 import com.magiology.util.m_extensions.TileEntitySpecialRendererM;
 import com.magiology.util.objs.Vec3M;
 

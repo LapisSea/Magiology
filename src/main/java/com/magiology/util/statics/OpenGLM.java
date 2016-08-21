@@ -135,6 +135,15 @@ public class OpenGLM extends GlStateManager{
 	public static void rotateZ(double rot){
 		rotate(rot, 0, 0, 1);
 	}
+	public static void rotateX(float rot){
+		rotate(rot, 1, 0, 0);
+	}
+	public static void rotateY(float rot){
+		rotate(rot, 0, 1, 0);
+	}
+	public static void rotateZ(float rot){
+		rotate(rot, 0, 0, 1);
+	}
 
 	public static void scale(double scale){
 		scale(scale, scale, scale);
@@ -149,6 +158,11 @@ public class OpenGLM extends GlStateManager{
 	public static void bindTexture(ResourceLocation texture){
 		UtilC.getMC().renderEngine.bindTexture(texture);
 	}
+	
+	public static void test(){
+	}
 
+	public static void test(Vec3M calculate, float radius, float xAngle, float yAngle, float zAngle){
+	}
 	
 }

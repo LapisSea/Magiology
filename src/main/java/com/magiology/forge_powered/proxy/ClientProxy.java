@@ -3,13 +3,10 @@ package com.magiology.forge_powered.proxy;
 import com.magiology.client.rendering.tile_render.DummyTileEntityRenderer;
 import com.magiology.client.shaders.ShaderHandler;
 import com.magiology.core.MReference;
-import com.magiology.features.MRegistery;
-import com.magiology.features.dimension_stabiliser.TileEntityDimensionStabiliser;
 import com.magiology.forge_powered.events.RenderEvents;
-import com.magiology.handlers.particle.ParticleFactory;
-import com.magiology.handlers.particle.ParticleHandler;
 import com.magiology.mc_objects.MBlocks;
-import com.magiology.util.interf.ObjectProcessor;
+import com.magiology.mc_objects.features.dimension_stabiliser.TileEntityDimensionStabiliser;
+import com.magiology.mc_objects.particles.Particles;
 import com.magiology.util.m_extensions.TileEntityM;
 import com.magiology.util.m_extensions.TileEntitySpecialRendererM;
 import com.magiology.util.objs.EnhancedRobot;
@@ -54,10 +51,8 @@ public class ClientProxy extends CommonProxy{
 		MinecraftForge.EVENT_BUS.register(new RenderEvents());
 		registerTileRedners();
 		registerTileJsons();
-		MRegistery.registerParticles(((ObjectProcessor<ParticleFactory>)(obj,a)->{
-			ParticleHandler.instance.registerParticle(obj);
-			return obj;
-		}));
+		
+		Particles.get().register();
 	}
 	
 	@Override
@@ -72,7 +67,7 @@ public class ClientProxy extends CommonProxy{
 	private void registerTileJsons(){
 		ItemModelMesher mesher=OpenGLM.getRI().getItemModelMesher();
 		
-		for(ITileEntityProvider i:MBlocks.instance.getByExtension(ITileEntityProvider.class)){
+		for(ITileEntityProvider i:MBlocks.get().getByExtension(ITileEntityProvider.class)){
 			Block block=(Block)i;
 			EnumBlockRenderType type=EnumBlockRenderType.INVISIBLE;
 			try{

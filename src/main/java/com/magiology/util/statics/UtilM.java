@@ -340,21 +340,21 @@ public class UtilM{
 		return i.keySet().contains(META);
 	}
 	
-	public static boolean instanceOf(Class tester, Class instance){
+	public static boolean instanceOf(Class toBeTested, Class instance){
 		try{
-			tester.asSubclass(instance);
+			toBeTested.asSubclass(instance);
 			return true;
 		}catch(Exception ignored){}
 		return false;
 	}
-	public static boolean instanceOf(Object tester, Class instance){
-		return instanceOf(tester.getClass(), instance);
+	public static boolean instanceOf(Object toBeTested, Class instance){
+		return instanceOf(toBeTested.getClass(), instance);
 	}
-	public static boolean instanceOf(Class tester, Object instance){
-		return instanceOf(tester, instance.getClass());
+	public static boolean instanceOf(Class toBeTested, Object instance){
+		return instanceOf(toBeTested, instance.getClass());
 	}
-	public static boolean instanceOf(Object tester, Object instance){
-		return instanceOf(tester.getClass(), instance.getClass());
+	public static boolean instanceOf(Object toBeTested, Object instance){
+		return instanceOf(toBeTested.getClass(), instance.getClass());
 	}
 	
 	public static boolean intToBoolean(int i){return i==1;}
@@ -624,13 +624,15 @@ public class UtilM{
 
 	public static String removeMcObjectEnd(String name){
 		String lower=name.toLowerCase();
-		if(lower.endsWith("block"))name=name.substring(0,name.length()-"block".length());
+		if(lower.endsWith("block"     ))name=name.substring(0,name.length()-"block"     .length());
 		if(lower.endsWith("tileentity"))name=name.substring(0,name.length()-"tileentity".length());
-		if(lower.endsWith("entity"))name=name.substring(0,name.length()-"entity".length());
+		if(lower.endsWith("entity"    ))name=name.substring(0,name.length()-"entity"    .length());
+		if(lower.endsWith("item"      ))name=name.substring(0,name.length()-"item"      .length());
 		
-		if(lower.startsWith("block"))name=name.substring(name.length()-"block".length());
+		if(lower.startsWith("block"     ))name=name.substring(name.length()-"block"     .length());
 		if(lower.startsWith("tileentity"))name=name.substring(name.length()-"tileentity".length());
-		if(lower.startsWith("entity"))name=name.substring(name.length()-"entity".length());
+		if(lower.startsWith("entity"    ))name=name.substring(name.length()-"entity"    .length());
+		if(lower.startsWith("item"      ))name=name.substring(name.length()-"item"      .length());
 		return name;
 	}
 }

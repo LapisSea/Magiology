@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.magiology.util.statics.PrintUtil;
-import com.magiology.util.statics.classload.ClassList;
+import com.magiology.util.statics.class_manager.ClassList;
 
 public class ShaderHandler{
 	

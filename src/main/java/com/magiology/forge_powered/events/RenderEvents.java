@@ -5,7 +5,7 @@ import java.util.Queue;
 import com.google.common.collect.Queues;
 import com.magiology.client.shaders.ShaderHandler;
 import com.magiology.client.shaders.effects.PositionAwareEffect;
-import com.magiology.client.shaders.programs.Template;
+import com.magiology.client.shaders.programs.InvisibleEffect;
 import com.magiology.handlers.particle.ParticleHandler;
 import com.magiology.util.objs.Vec3M;
 import com.magiology.util.statics.OpenGLM;
@@ -16,7 +16,10 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.passive.EntitySquid;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
@@ -37,9 +40,9 @@ public class RenderEvents{
 	@SubscribeEvent(priority=EventPriority.HIGHEST)
 	public void renderWorldLast(RenderWorldLastEvent e){
 		PositionAwareEffect.updateViewTransformation();
-		ParticleHandler.instance.renderParticles();
+		ParticleHandler.get().renderParticles();
 		if(!invisibleEntitys.isEmpty()){
-			Template shader=ShaderHandler.getShader(Template.class);
+			InvisibleEffect shader=ShaderHandler.getShader(InvisibleEffect.class);
 			if(shader.shouldRender()){
 				RenderManager renderManager=UtilC.getMC().getRenderManager();
 				GlStateManager.pushMatrix();
@@ -84,16 +87,38 @@ public class RenderEvents{
 		//		Template.unbind();
 		//		OpenGLM.popMatrix();
 	}
-
+	private boolean flag;
 	@SubscribeEvent(priority=EventPriority.HIGHEST)
 	public void renderEntityPre(RenderLivingEvent.Pre e){
-		EntityLivingBase en=e.getEntity();
-		if(en.isInvisibleToPlayer(UtilC.getThePlayer()))invisibleEntitys.add(en);
+		Entity en=e.getEntity();
+		if(en.isInvisibleToPlayer(UtilC.getThePlayer())&&en instanceof EntityLivingBase)invisibleEntitys.add((EntityLivingBase)en);
+		
+		if(en instanceof EntityPlayer){
+			EntityPlayer player=(EntityPlayer)en;
+			
+			en=player.getRidingEntity();
+			if(en instanceof EntitySquid){
+				EntitySquid squid=(EntitySquid)en;
+				flag=true;
+				
+				OpenGLM.pushMatrix();
+
+				OpenGLM.rotateY(-PartialTicksUtil.calculate(squid.prevRenderYawOffset,squid.renderYawOffset));
+				OpenGLM.rotateX(-PartialTicksUtil.calculate(squid.prevSquidPitch,squid.squidPitch)+90);
+				OpenGLM.rotateZ(-PartialTicksUtil.calculate(squid.prevSquidYaw,squid.squidYaw));
+				OpenGLM.translate(0, 10/16F, 0);
+				
+				
+				
+			}else flag=false;
+		}else flag=false;
 	}
 	
 	@SubscribeEvent(priority=EventPriority.HIGHEST)
 	public void renderPlayerPost(RenderPlayerEvent.Post e){
-		
+		if(flag){
+			OpenGLM.popMatrix();
+		}
 		
 //		EntityPlayer player=e.getEntityPlayer();
 //		if(player.isInvisibleToPlayer(UtilC.getThePlayer()))return;

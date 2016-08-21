@@ -6,11 +6,11 @@ import net.minecraftforge.fml.common.ModMetadata;
 
 public class MReference{
 	public static final String
-		NAME= "Magiology",
-		MODID= "magiology",
-		VERSION= "0.1052",
-		CHANNEL_NAME= "magicpackets",
-		MOD_START_FOLDER= "com.",
+		NAME="Magiology",
+		MODID="magiology",
+		VERSION="0.1052",
+		CHANNEL_NAME="magicpackets",
+		MOD_START_FOLDER="com.",
 		PROXY_LOCATION=MOD_START_FOLDER+MODID+".forge_powered.proxy",
 		ClIENT_PROXY_LOCATION=PROXY_LOCATION+".ClientProxy",
 		SERVER_PROXY_LOCATION=PROXY_LOCATION+".ServerProxy",

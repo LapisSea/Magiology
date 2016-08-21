@@ -10,7 +10,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
-public class BlockM extends Block{
+public abstract class BlockM extends Block{
 	public static final float p=1F/16F;
 	
 	public BlockM(Material material){

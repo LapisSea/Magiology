@@ -28,7 +28,7 @@ public class TickEvents{
 				
 				Particles.MISTY_ENERGY.spawn(pos.add(new Vec3M(RandUtil.CRF(10), RandUtil.CRF(10), RandUtil.CRF(10))), new Vec3M(), 0.1F, 0, new ColorF(0.7+RandUtil.RF(0.3),0.4+RandUtil.RF(0.4),0.2+RandUtil.RF(0.1),0.3+RandUtil.CRF(0.7)));
 				//if(UtilC.getThePlayer().isSneaking())Particles.MISTY_ENERGY.compileDisplayList();
-				ParticleHandler.instance.updateParticles();
+				ParticleHandler.get().updateParticles();
 //				if(UtilC.getWorldTime()%60==0){
 //					ShaderHandler.get().load();
 //					PrintUtil.println("shaders reloaded");

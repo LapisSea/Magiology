@@ -35,7 +35,7 @@ public abstract class ParticleFactory{
 
 	@SideOnly(Side.CLIENT)
 	protected boolean shouldSpawn(Vec3M spawnPos){
-		return ParticleHandler.instance.shouldSpawn(this, spawnPos);
+		return ParticleHandler.get().shouldSpawn(this, spawnPos);
 	}
 
 	@SideOnly(Side.CLIENT)

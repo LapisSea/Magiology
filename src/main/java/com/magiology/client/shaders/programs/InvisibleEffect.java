@@ -14,9 +14,9 @@ import com.magiology.util.statics.FileUtil;
 
 import org.lwjgl.opengl.Display;
 
-public class Template extends ShaderProgram{
+public class InvisibleEffect extends ShaderProgram{
 	
-	public static Template instance;
+	public static InvisibleEffect instance;
 	public static float screenSizeF;
 
 	private UniformUploaderF2 screenDim;
@@ -26,7 +26,7 @@ public class Template extends ShaderProgram{
 	
 	private Queue<PositionAwareEffect> effects=new ArrayDeque<>();
 	
-	public Template(){
+	public InvisibleEffect(){
 		instance=this;
 		effects.add(SoftEffectsShader.instance);
 	}

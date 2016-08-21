@@ -1,19 +1,69 @@
 package com.magiology.util.statics;
 
+import static org.apache.logging.log4j.Level.*;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializer;
+import com.magiology.core.MReference;
+
+import org.apache.logging.log4j.Level;
+
+import net.minecraftforge.fml.common.FMLLog;
+
+
+@SuppressWarnings("unused")
 public class PrintUtil{
 	
+	/**
+	 * print fancy stuff and things
+	 */
+	public static void printWrapped(Object obj){
+		String[] data=UtilM.toString(obj).split("\n");
+		StringBuilder line=new StringBuilder();
+		
+		int length=0;
+		for(int i=0;i<data.length;i++){
+			String lin=(data[i]=data[i].replaceFirst("\\s+$", ""));
+			length=Math.max(length, lin.length());
+		}
+		
+		if(length>6){
+			line.append("<<");
+			for(int i=0,j=length-4;i<j;i++){
+				line.append('=');
+			}
+			line.append(">>");
+		}
+		else for(int i=0;i<length;i++){
+			line.append('=');
+		}
+		
+		String lineS=line.toString();
+		
+		info(lineS);
+		for(String lin:data){
+			info(lin);
+		}
+		info(lineS);
+	}
 	public static void println(){
-		LogUtil.info("");
+		info("");
 	}
 	public static void println(Object obj){
-		LogUtil.info(UtilM.toString(obj));
+		info(UtilM.toString(obj));
 	}
 	public static void println(Object... objs){
-		LogUtil.info(UtilM.toString(objs));
+		info(UtilM.toString(objs));
+	}
+	public static void printPrettyJsonObj(Object objs){
+		GsonBuilder gsonBuilder=new GsonBuilder().setPrettyPrinting();
+        gsonBuilder.registerTypeAdapter(Class.class, (JsonSerializer<Class>)(clazz,a,b)->new JsonPrimitive(clazz.getSimpleName()));
+        println(gsonBuilder.create().toJson(objs));
 	}
 	
 	public static<T> T printlnAndReturn(T obj){
@@ -21,24 +71,24 @@ public class PrintUtil{
 		return obj;
 	}
 	public static void printlnEr(){
-		LogUtil.error("");
+		error("");
 	}
 	public static void printlnEr(Object obj){
-		LogUtil.error(UtilM.toString(obj));
+		error(UtilM.toString(obj));
 	}
 	
 	public static void printlnEr(Object... objs){
-		LogUtil.error(UtilM.toString(objs));
+		error(UtilM.toString(objs));
 	}
 	public static void printlnInf(){
-		LogUtil.info("");
+		info("");
 	}
 	public static void printlnInf(Object obj){
-		LogUtil.info(UtilM.toString(obj));
+		info(UtilM.toString(obj));
 	}
 	
 	public static void printlnInf(Object... objs){
-		LogUtil.info(UtilM.toString(objs));
+		info(UtilM.toString(objs));
 	}
 
 	public static void printStackTrace(){
@@ -59,4 +109,42 @@ public class PrintUtil{
 		
 		println(result);
 	}
+	
+	private static void all(String object){
+		log(ALL, object);
+	}
+	
+	private static void debug(String object){
+		log(DEBUG, object);
+	}
+	
+	private static void error(String object){
+		log(ERROR, object);
+	}
+	
+	private static void fatal(String object){
+		log(FATAL, object);
+	}
+	
+	private static void info(String object){
+		log(INFO, object);
+	}
+	
+	private static void log(Level logLevel, String object){
+		String[] lines=object.split("\n");
+		for(String line:lines)FMLLog.log(MReference.NAME, logLevel, line);
+	}
+	
+	private static void off(String object){
+		log(OFF, object);
+	}
+	
+	private static void trace(String object){
+		log(TRACE, object);
+	}
+	
+	private static void warn(String object){
+		log(WARN, object);
+	}
+	
 }

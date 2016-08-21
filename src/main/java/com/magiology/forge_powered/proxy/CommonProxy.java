@@ -1,14 +1,13 @@
 package com.magiology.forge_powered.proxy;
 
-import com.magiology.core.MReference;
-import com.magiology.features.MRegistery;
+import com.magiology.forge_powered.events.EntityEvents;
 import com.magiology.forge_powered.events.TickEvents;
-import com.magiology.util.interf.ObjectProcessor;
+import com.magiology.mc_objects.MBlocks;
+import com.magiology.mc_objects.MItems;
 import com.magiology.util.m_extensions.TileEntityM;
 import com.magiology.util.statics.UtilM;
+import com.magiology.util.statics.class_manager.ClassList;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.ItemBlock;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -19,18 +18,15 @@ public class CommonProxy{
 	}
 	
 	public void preInit(){
-		MRegistery.registerBlocks(((ObjectProcessor<Block>)(obj,a)->{
-			registerBlock(obj);
-			return obj;
-		}));
-		MRegistery.registerTileEntitys(((ObjectProcessor<Class<? extends TileEntityM>>)(clazz,a)->{
-			GameRegistry.registerTileEntity(clazz, "te_"+UtilM.standardizeName(UtilM.removeMcObjectEnd(clazz.getSimpleName())));
-			return clazz;
-		}));
+		
+		MBlocks.get().register();
+		MItems.get().register();
+		ClassList.getImplementations(TileEntityM.class).forEach((clazz)->GameRegistry.registerTileEntity(clazz, "te_"+UtilM.standardizeName(UtilM.removeMcObjectEnd(clazz.getSimpleName()))));
 	}
 	
 	public void init(){
 		MinecraftForge.EVENT_BUS.register(TickEvents.instance);
+		MinecraftForge.EVENT_BUS.register(EntityEvents.instance);
 	}
 	
 	public void postInit(){
@@ -41,18 +37,6 @@ public class CommonProxy{
 		
 	}
 	
-	private ItemBlock registerBlock(Block block){
-		return registerBlock(block,block.getClass().getSimpleName());
-	}
-	private ItemBlock registerBlock(Block block,String name){
-		name=UtilM.standardizeName(UtilM.removeMcObjectEnd(name));
-		block.setRegistryName(MReference.MODID, name);
-		block.setUnlocalizedName(name);
-		ItemBlock ib=new ItemBlock(block);
-		GameRegistry.register(block);
-		GameRegistry.register(ib.setRegistryName(MReference.MODID, name));
-		return ib;
-	}
 	
 	
 }

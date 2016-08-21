@@ -11,10 +11,10 @@ public abstract class DatabaseStorage<T>{
 
 	protected Map<Class, List<T>> extensionHistory=new HashMap<>();
 	protected Map<String, List<T>> nameHistory=new HashMap<>();
-	protected final Class<T> base;
+	protected final Class<?extends T> base;
 	
 	
-	public DatabaseStorage(Class<T> base1){
+	public DatabaseStorage(Class<?extends T> base1){
 		base=base1;
 	}
 	

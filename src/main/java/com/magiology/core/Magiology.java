@@ -10,8 +10,10 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.common.eventbus.EventBus;
+import com.magiology.forge_powered.networking.SimpleNetworkWrapperM;
 import com.magiology.forge_powered.proxy.CommonProxy;
 import com.magiology.util.statics.PrintUtil;
+import com.magiology.util.statics.class_manager.ClassList;
 
 import net.minecraftforge.fml.common.LoadController;
 import net.minecraftforge.fml.common.MetadataCollection;
@@ -24,7 +26,6 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.versioning.ArtifactVersion;
 import net.minecraftforge.fml.common.versioning.DefaultArtifactVersion;
 import net.minecraftforge.fml.common.versioning.VersionRange;
@@ -34,32 +35,37 @@ import scala.actors.threadpool.Arrays;
 public class Magiology implements ModContainer{
 	
 	
-	private static boolean IS_DEV;
+	private static final boolean IS_DEV;
 	static{
-		IS_DEV=new File("..\\src\\main\\java\\com\\magiology\\core\\Magiology.java").exists();
-		if(IS_DEV)PrintUtil.println(NAME+" is running in development environment! Work Lapis! Work!");
+		IS_DEV=!Magiology.class.getResource("Magiology.class").toString().startsWith("jar:");
+		if(IS_DEV)PrintUtil.printWrapped(NAME+" is running in development environment! Work Lapis! Work! NO! CLOSE THAT YOUTUBE VIDEO! ");
 	}
 	
 	/***//**variables*//***/
 	
-	public static SimpleNetworkWrapper NETWORK_CHANNEL;
+	public static SimpleNetworkWrapperM NETWORK_CHANNEL;
 	
 	@Instance(value=MODID)
 	private static Magiology instance;
 	
-	@SidedProxy(modId=MODID, clientSide=MReference.ClIENT_PROXY_LOCATION, serverSide=MReference.SERVER_PROXY_LOCATION)
+	@SidedProxy(modId=MODID, clientSide=ClIENT_PROXY_LOCATION, serverSide=SERVER_PROXY_LOCATION)
 	public static CommonProxy sideProxy;
 	public static CommonProxy commonProxy=new CommonProxy();
+	
+	private static String marker=NAME+"_"+MC_VERSION+"-"+VERSION;
 	
 	
 	public Magiology(){
 		instance=this;
+		ClassList.getImplementations();
 	}
 	
 	/***//**forge events*//***/
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event){
+		NETWORK_CHANNEL=new SimpleNetworkWrapperM(CHANNEL_NAME);
+		
 		commonProxy.loadModFiles();
 		sideProxy.loadModFiles();
 		Runtime.getRuntime().addShutdownHook(new Thread(()->{
@@ -67,24 +73,28 @@ public class Magiology implements ModContainer{
 			sideProxy.onExit();
 		}));
 		
-		PrintUtil.println(NAME+"_"+MC_VERSION+"-"+VERSION+" -> "+"Pre initialization started!");
+		PrintUtil.printWrapped(marker+" -> Pre initialization started!");
 		commonProxy.preInit();
 		sideProxy.preInit();
-		PrintUtil.println(NAME+"_"+MC_VERSION+"-"+VERSION+" -> "+"Pre initialization compleate!");
+		PrintUtil.printWrapped(marker+" -> Pre initialization compleate!");
 	}
+	
 	@EventHandler
 	public void init(FMLInitializationEvent event){
-		PrintUtil.println(NAME+"_"+MC_VERSION+"-"+VERSION+" -> "+"Initialization started!");
+		PrintUtil.printWrapped(marker+" -> Initialization started!");
 		commonProxy.init();
 		sideProxy.init();
-		PrintUtil.println(NAME+"_"+MC_VERSION+"-"+VERSION+" -> "+"Initialization compleate!");
+		PrintUtil.printWrapped(marker+" -> Initialization compleate!");
 	}
+	
 	@EventHandler
 	public void postInitStarter(FMLPostInitializationEvent event){
-		PrintUtil.println(NAME+"_"+MC_VERSION+"-"+VERSION+" -> "+"Post initialization started!");
+		PrintUtil.printWrapped(marker+" -> Post initialization started!");
 		commonProxy.postInit();
 		sideProxy.postInit();
-		PrintUtil.println(NAME+"_"+MC_VERSION+"-"+VERSION+" -> "+"Post initialization compleate!");
+		PrintUtil.printWrapped(marker+" -> Post initialization compleate!");
+		
+		marker=null;
 	}
 	
 	/***//**getters*//***/

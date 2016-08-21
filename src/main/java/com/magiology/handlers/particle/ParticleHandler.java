@@ -21,8 +21,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ParticleHandler{
 	
-	public static final ParticleHandler instance=new ParticleHandler();
-	
+	private static final ParticleHandler instance=new ParticleHandler();
+	public static ParticleHandler get(){
+		return instance;
+	}
 	private ParticleHandler(){}
 	
 	private final List<ParticleFactory> particleFactories=new ArrayList<>();

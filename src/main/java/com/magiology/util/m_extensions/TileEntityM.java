@@ -16,7 +16,7 @@ public abstract class TileEntityM extends TileEntity{
 	@Override
 	@Nullable
 	public SPacketUpdateTileEntity getUpdatePacket(){
-		return new SPacketUpdateTileEntity(pos, 69/*xD*/, getUpdateTag());
+		return new SPacketUpdateTileEntity(pos, 69/*no I am not 12*/, getUpdateTag());
 	}
 
 	@Override

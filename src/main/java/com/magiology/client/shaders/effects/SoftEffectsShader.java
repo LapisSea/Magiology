@@ -3,7 +3,7 @@ package com.magiology.client.shaders.effects;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-import com.magiology.client.shaders.programs.Template;
+import com.magiology.client.shaders.programs.InvisibleEffect;
 import com.magiology.client.shaders.upload.UniformUploaderColor;
 import com.magiology.client.shaders.upload.UniformUploaderF1;
 import com.magiology.client.shaders.upload.UniformUploaderF2;
@@ -77,21 +77,21 @@ public class SoftEffectsShader extends PositionAwareEffect{
 	@Override
 	public void initUniformLocations(){
 		for(int i=0;i<20;i++){
-			cricle_sizeP[i]=new UniformUploaderF1(Template.instance,"cricles["+i+"].sizeP");
-			cricle_sizeN[i]=new UniformUploaderF1(Template.instance,"cricles["+i+"].sizeN");
-			cricle_radius[i]=new UniformUploaderF1(Template.instance,"cricles["+i+"].radius");
-			cricle_mulColor[i]=new UniformUploaderColor(Template.instance,"cricles["+i+"].mulColor");
-			cricle_screenPos[i]=new UniformUploaderF2(Template.instance,"cricles["+i+"].screenPos");
+			cricle_sizeP[i]=new UniformUploaderF1(InvisibleEffect.instance,"cricles["+i+"].sizeP");
+			cricle_sizeN[i]=new UniformUploaderF1(InvisibleEffect.instance,"cricles["+i+"].sizeN");
+			cricle_radius[i]=new UniformUploaderF1(InvisibleEffect.instance,"cricles["+i+"].radius");
+			cricle_mulColor[i]=new UniformUploaderColor(InvisibleEffect.instance,"cricles["+i+"].mulColor");
+			cricle_screenPos[i]=new UniformUploaderF2(InvisibleEffect.instance,"cricles["+i+"].screenPos");
 
-			line_widthPos1[i]=new UniformUploaderF1(Template.instance,"lines["+i+"].widthPos1");
-			line_widthPos2[i]=new UniformUploaderF1(Template.instance,"lines["+i+"].widthPos2");
-			line_totalLength[i]=new UniformUploaderF1(Template.instance,"lines["+i+"].totalLength");
-			line_middle[i]=new UniformUploaderF2(Template.instance,"lines["+i+"].middle");
-			line_end[i]=new UniformUploaderF2(Template.instance,"lines["+i+"].end");
-			line_mulColor[i]=new UniformUploaderColor(Template.instance,"lines["+i+"].mulColor");
+			line_widthPos1[i]=new UniformUploaderF1(InvisibleEffect.instance,"lines["+i+"].widthPos1");
+			line_widthPos2[i]=new UniformUploaderF1(InvisibleEffect.instance,"lines["+i+"].widthPos2");
+			line_totalLength[i]=new UniformUploaderF1(InvisibleEffect.instance,"lines["+i+"].totalLength");
+			line_middle[i]=new UniformUploaderF2(InvisibleEffect.instance,"lines["+i+"].middle");
+			line_end[i]=new UniformUploaderF2(InvisibleEffect.instance,"lines["+i+"].end");
+			line_mulColor[i]=new UniformUploaderColor(InvisibleEffect.instance,"lines["+i+"].mulColor");
 		}
-		cricleArraySize=new UniformUploaderF1(Template.instance, "cricle_arraySize");
-		lineArraySize=new UniformUploaderF1(Template.instance, "line_arraySize");
+		cricleArraySize=new UniformUploaderF1(InvisibleEffect.instance, "cricle_arraySize");
+		lineArraySize=new UniformUploaderF1(InvisibleEffect.instance, "line_arraySize");
 	}
 	
 	private static interface BaseFX{
@@ -120,9 +120,9 @@ public class SoftEffectsShader extends PositionAwareEffect{
 			screenPos.y*=Display.getHeight()/2F;
 			distanceScale=1/o.obj2;
 			
-			this.sizeP=sizeP*distanceScale*Template.screenSizeF;
-			this.sizeN=sizeN*distanceScale*Template.screenSizeF;
-			this.radius=radius*distanceScale*Template.screenSizeF;
+			this.sizeP=sizeP*distanceScale*InvisibleEffect.screenSizeF;
+			this.sizeN=sizeN*distanceScale*InvisibleEffect.screenSizeF;
+			this.radius=radius*distanceScale*InvisibleEffect.screenSizeF;
 			this.mulColor=mulColor;
 		}
 		@Override
@@ -157,11 +157,11 @@ public class SoftEffectsShader extends PositionAwareEffect{
 			
 			DoubleObject<Vec2FM, Float>
 			o=convertWorldToScreenPos(worldPos1);
-			this.widthPos1=width/o.obj2*Template.screenSizeF;
+			this.widthPos1=width/o.obj2*InvisibleEffect.screenSizeF;
 			start=o.obj1;
 			
 			o=convertWorldToScreenPos(worldPos2);
-			this.widthPos2=width/o.obj2*Template.screenSizeF;
+			this.widthPos2=width/o.obj2*InvisibleEffect.screenSizeF;
 			end=o.obj1;
 			
 		}
