@@ -1,9 +1,7 @@
 package com.magiology.handlers.particle;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 
 import com.magiology.util.objs.Vec3M;
 import com.magiology.util.statics.UtilC;
@@ -61,7 +59,7 @@ public abstract class ParticleFactory{
 	//particle handling 
 	@SideOnly(Side.CLIENT)
 	protected void addParticle(IParticle particle){
-		particles.add(particle);
+		particles.add(particles.size(),particle);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -81,36 +79,52 @@ public abstract class ParticleFactory{
 
 	@SideOnly(Side.CLIENT)
 	public void update(){
-		Queue<IParticle> toRemove=new ArrayDeque<>();
-		particles.forEach(particle->{
-			particle.update();
-			if(particle.isDead()) toRemove.add(particle);
-		});
-		particles.removeAll(toRemove);
+			for(int j=0;j<particles.size();j++){
+				IParticle particle=particles.get(j);
+				try{
+					particle.update();
+					if(particle.isDead())particles.remove(j--);
+				}catch(Exception e){
+					tryToFix(e);
+				}
+			}
+	}
+
+	private void tryToFix(Exception e){
+		e.printStackTrace();
+		if(e instanceof NullPointerException){
+//			if()
+		}
 	}
 
 	@SideOnly(Side.CLIENT)
 	public void render(float xRotation, float zRotation, float yzRotation, float xyRotation, float xzRotation){
-		if(!particles.isEmpty()){
-			setUpOpenGl();
-			if(hasStaticModel()){
-				for(IParticle particle:particles){
-					GlStateManager.pushMatrix();
-					particle.setUpOpenGl();
-					int[] ids=particle.getModelIds();
-					if(ids==null)GlStateManager.callList(particle.getModelId());
-					else for(int i:ids)GlStateManager.callList(i);
-					GlStateManager.popMatrix();
+		try{
+			if(!particles.isEmpty()){
+				setUpOpenGl();
+				if(hasStaticModel()){
+					for(int j=0;j<particles.size();j++){
+						IParticle particle=particles.get(j);
+						GlStateManager.pushMatrix();
+						particle.setUpOpenGl();
+						int[] ids=particle.getModelIds();
+						if(ids==null)GlStateManager.callList(particle.getModelId());
+						else for(int i:ids)GlStateManager.callList(i);
+						GlStateManager.popMatrix();
+					}
+				}else{
+					for(int j=0;j<particles.size();j++){
+						IParticle particle=particles.get(j);
+						GlStateManager.pushMatrix();
+						particle.setUpOpenGl();
+						particle.renderModel(xRotation, zRotation, yzRotation, xyRotation, xzRotation);
+						GlStateManager.popMatrix();
+					}
 				}
-			}else{
-				for(IParticle particle:particles){
-					GlStateManager.pushMatrix();
-					particle.setUpOpenGl();
-					particle.renderModel(xRotation, zRotation, yzRotation, xyRotation, xzRotation);
-					GlStateManager.popMatrix();
-				}
+				resetOpenGl();
 			}
-			resetOpenGl();
+		}catch(Exception e){
+			tryToFix(e);
 		}
 	}
 

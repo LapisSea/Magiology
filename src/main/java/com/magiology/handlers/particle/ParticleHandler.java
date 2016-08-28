@@ -46,6 +46,7 @@ public class ParticleHandler{
 
 		if(shouldSpawn&&factory.hasDistanceLimit()){
 			Entity ent=mc.getRenderViewEntity();
+			if(ent==null)return false;
 			Vec3M distanceFromCamera=UtilM.getEntityPos(ent).addY(ent.getEyeHeight()).sub(spawnPos);
 			if(distanceFromCamera.lengthSquared()>MathUtil.sq(factory.getSpawnDistanceInBlocks()))shouldSpawn=false;
 		}

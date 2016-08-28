@@ -1,4 +1,4 @@
-package com.magiology.features.dimension_stabiliser;
+package com.magiology.mc_objects.features.dimension_stabiliser;
 
 import com.magiology.mc_objects.particles.Particles;
 import com.magiology.util.m_extensions.TileEntityMTickable;

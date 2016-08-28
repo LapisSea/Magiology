@@ -403,6 +403,9 @@ public class UtilM{
 	 * @param stack a
 	 * @return a
 	 */
+	public static boolean isItemInStack(Class<?extends Item> item,ItemStack stack){
+		return stack!=null&&stack.getItem()!=null&&stack.getItem().getClass()==item;
+	}
 	public static boolean isItemInStack(Item item,ItemStack stack){
 		return stack!=null&&stack.getItem()==item;
 	}
@@ -634,5 +637,11 @@ public class UtilM{
 		if(lower.startsWith("entity"    ))name=name.substring(name.length()-"entity"    .length());
 		if(lower.startsWith("item"      ))name=name.substring(name.length()-"item"      .length());
 		return name;
+	}
+	public static String classNameToMcName(String name){
+		return standardizeName(removeMcObjectEnd(name));
+	}
+	public static String classNameToMcName(Class clazz){
+		return classNameToMcName(clazz.getSimpleName());
 	}
 }

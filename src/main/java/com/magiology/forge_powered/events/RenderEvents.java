@@ -90,23 +90,28 @@ public class RenderEvents{
 	private boolean flag;
 	@SubscribeEvent(priority=EventPriority.HIGHEST)
 	public void renderEntityPre(RenderLivingEvent.Pre e){
-		Entity en=e.getEntity();
-		if(en.isInvisibleToPlayer(UtilC.getThePlayer())&&en instanceof EntityLivingBase)invisibleEntitys.add((EntityLivingBase)en);
+		EntityLivingBase en=e.getEntity();
+		if(en.isInvisibleToPlayer(UtilC.getThePlayer()))invisibleEntitys.add(en);
+		Entity en1=e.getEntity();
 		
-		if(en instanceof EntityPlayer){
-			EntityPlayer player=(EntityPlayer)en;
+		if(en1 instanceof EntityPlayer){
+			EntityPlayer player=(EntityPlayer)en1;
 			
-			en=player.getRidingEntity();
-			if(en instanceof EntitySquid){
-				EntitySquid squid=(EntitySquid)en;
+			en1=player.getRidingEntity();
+			if(en1 instanceof EntitySquid){
+				EntitySquid squid=(EntitySquid)en1;
 				flag=true;
 				
 				OpenGLM.pushMatrix();
 
-				OpenGLM.rotateY(-PartialTicksUtil.calculate(squid.prevRenderYawOffset,squid.renderYawOffset));
-				OpenGLM.rotateX(-PartialTicksUtil.calculate(squid.prevSquidPitch,squid.squidPitch)+90);
-				OpenGLM.rotateZ(-PartialTicksUtil.calculate(squid.prevSquidYaw,squid.squidYaw));
-				OpenGLM.translate(0, 10/16F, 0);
+				OpenGLM.translate(0, 3/16F, 0);
+				//PartialTicksUtil.calculate(prevPos, pos) is equal to prevPos+(pos-prevPos)*partialTicks to smooth out transformation 
+				//OpenGLM.rotateX,Y,Z https://github.com/LapisSea/Magiology/blob/1.9/src/main/java/com/magiology/util/statics/OpenGLM.java#L129-L146
+				OpenGLM.rotateY(-PartialTicksUtil.calculate(squid.prevRenderYawOffset,squid.renderYawOffset));//-\
+				OpenGLM.rotateX(-PartialTicksUtil.calculate(squid.prevSquidPitch,squid.squidPitch)+90);//--------===> match squid rotation
+				OpenGLM.rotateZ(-PartialTicksUtil.calculate(squid.prevSquidYaw,squid.squidYaw));//---------------/
+				//fix gap between riding entity and 
+				OpenGLM.translate(0, -3/16F, 0);
 				
 				
 				

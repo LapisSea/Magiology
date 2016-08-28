@@ -1,10 +1,12 @@
 package com.magiology.forge_powered.proxy;
 
+import com.magiology.client.entity.EntityPenguinRenderer;
 import com.magiology.client.rendering.tile_render.DummyTileEntityRenderer;
 import com.magiology.client.shaders.ShaderHandler;
 import com.magiology.core.MReference;
 import com.magiology.forge_powered.events.RenderEvents;
 import com.magiology.mc_objects.MBlocks;
+import com.magiology.mc_objects.entitys.EntityPenguin;
 import com.magiology.mc_objects.features.dimension_stabiliser.TileEntityDimensionStabiliser;
 import com.magiology.mc_objects.particles.Particles;
 import com.magiology.util.m_extensions.TileEntityM;
@@ -20,6 +22,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -43,7 +46,7 @@ public class ClientProxy extends CommonProxy{
 		ROBOT=robotH;
 		ShaderHandler.get().load();
 		
-		
+		RenderingRegistry.registerEntityRenderingHandler(EntityPenguin.class, (manager)->new EntityPenguinRenderer(manager));
 	}
 	
 	@Override

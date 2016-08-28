@@ -2,6 +2,7 @@ package com.magiology.util.objs;
 
 import java.awt.Color;
 
+import com.magiology.util.statics.RandUtil;
 import com.magiology.util.statics.math.MathUtil;
 
 import net.minecraft.client.renderer.GlStateManager;
@@ -21,6 +22,13 @@ public class ColorF{
 		RED	  	  =ColorF.convert(Color.RED),
 		WHITE	  =ColorF.convert(Color.WHITE),
 		YELLOW	  =ColorF.convert(Color.YELLOW);
+	
+	public static ColorF randomRGB(){
+		return new ColorF(RandUtil.RF(),RandUtil.RF(),RandUtil.RF(),1);
+	}
+	public static ColorF randomRGBA(){
+		return new ColorF(RandUtil.RF(),RandUtil.RF(),RandUtil.RF(),RandUtil.RF());
+	}
 	public static ColorF convert(Color color){
 		return new ColorF(color.getRed()/256F, color.getGreen()/256F, color.getBlue()/256F, color.getAlpha()/256F);
 	}
@@ -29,11 +37,14 @@ public class ColorF{
 	public ColorF(){
 		this(1,1,1,1);
 	}
+	public ColorF(float r, float g, float b, float a){
+		this.r=MathUtil.snap(r, 0, 1);
+		this.g=MathUtil.snap(g, 0, 1);
+		this.b=MathUtil.snap(b, 0, 1);
+		this.a=MathUtil.snap(a, 0, 1);
+	}
 	public ColorF(double r, double g, double b, double a){
-		this.r=(float)MathUtil.snap(r, 0, 1);
-		this.g=(float)MathUtil.snap(g, 0, 1);
-		this.b=(float)MathUtil.snap(b, 0, 1);
-		this.a=(float)MathUtil.snap(a, 0, 1);
+		this((float)r,(float)g,(float)b,(float)a);
 	}
 	public ColorF add(ColorF color){
 		return new ColorF(color.r+r,color.g+g,color.b+b,color.a+a);

@@ -1,28 +1,25 @@
-package com.magiology.util.statics.classload;
+package com.magiology.util.statics.class_manager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.magiology.client.shaders.ShaderProgram;
-import com.magiology.util.interf.Calculable;
-import com.magiology.util.m_extensions.TileEntityM;
 import com.magiology.util.statics.PrintUtil;
-
-import net.minecraft.launchwrapper.IClassTransformer;
 
 public class ClassList{
 	
 	static String[]
 			classes={
+				"com.magiology.client.entity.EntityPenguinRenderer",
 				"com.magiology.client.renderers.AdvancedRenderer",
+				"com.magiology.client.renderers.GenericModels",
 				"com.magiology.client.renderers.Renderer",
 				"com.magiology.client.rendering.tile_render.DummyTileEntityRenderer",
 				"com.magiology.client.shaders.effects.PositionAwareEffect",
 				"com.magiology.client.shaders.effects.SoftEffectsShader",
+				"com.magiology.client.shaders.programs.InvisibleEffect",
 				"com.magiology.client.shaders.programs.SepiaShader",
-				"com.magiology.client.shaders.programs.Template",
 				"com.magiology.client.shaders.ShaderHandler",
 				"com.magiology.client.shaders.ShaderProgram",
 				"com.magiology.client.shaders.upload.UniformUploaderArray",
@@ -37,12 +34,15 @@ public class ClassList{
 				"com.magiology.core.Config",
 				"com.magiology.core.Magiology",
 				"com.magiology.core.MReference",
-				"com.magiology.features.dimension_stabiliser.DimensionStabiliserBlock",
-				"com.magiology.features.dimension_stabiliser.TileEntityDimensionStabiliser",
-				"com.magiology.features.MRegistery",
-				"com.magiology.features.SimpleItems",
+				"com.magiology.forge_powered.events.ClientEvents",
+				"com.magiology.forge_powered.events.EntityEvents",
 				"com.magiology.forge_powered.events.RenderEvents",
 				"com.magiology.forge_powered.events.TickEvents",
+				"com.magiology.forge_powered.networking.NBTPacket",
+				"com.magiology.forge_powered.networking.PacketBufferM",
+				"com.magiology.forge_powered.networking.PacketM",
+				"com.magiology.forge_powered.networking.Packets",
+				"com.magiology.forge_powered.networking.SimpleNetworkWrapperM",
 				"com.magiology.forge_powered.proxy.ClientProxy",
 				"com.magiology.forge_powered.proxy.CommonProxy",
 				"com.magiology.forge_powered.proxy.ServerProxy",
@@ -50,7 +50,13 @@ public class ClassList{
 				"com.magiology.handlers.particle.ParticleFactory",
 				"com.magiology.handlers.particle.ParticleHandler",
 				"com.magiology.handlers.particle.ParticleM",
+				"com.magiology.mc_objects.entitys.EntityPenguin",
+				"com.magiology.mc_objects.features.dimension_stabiliser.DimensionStabiliserBlock",
+				"com.magiology.mc_objects.features.dimension_stabiliser.TileEntityDimensionStabiliser",
+				"com.magiology.mc_objects.items.ItemJetpack",
+				"com.magiology.mc_objects.items.SimpleItems",
 				"com.magiology.mc_objects.MBlocks",
+				"com.magiology.mc_objects.MItems",
 				"com.magiology.mc_objects.MTabs",
 				"com.magiology.mc_objects.particles.ParticleBubbleFactory",
 				"com.magiology.mc_objects.particles.ParticleCubeFactory",
@@ -62,12 +68,17 @@ public class ClassList{
 				"com.magiology.util.interf.Calculable",
 				"com.magiology.util.interf.IObjectFactory",
 				"com.magiology.util.interf.ObjectConverter",
+				"com.magiology.util.interf.ObjectConverterThrows",
 				"com.magiology.util.interf.ObjectProcessor",
 				"com.magiology.util.interf.ObjectReturn",
+				"com.magiology.util.interf.ObjectSimpleCallback",
+				"com.magiology.util.interf.ObjectSimpleProcessor",
 				"com.magiology.util.m_extensions.BlockContainerM",
 				"com.magiology.util.m_extensions.BlockM",
 				"com.magiology.util.m_extensions.BlockPosM",
+				"com.magiology.util.m_extensions.EntityCreatureM",
 				"com.magiology.util.m_extensions.GuiContainerM",
+				"com.magiology.util.m_extensions.ResourceLocationM",
 				"com.magiology.util.m_extensions.TileEntityM",
 				"com.magiology.util.m_extensions.TileEntityMTickable",
 				"com.magiology.util.m_extensions.TileEntitySpecialRendererM",
@@ -89,15 +100,16 @@ public class ClassList{
 				"com.magiology.util.objs.physics.real.RealPhysicsVec3F",
 				"com.magiology.util.objs.QuadUV",
 				"com.magiology.util.objs.QuadUVGenerator",
+				"com.magiology.util.objs.RegistrableDatabaseStorage",
 				"com.magiology.util.objs.Vec2FM",
 				"com.magiology.util.objs.Vec2i",
 				"com.magiology.util.objs.Vec3M",
 				"com.magiology.util.statics.AxisAlignedBBFloat",
-				"com.magiology.util.statics.classload.ClassFinder",
-				"com.magiology.util.statics.classload.ClassList",
+				"com.magiology.util.statics.class_manager.ClassFinder",
+				"com.magiology.util.statics.class_manager.ClassList",
+				"com.magiology.util.statics.class_manager.ListCompiler",
 				"com.magiology.util.statics.CollectionConverter",
 				"com.magiology.util.statics.FileUtil",
-				"com.magiology.util.statics.LogUtil",
 				"com.magiology.util.statics.math.ArrayMath",
 				"com.magiology.util.statics.math.MathUtil",
 				"com.magiology.util.statics.math.MatrixUtil",
@@ -111,25 +123,36 @@ public class ClassList{
 				"com.magiology.util.statics.UtilM"
 			};
 	
-	protected static boolean error=false;
 	
 	static final Map<Class<?>, List<Class<?>>> implementations=new HashMap<>(),directImplementations=new HashMap<>();
 	
-	static final List<Class<?>> loadedClasses=new ArrayList<>();
+	static final List<Class<?>> allClasses=new ArrayList<>();
+	private static List<Class<?>> classesToGet=new ArrayList<>();
 	
-	static List<Class<?>> getClassesToSort(){
-		List<Class<?>> classes=new ArrayList<>();
-		
-		classes.add(IClassTransformer.class);
-		classes.add(Calculable.class);
-		classes.add(TileEntityM.class);
-		classes.add(ShaderProgram.class);
-		
-		return classes;
+	static List<Class<?>> getClassesToSort(){		
+		return classesToGet;
 	}
-	public static <T> List<Class<T>> getDirectImplementations(Class<T> clazz){
+	/**
+	 * testedClass extends givenClass = true, testedClass extends someClass extends givenClass = false
+	 * @return
+	 */
+	public static <T> List<Class<T>> getDirectImplementations(Class<T>... classes){
 		List<Class<T>> list=new ArrayList<>();
-		getDirectImplementations().get(clazz).forEach(c->list.add((Class<T>)c));
+		
+		boolean added=false;
+		for(Class<? extends T> cl:classes){
+			if(getDirectImplementations().get(cl)==null){
+				classesToGet.add(cl);
+				added=true;
+			}
+		}
+		if(added)ClassFinder.load();
+		
+		PrintUtil.println(added);
+		PrintUtil.println(implementations);
+		PrintUtil.println(allClasses);
+		
+		for(Class<T> cl:classes)getDirectImplementations().get(cl).forEach(c->list.add((Class<T>)c));
 		return list;
 	}
 	public static Map<Class<?>, List<Class<?>>> getDirectImplementations(){
@@ -137,23 +160,32 @@ public class ClassList{
 		return directImplementations;
 	}
 	
-	public static <T> List<Class<T>> getImplementations(Class<T> clazz){
+	public static <T> List<Class<T>> getImplementations(Class<? extends T>... classes){
 		List<Class<T>> list=new ArrayList<>();
 		try{
-			getImplementations().get(clazz).forEach(c->list.add((Class<T>)c));
-		} catch (Exception e){
-			PrintUtil.println(clazz);
+			boolean added=false;
+			for(Class<? extends T> cl:classes){
+				if(getImplementations().get(cl)==null){
+					classesToGet.add(cl);
+					added=true;
+				}
+			}
+			if(added)ClassFinder.load();
+			
+			for(Class<? extends T> cl:classes){
+				getImplementations().get(cl).forEach(c->list.add((Class<T>)c));
+			}
+		}catch(Exception e){
+			PrintUtil.println((Object)classes);
 			throw e;
 		}
 		return list;
 	}
 	public static Map<Class<?>, List<Class<?>>> getImplementations(){
-		ClassFinder.load();
 		return implementations;
 	}
 	
 	public static List<Class<?>> getLoadedclasses(){
-		ClassFinder.load();
-		return loadedClasses;
+		return allClasses;
 	}
 }

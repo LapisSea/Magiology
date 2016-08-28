@@ -3,7 +3,9 @@ package com.magiology.util.statics.math;
 import com.magiology.util.statics.RandUtil;
 
 public class MathUtil{
-
+	
+	public static final double GOLDEN_RATIO=(1+Math.sqrt(5))/2;
+	
 	public static float[][] addToDoubleFloatArray(final float[][] array1,final float[][] array2){
 		float[][] result=array1.clone();
 		for(int a=0;a<result.length;a++)result[a]=addToFloatArray(result[a], array2[a]);

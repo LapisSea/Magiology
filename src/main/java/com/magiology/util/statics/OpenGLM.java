@@ -159,10 +159,4 @@ public class OpenGLM extends GlStateManager{
 		UtilC.getMC().renderEngine.bindTexture(texture);
 	}
 	
-	public static void test(){
-	}
-
-	public static void test(Vec3M calculate, float radius, float xAngle, float yAngle, float zAngle){
-	}
-	
 }
