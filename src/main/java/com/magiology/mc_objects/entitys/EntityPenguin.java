@@ -50,7 +50,7 @@ public class EntityPenguin extends EntityAgeableM{
 			try{
 				return Moods.values()[buf.readByte()];
 			}catch(Exception e){
-				return Moods.ALONE;
+				return Moods.NEUTRAL;
 			}
 		}
 		
@@ -60,18 +60,28 @@ public class EntityPenguin extends EntityAgeableM{
 		}
 	});
 	public static enum Moods{
-		NEUTRAL,//when nothing special is happening
-		HAPPY,//when a player gives food or if job done
-		SAD,//if job failed to be executed (moving stuff and being blocked by terrain) or if an accident occurs 
-		SCARED,//when a penguin is hurt
-		SCARED2,//when a mate is killed
-		IN_LOVE,//sexy time ;)
-		ANGRY,//after a period of time of being SCARED2 (refuses to work for player unless given a gift)
-		ALONE,//when there is no mates around
-		CHEERFUL,//when a big project is successfully executed
-		ENERGETIC,//when not adult (Grandma: damn kinds wont shut up!)
-		PROTECTFUL,//when a female is protecting eggs
-		RESPECTFUL;//when passing by the player owner or king penguin
+		NEUTRAL		(true, false,true, false),//when nothing special is happening
+		HAPPY		(true, false,true, false),//when a player gives food or if job done
+		SAD			(true, false,true, false),//if job failed to be executed (moving stuff and being blocked by terrain) or if an accident occurs 
+		SCARED		(true, true, true, false),//when a penguin is hurt
+		SCARED2		(false,true, true, true ),//when a mate is killed
+		IN_LOVE		(false,false,true, false),//sexy time ;)
+		ANGRY		(false,false,true, true ),//after a period of time of being SCARED2 (refuses to work for player unless given a gift)
+		LONELY		(true, false,true, false),//when there is no mates around
+		CHEERFUL	(false,false,false,false),//when a big project is successfully executed
+		ENERGETIC	(false,false,true, false),//when not adult (Grandma: damn kinds wont shut up!)
+		PROTECTFUL	(false,false,false,false),//when a female is protecting eggs
+		RESPECTFUL	(true, false,true, false);//when passing by the player owner or king penguin
+		
+		public final boolean willingToWork,runsAway,canMove,isAggressive;
+
+		private Moods(boolean willingToWork, boolean runsAway, boolean canMove, boolean isAggressive){
+			this.willingToWork=willingToWork;
+			this.runsAway=runsAway;
+			this.canMove=canMove;
+			this.isAggressive=isAggressive;
+		}
+		
 	}
 	
 	protected float baseSpeed=0.15F;
