@@ -2,8 +2,8 @@ package com.magiology.util.objs.physics.real;
 
 import java.util.List;
 
+import com.magiology.util.m_extensions.BlockPosM;
 import com.magiology.util.objs.AngularVec3;
-import com.magiology.util.objs.BlockPosM;
 import com.magiology.util.objs.DoubleObject;
 import com.magiology.util.objs.Vec3M;
 import com.magiology.util.objs.physics.real.entitymodel.Colideable;

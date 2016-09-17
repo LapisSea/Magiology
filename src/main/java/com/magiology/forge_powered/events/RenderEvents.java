@@ -2,6 +2,8 @@ package com.magiology.forge_powered.events;
 
 import java.util.Queue;
 
+import org.lwjgl.opengl.GL11;
+
 import com.google.common.collect.Queues;
 import com.magiology.client.shaders.ShaderHandler;
 import com.magiology.client.shaders.effects.PositionAwareEffect;
@@ -11,8 +13,6 @@ import com.magiology.util.objs.Vec3M;
 import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.UtilC;
 import com.magiology.util.statics.math.PartialTicksUtil;
-
-import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -28,7 +28,6 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class RenderEvents{
-	
 	
 	public static Queue<EntityLivingBase> invisibleEntitys=Queues.newArrayDeque();
 	

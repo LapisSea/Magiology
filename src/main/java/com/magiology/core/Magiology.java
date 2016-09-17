@@ -12,6 +12,7 @@ import java.util.Set;
 import com.google.common.eventbus.EventBus;
 import com.magiology.forge_powered.networking.SimpleNetworkWrapperM;
 import com.magiology.forge_powered.proxy.CommonProxy;
+import com.magiology.io.IOManager;
 import com.magiology.util.statics.PrintUtil;
 import com.magiology.util.statics.class_manager.ClassList;
 
@@ -34,13 +35,12 @@ import scala.actors.threadpool.Arrays;
 @Mod(modid=MODID, version=VERSION, name=NAME, acceptedMinecraftVersions=ACCEPTED_MC_VERSION)
 public class Magiology implements ModContainer{
 	
-	
 	private static final boolean IS_DEV;
 	static{
-		IS_DEV=!Magiology.class.getResource("Magiology.class").toString().startsWith("jar:");
-		if(IS_DEV) PrintUtil.printWrapped(NAME+" is running in development environment! Work Lapis! Work! NO! CLOSE THAT YOUTUBE VIDEO! ");
+		IS_DEV=SOURCE_FILE==null;
+		if(IS_DEV)PrintUtil.printWrapped(NAME+" is running in development environment! Work Lapis! Work! NO! CLOSE THAT YOUTUBE VIDEO! ");
 	}
-	/***//**variables*//***/
+	/***//** variables *//***/
 	public static SimpleNetworkWrapperM NETWORK_CHANNEL;
 	@Instance(value=MODID)
 	private static Magiology instance;
@@ -49,12 +49,14 @@ public class Magiology implements ModContainer{
 	public static CommonProxy commonProxy=new CommonProxy();
 	private static String marker=NAME+"_"+MC_VERSION+"-"+VERSION;
 	
+	public static IOManager extraFiles=new IOManager();
+	
 	public Magiology(){
 		instance=this;
 		ClassList.getImplementations();
 	}
 	
-	/***//**forge events*//***/
+	/***//** forge events *//***/
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event){
 		NETWORK_CHANNEL=new SimpleNetworkWrapperM(CHANNEL_NAME);
@@ -87,7 +89,9 @@ public class Magiology implements ModContainer{
 		marker=null;
 	}
 	
-	/***//**getters*//***/
+	/***/
+	/** getters */
+	/***/
 	public static Magiology getMagiology(){
 		return instance;
 	}
@@ -96,7 +100,9 @@ public class Magiology implements ModContainer{
 		return IS_DEV;
 	}
 	
-	/***//**interfaces*//***/
+	/***/
+	/** interfaces */
+	/***/
 	@Override
 	public VersionRange acceptableMinecraftVersionRange(){
 		try{
@@ -106,8 +112,7 @@ public class Magiology implements ModContainer{
 	}
 	
 	@Override
-	public void bindMetadata(MetadataCollection mc){
-	}
+	public void bindMetadata(MetadataCollection mc){}
 	
 	@Override
 	public Disableable canBeDisabled(){
@@ -166,9 +171,7 @@ public class Magiology implements ModContainer{
 	
 	@Override
 	public List<String> getOwnedPackages(){
-		return Arrays.asList(new String[]{
-				BASE_PATH.substring(0, BASE_PATH.length()-1)
-		});
+		return Arrays.asList(new String[]{BASE_PATH.substring(0, BASE_PATH.length()-1)});
 	}
 	
 	@Override
@@ -239,8 +242,7 @@ public class Magiology implements ModContainer{
 	}
 	
 	@Override
-	public void setClassVersion(int classVersion){
-	}
+	public void setClassVersion(int classVersion){}
 	
 	@Override
 	public int getClassVersion(){

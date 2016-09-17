@@ -1,8 +1,8 @@
 package com.magiology.util.m_extensions;
 
-import com.magiology.util.statics.UtilM;
-
 import javax.annotation.Nullable;
+
+import com.magiology.util.statics.UtilM;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -75,5 +75,8 @@ public abstract class TileEntityM extends TileEntity{
 	}
 	public long worldTime(){
 		return UtilM.worldTime(this);
+	}
+	public boolean isValid(){
+		return worldObj!=null&&worldObj.getTileEntity(getPos())==this;
 	}
 }

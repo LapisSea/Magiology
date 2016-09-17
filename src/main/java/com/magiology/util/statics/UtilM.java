@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -23,14 +24,15 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import com.google.common.collect.ImmutableMap;
 import com.magiology.SoundM;
 import com.magiology.core.MReference;
+import com.magiology.util.m_extensions.BlockPosM;
 import com.magiology.util.objs.ColorF;
 import com.magiology.util.objs.Vec3M;
 import com.mojang.realmsclient.gui.ChatFormatting;
-
-import org.apache.commons.lang3.ArrayUtils;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.PropertyInteger;
@@ -40,8 +42,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -85,7 +90,7 @@ public class UtilM{
 			for(int i=0;i<b.length;i++){
 				boolean c=b[i];
 				if(isArray(c))print.append(arrayToString(c));
-				else print.append(c+(i==b.length-1?"":" "));
+				else print.append(c+(i==b.length-1?"":", "));
 			}
 		}
 		else if(array instanceof float[]){
@@ -93,7 +98,7 @@ public class UtilM{
 			for(int i=0;i<b.length;i++){
 				float c=b[i];
 				if(isArray(c))print.append(arrayToString(c));
-				else print.append(c+(i==b.length-1?"":" "));
+				else print.append(c+(i==b.length-1?"":", "));
 			}
 		}
 		else if(array instanceof int[]){
@@ -101,7 +106,7 @@ public class UtilM{
 			for(int i=0;i<b.length;i++){
 				int c=b[i];
 				if(isArray(c))print.append(arrayToString(c));
-				else print.append(c+(i==b.length-1?"":" "));
+				else print.append(c+(i==b.length-1?"":", "));
 			}
 		}
 		else if(array instanceof double[]){
@@ -109,7 +114,7 @@ public class UtilM{
 			for(int i=0;i<b.length;i++){
 				double c=b[i];
 				if(isArray(c))print.append(arrayToString(c));
-				else print.append(c+(i==b.length-1?"":" "));
+				else print.append(c+(i==b.length-1?"":", "));
 			}
 		}
 		else if(array instanceof Object[]){
@@ -117,7 +122,7 @@ public class UtilM{
 			for(int i=0;i<b.length;i++){
 				Object c=b[i];
 				if(isArray(c))print.append(arrayToString(c));
-				else print.append(toString(c)+(i==b.length-1?"":" "));
+				else print.append(toString(c)+(i==b.length-1?"":", "));
 			}
 		}else throw new IllegalStateException("Given object is not an array!");
 		
@@ -213,9 +218,6 @@ public class UtilM{
 	}
 	public static Block getBlock(World world, int x, int y, int z){
 		return getBlock(world, new BlockPos(x, y, z));
-	}
-	public static int getBlockMetadata(World world, BlockPos pos){
-		return hasMetaState(world, pos)?getBlock(world, pos).getMetaFromState(world.getBlockState(pos)):0;
 	}
 	public static double getDistance(Entity entity,int x,int y, int z){
 		Vec3M entityPos=new Vec3M(entity.posX, entity.posY, entity.posZ);
@@ -512,12 +514,11 @@ public class UtilM{
 		return result;
 	}
 	public static float exponentiallyEqualize(float variable, float goal, float speed){
-		return (float)exponentiallyEqualize((double)variable, (double)goal, (double)speed);
+		if(speed==0)return goal;
+		return (variable*speed+goal)/(speed+1);
 	}
 	public static double exponentiallyEqualize(double variable, double goal, double speed){
-		if(speed==0)return variable;
-		speed=Math.abs(speed);
-		
+		if(speed==0)return goal;
 		return (variable*speed+goal)/(speed+1);
 	}
 	
@@ -632,10 +633,10 @@ public class UtilM{
 		if(lower.endsWith("entity"    ))name=name.substring(0,name.length()-"entity"    .length());
 		if(lower.endsWith("item"      ))name=name.substring(0,name.length()-"item"      .length());
 		
-		if(lower.startsWith("block"     ))name=name.substring(name.length()-"block"     .length());
-		if(lower.startsWith("tileentity"))name=name.substring(name.length()-"tileentity".length());
-		if(lower.startsWith("entity"    ))name=name.substring(name.length()-"entity"    .length());
-		if(lower.startsWith("item"      ))name=name.substring(name.length()-"item"      .length());
+		if(lower.startsWith("block"     ))name=name.substring("block"     .length());
+		if(lower.startsWith("tileentity"))name=name.substring("tileentity".length());
+		if(lower.startsWith("entity"    ))name=name.substring("entity"    .length());
+		if(lower.startsWith("item"      ))name=name.substring("item"      .length());
 		return name;
 	}
 	public static String classNameToMcName(String name){
@@ -643,5 +644,82 @@ public class UtilM{
 	}
 	public static String classNameToMcName(Class clazz){
 		return classNameToMcName(clazz.getSimpleName());
+	}
+	
+	final protected static char[] hexArray="0123456789ABCDEF".toCharArray();
+	
+	public static String bytesToHex(byte[] bytes){
+		char[] hexChars=new char[bytes.length*2];
+		for(int j=0; j<bytes.length; j++){
+			int v=bytes[j]&0xFF;
+			hexChars[j*2]=hexArray[v>>>4];
+			hexChars[j*2+1]=hexArray[v&0x0F];
+		}
+		return new String(hexChars);
+	}
+
+	public static void writeStacksToNBT(ItemStack[] stacks, NBTTagCompound compound, String baseName){
+		NBTTagList nbtStacks=new NBTTagList();
+		for(int i=0;i<stacks.length;i++){
+			if(stacks[i]!=null){
+				NBTTagCompound stackNbt=new NBTTagCompound();
+				stackNbt.setInteger("Slot", i);
+				stacks[i].writeToNBT(stackNbt);
+				nbtStacks.appendTag(stackNbt);
+			}
+		}
+		compound.setTag(baseName, nbtStacks);
+		
+	}
+
+	public static ItemStack[] readStacksFromNBT(NBTTagCompound compound, String baseName){
+		NBTTagList nbtStacks=compound.getTagList(baseName, 10);
+		ItemStack[] stacks=new ItemStack[nbtStacks.tagCount()];
+		for(int i=0;i<stacks.length;i++){
+			NBTTagCompound stackNbt=nbtStacks.getCompoundTagAt(i);
+			stacks[stackNbt.getInteger("Slot")]=ItemStack.loadItemStackFromNBT(stackNbt);
+		}
+		return stacks;
+	}
+
+	public static List<TileEntity> getTileSides(World worldObj, BlockPosM pos){
+		List<TileEntity> list=new ArrayList<>();
+		
+		for(EnumFacing side:EnumFacing.values()){
+			TileEntity tile=pos.offset(side).getTile(worldObj);
+			if(tile!=null)list.add(tile);
+		}
+		
+		return list;
+	}
+	public static Map<EnumFacing, TileEntity> getTileSidesDir(World worldObj, BlockPosM pos){
+		Map<EnumFacing, TileEntity> map=new HashMap<>();
+		
+		for(EnumFacing side:EnumFacing.values()){
+			TileEntity tile=pos.offset(side).getTile(worldObj);
+			if(tile!=null)map.put(side,tile);
+		}
+		
+		return map;
+	}
+	public static <T extends TileEntity> List<T> getTileSides(World worldObj, BlockPosM pos, Class<T> type){
+		List<T> list=new ArrayList<>();
+		
+		for(EnumFacing side:EnumFacing.values()){
+			TileEntity tile=pos.offset(side).getTile(worldObj,type);
+			if(tile!=null)list.add((T)tile);
+		}
+		
+		return list;
+	}
+	public static <T extends TileEntity> Map<EnumFacing, T> getTileSidesDir(World worldObj, BlockPosM pos, Class<T> type){
+		Map<EnumFacing, T> map=new HashMap<>();
+		
+		for(EnumFacing side:EnumFacing.values()){
+			TileEntity tile=pos.offset(side).getTile(worldObj,type);
+			if(tile!=null)map.put(side,(T)tile);
+		}
+		
+		return map;
 	}
 }

@@ -1,8 +1,11 @@
 package com.magiology.forge_powered.proxy;
 
+import java.awt.Color;
+
 import com.magiology.core.Magiology;
 import com.magiology.forge_powered.events.EntityEvents;
 import com.magiology.forge_powered.events.TickEvents;
+import com.magiology.io.IOManager;
 import com.magiology.mc_objects.MBlocks;
 import com.magiology.mc_objects.MItems;
 import com.magiology.mc_objects.entitys.EntityPenguin;
@@ -19,7 +22,11 @@ public class CommonProxy{
 	private int entityID=0;
 	
 	public void loadModFiles(){
-		
+		IOManager manager=Magiology.extraFiles;
+		manager.addFolder("animations/user");
+		manager.addFile("animations/penguin/swimming.la");
+		manager.addFile("animations/user/READ_ME.txt");
+		manager.checkAndExtract();
 	}
 	
 	public void preInit(){
@@ -30,13 +37,16 @@ public class CommonProxy{
 	}
 	
 	public void init(){
-		registerModEntityWithEgg(EntityPenguin.class);
+		registerModEntityWithEgg(EntityPenguin.class,new Color(20, 20, 30),new Color(230, 230, 230));
 		MinecraftForge.EVENT_BUS.register(TickEvents.instance);
 		MinecraftForge.EVENT_BUS.register(EntityEvents.instance);
 	}
 	
-	private void registerModEntityWithEgg(Class parEntityClass){
-		EntityRegistry.registerModEntity(parEntityClass, UtilM.classNameToMcName(parEntityClass.getSimpleName()), ++entityID, Magiology.getMagiology(), 80, 1, true,0x00FF00,0x0000FF);
+	private void registerModEntityWithEgg(Class parEntityClass,Color col1,Color col2){
+		registerModEntityWithEgg(parEntityClass, col1.hashCode(), col2.hashCode());
+	}
+	private void registerModEntityWithEgg(Class parEntityClass,int col1,int col2){
+		EntityRegistry.registerModEntity(parEntityClass, UtilM.classNameToMcName(parEntityClass.getSimpleName()), ++entityID, Magiology.getMagiology(), 80, 1, true,col1,col2);
 	}
 	
 	public void postInit(){

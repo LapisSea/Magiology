@@ -5,7 +5,6 @@ import com.magiology.util.m_extensions.BlockContainerM;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
@@ -14,13 +13,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class DimensionStabiliserBlock extends BlockContainerM{
+public class BlockDimensionStabiliser extends BlockContainerM{
 
     public static final PropertyBool FACING = PropertyBool.create("main");
     
-	public DimensionStabiliserBlock(){
-		super(Material.GOURD);
-		setCreativeTab(CreativeTabs.FOOD);
+	public BlockDimensionStabiliser(){
+		super(Material.IRON);
 		setBlockBounds(0, 0, 0, 1, 8/16F, 1);
 		
 	}

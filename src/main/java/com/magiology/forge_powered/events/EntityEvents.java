@@ -10,7 +10,7 @@ public class EntityEvents{
 
 	@SubscribeEvent
 	public void entityInteract(EntityInteract e){
-		e.getEntityPlayer().startRiding(e.getTarget(),true);
+//		e.getEntityPlayer().startRiding(e.getTarget(),true);
 	}
 	
 }

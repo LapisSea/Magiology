@@ -1,7 +1,7 @@
 package com.magiology.handlers.particle;
 
 import com.magiology.client.renderers.Renderer;
-import com.magiology.util.objs.BlockPosM;
+import com.magiology.util.m_extensions.BlockPosM;
 import com.magiology.util.objs.ColorF;
 import com.magiology.util.objs.QuadUV;
 import com.magiology.util.objs.Vec2i;

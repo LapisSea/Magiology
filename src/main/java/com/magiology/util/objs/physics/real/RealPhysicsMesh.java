@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.magiology.util.interf.ObjectProcessor;
-import com.magiology.util.objs.BlockPosM;
+import com.magiology.util.m_extensions.BlockPosM;
 import com.magiology.util.objs.DoubleObject;
 import com.magiology.util.objs.Vec2i;
 import com.magiology.util.objs.Vec3M;

@@ -25,7 +25,6 @@ public class ListCompiler{
 			
 			List<String> fileNames=getFileNames(new ArrayList<>(), new File(startPath+"com\\magiology").toPath());
 			
-			
 			List<String> beforeList=new ArrayList<>(),afterList=new ArrayList<>();
 			String tabs="\t";
 			BufferedReader br=new BufferedReader(new FileReader(thisClass));

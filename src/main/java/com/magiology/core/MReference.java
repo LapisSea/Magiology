@@ -1,5 +1,7 @@
 package com.magiology.core;
 
+import java.net.URISyntaxException;
+import java.security.MessageDigest;
 import java.util.Arrays;
 
 import net.minecraftforge.fml.common.ModMetadata;
@@ -15,14 +17,29 @@ public class MReference{
 		ClIENT_PROXY_LOCATION=PROXY_LOCATION+".ClientProxy",
 		SERVER_PROXY_LOCATION=PROXY_LOCATION+".ServerProxy",
 		MC_VERSION= "1.10.2",
-		MODS_SUBFOLDER_DIR= "mods/"+MC_VERSION+"/"+NAME,
-		MODS_SUBFOLDER_COMMON_ASSETS= MODS_SUBFOLDER_DIR+"/common",
-		MODS_SUBFOLDER_WIN_GUI= MODS_SUBFOLDER_DIR+"/externalGui",
-		INFO_FILE_NAME= "FileForMod-"+MODID,
 		ACCEPTED_MC_VERSION= "["+MC_VERSION+"]",
-		JS_PROGRAMS_DIR= MODS_SUBFOLDER_DIR+"/jsPrograms",
 		AUTHORS="LapisSea",
-		BASE_PATH=MOD_START_FOLDER+MODID+".";
+		BASE_PATH=MOD_START_FOLDER+MODID+".",
+		SOURCE_FILE,
+		MD5_ID;
+	static{
+		
+		String dummy=null;
+		try{
+			String path=MReference.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+			dummy=path.endsWith(".jar")||path.endsWith(".zip")?path:null;
+		}catch(URISyntaxException e){
+			e.printStackTrace();
+		}
+		SOURCE_FILE=dummy;
+		dummy=MODID+MC_VERSION+VERSION;
+		try{
+			dummy=new String(MessageDigest.getInstance("MD5").digest(dummy.getBytes("UTF-8")),"UTF-8");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		MD5_ID=dummy;
+	}
 	
 	public static ModMetadata getModMetadata(){
 		ModMetadata metadata=new ModMetadata();

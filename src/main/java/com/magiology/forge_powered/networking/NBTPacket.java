@@ -5,7 +5,6 @@ import java.io.IOException;
 import com.magiology.util.statics.UtilM;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.PacketBuffer;
 
 public abstract class NBTPacket extends PacketM{
 	
@@ -17,7 +16,7 @@ public abstract class NBTPacket extends PacketM{
 	}
 	
 	@Override
-	public void fromBytes(PacketBuffer buf){
+	public void fromBytes(PacketBufferM buf){
 		try{
 			nbt=buf.readNBTTagCompoundFromBuffer();
 		}catch(IOException e){
@@ -27,7 +26,7 @@ public abstract class NBTPacket extends PacketM{
 	}
 
 	@Override
-	public void toBytes(PacketBuffer buf){
+	public void toBytes(PacketBufferM buf){
 		buf.writeNBTTagCompoundToBuffer(nbt);
 	}
 	

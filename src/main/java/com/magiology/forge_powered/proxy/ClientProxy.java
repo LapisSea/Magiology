@@ -1,23 +1,21 @@
 package com.magiology.forge_powered.proxy;
 
 import com.magiology.client.entity.EntityPenguinRenderer;
-import com.magiology.client.rendering.tile_render.DummyTileEntityRenderer;
 import com.magiology.client.shaders.ShaderHandler;
 import com.magiology.core.MReference;
 import com.magiology.forge_powered.events.RenderEvents;
 import com.magiology.mc_objects.MBlocks;
 import com.magiology.mc_objects.entitys.EntityPenguin;
-import com.magiology.mc_objects.features.dimension_stabiliser.TileEntityDimensionStabiliser;
 import com.magiology.mc_objects.particles.Particles;
-import com.magiology.util.m_extensions.TileEntityM;
-import com.magiology.util.m_extensions.TileEntitySpecialRendererM;
 import com.magiology.util.objs.EnhancedRobot;
+import com.magiology.util.objs.animation.AnimationBank;
 import com.magiology.util.statics.OpenGLM;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraftforge.common.MinecraftForge;
@@ -34,7 +32,7 @@ public class ClientProxy extends CommonProxy{
 
 	@Override
 	public void loadModFiles(){
-		
+		AnimationBank.load();
 	}
 	
 	@Override
@@ -52,8 +50,8 @@ public class ClientProxy extends CommonProxy{
 	@Override
 	public void init(){
 		MinecraftForge.EVENT_BUS.register(new RenderEvents());
-		registerTileRedners();
-		registerTileJsons();
+//		registerTileRedners();
+		registerTileRendering();
 		
 		Particles.get().register();
 	}
@@ -67,7 +65,7 @@ public class ClientProxy extends CommonProxy{
 		
 	}
 	
-	private void registerTileJsons(){
+	private void registerTileRendering(){
 		ItemModelMesher mesher=OpenGLM.getRI().getItemModelMesher();
 		
 		for(ITileEntityProvider i:MBlocks.get().getByExtension(ITileEntityProvider.class)){
@@ -76,16 +74,23 @@ public class ClientProxy extends CommonProxy{
 			try{
 				type=block.getRenderType(block.getDefaultState());
 			}catch(Exception e){}
-			if(type!=EnumBlockRenderType.INVISIBLE)mesher.register(Item.getItemFromBlock(block), 0, new ModelResourceLocation(MReference.MODID+":"+block.getUnlocalizedName().substring(5), "inventory"));
+			if(type!=EnumBlockRenderType.INVISIBLE){
+				if(type==EnumBlockRenderType.ENTITYBLOCK_ANIMATED){
+					
+					try{
+						Class tileClass=i.createNewTileEntity(null, 0).getClass();
+						Class rederer=Class.forName("com.magiology.client.rendering.tile_render."+tileClass.getSimpleName()+"Renderer");
+						ClientRegistry.bindTileEntitySpecialRenderer(tileClass,(TileEntitySpecialRenderer)rederer.newInstance());
+					}catch(Exception e){}
+				}
+				else mesher.register(Item.getItemFromBlock(block), 0, new ModelResourceLocation(MReference.MODID+":"+block.getUnlocalizedName().substring(5), "inventory"));
+			}
 		}
 	}
 	
-	private void registerTileRedners(){
-		bindTileWithRenderer(TileEntityDimensionStabiliser.class, new DummyTileEntityRenderer());
-	}
+//	private void registerTileRedners(){
+//		bindTileWithRenderer(TileEntityDimensionStabiliser.class, new DummyTileEntityRenderer());
+//	}
 	
-	public static void bindTileWithRenderer(Class<?extends TileEntityM>tileEntityClass, TileEntitySpecialRendererM specialRenderer){
-		ClientRegistry.bindTileEntitySpecialRenderer(tileEntityClass,specialRenderer);
-	}
 }
 

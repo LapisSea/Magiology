@@ -1,14 +1,15 @@
 package com.magiology.util.statics;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import com.magiology.util.objs.Vec2i;
 import com.magiology.util.statics.math.PartialTicksUtil;
-
-import org.apache.commons.lang3.ArrayUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -111,5 +112,9 @@ public class UtilC{
 
 	public static boolean peridOf(int period){
 		return UtilM.peridOf(getTheWorld(), period);
+	}
+
+	public static ItemRenderer getIR(){
+		return getMC().getItemRenderer();
 	}
 }

@@ -1,11 +1,15 @@
 package com.magiology.util.statics;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_ALPHA_TEST;
+import static org.lwjgl.opengl.GL11.GL_GREATER;
+import static org.lwjgl.opengl.GL11.GL_LESS;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+
+import org.lwjgl.opengl.GL11;
 
 import com.magiology.util.objs.ColorF;
 import com.magiology.util.objs.Vec3M;
-
-import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderItem;
@@ -20,7 +24,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 @SideOnly(Side.CLIENT)
 public class OpenGLM extends GlStateManager{
-	
 	
 	public static enum BlendFunc{
 		
@@ -101,6 +104,7 @@ public class OpenGLM extends GlStateManager{
 	public static Tessellator getT(){
 		return Tessellator.getInstance();
 	}
+	
 	public static RenderItem getRI(){
 		return UtilC.getMC().getRenderItem();
 	}
@@ -112,7 +116,7 @@ public class OpenGLM extends GlStateManager{
 		AlphaFunc.ALL.bind();
 		disableAlphaTest();
 	}
-
+	
 	public static void endOpaqueRendering(){
 		disableBlend();
 		enableAlphaTest();
@@ -122,41 +126,145 @@ public class OpenGLM extends GlStateManager{
 	}
 	
 	public static void rotate(Vec3M rot){
-		if(rot.x!=0)rotateX(rot.x);
-		if(rot.y!=0)rotateY(rot.y);
-		if(rot.z!=0)rotateZ(rot.z);
-	}
-	public static void rotateX(double rot){
-		rotate(rot, 1, 0, 0);
-	}
-	public static void rotateY(double rot){
-		rotate(rot, 0, 1, 0);
-	}
-	public static void rotateZ(double rot){
-		rotate(rot, 0, 0, 1);
-	}
-	public static void rotateX(float rot){
-		rotate(rot, 1, 0, 0);
-	}
-	public static void rotateY(float rot){
-		rotate(rot, 0, 1, 0);
-	}
-	public static void rotateZ(float rot){
-		rotate(rot, 0, 0, 1);
+		if(rot.x!=0)
+			rotateX(rot.x);
+		if(rot.y!=0)
+			rotateY(rot.y);
+		if(rot.z!=0)
+			rotateZ(rot.z);
 	}
 
+	public static void rotateX(double x){
+		rotate(x, 1, 0, 0);
+	}
+	
+	public static void rotateY(double y){
+		rotate(y, 0, 1, 0);
+	}
+	
+	public static void rotateZ(double z){
+		rotate(z, 0, 0, 1);
+	}
+	
+	public static void rotateX(float x){
+		rotate(x, 1, 0, 0);
+	}
+	
+	public static void rotateY(float y){
+		rotate(y, 0, 1, 0);
+	}
+	
+	public static void rotateZ(float z){
+		rotate(z, 0, 0, 1);
+	}
+
+	public static void rotateXY(double x, double y){
+		rotateX(x);
+		rotateY(y);
+	}
+	
+	public static void rotateXZ(double x, double z){
+		rotateX(x);
+		rotateZ(z);
+	}
+	
+	public static void rotateYX(double y, double x){
+		rotateY(y);
+		rotateX(x);
+	}
+	
+	public static void rotateYZ(double y, double z){
+		rotateY(y);
+		rotateZ(z);
+	}
+	
+	public static void rotateZX(double z, double x){
+		rotateZ(z);
+		rotateX(x);
+	}
+	
+	public static void rotateZY(double z, double y){
+		rotateZ(z);
+		rotateY(y);
+	}
+
+	public static void rotateXYZ(double x, double y, double z){
+		rotateX(x);
+		rotateY(y);
+		rotateZ(z);
+	}
+	public static void rotateZYX(double z, double y, double x){
+		rotateZ(z);
+		rotateY(y);
+		rotateX(x);
+	}
+	public static void rotateXZY(double x, double z, double y){
+		rotateX(x);
+		rotateZ(z);
+		rotateY(y);
+	}
+
+	public static void rotateXY(float x, float y){
+		rotateX(x);
+		rotateY(y);
+	}
+	
+	public static void rotateXZ(float x, float z){
+		rotateX(x);
+		rotateZ(z);
+	}
+	
+	public static void rotateYX(float y, float x){
+		rotateY(y);
+		rotateX(x);
+	}
+	
+	public static void rotateYZ(float y, float z){
+		rotateY(y);
+		rotateZ(z);
+	}
+	
+	public static void rotateZX(float z, float x){
+		rotateZ(z);
+		rotateX(x);
+	}
+	
+	public static void rotateZY(float z, float y){
+		rotateZ(z);
+		rotateY(y);
+	}
+
+	public static void rotateXYZ(float x, float y, float z){
+		rotateX(x);
+		rotateY(y);
+		rotateZ(z);
+	}
+	public static void rotateZYX(float z, float y, float x){
+		rotateZ(z);
+		rotateY(y);
+		rotateX(x);
+	}
+	public static void rotateXZY(float x, float z, float y){
+		rotateX(x);
+		rotateZ(z);
+		rotateY(y);
+	}
+	
 	public static void scale(double scale){
 		scale(scale, scale, scale);
 	}
+	
 	public static void scale(float scale){
 		scale(scale, scale, scale);
 	}
+	
 	public static void color(ColorF color){
 		color(color.r, color.g, color.b, color.a);
 	}
-
+	
 	public static void bindTexture(ResourceLocation texture){
 		UtilC.getMC().renderEngine.bindTexture(texture);
 	}
+
 	
 }

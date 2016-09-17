@@ -5,6 +5,7 @@ import com.magiology.util.m_extensions.BlockContainerM;
 import com.magiology.util.m_extensions.BlockM;
 import com.magiology.util.objs.RegistrableDatabaseStorage;
 import com.magiology.util.statics.CollectionConverter;
+import com.magiology.util.statics.PrintUtil;
 import com.magiology.util.statics.UtilM;
 import com.magiology.util.statics.class_manager.ClassList;
 
@@ -34,6 +35,7 @@ public final class MBlocks extends RegistrableDatabaseStorage<Block>{
 	@Override
 	public void registerObj(Block block){
 		String name=UtilM.standardizeName(UtilM.removeMcObjectEnd(block.getClass().getSimpleName()));
+		PrintUtil.println(name);
 		block.setRegistryName(MReference.MODID, name);
 		block.setUnlocalizedName(name);
 		ItemBlock ib=new ItemBlock(block);
