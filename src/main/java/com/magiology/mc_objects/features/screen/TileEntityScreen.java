@@ -36,6 +36,7 @@ public class TileEntityScreen extends TileEntityM{
 		buildScreen(blocks);
 	}
 	
+	
 	private List<TileEntityScreen> buildScreen(List<TileEntityScreen> blocks){
 		
 		Map<Integer, List<TileEntityScreen>> xBuildPlanes=new HashMap(),yBuildPlanes=new HashMap<>(),zBuildPlanes=new HashMap<>();
@@ -58,6 +59,8 @@ public class TileEntityScreen extends TileEntityM{
 		List<List<TileEntityScreen>> xPlanes=new ArrayList(xBuildPlanes.values()),yPlanes=new ArrayList<>(yBuildPlanes.values()),zPlanes=new ArrayList<>(zBuildPlanes.values());
 		
 		Queue<List<TileEntityScreen>> toRemove=new ArrayDeque<>();
+		List<List<TileEntityScreen>> allPlanes=new ArrayList<>();
+		
 		Consumer<? super List<TileEntityScreen>> fix=p->{
 			if(p.size()>1){
 				List<BlockPosM> positions=new ArrayList<>();
@@ -159,7 +162,10 @@ public class TileEntityScreen extends TileEntityM{
 							}
 						});
 					});
-					if(!solutions.isEmpty())toRemove.add(p);
+					if(!solutions.isEmpty()){
+						toRemove.add(p);
+						allPlanes.addAll(solutions);
+					}
 				}
 			}
 		};
@@ -176,8 +182,8 @@ public class TileEntityScreen extends TileEntityM{
 		
 		zPlanes.forEach(fix);
 		zPlanes.removeAll(toRemove);
-		
-		List<List<TileEntityScreen>> allPlanes=new ArrayList<>(xPlanes);
+
+		allPlanes.addAll(xPlanes);
 		allPlanes.addAll(yPlanes);
 		allPlanes.addAll(zPlanes);
 		

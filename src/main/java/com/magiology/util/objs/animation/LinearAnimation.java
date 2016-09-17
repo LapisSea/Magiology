@@ -1,58 +1,97 @@
-package com.magiology.util.objs;
+package com.magiology.util.objs.animation;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import com.magiology.util.interf.Calculable;
+import com.magiology.util.interf.ObjectReturn;
 
-public class LinearAnimation<T extends Calculable>{
+public class LinearAnimation<T extends Calculable<T>>{
 	
-	private DoubleObject<T[], Float>[] animationData;
+	private Point<T>[] points;
 	
-	public LinearAnimation(DoubleObject<T[], Float>...data){
-		List<DoubleObject<T[], Float>> dataSorted=new ArrayList<DoubleObject<T[], Float>>();
+	static class Point<T extends Calculable<T>>{
+		public T value;
+		public float pos;
 		
-		for(DoubleObject<T[], Float> pos:data){
+		public Point(T point, float pos){
+			this.value=point;
+			this.pos=pos;
+		}
+		
+		@Override
+		public String toString(){
+			return "Point[pos="+pos+", value="+value+"]";
+		}
+	}
+	
+	public LinearAnimation(Collection<T> data){
+		this(((ObjectReturn<Map<Float, T>>)()->{
+			Map<Float, T> map=new HashMap<>();
+			int i=0;
+			for(T t:data){
+				float j=i/(data.size()-1F);
+				i++;
+				map.put(j, t);
+			}
+			return map;
+		}).process());
+	}
+	
+	public LinearAnimation(Map<Float, T> data){
+		if(data.isEmpty())
+			throw new IllegalStateException("Linear animation can't be empty!");
+		
+		List<Point> dataSorted=new ArrayList<Point>();
+		
+		for(Entry<Float, T> pos:data.entrySet()){
 			boolean added=false;
 			
-			for(int i=0;i<dataSorted.size();i++){
-				if(dataSorted.get(i).obj2>pos.obj2){
-					dataSorted.add(i, pos);
+			for(int i=0; i<dataSorted.size(); i++){
+				if(dataSorted.get(i).pos>pos.getKey()){
+					dataSorted.add(i, new Point(pos.getValue(), pos.getKey()));
 					i=dataSorted.size();
 					added=true;
 				}
 			}
-			if(!added)dataSorted.add(pos);
+			if(!added)dataSorted.add(new Point(pos.getValue(), pos.getKey()));
 		}
-		animationData=dataSorted.toArray(new DoubleObject[0]);
+		points=dataSorted.toArray(new Point[dataSorted.size()]);
 	}
 	
-	public T[] get(float animationPos){
-		int pos=0;
-		for(int i=0;i<animationData.length-1;i++){
-			if(animationData[pos+1].obj2<animationPos)pos=i;
-			else i=animationData.length;
-		}
-		return get(pos, animationPos);
-	}
-	public T[] get(int partId,float animationPos){
-		DoubleObject<T[], Float> before=animationData[partId],after=animationData[partId+1];
-		T[] result=(T[])Array.newInstance(before.obj1.getClass().getComponentType(), before.obj1.length);
-		if(animationPos>=after.obj2)return after.obj1;
-		if(animationPos<=before.obj2)return before.obj1;
-		float 
-		precentageDifference=after.obj2-before.obj2,
-		precentageStart=animationPos-before.obj2,
-		precentage=precentageStart/precentageDifference;
+	public T get(float pos){
+		Point<T> start=null, end=null;
 		
+		pos%=1;
 		
-		
-		for(int i=0;i<result.length;i++){
-			T pos1=before.obj1[i], pos2=after.obj1[i];
-			result[i]=(T)pos2.sub(pos1).mul(precentage).add(pos1);
+		for(int i=1; i<points.length; i++){
+			Point<T> child=points[i];
+			if(child.pos>=pos){
+				start=points[i-1];
+				end=child;
+				break;
+			}
 		}
 		
-		return result;
+		if(start==null)return points[0].value;
+		
+		float startPos=start.pos, endPos=end.pos;
+		
+		if(pos<startPos)return start.value;
+		if(pos>endPos)return end.value;
+		
+		float precentageDifference=endPos-startPos, precentageStart=pos-startPos, precentage=precentageStart/precentageDifference;
+		T startValue=start.value;
+		
+		return end.value.sub(startValue).mul(precentage).add(startValue);
 	}
+	
+	Point<T>[] getPoints(){
+		return points;
+	}
+	
 }
