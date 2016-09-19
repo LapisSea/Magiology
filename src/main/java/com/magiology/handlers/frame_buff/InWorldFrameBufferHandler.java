@@ -33,16 +33,19 @@ public class InWorldFrameBufferHandler{
 		long time=System.currentTimeMillis();
 		Queue<InWorldFrame> unused=new ArrayDeque<>();
 		allBuffers.forEach(f->{
-			if(f.lastTimeUsed+2000<time){
+			if(f.lastTimeUsed+4000<time){
 				unused.add(f);
 				f.dirty=true;
 				PrintUtil.println("Deleted InWorldFrame id=",f.frameBuffer.framebufferObject);
 				f.frameBuffer.deleteFramebuffer();
 			}
 		});
-		PrintUtil.println("Old InWorldFrame list size:",allBuffers.size());
+		int siz=allBuffers.size();
 		allBuffers.removeAll(unused);
-		PrintUtil.println("New InWorldFrame list size:",allBuffers.size());
+		if(allBuffers.size()!=siz){
+			PrintUtil.println("Old InWorldFrame list size:",siz);
+			PrintUtil.println("New InWorldFrame list size:",allBuffers.size());
+		}
 	}
 	
 	void requestRender(InWorldFrame frame){

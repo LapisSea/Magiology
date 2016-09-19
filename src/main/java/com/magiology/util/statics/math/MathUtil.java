@@ -134,6 +134,9 @@ public class MathUtil{
 		return result;
 	}
 
+	public static int min(int n1, int n2,int n3){
+		return Math.min(n1, Math.min(n2, n3));
+	}
 	public static int min(int...nums){
 		if(nums.length==1)return nums[0];
 		int result=nums[0];

@@ -24,10 +24,6 @@ public abstract class TileEntityM extends TileEntity{
 		return this.writeToNBT(new NBTTagCompound());
 	}
     
-	@Override
-	public BlockPosM getPos(){
-		return new BlockPosM(super.getPos());
-	}
 	
 	public long getTime(){
 		return worldObj.getTotalWorldTime();

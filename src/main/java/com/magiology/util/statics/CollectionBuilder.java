@@ -1,5 +1,6 @@
 package com.magiology.util.statics;
 
+import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,11 +32,11 @@ public class CollectionBuilder{
 		}, 2, data);
 	}
 	
-	public static <U,T extends Collection<U>> T build(T col, ObjectConverter<Object[], U> builder, int dataChunkSize, Object...data){
+	public static <U,T extends Collection<U>, L> T build(T col, ObjectConverter<L[], U> builder, int dataChunkSize, L...data){
 		if(data.length==0)return col;
 		if(data.length%dataChunkSize!=0)throw new IllegalArgumentException("Incorrect number of data objects!");
 		
-		Object[] chunk=new Object[dataChunkSize];
+		L[] chunk=(L[])Array.newInstance(data[0].getClass(), dataChunkSize);
 		int tracker=0;
 		for(int i=0,j=data.length/dataChunkSize;i<j;i++){
 			for(int k=0;k<chunk.length;k++){

@@ -25,17 +25,12 @@ public class TickEvents{
 	public void onClientTick(TickEvent.ClientTickEvent event){
 		if(event.phase!=Phase.START){
 			if(UtilC.isWorldOpen()){
-				if(UtilC.peridOf(50))InWorldFrameBufferHandler.instance.bufferGC();
+				if(UtilC.getWorldTime()%50==0)InWorldFrameBufferHandler.instance.bufferGC();
 				if(!UtilC.getMC().isGamePaused()){
 					Vec3M pos=new Vec3M(UtilC.getThePlayer().getPositionEyes(0));
 					
 					Particles.MISTY_ENERGY.spawn(pos.add(new Vec3M(RandUtil.CRF(10), RandUtil.CRF(10), RandUtil.CRF(10))), new Vec3M(), 0.1F, 0, new ColorF(0.7+RandUtil.RF(0.3),0.4+RandUtil.RF(0.4),0.2+RandUtil.RF(0.1),0.3+RandUtil.CRF(0.7)));
-					//if(UtilC.getThePlayer().isSneaking())Particles.MISTY_ENERGY.compileDisplayList();
 					ParticleHandler.get().updateParticles();
-//					if(UtilC.getWorldTime()%60==0){
-//						ShaderHandler.get().load();
-//						PrintUtil.println("shaders reloaded");
-//					}
 				}
 			}
 		}

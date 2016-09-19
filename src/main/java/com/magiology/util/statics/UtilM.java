@@ -350,7 +350,7 @@ public class UtilM{
 		return false;
 	}
 	public static boolean instanceOf(Object toBeTested, Class instance){
-		return instanceOf(toBeTested.getClass(), instance);
+		return toBeTested!=null&&instanceOf(toBeTested.getClass(), instance);
 	}
 	public static boolean instanceOf(Class toBeTested, Object instance){
 		return instanceOf(toBeTested, instance.getClass());
@@ -682,21 +682,21 @@ public class UtilM{
 		return stacks;
 	}
 
-	public static List<TileEntity> getTileSides(World worldObj, BlockPosM pos){
+	public static List<TileEntity> getTileSides(World worldObj, BlockPos pos){
 		List<TileEntity> list=new ArrayList<>();
 		
 		for(EnumFacing side:EnumFacing.values()){
-			TileEntity tile=pos.offset(side).getTile(worldObj);
+			TileEntity tile=worldObj.getTileEntity(pos.offset(side));
 			if(tile!=null)list.add(tile);
 		}
 		
 		return list;
 	}
-	public static Map<EnumFacing, TileEntity> getTileSidesDir(World worldObj, BlockPosM pos){
+	public static Map<EnumFacing, TileEntity> getTileSidesDir(World worldObj, BlockPos pos){
 		Map<EnumFacing, TileEntity> map=new HashMap<>();
 		
 		for(EnumFacing side:EnumFacing.values()){
-			TileEntity tile=pos.offset(side).getTile(worldObj);
+			TileEntity tile=worldObj.getTileEntity(pos.offset(side));
 			if(tile!=null)map.put(side,tile);
 		}
 		

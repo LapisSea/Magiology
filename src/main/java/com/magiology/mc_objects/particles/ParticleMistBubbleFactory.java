@@ -1,5 +1,7 @@
 package com.magiology.mc_objects.particles;
 
+import org.lwjgl.opengl.GL11;
+
 import com.magiology.client.renderers.Renderer;
 import com.magiology.core.MReference;
 import com.magiology.handlers.particle.ParticleFactory;
@@ -10,8 +12,6 @@ import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.OpenGLM.BlendFunc;
 import com.magiology.util.statics.UtilC;
 import com.magiology.util.statics.UtilM;
-
-import org.lwjgl.opengl.GL11;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3i;
@@ -88,7 +88,7 @@ public class ParticleMistBubbleFactory extends ParticleFactory{
 			setSizeTo(0);
 			this.lifeTime=lifeTime;
 			setGravity(gravity);
-			setColor(color);
+			setColor(color.copy());
 			originalSize=size;
 			originalAlpha=color.a;
 		}
@@ -96,6 +96,7 @@ public class ParticleMistBubbleFactory extends ParticleFactory{
 		@Override
 		public void update(){
 			super.update();
+			moveParticle(getSpeed());
 			float mul=1-Math.abs((getParticleAge()*2-lifeTime)/lifeTime);
 			setSize(originalSize*(float)Math.sqrt(mul));
 			getColor().a=mul*2*originalAlpha;

@@ -24,7 +24,8 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 		OpenGLM.pushMatrix();
 		screen.bindTexture();
 		OpenGLM.translate(renderPos);
-		OpenGLM.disableLighting();
+		OpenGLM.disableCull();
+		
 		
 		Renderer.POS_UV.beginQuads();
 		Renderer.POS_UV.addVertex(1, 1, 0,  1,1);
@@ -32,7 +33,7 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 		Renderer.POS_UV.addVertex(0, 0, 0,  0,0);
 		Renderer.POS_UV.addVertex(0, 1, 0,  0,1);
 		Renderer.POS_UV.draw();
-		OpenGLM.enableLighting();
+		OpenGLM.enableCull();
 		
 		OpenGLM.popMatrix();
 	}
@@ -57,7 +58,7 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 		
 		OpenGLM.pushMatrix();
 		OpenGLM.translate(30, 30, 0);
-		OpenGLM.rotateZ(Math.sin((System.currentTimeMillis()/1000D)%(Math.PI*2))*360);
+		OpenGLM.rotateZ(Math.sin((System.currentTimeMillis()/1000D+screenTile.getPos().toLong())%(Math.PI*2))*360);
 		Renderer.POS.draw();
 		OpenGLM.popMatrix();
 		
