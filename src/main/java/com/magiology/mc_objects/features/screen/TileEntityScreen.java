@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import com.magiology.handlers.frame_buff.InWorldFrame;
 import com.magiology.mc_objects.particles.ParticleMistBubbleFactory;
@@ -35,18 +36,11 @@ public class TileEntityScreen extends TileEntityM{
 	public void structurize(){
 		List<TileEntityScreen> blocks=explore(new ArrayList<>());
 		PrintUtil.println("--------------------");
-		Thread t=new Thread(()->{
-			try{
-				List<TileEntityScreen> plane=buildScreen(blocks);
-				for(TileEntityScreen tileEntityScreen:plane){
-					for(int k=0; k<5; k++)
-						ParticleMistBubbleFactory.get().spawn(new Vec3M(tileEntityScreen.getPos()).add(0.3, 0.5, 0.5), new Vec3M(RandUtil.CRD(0.005), RandUtil.CRD(0.005), RandUtil.CRD(0.005)), 3/16F, 50, 0, ColorF.WHITE);
-				}
-			}catch(Exception e){
-				e.printStackTrace();
+			List<TileEntityScreen> plane=buildScreen(blocks);
+			for(TileEntityScreen tileEntityScreen:plane){
+				for(int k=0; k<5; k++)
+					ParticleMistBubbleFactory.get().spawn(new Vec3M(tileEntityScreen.getPos()).add(0.3, 0.5, 0.5), new Vec3M(RandUtil.CRD(0.005), RandUtil.CRD(0.005), RandUtil.CRD(0.005)), 3/16F, 50, 0, ColorF.WHITE);
 			}
-		});
-		t.start();
 	}
 	
 	private List<TileEntityScreen> buildScreen(List<TileEntityScreen> blocks){
@@ -74,18 +68,18 @@ public class TileEntityScreen extends TileEntityM{
 		List<List<TileEntityScreen>> xPlanes=new ArrayList(xBuildPlanes.values()), yPlanes=new ArrayList<>(yBuildPlanes.values()), zPlanes=new ArrayList<>(zBuildPlanes.values());
 		
 		Queue<List<TileEntityScreen>> toRemove=new ArrayDeque<>(), toAdd=new ArrayDeque<>();
-		Consumer<? super List<TileEntityScreen>> fix=p->{
-			if(p.size()<2)
-				return;
-			// calculate 2D size of
-			// plane---------------------------------------------------
-			int xSize, ySize, minX=Integer.MAX_VALUE, maxX=Integer.MIN_VALUE, minY=Integer.MAX_VALUE, maxY=Integer.MIN_VALUE, minZ=Integer.MAX_VALUE, maxZ=Integer.MIN_VALUE;
+		Consumer<? super List<TileEntityScreen>> fix=rawPlane->{
+			if(rawPlane.size()<2)return;//is 1 block or empty? Than it can't have holes, hence nothing is there to be fixed
+			
+			int xSize, ySize,
+				minX=Integer.MAX_VALUE, minY=Integer.MAX_VALUE, minZ=Integer.MAX_VALUE, 
+				maxX=Integer.MIN_VALUE, maxY=Integer.MIN_VALUE, maxZ=Integer.MIN_VALUE;
 			boolean isVerticalX, isHorisontal;
-			{// braces here to dump values
-				int xSi, ySi;
+			{//braces here to dump values
+				int xSizeCalc, ySizeCalc;//using helper values to make xSize/ySize effectively final
 				
-				for(TileEntityScreen t:p){
-					BlockPos pos=t.getPos();
+				for(TileEntityScreen tile:rawPlane){
+					BlockPos pos=tile.getPos();
 					minX=Math.min(minX, pos.getX());
 					minY=Math.min(minY, pos.getY());
 					minZ=Math.min(minZ, pos.getZ());
@@ -94,91 +88,85 @@ public class TileEntityScreen extends TileEntityM{
 					maxY=Math.max(maxY, pos.getY());
 					maxZ=Math.max(maxZ, pos.getZ());
 				}
-				int ySiz=maxY-minY, zSiz=maxZ-minZ;
-				isVerticalX=zSiz==0;
-				isHorisontal=ySiz==0;
+				int ySizeHelper=maxY-minY, zSizeHelper=maxZ-minZ;//calculate on spot to prevent double calculation
+				isVerticalX=zSizeHelper==0;//determine orientation of plane
+				isHorisontal=ySizeHelper==0;
 				
-				if(isHorisontal){
-					xSi=maxX-minX;
-					ySi=zSiz;
+				if(isHorisontal){//convert 3D space to normalized (origin at 0) 2D space
+					xSizeCalc=maxX-minX;
+					ySizeCalc=zSizeHelper;
 				}else if(isVerticalX){
-					xSi=maxX-minX;
-					ySi=ySiz;
+					xSizeCalc=maxX-minX;
+					ySizeCalc=ySizeHelper;
 				}else{
-					xSi=zSiz;
-					ySi=ySiz;
+					xSizeCalc=zSizeHelper;
+					ySizeCalc=ySizeHelper;
 				}
-				xSize=xSi+1;
-				ySize=ySi+1;
+				xSize=xSizeCalc+1;//apply final size
+				ySize=ySizeCalc+1;
 			}
-			// -----------------------------------------------------------------------------
 			
 			// Number of elements shows that the plane can be only full.
 			// Discontinuing fixing!
-			if(xSize*ySize==p.size())
-				return;
+			if(xSize*ySize==rawPlane.size())return;
 			
-			// create
-			// plane-----------------------------------------------------------------
 
 			TileEntityScreen[][] grid=new TileEntityScreen[xSize][ySize];
 			
-			if(isHorisontal){
-				for(TileEntityScreen t:p){
+			if(isHorisontal){//convert mixed tileEntitys from list to 2D grid
+				for(TileEntityScreen t:rawPlane){
 					grid[t.x()-minX][t.z()-minZ]=t;
 				}
 			}else if(isVerticalX){
-				for(TileEntityScreen t:p){
+				for(TileEntityScreen t:rawPlane){
 					grid[t.x()-minX][t.y()-minY]=t;
 				}
 			}else{
-				for(TileEntityScreen t:p){
+				for(TileEntityScreen t:rawPlane){
 					grid[t.z()-minZ][t.y()-minY]=t;
 				}
 			}
-			// -----------------------------------------------------------------------------
 			
 			for(int x=0;x<grid.length;x++){
 				for(int y=0;y<grid[x].length;y++){
 					TileEntityScreen tile=grid[x][y];
-					if(tile==null)continue;
+					if(tile==null)continue;//is a hole? No need to use that!
 					
 					int minX1=x, minY1=y, maxX1=minX1, maxY1=minY1;
-					boolean minX1p=true, minY1p=true;
+					boolean xHasNoHole=true, yHasNoHole=true;
 					
-					while(minX1p||minY1p){
-						if(minY1p){
-							if(minY1==0)minY1p=false;
+					while(xHasNoHole||yHasNoHole){//try to expand until x and y get stuck on a hole
+						if(yHasNoHole){
+							if(minY1==0)yHasNoHole=false;
 							else{
-								minY1--;
+								minY1--;//expand rectangle
 								for(int x1=minX1; x1<maxX1+1; x1++){
-									if(grid[x1][minY1]==null){
-										if(minY1p){
-											minY1++;
-											minY1p=false;
-										}
+									if(grid[x1][minY1]==null){//hole found! Reverting expansion and discontinuing it. 
+										minY1++;
+										yHasNoHole=false;
+										break;
 									}
 								}
 							}
 						}
-						if(minX1p){
-							if(minX1==0)minX1p=false;
+						if(xHasNoHole){
+							if(minX1==0)xHasNoHole=false;
 							else{
 								minX1--;
 								for(int y1=minY1; y1<maxY1+1; y1++){
 									if(grid[minX1][y1]==null){
-										if(minX1p){
-											minX1++;
-											minX1p=false;
-										}
+										minX1++;
+										xHasNoHole=false;
+										break;
 									}
 								}
 							}
 						}
 					}
 					
+					//convert bounding rectangle to useable list
 					List<TileEntityScreen> newPlane=new ArrayList<>();
-
+					
 					for(int x1=minX1;x1<maxX1+1;x1++){
 						for(int y1=minY1;y1<maxY1+1;y1++){
 							TileEntityScreen tile1=grid[x1][y1];
@@ -187,81 +175,52 @@ public class TileEntityScreen extends TileEntityM{
 							}
 						}
 					}
-					
+					//did the plane expand? Than add it to said plane collection. 
 					if(newPlane.size()>1)toAdd.add(newPlane);
 				}
 			}
-			
-			if(!toAdd.isEmpty())toRemove.add(p);
+			//anything generated from broken plane? Than remove it. 
+			if(!toAdd.isEmpty())toRemove.add(rawPlane);
 		};
 		
-		PrintUtil.println("fixing x planes");
+		//call fix on each axis of planes and handle removing/adding
 		xPlanes.forEach(fix);
-		
 		xPlanes.removeAll(toRemove);
 		xPlanes.addAll(toAdd);
 		toRemove.clear();
 		toAdd.clear();
 		
-		PrintUtil.println("fixing y planes");
 		yPlanes.forEach(fix);
-		
 		yPlanes.removeAll(toRemove);
 		yPlanes.addAll(toAdd);
 		toRemove.clear();
 		toAdd.clear();
 		
-		PrintUtil.println("fixing z planes");
 		zPlanes.forEach(fix);
-		
 		zPlanes.removeAll(toRemove);
 		zPlanes.addAll(toAdd);
+		toRemove.clear();
+		toAdd.clear();
 		
-		// for(List<TileEntityScreen> plane:xPlanes){
-		// ColorF color=new
-		// ColorF(RandUtil.CRF(0.5),RandUtil.CRF(0.5),RandUtil.CRF(0.5)+0.7,1);
-		// for(TileEntityScreen tileEntityScreen:plane){
-		// ParticleMistBubbleFactory.get().spawn(
-		// new Vec3M(tileEntityScreen.getPos()).add(0.5F),
-		// new Vec3M(),
-		// 4/16F, 50, 0, color);
-		// }
-		// }
-		// for(List<TileEntityScreen> plane:yPlanes){
-		// ColorF color=new
-		// ColorF(RandUtil.CRF(0.5)+0.7,RandUtil.CRF(0.5),RandUtil.CRF(0.5),1);
-		// for(TileEntityScreen tileEntityScreen:plane){
-		// ParticleMistBubbleFactory.get().spawn(
-		// new Vec3Mw(tileEntityScreen.getPos()).add(0.5,0.7,0.5),
-		// new Vec3M(),
-		// 4/16F, 50, 0, color);
-		// }
-		// }
-		// for(List<TileEntityScreen> plane:zPlanes){
-		// ColorF color=new
-		// ColorF(RandUtil.CRF(0.5),RandUtil.CRF(0.5)+0.7,RandUtil.CRF(0.5),1);
-		// for(TileEntityScreen tileEntityScreen:plane){
-		// ParticleMistBubbleFactory.get().spawn(
-		// new Vec3M(tileEntityScreen.getPos()).add(0.5,0.3,0.5),
-		// new Vec3M(),
-		// 4/16F, 50, 0, color);
-		// }
-		// }
-		
+		//combine for analysis
 		List<List<TileEntityScreen>> allPlanes=new ArrayList<>();
 		allPlanes.addAll(xPlanes);
 		allPlanes.addAll(yPlanes);
 		allPlanes.addAll(zPlanes);
 		
-		List<TileEntityScreen> plane;
-		if(allPlanes.size()==1)
-			plane=allPlanes.get(0);
-		else
-			plane=allPlanes.stream().max((p1, p2)->Integer.compare(p1.size(), p2.size())).get();
-		return plane;
+		if(allPlanes.size()==1)return allPlanes.get(0);//only 1 plane? than no need to choose a plane
+		else{
+			int maxSize=allPlanes.stream().max((p1, p2)->Integer.compare(p1.size(), p2.size())).get().size();
+			//get all planes with biggest size
+			List<List<TileEntityScreen>> biggestPlanes=allPlanes.stream().filter(plane->plane.size()==maxSize).collect(Collectors.toList());
+			
+			if(biggestPlanes.size()==1)return biggestPlanes.get(0);//only 1 plane with maxSize?
+			
+			return null;//get the biggest plane
+		}
 	}
 	
-	private List<TileEntityScreen> explore(List<TileEntityScreen> parts){
+	private List<TileEntityScreen> explore(List<TileEntityScreen> parts){//crawl trough all connected blocks
 		UtilM.getTileSides(getWorld(), new BlockPosM(getPos()), TileEntityScreen.class).forEach(t->{
 			if(!parts.contains(t)){
 				parts.add(t);
