@@ -8,7 +8,7 @@ import com.magiology.client.shaders.upload.UniformUploaderColor;
 import com.magiology.client.shaders.upload.UniformUploaderF1;
 import com.magiology.client.shaders.upload.UniformUploaderF2;
 import com.magiology.util.objs.ColorF;
-import com.magiology.util.objs.DoubleObject;
+import com.magiology.util.objs.PairM;
 import com.magiology.util.objs.Vec2FM;
 import com.magiology.util.objs.Vec3M;
 
@@ -114,7 +114,7 @@ public class SoftEffectsShader extends PositionAwareEffect{
 			radius;
 		
 		public CricleFX(Vec3M worldPos, float sizeP, float sizeN, float radius, ColorF mulColor){
-			DoubleObject<Vec2FM, Float> o=convertWorldToScreenPos(worldPos);
+			PairM<Vec2FM, Float> o=convertWorldToScreenPos(worldPos);
 			screenPos=o.obj1;
 			screenPos.x*=Display.getWidth()/2F;
 			screenPos.y*=Display.getHeight()/2F;
@@ -155,7 +155,7 @@ public class SoftEffectsShader extends PositionAwareEffect{
 		public LineFX(Vec3M worldPos1, Vec3M worldPos2, float width, ColorF mulColor){
 			this.mulColor=mulColor;
 			
-			DoubleObject<Vec2FM, Float>
+			PairM<Vec2FM, Float>
 			o=convertWorldToScreenPos(worldPos1);
 			this.widthPos1=width/o.obj2*InvisibleEffect.screenSizeF;
 			start=o.obj1;

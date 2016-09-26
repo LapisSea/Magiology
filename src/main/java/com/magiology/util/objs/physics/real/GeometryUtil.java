@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.magiology.util.objs.DoubleObject;
+import com.magiology.util.objs.PairM;
 import com.magiology.util.objs.Vec3M;
 import com.magiology.util.statics.math.MatrixUtil;
 
@@ -218,7 +218,7 @@ public class GeometryUtil{
 		return vec31.crossProduct(vec3).normalize();
 	}
 	
-	public static DoubleObject<Vec3d,Vec3d> getStartEndLook(Entity entity){
+	public static PairM<Vec3d,Vec3d> getStartEndLook(Entity entity){
 		float 
 			f=entity.rotationPitch,
 			f1=entity.rotationYaw,
@@ -235,12 +235,12 @@ public class GeometryUtil{
 		Vec3d 
 			start=new Vec3d(d0,d1,d2),
 			end=start.addVector(f6*d3,f5*d3,f7*d3);
-		return new DoubleObject<Vec3d,Vec3d>(start,end);
+		return new PairM<Vec3d,Vec3d>(start,end);
 	}
 	public static Vec3M intersectRayQuad(Ray ray, Quad quad){
 		return intersectRayTriangles(ray,quad.getTriangle1(),quad.getTriangle2()).obj1;
 	}
-	public static DoubleObject<Vec3M, Integer> intersectRayQuads(Ray ray, List<Quad> quads){
+	public static PairM<Vec3M, Integer> intersectRayQuads(Ray ray, List<Quad> quads){
 		Triangle[] data=new Triangle[quads.size()*2];
 		
 		
@@ -251,14 +251,14 @@ public class GeometryUtil{
 			i++;
 		}
 		
-		DoubleObject<Vec3M, Integer> result=intersectRayTriangles(ray,data);
+		PairM<Vec3M, Integer> result=intersectRayTriangles(ray,data);
 		if(result==null)return null;
 		result.obj2-=result.obj2%2;
 		result.obj2/=2;
 		return result;
 	}
 	
-	public static DoubleObject<Vec3M, Integer> intersectRayQuads(Ray ray, Quad...quads){
+	public static PairM<Vec3M, Integer> intersectRayQuads(Ray ray, Quad...quads){
 		Triangle[] data=new Triangle[quads.length*2];
 		
 		
@@ -267,7 +267,7 @@ public class GeometryUtil{
 			data[i*2+1]=quads[i].getTriangle2();
 		}
 		
-		DoubleObject<Vec3M, Integer> result=intersectRayTriangles(ray,data);
+		PairM<Vec3M, Integer> result=intersectRayTriangles(ray,data);
 		if(result==null)return null;
 		result.obj2-=result.obj2%2;
 		result.obj2/=2;
@@ -336,7 +336,7 @@ public class GeometryUtil{
 
 		return i;
 	}
-	public static DoubleObject<Vec3M, Integer> intersectRayTriangles(Ray ray, Triangle...triangles){
+	public static PairM<Vec3M, Integer> intersectRayTriangles(Ray ray, Triangle...triangles){
 		List<Vec3M> results=new ArrayList<>();
 		
 		for(Triangle triangle:triangles){
@@ -356,14 +356,14 @@ public class GeometryUtil{
 				closestId=i;
 			}
 		}
-		return new DoubleObject<Vec3M, Integer>(results.get(closestId), closestId);
+		return new PairM<Vec3M, Integer>(results.get(closestId), closestId);
 	}
 	
 	public static RayTraceResult rayTrace(Entity player){
 		return rayTrace(player,false);
 	}
 	public static RayTraceResult rayTrace(Entity entity,boolean useLiquids){
-		DoubleObject<Vec3d,Vec3d> look=getStartEndLook(entity);
+		PairM<Vec3d,Vec3d> look=getStartEndLook(entity);
 		return entity.worldObj.rayTraceBlocks(look.obj1,look.obj2,useLiquids,!useLiquids,false);
 	}
 }

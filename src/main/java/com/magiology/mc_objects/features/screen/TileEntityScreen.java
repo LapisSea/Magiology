@@ -1,49 +1,90 @@
 package com.magiology.mc_objects.features.screen;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import com.magiology.handlers.frame_buff.InWorldFrame;
-import com.magiology.mc_objects.particles.ParticleMistBubbleFactory;
-import com.magiology.util.m_extensions.BlockPosM;
-import com.magiology.util.m_extensions.TileEntityM;
-import com.magiology.util.objs.ColorF;
+import com.magiology.util.interf.IBlockBreakListener;
+import com.magiology.util.m_extensions.*;
 import com.magiology.util.objs.Vec3M;
-import com.magiology.util.statics.PrintUtil;
-import com.magiology.util.statics.RandUtil;
-import com.magiology.util.statics.UtilM;
+import com.magiology.util.statics.*;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.*;
 
-public class TileEntityScreen extends TileEntityM{
+public class TileEntityScreen extends TileEntityM implements IBlockBreakListener{
 	
 	public boolean isMultiblockBrain=true, screenDirty=true;
-	
-	private TileEntityScreen brain;
-	
+	public int xScreenOff,yScreenOff;
+	public Plane screen;
 	@SideOnly(Side.CLIENT)
 	public InWorldFrame screenTexture;
 	
+	private TileEntityScreen brain;
 	
-	public void structurize(){
-		List<TileEntityScreen> blocks=explore(new ArrayList<>());
-		PrintUtil.println("--------------------");
-			List<TileEntityScreen> plane=buildScreen(blocks);
-			for(TileEntityScreen tileEntityScreen:plane){
-				for(int k=0; k<5; k++)
-					ParticleMistBubbleFactory.get().spawn(new Vec3M(tileEntityScreen.getPos()).add(0.3, 0.5, 0.5), new Vec3M(RandUtil.CRD(0.005), RandUtil.CRD(0.005), RandUtil.CRD(0.005)), 3/16F, 50, 0, ColorF.WHITE);
-			}
+	
+	public class Plane{
+		public List<TileEntityScreen> blocks;
+		public boolean isVerticalX, isHorisontal;
+		public int xSize, ySize, minX,minY,minZ;
+		public Plane(List<TileEntityScreen> blocks){
+			this.blocks=blocks;
+		}
+		public Plane(List<TileEntityScreen> blocks, boolean isVerticalX, boolean isHorisontal, int xSize, int ySize, int minX, int minY, int minZ){
+			this.blocks=blocks;
+			this.isVerticalX=isVerticalX;
+			this.isHorisontal=isHorisontal;
+			this.xSize=xSize;
+			this.ySize=ySize;
+			this.minX=minX;
+			this.minY=minY;
+			this.minZ=minZ;
+		}
+		
 	}
 	
-	private List<TileEntityScreen> buildScreen(List<TileEntityScreen> blocks){
+	public void structurize(Vec3M clickedPos){
+		List<TileEntityScreen> blocks=explore(new ArrayList<>());
+		TileEntityScreen brain=this;
+		while(blocks.isEmpty()){
+			try{
+				brain.screen=brain.buildScreen(blocks,clickedPos);
+				for(TileEntityScreen tile:brain.screen.blocks){
+//					ParticleMistBubbleFactory.get().spawn(new Vec3M(tile.pos).add(0.5F), new Vec3M(), 0.5F, 10, 0, ColorF.RED);
+					tile.brain=brain;
+					if(tile.screenTexture!=null)tile.screenTexture=null;
+					BlockPos off=tile.getPos().subtract(new BlockPos(brain.screen.minX,brain.screen.minY,brain.screen.minZ));
+					PrintUtil.println(brain.screen.isVerticalX,brain.screen.isHorisontal);
+					tile.xScreenOff=brain.screen.isVerticalX? off.getX():off.getZ();
+					tile.yScreenOff=brain.screen.isHorisontal?off.getZ():off.getY();
+				}
+				blocks.removeAll(brain.screen.blocks);
+				if(!blocks.isEmpty())brain=blocks.get(0);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+	}
+	@Override
+	public void onBroken(World world, BlockPos pos, IBlockState state){
+		if(isBrain())breakScreen();
+		else if(hasBrain()){
+			getBrain().breakScreen();
+		}
+	}
+	private void breakScreen(){
+		screen.blocks.forEach(tile->{
+			tile.screenTexture=null;
+			tile.brain=null;
+		});
+		screen=null;
+	}
+	
+	private Plane buildScreen(List<TileEntityScreen> blocks,Vec3M clickedPos){
 		
 		Map<Integer, List<TileEntityScreen>> xBuildPlanes=new HashMap(), yBuildPlanes=new HashMap<>(), zBuildPlanes=new HashMap<>();
 		blocks.forEach(t->{
@@ -65,11 +106,13 @@ public class TileEntityScreen extends TileEntityM{
 				zBuildPlanes.put(z, plane=new ArrayList<>());
 			plane.add(t);
 		});
-		List<List<TileEntityScreen>> xPlanes=new ArrayList(xBuildPlanes.values()), yPlanes=new ArrayList<>(yBuildPlanes.values()), zPlanes=new ArrayList<>(zBuildPlanes.values());
+		List<Plane> xPlanes=new ArrayList(), yPlanes=new ArrayList<>(), zPlanes=new ArrayList<>();
+		xBuildPlanes.forEach((i,v)->xPlanes.add(new Plane(v)));
+		yBuildPlanes.forEach((i,v)->yPlanes.add(new Plane(v)));
+		zBuildPlanes.forEach((i,v)->zPlanes.add(new Plane(v)));
 		
-		Queue<List<TileEntityScreen>> toRemove=new ArrayDeque<>(), toAdd=new ArrayDeque<>();
-		Consumer<? super List<TileEntityScreen>> fix=rawPlane->{
-			if(rawPlane.size()<2)return;//is 1 block or empty? Than it can't have holes, hence nothing is there to be fixed
+		Queue<Plane> toRemove=new ArrayDeque<>(), toAdd=new ArrayDeque<>();
+		Consumer<? super Plane> fix=rawPlane->{
 			
 			int xSize, ySize,
 				minX=Integer.MAX_VALUE, minY=Integer.MAX_VALUE, minZ=Integer.MAX_VALUE, 
@@ -78,7 +121,7 @@ public class TileEntityScreen extends TileEntityM{
 			{//braces here to dump values
 				int xSizeCalc, ySizeCalc;//using helper values to make xSize/ySize effectively final
 				
-				for(TileEntityScreen tile:rawPlane){
+				for(TileEntityScreen tile:rawPlane.blocks){
 					BlockPos pos=tile.getPos();
 					minX=Math.min(minX, pos.getX());
 					minY=Math.min(minY, pos.getY());
@@ -105,25 +148,33 @@ public class TileEntityScreen extends TileEntityM{
 				xSize=xSizeCalc+1;//apply final size
 				ySize=ySizeCalc+1;
 			}
+			rawPlane.isHorisontal=isHorisontal;
+			rawPlane.isVerticalX=isVerticalX;
+			rawPlane.xSize=xSize;
+			rawPlane.ySize=ySize;
+			rawPlane.minX=minX;
+			rawPlane.minY=minY;
+			rawPlane.minZ=minZ;
 			
+			if(rawPlane.blocks.size()<2)return;//is 1 block or empty? Than it can't have holes, hence nothing is there to be fixed
 			// Number of elements shows that the plane can be only full.
 			// Discontinuing fixing!
-			if(xSize*ySize==rawPlane.size())return;
+			if(xSize*ySize==rawPlane.blocks.size())return;
 			
 
 			TileEntityScreen[][] grid=new TileEntityScreen[xSize][ySize];
 			
 			if(isHorisontal){//convert mixed tileEntitys from list to 2D grid
-				for(TileEntityScreen t:rawPlane){
-					grid[t.x()-minX][t.z()-minZ]=t;
+				for(TileEntityScreen t:rawPlane.blocks){
+					grid[t.x()-rawPlane.minX][t.z()-rawPlane.minZ]=t;
 				}
 			}else if(isVerticalX){
-				for(TileEntityScreen t:rawPlane){
-					grid[t.x()-minX][t.y()-minY]=t;
+				for(TileEntityScreen t:rawPlane.blocks){
+					grid[t.x()-rawPlane.minX][t.y()-rawPlane.minY]=t;
 				}
 			}else{
-				for(TileEntityScreen t:rawPlane){
-					grid[t.z()-minZ][t.y()-minY]=t;
+				for(TileEntityScreen t:rawPlane.blocks){
+					grid[t.z()-rawPlane.minZ][t.y()-rawPlane.minY]=t;
 				}
 			}
 			
@@ -164,19 +215,19 @@ public class TileEntityScreen extends TileEntityM{
 						}
 					}
 					
-					//convert bounding rectangle to useable list
-					List<TileEntityScreen> newPlane=new ArrayList<>();
+					//convert bounding rectangle to usable list
+					List<TileEntityScreen> newPlaneBlocks=new ArrayList<>();
 					
 					for(int x1=minX1;x1<maxX1+1;x1++){
 						for(int y1=minY1;y1<maxY1+1;y1++){
 							TileEntityScreen tile1=grid[x1][y1];
 							if(tile1!=null){
-								newPlane.add(tile1);
+								newPlaneBlocks.add(tile1);
 							}
 						}
 					}
 					//did the plane expand? Than add it to said plane collection. 
-					if(newPlane.size()>1)toAdd.add(newPlane);
+					if(newPlaneBlocks.size()>1)toAdd.add(new Plane(newPlaneBlocks, isVerticalX, isHorisontal, xSize, ySize,minX,minY,minZ));
 				}
 			}
 			//anything generated from broken plane? Than remove it. 
@@ -203,33 +254,42 @@ public class TileEntityScreen extends TileEntityM{
 		toAdd.clear();
 		
 		//combine for analysis
-		List<List<TileEntityScreen>> allPlanes=new ArrayList<>();
+		List<Plane> allPlanes=new ArrayList<>();
 		allPlanes.addAll(xPlanes);
 		allPlanes.addAll(yPlanes);
 		allPlanes.addAll(zPlanes);
 		
 		if(allPlanes.size()==1)return allPlanes.get(0);//only 1 plane? than no need to choose a plane
 		else{
-			int maxSize=allPlanes.stream().max((p1, p2)->Integer.compare(p1.size(), p2.size())).get().size();
+			int maxSize=allPlanes.stream().max((p1, p2)->Integer.compare(p1.blocks.size(), p2.blocks.size())).get().blocks.size();
 			//get all planes with biggest size
-			List<List<TileEntityScreen>> biggestPlanes=allPlanes.stream().filter(plane->plane.size()==maxSize).collect(Collectors.toList());
-			
+			List<Plane> biggestPlanes=allPlanes.stream().filter(plane->plane.blocks.size()==maxSize).collect(Collectors.toList());
 			if(biggestPlanes.size()==1)return biggestPlanes.get(0);//only 1 plane with maxSize?
 			
-			return null;//get the biggest plane
+			double smallestDistance=1000000000;
+			Plane closestPlane=null;
+			for(Plane plane:biggestPlanes){
+				double distance=plane.blocks.stream().mapToDouble(tile->clickedPos.sub(0.5F).distanceTo(tile.getPos())).min().getAsDouble();
+				if(smallestDistance>distance){
+					smallestDistance=distance;
+					closestPlane=plane;
+				}
+			}
+			return closestPlane;
 		}
 	}
 	
 	private List<TileEntityScreen> explore(List<TileEntityScreen> parts){//crawl trough all connected blocks
-		UtilM.getTileSides(getWorld(), new BlockPosM(getPos()), TileEntityScreen.class).forEach(t->{
-			if(!parts.contains(t)){
-				parts.add(t);
-				t.explore(parts);
-			}
+		UtilM.getTileSides(getWorld(), new BlockPosM(getPos()), TileEntityScreen.class).stream().filter(t->!parts.contains(t)&&!t.hasBrain()).forEach(t->{
+			parts.add(t);
+			t.explore(parts);
 		});
 		return parts;
 	}
-	
+
+	public boolean isBrain(){
+		return getBrain()==this;
+	}
 	public boolean hasBrain(){
 		return getBrain()!=null;
 	}
@@ -237,5 +297,7 @@ public class TileEntityScreen extends TileEntityM{
 	public TileEntityScreen getBrain(){
 		return brain;
 	}
-	
+	public EnumFacing getRotation(IBlockState state){
+		return getState().getValue(BlockScreen.ROT);
+	}
 }

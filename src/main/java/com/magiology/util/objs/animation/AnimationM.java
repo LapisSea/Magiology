@@ -8,7 +8,7 @@ import java.util.Map;
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.magiology.util.objs.CalculableFloat;
-import com.magiology.util.objs.DoubleObject;
+import com.magiology.util.objs.PairM;
 import com.magiology.util.objs.Vec2FM;
 import com.magiology.util.objs.animation.LinearAnimation.Point;
 import com.magiology.util.statics.math.MathUtil;
@@ -20,7 +20,7 @@ public class AnimationM{
 	private final String[] names;
 	private final LinearAnimation<CalculableFloat>[] data;
 	public AnimationM(String file){
-		DoubleObject<LinearAnimation<CalculableFloat>[], String[]>dat=parse(file);
+		PairM<LinearAnimation<CalculableFloat>[], String[]>dat=parse(file);
 		names=dat.obj2;
 		data=dat.obj1;
 	}
@@ -30,7 +30,7 @@ public class AnimationM{
 		this.names=names;
 	}
 	
-	private DoubleObject<LinearAnimation<CalculableFloat>[], String[]> parse(String string){
+	private PairM<LinearAnimation<CalculableFloat>[], String[]> parse(String string){
 		
 		String[] lines=string.split("\n");
 		List<LinearAnimation<CalculableFloat>> data=new ArrayList<>();
@@ -83,7 +83,7 @@ public class AnimationM{
 			data.add(new LinearAnimation(points));
 		}
 		
-		return new DoubleObject(data.toArray(new LinearAnimation[data.size()]),names.toArray(new String[names.size()]));
+		return new PairM(data.toArray(new LinearAnimation[data.size()]),names.toArray(new String[names.size()]));
 	}
 	
 	public float get(int id, float pos){

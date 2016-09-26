@@ -1,7 +1,6 @@
 package com.magiology.util.m_extensions;
 
-import com.magiology.util.statics.PrintUtil;
-import com.magiology.util.statics.UtilM;
+import com.magiology.util.statics.*;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -9,20 +8,19 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
 
 public abstract class BlockContainerM extends BlockContainer{
 	public static final float p=1F/16F;
-	protected boolean isNullTileEntityOk=false;
+	
+	protected boolean isNullTileEntityOk=false,hasBoxArray=false;
+	private AxisAlignedBB boundingBox=new AxisAlignedBB(0, 0, 0, 1, 1, 1),boxes[];
+	
 	protected BlockContainerM(Material material){
 		super(material);
 	}
 	
-	protected AxisAlignedBB boundingBox=new AxisAlignedBB(p*6, p*6, p*6, p*10, p*10, p*10);
 	
 	public void setBlockBounds(double x1, double y1, double z1, double x2, double y2, double z2){
 		setBlockBounds(new AxisAlignedBB(x1, y1, z1, x2, y2, z2));
@@ -30,19 +28,24 @@ public abstract class BlockContainerM extends BlockContainer{
 	public void setBlockBounds(AxisAlignedBB box){
 		this.boundingBox=box;
 	}
-	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-		return boundingBox;
+	public void setPossibleBlockBounds(AxisAlignedBB...boxes){
+		if(boxes==null)throw new IllegalArgumentException("Boxes canot be null!");
+		if(boxes.length==0)throw new IllegalArgumentException("Boxes canot be empty!");
+		if(this.boxes!=null)throw new IllegalArgumentException("Boxes are already set!");
+		
+		this.boxes=boxes;
+		hasBoxArray=true;
 	}
 	
-//	@Override
-//	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side){
-//		if(side==null)return false;
-//		List<Integer> sides=new ArrayList<Integer>();
-//		getRedstoneConnectableSides(world, world.getTileEntity(pos), pos,sides);
-//		
-//		return sides.contains(side.getIndex());
-//	}
+	protected int chooseBox(IBlockState state){
+		throw new IllegalStateException("Function chooseBox is not overriden in: "+this.getClass().getName()+" and boxes are set!");
+	}
+	
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
+		return hasBoxArray?boxes[chooseBox(state)]:boundingBox;
+	}
+	
 	@Override
 	public TileEntity createNewTileEntity(World world, int metadata){
 		if(!isNullTileEntityOk){
@@ -63,24 +66,4 @@ public abstract class BlockContainerM extends BlockContainer{
 		return super.getPickBlock(state,target, world, pos, player);
 	}
 	
-//	/**
-//	 * Used instead of isProvidingStrongPower and isProvidingWeakPower. Note: do not use Return=smth; use Return.smth=smth_else;
-//	 * @param side 
-//	 */
-//	public void getProvidingPower(World world, TileEntity tile, BlockPos pos, int metadata,Redstone Return, EnumFacing side){}
-//	public void getRedstoneConnectableSides(IBlockAccess world, TileEntity tile, BlockPos pos, List<Integer> sides){}
-//	
-//	@Override
-//	public int getStrongPower(IBlockState blockState, IBlockAccess worldIn, BlockPos pos, EnumFacing side){
-//		Redstone data=new Redstone();
-//		getProvidingPower((World)worldIn, worldIn.getTileEntity(pos), pos, UtilM.getBlockMetadata((World)worldIn, pos), data,side);
-//		if(!data.isStrong)return 0;
-//		return data.strenght;
-//	}
-//	@Override
-//	public int getWeakPower(IBlockState state, IBlockAccess worldIn, BlockPos pos, EnumFacing side){
-//		Redstone data=new Redstone();
-//		getProvidingPower((World)worldIn, worldIn.getTileEntity(pos), pos, UtilM.getBlockMetadata((World)worldIn, pos), data,side);
-//		return data.strenght;
-//	}
 }

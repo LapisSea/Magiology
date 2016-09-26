@@ -1,9 +1,8 @@
 package com.magiology.util.m_extensions;
 
-import javax.annotation.Nullable;
-
 import com.magiology.util.statics.UtilM;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
@@ -14,7 +13,6 @@ public abstract class TileEntityM extends TileEntity{
 	public static final float p=1F/16F;
 	
 	@Override
-	@Nullable
 	public SPacketUpdateTileEntity getUpdatePacket(){
 		return new SPacketUpdateTileEntity(pos, 69/*no I am not 12*/, getUpdateTag());
 	}
@@ -74,5 +72,9 @@ public abstract class TileEntityM extends TileEntity{
 	}
 	public boolean isValid(){
 		return worldObj!=null&&worldObj.getTileEntity(getPos())==this;
+	}
+	
+	public IBlockState getState(){
+		return getWorld().getBlockState(getPos());
 	}
 }

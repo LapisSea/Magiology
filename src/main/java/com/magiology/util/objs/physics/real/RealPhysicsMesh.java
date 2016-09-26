@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.magiology.util.interf.ObjectProcessor;
 import com.magiology.util.m_extensions.BlockPosM;
-import com.magiology.util.objs.DoubleObject;
+import com.magiology.util.objs.PairM;
 import com.magiology.util.objs.Vec2i;
 import com.magiology.util.objs.Vec3M;
 import com.magiology.util.objs.physics.real.entitymodel.Colideable;
@@ -47,11 +47,11 @@ public class RealPhysicsMesh{
 			this.hook=hook;
 		}
 		
-		private DoubleObject<Vec3M, Integer> getHook(){
-			return new DoubleObject<Vec3M, Integer>(hook.process(vertices.get(vertexID).getPos(), RealPhysicsMesh.this,this,vertexID), vertexID);
+		private PairM<Vec3M, Integer> getHook(){
+			return new PairM<Vec3M, Integer>(hook.process(vertices.get(vertexID).getPos(), RealPhysicsMesh.this,this,vertexID), vertexID);
 		}
 	}
-	public static DoubleObject<List<Vec3M>, List<Vec2i>> create2DPlane(int xCubes, int yCubes ,float xSize, float ySize){
+	public static PairM<List<Vec3M>, List<Vec2i>> create2DPlane(int xCubes, int yCubes ,float xSize, float ySize){
 		List<Vec3M> vertices=new ArrayList<>();
 		List<Vec2i> indices=new ArrayList<>();
 		
@@ -81,7 +81,7 @@ public class RealPhysicsMesh{
 			}
 		}
 		
-		return new DoubleObject<List<Vec3M>, List<Vec2i>>(vertices, indices);
+		return new PairM<List<Vec3M>, List<Vec2i>>(vertices, indices);
 	}
 	public List<Colideable> coliders=new ArrayList<>();
 	private boolean criticalState=false;
@@ -197,7 +197,7 @@ public class RealPhysicsMesh{
 		}
 		List<Vec3M> hooksPos=new ArrayList<>();
 		for(RealPhysicsMeshHook hook:physicsHooks){
-			DoubleObject<Vec3M, Integer> result=hook.getHook();
+			PairM<Vec3M, Integer> result=hook.getHook();
 			AbstractRealPhysicsVec3F vertex=vertices.get(result.obj2);
 			hooksPos.add(result.obj1);
 			vertex.setPos(result.obj1);

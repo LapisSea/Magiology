@@ -36,20 +36,20 @@ public class AnimationBank{
 	
 	public static AnimationMReference getExact(String name){
 		String name0=name.toLowerCase();
-		return new AnimationMReference(st(ent->ent.srcNameLower.equals(name0)).findFirst().get().accessId);
+		return new AnimationMReference(stream(ent->ent.srcNameLower.equals(name0)).findFirst().get().accessId);
 	}
 	public static AnimationMReference getByName(String name){
 		String name0=name.toLowerCase();
-		return new AnimationMReference(st(ent->ent.srcNameLower.contains(name0)).findFirst().get().accessId);
+		return new AnimationMReference(stream(ent->ent.srcNameLower.contains(name0)).findFirst().get().accessId);
 	}
 	public static Map<String, AnimationMReference> getAllWith(String name){
 		String name0=name.toLowerCase();
 		Map<String, AnimationMReference> result=new HashMap<>();
-		st(ent->ent.srcNameLower.contains(name0)).forEach(ent->result.put(ent.srcName, new AnimationMReference(ent.accessId)));
+		stream(ent->ent.srcNameLower.contains(name0)).forEach(ent->result.put(ent.srcName, new AnimationMReference(ent.accessId)));
 		return result;
 	}
 	
-	private static Stream<Anim> st(Predicate<? super Anim> predicate){
+	private static Stream<Anim> stream(Predicate<? super Anim> predicate){
 		return animations.stream().filter(predicate);
 	}
 	

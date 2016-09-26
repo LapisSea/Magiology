@@ -5,6 +5,7 @@ import java.awt.Color;
 import com.magiology.core.Magiology;
 import com.magiology.forge_powered.events.EntityEvents;
 import com.magiology.forge_powered.events.TickEvents;
+import com.magiology.forge_powered.events.WorldEvents;
 import com.magiology.io.IOManager;
 import com.magiology.mc_objects.MBlocks;
 import com.magiology.mc_objects.MItems;
@@ -40,6 +41,7 @@ public class CommonProxy{
 		registerModEntityWithEgg(EntityPenguin.class,new Color(20, 20, 30),new Color(230, 230, 230));
 		MinecraftForge.EVENT_BUS.register(TickEvents.instance);
 		MinecraftForge.EVENT_BUS.register(EntityEvents.instance);
+		MinecraftForge.EVENT_BUS.register(WorldEvents.instance);
 	}
 	
 	private void registerModEntityWithEgg(Class parEntityClass,Color col1,Color col2){

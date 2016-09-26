@@ -50,23 +50,17 @@ public class InWorldFrameBufferHandler{
 	
 	void requestRender(InWorldFrame frame){
 		renderQueue.add(frame);
-		if(frame.gcPossible){
-			frame.gcPossible=false;
-			allBuffers.add(frame);
-		}
 	}
 	
 	
 	public void renderFrames(){
-		if(renderQueue.isEmpty()){
-			
-			return;
-		}
-		OpenGLM.pushMatrix();
+		if(renderQueue.isEmpty())return;
 		
+		OpenGLM.pushMatrix();
+
+		OpenGLM.disableLighting();
 		renderQueue.forEach(InWorldFrame::render);
 		renderQueue.clear();
-		
 		UtilC.getMC().getFramebuffer().bindFramebuffer(true);
 		ScaledResolution scaledresolution=new ScaledResolution(UtilC.getMC());
 		int i=scaledresolution.getScaleFactor();
@@ -77,5 +71,12 @@ public class InWorldFrameBufferHandler{
 		GlStateManager.loadIdentity();
 		GlStateManager.translate(0.0F, 0.0F, -2000.0F);
 		OpenGLM.popMatrix();
+	}
+
+	public void checkList(InWorldFrame frame){
+		if(frame.gcPossible){
+			frame.gcPossible=false;
+			allBuffers.add(frame);
+		}
 	}
 }

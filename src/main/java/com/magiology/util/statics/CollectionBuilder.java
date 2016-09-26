@@ -6,11 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.magiology.util.interf.ObjectConverter;
-import com.magiology.util.objs.DoubleObject;
+import com.magiology.util.objs.PairM;
 
 public class CollectionBuilder{
 
-	public static <K,V> Map<K,V> buildMap(Map<K, V> map, ObjectConverter<Object[], DoubleObject<K, V>> builder, int dataChunkSize, Object...data){
+	public static <K,V> Map<K,V> buildMap(Map<K, V> map, ObjectConverter<Object[], PairM<K, V>> builder, int dataChunkSize, Object...data){
 		if(data.length==0)return map;
 		if(data.length%dataChunkSize!=0)throw new IllegalArgumentException("Incorrect number of data objects!");
 		
@@ -20,15 +20,15 @@ public class CollectionBuilder{
 			for(int k=0;k<chunk.length;k++){
 				chunk[k]=data[tracker++];
 			}
-			DoubleObject<K, V> entrty=builder.convert(chunk);
+			PairM<K, V> entrty=builder.convert(chunk);
 			map.put(entrty.obj1, entrty.obj2);
 		}
 		
 		return map;
 	}
 	public static <K,V> Map<K,V> buildMap(Map<K, V> map,Object...data){
-		return buildMap(new HashMap<>(), (ObjectConverter<Object[], DoubleObject<K, V>>)(in)->{
-			return new DoubleObject<K, V>((K)in[0], (V)in[1]);
+		return buildMap(new HashMap<>(), (ObjectConverter<Object[], PairM<K, V>>)(in)->{
+			return new PairM<K, V>((K)in[0], (V)in[1]);
 		}, 2, data);
 	}
 	

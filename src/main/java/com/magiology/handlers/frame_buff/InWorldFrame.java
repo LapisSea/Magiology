@@ -24,9 +24,10 @@ public class InWorldFrame{
 		this.width=width;
 		this.height=height;
 		this.useDepth=useDepth;
-		InWorldFrameBufferHandler.instance.allBuffers.add(this);
+		InWorldFrameBufferHandler.instance.checkList(this);
 	}
 	public InWorldFrame setSize(int width, int height){
+		InWorldFrameBufferHandler.instance.checkList(this);
 		if(!dirty)dirty=this.width!=width||this.height!=height;
 		this.width=width;
 		this.height=height;
@@ -46,16 +47,19 @@ public class InWorldFrame{
 	
 	public void requestRender(){
 		if(willBeRendered)return;
+		InWorldFrameBufferHandler.instance.checkList(this);
 		willBeRendered=true;
 		InWorldFrameBufferHandler.instance.requestRender(this);
 	}
 	public void bindTexture(){
+		InWorldFrameBufferHandler.instance.checkList(this);
 		frameBuffer.bindFramebufferTexture();
 		lastTimeUsed=System.currentTimeMillis();
 	}
 	
 	
 	public void render(){
+		InWorldFrameBufferHandler.instance.checkList(this);
 		OpenGLM.pushMatrix();
 		if(dirty){
 			dirty=false;

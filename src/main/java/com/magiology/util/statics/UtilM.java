@@ -62,7 +62,6 @@ public class UtilM{
 	public class U extends UtilM{}
 	
 	@Deprecated
-	public static final PropertyInteger META=PropertyInteger.create("meta", 0, 15);
 	public static final float p=1F/16F;
 	private static long startTime;
 	
@@ -336,11 +335,6 @@ public class UtilM{
 	}
 	public static float handleSpeedFolower(float speed, float pos,float wantedPos,float acceleration){
 	return (float)handleSpeedFolower((double)speed, (double)pos, (double)wantedPos, (double)acceleration);}
-	@Deprecated
-	public static boolean hasMetaState(World world, BlockPos pos){
-		ImmutableMap i=world.getBlockState(pos).getProperties();
-		return i.keySet().contains(META);
-	}
 	
 	public static boolean instanceOf(Class toBeTested, Class instance){
 		try{
@@ -476,14 +470,6 @@ public class UtilM{
 	
 	public static void setBlock(World world, BlockPos pos,Block block){
 		world.setBlockState(pos, block.getDefaultState(), 3);
-	}
-	@Deprecated
-	public static void setBlock(World world, BlockPos pos, Block block, int meta){
-		world.setBlockState(pos, block.getDefaultState().withProperty(META, meta), 3);
-	}
-	@Deprecated
-	public static void setMetadata(World world, BlockPos pos,int meta){
-		if(hasMetaState(world, pos))world.setBlockState(pos, world.getBlockState(pos).withProperty(META, meta), 3);
 	}
 	public static String signature(){
 		return signature(RESET);

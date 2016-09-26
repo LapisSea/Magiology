@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.magiology.util.m_extensions.BlockPosM;
 import com.magiology.util.objs.AngularVec3;
-import com.magiology.util.objs.DoubleObject;
+import com.magiology.util.objs.PairM;
 import com.magiology.util.objs.Vec3M;
 import com.magiology.util.objs.physics.real.entitymodel.Colideable;
 import com.magiology.util.statics.PhysicsUtil;
@@ -45,7 +45,7 @@ public abstract class AbstractRealPhysicsVec3F{
 					Block block=state.getBlock();
 					AxisAlignedBB bounding=block.getCollisionBoundingBox(state, getWorld(), hit.getBlockPos());
 					if(bounding!=null){
-						surfaceHit(new DoubleObject<Vec3M, Vec3M>(new Vec3M(hit.hitVec), new Vec3M().offset(hit.sideHit)));
+						surfaceHit(new PairM<Vec3M, Vec3M>(new Vec3M(hit.hitVec), new Vec3M().offset(hit.sideHit)));
 						Vec3M pos=getPos();
 						if(bounding.isVecInside(pos.conv())){
 							double 
@@ -68,7 +68,7 @@ public abstract class AbstractRealPhysicsVec3F{
 				}
 			}
 			if(Math.abs(getStress())<0.1)for(Colideable c:coliders){
-				DoubleObject<Vec3M, Vec3M> result=c.rayTrace(start, end);
+				PairM<Vec3M, Vec3M> result=c.rayTrace(start, end);
 				if(result!=null){
 					surfaceHit(result);
 					return;
@@ -124,7 +124,7 @@ public abstract class AbstractRealPhysicsVec3F{
 	public abstract void setWillColideWithBlocks(boolean colide);
 	public abstract void setWorld(World world);
 	public abstract void setWorldClipping(boolean isWorldClipping);
-	public void surfaceHit(DoubleObject<Vec3M, Vec3M> result){
+	public void surfaceHit(PairM<Vec3M, Vec3M> result){
 		
 		Vec3M hitMul=result.obj2.mul(getBounciness()).abs();
 		AngularVec3 hitMulAngle=new AngularVec3(hitMul);

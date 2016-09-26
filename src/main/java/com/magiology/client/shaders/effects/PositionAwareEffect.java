@@ -3,7 +3,7 @@ package com.magiology.client.shaders.effects;
 import java.lang.reflect.Method;
 
 import com.magiology.util.interf.ObjectReturn;
-import com.magiology.util.objs.DoubleObject;
+import com.magiology.util.objs.PairM;
 import com.magiology.util.objs.Vec2FM;
 import com.magiology.util.objs.Vec3M;
 import com.magiology.util.statics.UtilC;
@@ -55,10 +55,10 @@ public abstract class PositionAwareEffect{
 		
 		GlStateManager.popMatrix();
 	}
-	public static DoubleObject<Vec2FM, Float> convertWorldToScreenPos(Vec3M worldPos){
+	public static PairM<Vec2FM, Float> convertWorldToScreenPos(Vec3M worldPos){
 		Vec3M pos=MatrixUtil.transformVector(worldPos, viewTransformation);
 		if(pos.z<0)pos.z=0;
-		return new DoubleObject<Vec2FM, Float>(new Vec2FM((float)(pos.x/pos.z),(float)(pos.y/pos.z)), (float)pos.z);
+		return new PairM<Vec2FM, Float>(new Vec2FM((float)(pos.x/pos.z),(float)(pos.y/pos.z)), (float)pos.z);
 	}
 	
 }
