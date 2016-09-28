@@ -7,14 +7,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
 
 public abstract class TileEntityM extends TileEntity{
 	public static final float p=1F/16F;
 	
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket(){
-		return new SPacketUpdateTileEntity(pos, 69/*no I am not 12*/, getUpdateTag());
+		return new SPacketUpdateTileEntity(pos, 100, getUpdateTag());
 	}
 
 	@Override
@@ -30,29 +29,9 @@ public abstract class TileEntityM extends TileEntity{
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet){
 		readFromNBT(packet.getNbtCompound());
 	}
-	public int[] read3I(NBTTagCompound nbt,String name){
-		return new int[]{
-			nbt.getInteger(name+"X"),
-			nbt.getInteger(name+"Y"),
-			nbt.getInteger(name+"Z")
-		};
-	}
-	public BlockPos readPos(NBTTagCompound nbt,String name){
-		return new BlockPos(nbt.getInteger(name+"X"), nbt.getInteger(name+"Y"), nbt.getInteger(name+"Z"));
-	}
 	public void sync(){
 		if(worldObj==null||worldObj.isRemote)return;
 		markDirty();
-	}
-	public void write3I(NBTTagCompound nbt,int x,int y,int z,String name){
-		nbt.setInteger(name+"X", pos.getX());
-		nbt.setInteger(name+"Y", pos.getY());
-		nbt.setInteger(name+"Z", pos.getZ());
-	}
-	public void writePos(NBTTagCompound nbt,BlockPos pos,String name){
-		nbt.setInteger(name+"X", pos.getX());
-		nbt.setInteger(name+"Y", pos.getY());
-		nbt.setInteger(name+"Z", pos.getZ());
 	}
 	public int x(){
 		return pos.getX();

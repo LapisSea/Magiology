@@ -1,6 +1,6 @@
 package com.magiology.mc_objects;
 
-import java.util.Collection;
+import java.util.*;
 
 import com.google.common.collect.Lists;
 
@@ -9,26 +9,50 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 
 public class BlockStates{
-	public static final PropertyDirectionM ROTATION_FULL_3BIT=new PropertyDirectionM("facing", Lists.newArrayList(EnumFacing.values()));
+
+	public static final PropertyDirectionM SAVE_ROTATION_FULL_3BIT=saveableFull3BitRotationProp("facing"),NOSAVE_ROTATION_FULL_3BIT=full3BitRotationProp("facing");
 	
-	public static final PropertyBoolM BOOLEAN_STATE=new PropertyBoolM("generic_boolean");
-	public static final PropertyInteger INT_2BIT=new PropertyIntegerM("2bit_int",2),
-										INT_3BIT=new PropertyIntegerM("3bit_int",3),
-										INT_4BIT=new PropertyIntegerM("4bit_int",4);
+	public static PropertyDirectionM saveableFull3BitRotationProp(String name){
+		return new PropertyDirectionM(name, Lists.newArrayList(EnumFacing.values()),true);
+	}
+	public static PropertyDirectionM full3BitRotationProp(String name){
+		return new PropertyDirectionM(name, Lists.newArrayList(EnumFacing.values()),false);
+	}
 	
-	private static interface BitSerializable<T extends Comparable<T>>{
+	public static PropertyBoolM saveableBooleanProp(String name){
+		return new PropertyBoolM(name,true);
+	}
+	public static PropertyBoolM booleanProp(String name){
+		return new PropertyBoolM(name,false);
+	}
+	
+	public static PropertyIntegerM saveableIntProp(String name, int bitCount){
+		if(bitCount>4)throw new IllegalArgumentException("Can't store that much data! - 4 bits max, tried to use "+bitCount+" bits");
+		return new PropertyIntegerM(name,bitCount,true);
+	}
+	public static PropertyIntegerM intProp(String name, int bitCount){
+		return new PropertyIntegerM(name,bitCount,false);
+	}
+	
+	public static interface IPropertyM<T extends Comparable<T>> extends IProperty<T>{
 		int write(IBlockState src);
 		T read(int src);
 		
 		int getBitCount();
 		
-		public T get(IBlockState state);
-		public IBlockState set(IBlockState src, T value);
+		T get(IBlockState state);
+		IBlockState set(IBlockState src, T value);
+		
+		boolean isSaveable();
 	}
 	
-	public static class PropertyDirectionM extends PropertyDirection implements BitSerializable<EnumFacing>{
-		private PropertyDirectionM(String name,Collection<EnumFacing> values){
+	public static class PropertyDirectionM extends PropertyDirection implements IPropertyM<EnumFacing>{
+		
+		private final boolean saveable;
+		
+		private PropertyDirectionM(String name,Collection<EnumFacing> values,boolean saveable){
 			super(name,values);
+			this.saveable=saveable;
 		}
 		@Override
 		public EnumFacing get(IBlockState state){
@@ -53,11 +77,19 @@ public class BlockStates{
 			return 3;
 		}
 		
-	}
-	public static class PropertyBoolM extends PropertyBool implements BitSerializable<Boolean>{
+		@Override
+		public boolean isSaveable(){
+			return saveable;
+		}
 		
-		public PropertyBoolM(String name){
+	}
+	public static class PropertyBoolM extends PropertyBool implements IPropertyM<Boolean>{
+		
+		private final boolean saveable;
+		
+		private PropertyBoolM(String name,boolean saveable){
 			super(name);
+			this.saveable=saveable;
 		}
 		
 		@Override
@@ -84,12 +116,21 @@ public class BlockStates{
 		public int getBitCount(){
 			return 1;
 		}
+		
+		@Override
+		public boolean isSaveable(){
+			return saveable;
+		}
 	}
-	public static class PropertyIntegerM extends PropertyInteger implements BitSerializable<Integer>{
+	public static class PropertyIntegerM extends PropertyInteger implements IPropertyM<Integer>{
+		
+		private final boolean saveable;
 		public final int bitCount;
-		public PropertyIntegerM(String name,int bitCount){
+		
+		private PropertyIntegerM(String name,int bitCount,boolean saveable){
 			super(name, 0, (int)(Math.pow(2,bitCount)-1));
 			this.bitCount=bitCount;
+			this.saveable=saveable;
 		}
 		
 		@Override
@@ -116,17 +157,25 @@ public class BlockStates{
 			return bitCount;
 		}
 		
+		@Override
+		public boolean isSaveable(){
+			return saveable;
+		}
 	}
 	
 	
 	public static class BlockStateParser{
 		
-		private final BitSerializable[] values;
+		private final IPropertyM[] values;
 		
-		public BlockStateParser(BitSerializable[] values){
+		public BlockStateParser(IPropertyM[] values){
+			List<IPropertyM> valuesList=Lists.newArrayList(values);
+			valuesList.removeIf(v->!v.isSaveable());
+			values=valuesList.toArray(new IPropertyM[valuesList.size()]);
+			
 			if(values.length>4)throw new IllegalArgumentException("To big ammount of states!");
 			int totalSize=0;
-			for(BitSerializable value:values){
+			for(IPropertyM value:values){
 				totalSize+=value.getBitCount();
 			}
 			if(totalSize>4)throw new IllegalArgumentException("Can't store that much data! - 4 bits max, tried to use "+totalSize+" bits");
@@ -136,7 +185,7 @@ public class BlockStates{
 		public IBlockState parseBits(IBlockState destination, int src){
 			
 			int offset=0;
-			for(BitSerializable value:values){
+			for(IPropertyM value:values){
 				int size=value.getBitCount();
 				
 				int valueBits=cutBits(src,offset,size);
@@ -151,13 +200,14 @@ public class BlockStates{
 			int bits=0b0000;
 			
 			int offset=0;
-			for(BitSerializable value:values){
+			for(IPropertyM value:values){
 				bits=fillBits(bits,value.write(src),offset);
 				offset+=value.getBitCount();
 			}
 			
 			return bits;
 		}
+		
 		private int fillBits(int src,int inserting,int offset){
 			return src|(inserting<<offset);
 		}

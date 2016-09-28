@@ -11,6 +11,12 @@ buildscript {
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
     }
+	repositories {
+		maven { url "http://maven.amadornes.com/" }
+	}
+	dependencies {
+		deobfCompile "MCMultiPart:MCMultiPart:1.10:universal"
+	}
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
@@ -27,6 +33,13 @@ archivesBaseName = "modid"
 sourceCompatibility = targetCompatibility = "1.6" // Need this here so eclipse task generates correctly.
 compileJava {
     sourceCompatibility = targetCompatibility = "1.6"
+}
+
+dependencies {
+    // compile against the JEI API
+    deobfCompile "mezz.jei:jei_${mc_version}:${jei_version}:api"
+    // at runtime, use the full JEI jar
+    runtime "mezz.jei:jei_${mc_version}:${jei_version}"
 }
 
 minecraft {

@@ -38,7 +38,7 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 			maxY=(tile.yScreenOff+1)/ys;
 		}else OpenGLM.disableTexture2D();
 		
-		EnumFacing rot=BlockStates.ROTATION_FULL_3BIT.get(tile.getWorld().getBlockState(tile.getPos()));
+		EnumFacing rot=BlockStates.SAVE_ROTATION_FULL_3BIT.get(tile.getWorld().getBlockState(tile.getPos()));
 		Vec3i rotVec=rot.getDirectionVec();
 		Vec3M rot3d=new Vec3M();
 		

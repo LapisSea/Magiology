@@ -1,12 +1,9 @@
 package com.magiology.mc_objects;
 
 import com.magiology.core.MReference;
-import com.magiology.util.m_extensions.BlockContainerM;
 import com.magiology.util.m_extensions.BlockM;
 import com.magiology.util.objs.RegistrableDatabaseStorage;
-import com.magiology.util.statics.CollectionConverter;
-import com.magiology.util.statics.PrintUtil;
-import com.magiology.util.statics.UtilM;
+import com.magiology.util.statics.*;
 import com.magiology.util.statics.class_manager.ClassList;
 
 import net.minecraft.block.Block;
@@ -25,7 +22,7 @@ public final class MBlocks extends RegistrableDatabaseStorage<Block>{
 		super(Block.class);
 	}
 	
-	private final Block[] blocks=CollectionConverter.convAr(ClassList.getImplementations(BlockM.class,BlockContainerM.class), Block.class, (i)->i.newInstance());
+	private final Block[] blocks=CollectionConverter.convAr(ClassList.getImplementations(BlockM.class), Block.class, (i)->i.newInstance());
 	
 	@Override
 	public Block[] getDatabase(){
@@ -35,7 +32,6 @@ public final class MBlocks extends RegistrableDatabaseStorage<Block>{
 	@Override
 	public void registerObj(Block block){
 		String name=UtilM.standardizeName(UtilM.removeMcObjectEnd(block.getClass().getSimpleName()));
-		PrintUtil.println(name);
 		block.setRegistryName(MReference.MODID, name);
 		block.setUnlocalizedName(name);
 		ItemBlock ib=new ItemBlock(block);

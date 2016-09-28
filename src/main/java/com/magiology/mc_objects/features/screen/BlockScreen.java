@@ -1,14 +1,13 @@
 package com.magiology.mc_objects.features.screen;
 
 import com.magiology.mc_objects.BlockStates;
-import com.magiology.mc_objects.BlockStates.PropertyDirectionM;
+import com.magiology.mc_objects.BlockStates.*;
 import com.magiology.util.interf.IBlockBreakListener;
 import com.magiology.util.m_extensions.BlockContainerM;
 import com.magiology.util.objs.Vec3M;
 
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.state.*;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -18,31 +17,18 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 
 public class BlockScreen extends BlockContainerM implements IBlockBreakListener{
-	
-	public static final PropertyDirectionM ROT=BlockStates.ROTATION_FULL_3BIT;
+
+	public static final PropertyDirectionM ROT=BlockStates.SAVE_ROTATION_FULL_3BIT;
+	public static final PropertyBoolM ACTIVE=BlockStates.saveableBooleanProp("active");
 	
 	public BlockScreen(){
-		super(Material.IRON);
+		super(Material.IRON,ROT,ACTIVE);
 		setPossibleBlockBounds(new AxisAlignedBB(0,p*5,0,1,1-p*5,1),new AxisAlignedBB(0,0,p*5,1,1,1-p*5),new AxisAlignedBB(p*5,0,0,1-p*5,1,1));
 	}
 	
 	@Override
 	protected int chooseBox(IBlockState state){
 		return state.getValue(ROT).getIndex()/2;
-	}
-	@Override
-	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[]{ROT});
-	}
-	
-	@Override
-	public IBlockState getStateFromMeta(int meta){
-		return ROT.set(getDefaultState(),EnumFacing.getFront(meta));
-	}
-	
-	@Override
-	public int getMetaFromState(IBlockState state){
-		return ROT.get(state).getIndex();
 	}
 	
 	@Override
@@ -61,11 +47,6 @@ public class BlockScreen extends BlockContainerM implements IBlockBreakListener{
 	
 	@Override
 	public boolean isOpaqueCube(IBlockState state){
-		return false;
-	}
-	
-	@Override
-	public boolean isFullCube(IBlockState state){
 		return false;
 	}
 	
