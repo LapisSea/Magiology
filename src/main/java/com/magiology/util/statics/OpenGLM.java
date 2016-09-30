@@ -1,23 +1,15 @@
 package com.magiology.util.statics;
 
-import static org.lwjgl.opengl.GL11.GL_ALPHA_TEST;
-import static org.lwjgl.opengl.GL11.GL_GREATER;
-import static org.lwjgl.opengl.GL11.GL_LESS;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.*;
+
+import com.magiology.util.objs.ColorF;
+import com.magiology.util.objs.vec.Vec3M;
 
 import org.lwjgl.opengl.GL11;
 
-import com.magiology.util.objs.ColorF;
-import com.magiology.util.objs.Vec3M;
-
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.*;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.*;
 
 /**
  * Short for OpenGL Magiology
@@ -94,7 +86,7 @@ public class OpenGLM extends GlStateManager{
 	}
 	
 	public static void translate(Vec3M vec){
-		translate(vec.x, vec.y, vec.z);
+		translate(vec.x(), vec.y(), vec.z());
 	}
 	
 	public static VertexBuffer getWB(){
@@ -126,12 +118,12 @@ public class OpenGLM extends GlStateManager{
 	}
 	
 	public static void rotate(Vec3M rot){
-		if(rot.x!=0)
-			rotateX(rot.x);
-		if(rot.y!=0)
-			rotateY(rot.y);
-		if(rot.z!=0)
-			rotateZ(rot.z);
+		if(rot.x()!=0)
+			rotateX(rot.x());
+		if(rot.y()!=0)
+			rotateY(rot.y());
+		if(rot.z()!=0)
+			rotateZ(rot.z());
 	}
 
 	public static void rotateX(double x){

@@ -1,9 +1,8 @@
 package com.magiology.util.objs.physics.real;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-import com.magiology.util.objs.Vec3M;
+import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.math.MathUtil;
 
 import net.minecraft.world.World;
@@ -103,8 +102,8 @@ public class RealPhysicsVec3F extends AbstractRealPhysicsVec3F{
 	}
 	@Override
 	public void setPos(Vec3M pos){
-		if(MathUtil.isNumValid(pos.x))this.pos=pos;
-		if(!MathUtil.isNumValid(this.pos.x))this.pos=posBackup;
+		if(MathUtil.isNumValid(pos.x()))this.pos=pos;
+		if(!MathUtil.isNumValid(this.pos.x()))this.pos=posBackup;
 		else posBackup=this.pos;
 	}
 	@Override
@@ -131,7 +130,7 @@ public class RealPhysicsVec3F extends AbstractRealPhysicsVec3F{
 	}
 	@Override
 	public void setVelocity(Vec3M velocity){
-		if(MathUtil.isNumValid(velocity.x))this.velocity=velocity;
+		if(MathUtil.isNumValid(velocity.x()))this.velocity=velocity;
 	}
 	@Override
 	public void setWillColideWithBlocks(boolean colide){

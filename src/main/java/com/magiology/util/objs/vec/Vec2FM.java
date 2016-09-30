@@ -1,4 +1,4 @@
-package com.magiology.util.objs;
+package com.magiology.util.objs.vec;
 
 import com.magiology.util.interf.Calculable;
 

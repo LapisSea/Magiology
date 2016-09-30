@@ -4,7 +4,7 @@ import com.magiology.mc_objects.BlockStates;
 import com.magiology.mc_objects.BlockStates.*;
 import com.magiology.util.interf.IBlockBreakListener;
 import com.magiology.util.m_extensions.BlockContainerM;
-import com.magiology.util.objs.Vec3M;
+import com.magiology.util.objs.vec.Vec3M;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -16,13 +16,13 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 
-public class BlockScreen extends BlockContainerM implements IBlockBreakListener{
+public class BlockScreen extends BlockContainerM<TileEntityScreen> implements IBlockBreakListener{
 
 	public static final PropertyDirectionM ROT=BlockStates.SAVE_ROTATION_FULL_3BIT;
 	public static final PropertyBoolM ACTIVE=BlockStates.saveableBooleanProp("active");
 	
 	public BlockScreen(){
-		super(Material.IRON,ROT,ACTIVE);
+		super(Material.IRON,()->new TileEntityScreen(),ROT,ACTIVE);
 		setPossibleBlockBounds(new AxisAlignedBB(0,p*5,0,1,1-p*5,1),new AxisAlignedBB(0,0,p*5,1,1,1-p*5),new AxisAlignedBB(p*5,0,0,1-p*5,1,1));
 	}
 	
@@ -38,11 +38,6 @@ public class BlockScreen extends BlockContainerM implements IBlockBreakListener{
 	
 	public EnumFacing getRotation(IBlockState state){
 		return ROT.get(state);
-	}
-	
-	@Override
-	public TileEntity createNewTileEntity(World world,int metadata){
-		return new TileEntityScreen();
 	}
 	
 	@Override

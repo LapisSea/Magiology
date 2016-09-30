@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 import org.apache.commons.io.FileUtils;
 
 import com.magiology.core.Magiology;
-import com.magiology.util.statics.PrintUtil;
+import com.magiology.util.statics.LogUtil;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -74,7 +74,7 @@ public class AnimationBank{
 	}
 	private static void load0(File f,List<File> files){
 		if(f.isDirectory()){
-			PrintUtil.println(f);
+			LogUtil.println(f);
 			for(String name:f.list()){
 				load0(new File(f.getPath()+"/"+name), files);
 			}

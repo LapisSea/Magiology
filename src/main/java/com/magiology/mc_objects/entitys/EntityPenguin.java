@@ -8,12 +8,11 @@ import com.magiology.mc_objects.entitys.ai.PathNavigateSmart;
 import com.magiology.mc_objects.items.ItemJetpack;
 import com.magiology.util.m_extensions.BlockPosM;
 import com.magiology.util.m_extensions.EntityAgeableM;
-import com.magiology.util.objs.Vec2FM;
-import com.magiology.util.objs.Vec3M;
 import com.magiology.util.objs.data_parameter_wappers.DataParamBlockPos;
 import com.magiology.util.objs.data_parameter_wappers.DataParamBoolean;
 import com.magiology.util.objs.data_parameter_wappers.DataParamEnum;
 import com.magiology.util.objs.data_parameter_wappers.DataParamFloat;
+import com.magiology.util.objs.vec.*;
 import com.magiology.util.statics.UtilM;
 
 import net.minecraft.block.material.Material;

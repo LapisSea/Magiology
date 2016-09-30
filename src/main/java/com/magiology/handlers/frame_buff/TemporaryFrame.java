@@ -1,16 +1,14 @@
 package com.magiology.handlers.frame_buff;
 
 import com.magiology.util.interf.ObjectSimpleCallback;
-import com.magiology.util.statics.OpenGLM;
-import com.magiology.util.statics.PrintUtil;
+import com.magiology.util.statics.*;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.shader.Framebuffer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
-public class InWorldFrame{
+public class TemporaryFrame{
 	
 	Framebuffer frameBuffer=new Framebuffer(1, 1, false);
 	boolean dirty=true,gcPossible=false;
@@ -18,16 +16,16 @@ public class InWorldFrame{
 	
 	private int width,height;
 	private boolean useDepth,willBeRendered=false;
-	private ObjectSimpleCallback<InWorldFrame> rednerHook;
+	private ObjectSimpleCallback<TemporaryFrame> rednerHook;
 	
-	public InWorldFrame(int width, int height, boolean useDepth){
+	public TemporaryFrame(int width, int height, boolean useDepth){
 		this.width=width;
 		this.height=height;
 		this.useDepth=useDepth;
-		InWorldFrameBufferHandler.instance.checkList(this);
+		TemporaryFrameBufferHandler.instance.resurrectList(this);
 	}
-	public InWorldFrame setSize(int width, int height){
-		InWorldFrameBufferHandler.instance.checkList(this);
+	public TemporaryFrame setSize(int width, int height){
+		TemporaryFrameBufferHandler.instance.resurrectList(this);
 		if(!dirty)dirty=this.width!=width||this.height!=height;
 		this.width=width;
 		this.height=height;
@@ -47,19 +45,19 @@ public class InWorldFrame{
 	
 	public void requestRender(){
 		if(willBeRendered)return;
-		InWorldFrameBufferHandler.instance.checkList(this);
+		TemporaryFrameBufferHandler.instance.resurrectList(this);
 		willBeRendered=true;
-		InWorldFrameBufferHandler.instance.requestRender(this);
+		TemporaryFrameBufferHandler.instance.requestRender(this);
 	}
 	public void bindTexture(){
-		InWorldFrameBufferHandler.instance.checkList(this);
+		TemporaryFrameBufferHandler.instance.resurrectList(this);
 		frameBuffer.bindFramebufferTexture();
 		lastTimeUsed=System.currentTimeMillis();
 	}
 	
 	
 	public void render(){
-		InWorldFrameBufferHandler.instance.checkList(this);
+		TemporaryFrameBufferHandler.instance.resurrectList(this);
 		OpenGLM.pushMatrix();
 		if(dirty){
 			dirty=false;
@@ -68,7 +66,7 @@ public class InWorldFrame{
 			frameBuffer.setFramebufferColor(0, 0, 0, 0);
 			frameBuffer.createBindFramebuffer(width,height);
 			onBufferInit();
-			PrintUtil.println("Created InWorldFrame id=",frameBuffer.framebufferObject);
+			LogUtil.println("Created InWorldFrame id=",frameBuffer.framebufferObject);
 			requestRender();
 		}
 		frameBuffer.framebufferClear();
@@ -84,8 +82,10 @@ public class InWorldFrame{
 		willBeRendered=false;
 		lastTimeUsed=System.currentTimeMillis();
 	}
+	
+	
 	protected void onBufferInit(){}
-	public void setRednerHook(ObjectSimpleCallback<InWorldFrame> rednerHook){
+	public void setRednerHook(ObjectSimpleCallback<TemporaryFrame> rednerHook){
 		this.rednerHook = rednerHook;
 		lastTimeUsed=System.currentTimeMillis();
 	}

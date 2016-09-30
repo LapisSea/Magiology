@@ -3,7 +3,7 @@ package com.magiology.mc_objects.features.dimension_stabiliser;
 import com.magiology.mc_objects.particles.Particles;
 import com.magiology.util.m_extensions.TileEntityMTickable;
 import com.magiology.util.objs.ColorF;
-import com.magiology.util.objs.Vec3M;
+import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.RandUtil;
 import com.magiology.util.statics.UtilM;
 

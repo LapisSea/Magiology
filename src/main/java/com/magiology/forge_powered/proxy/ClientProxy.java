@@ -4,7 +4,7 @@ import com.magiology.client.entity.EntityPenguinRenderer;
 import com.magiology.client.shaders.ShaderHandler;
 import com.magiology.core.MReference;
 import com.magiology.forge_powered.events.RenderEvents;
-import com.magiology.mc_objects.MBlocks;
+import com.magiology.mc_objects.BlockRegistry;
 import com.magiology.mc_objects.entitys.EntityPenguin;
 import com.magiology.mc_objects.particles.Particles;
 import com.magiology.util.objs.EnhancedRobot;
@@ -68,7 +68,7 @@ public class ClientProxy extends CommonProxy{
 	private void registerTileRendering(){
 		ItemModelMesher mesher=OpenGLM.getRI().getItemModelMesher();
 		
-		for(ITileEntityProvider i:MBlocks.get().getByExtension(ITileEntityProvider.class)){
+		for(ITileEntityProvider i:BlockRegistry.get().getByExtension(ITileEntityProvider.class)){
 			Block block=(Block)i;
 			EnumBlockRenderType type=EnumBlockRenderType.INVISIBLE;
 			try{

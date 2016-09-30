@@ -4,18 +4,14 @@ import java.lang.reflect.Method;
 
 import com.magiology.util.interf.ObjectReturn;
 import com.magiology.util.objs.PairM;
-import com.magiology.util.objs.Vec2FM;
-import com.magiology.util.objs.Vec3M;
-import com.magiology.util.statics.UtilC;
-import com.magiology.util.statics.UtilM;
-import com.magiology.util.statics.math.MatrixUtil;
-import com.magiology.util.statics.math.PartialTicksUtil;
+import com.magiology.util.objs.vec.*;
+import com.magiology.util.statics.*;
+import com.magiology.util.statics.math.*;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
-import net.minecraft.client.renderer.EntityRenderer;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.culling.ClippingHelperImpl;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 
@@ -57,8 +53,8 @@ public abstract class PositionAwareEffect{
 	}
 	public static PairM<Vec2FM, Float> convertWorldToScreenPos(Vec3M worldPos){
 		Vec3M pos=MatrixUtil.transformVector(worldPos, viewTransformation);
-		if(pos.z<0)pos.z=0;
-		return new PairM<Vec2FM, Float>(new Vec2FM((float)(pos.x/pos.z),(float)(pos.y/pos.z)), (float)pos.z);
+		if(pos.z()<0)pos.setZ(0);
+		return new PairM<Vec2FM, Float>(new Vec2FM(pos.getX()/pos.getZ(),pos.getY()/pos.getZ()), pos.getZ());
 	}
 	
 }

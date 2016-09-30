@@ -1,23 +1,19 @@
 package com.magiology.client.renderers;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import com.magiology.client.renderers.Renderer.RendererBase;
-import com.magiology.util.objs.Vec3M;
 import com.magiology.util.objs.physics.real.GeometryUtil;
-import com.magiology.util.statics.PrintUtil;
-import com.magiology.util.statics.UtilM;
+import com.magiology.util.objs.vec.Vec3M;
+import com.magiology.util.statics.*;
 import com.magiology.util.statics.math.MatrixUtil;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.*;
 
 import net.minecraft.client.model.PositionTextureVertex;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.*;
 
 /**
  * 
@@ -78,7 +74,7 @@ public class AdvancedRenderer{
 		if(unfinishedTriangle.size()==4)process();
 	}
 	public void addVertexWithUV(Vec3M vec3m, double u, double v){
-		addVertexWithUV((float)vec3m.x, (float)vec3m.y, (float)vec3m.z, (float)u, (float)v);
+		addVertexWithUV(vec3m.getX(), vec3m.getY(), vec3m.getZ(), (float)u, (float)v);
 	}
 	
 	public void cleanUp(){
@@ -175,7 +171,7 @@ public class AdvancedRenderer{
 	}
 	public void popMatrix(){
 		if(transformationStacks.isEmpty()){
-			PrintUtil.println("Buffer is out of stacks to pop! You need to push before popping!\nFunction aborted.",UtilM.getStackTrace());
+			LogUtil.println("Buffer is out of stacks to pop! You need to push before popping!\nFunction aborted.",UtilM.getStackTrace());
 			return;
 		}
 		int pos=transformationStacks.size()-1;
@@ -242,23 +238,23 @@ public class AdvancedRenderer{
 	}
 	
 	protected void tesselateLines(ShadedQuad triangle){
-		Vec3M finalVectors[]={
+		Vec3M vecs[]={
 				MatrixUtil.transformVector(new Vec3M(triangle.pos4[0].vector3D), transformation),
 				MatrixUtil.transformVector(new Vec3M(triangle.pos4[1].vector3D), transformation),
 				MatrixUtil.transformVector(new Vec3M(triangle.pos4[2].vector3D), transformation),
 				MatrixUtil.transformVector(new Vec3M(triangle.pos4[3].vector3D), transformation)
 		};
-		Renderer.POS.addVertex(finalVectors[0].x, finalVectors[0].y, finalVectors[0].z);
-		Renderer.POS.addVertex(finalVectors[1].x, finalVectors[1].y, finalVectors[1].z);
+		Renderer.POS.addVertex(vecs[0].x(), vecs[0].y(), vecs[0].z());
+		Renderer.POS.addVertex(vecs[1].x(), vecs[1].y(), vecs[1].z());
 
-		Renderer.POS.addVertex(finalVectors[1].x, finalVectors[1].y, finalVectors[1].z);
-		Renderer.POS.addVertex(finalVectors[2].x, finalVectors[2].y, finalVectors[2].z);
+		Renderer.POS.addVertex(vecs[1].x(), vecs[1].y(), vecs[1].z());
+		Renderer.POS.addVertex(vecs[2].x(), vecs[2].y(), vecs[2].z());
 		
-		Renderer.POS.addVertex(finalVectors[2].x, finalVectors[2].y, finalVectors[2].z);
-		Renderer.POS.addVertex(finalVectors[3].x, finalVectors[3].y, finalVectors[3].z);
+		Renderer.POS.addVertex(vecs[2].x(), vecs[2].y(), vecs[2].z());
+		Renderer.POS.addVertex(vecs[3].x(), vecs[3].y(), vecs[3].z());
 		
-		Renderer.POS.addVertex(finalVectors[3].x, finalVectors[3].y, finalVectors[3].z);
-		Renderer.POS.addVertex(finalVectors[0].x, finalVectors[0].y, finalVectors[0].z);
+		Renderer.POS.addVertex(vecs[3].x(), vecs[3].y(), vecs[3].z());
+		Renderer.POS.addVertex(vecs[0].x(), vecs[0].y(), vecs[0].z());
 	}
 	protected void tesselateQuads(ShadedQuad triangle){
 		Vec3M finalNormal1=MatrixUtil.transformVector(triangle.normal1.add(0,0,0), new Vector3f(),rotation.x,rotation.y,rotation.z,1).normalize();

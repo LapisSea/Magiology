@@ -9,7 +9,7 @@ import com.magiology.client.shaders.effects.PositionAwareEffect;
 import com.magiology.client.shaders.effects.SoftEffectsShader;
 import com.magiology.client.shaders.upload.UniformUploaderF1;
 import com.magiology.client.shaders.upload.UniformUploaderF2;
-import com.magiology.util.objs.Vec2FM;
+import com.magiology.util.objs.vec.Vec2FM;
 import com.magiology.util.statics.FileUtil;
 
 import org.lwjgl.opengl.Display;

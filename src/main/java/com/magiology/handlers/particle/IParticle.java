@@ -3,20 +3,15 @@ package com.magiology.handlers.particle;
 import java.util.List;
 
 import com.magiology.util.objs.ColorF;
-import com.magiology.util.objs.Vec2i;
-import com.magiology.util.objs.Vec3M;
-import com.magiology.util.statics.OpenGLM;
-import com.magiology.util.statics.UtilC;
-import com.magiology.util.statics.math.MathUtil;
-import com.magiology.util.statics.math.PartialTicksUtil;
+import com.magiology.util.objs.vec.*;
+import com.magiology.util.statics.*;
+import com.magiology.util.statics.math.*;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public abstract class IParticle{
@@ -102,26 +97,26 @@ public abstract class IParticle{
 	
 	public void moveParticle(Vec3M speed){
 		if(noClip()){
-			setBoundingBox(getBoundingBox().offset(speed.x,speed.y,speed.z));
+			setBoundingBox(getBoundingBox().offset(speed.x(),speed.y(),speed.z()));
 			setPosFromBoundingBox();
 			return;
 		}
 		Vec3M originalSpeed=speed.copy();
-		List<AxisAlignedBB> boundingBoxes=getWorld().getCollisionBoxes(getBoundingBox().addCoord(speed.x,speed.y,speed.z));
-		boundingBoxes.forEach(box->speed.x=box.calculateXOffset(getBoundingBox(),speed.x));
-		setBoundingBox(getBoundingBox().offset(speed.x,0.0D,0.0D));
-		boundingBoxes.forEach(box->speed.y=box.calculateYOffset(getBoundingBox(),speed.y));
-		setBoundingBox(getBoundingBox().offset(0.0D,speed.y,0.0D));
-		boundingBoxes.forEach(box->speed.z=box.calculateZOffset(getBoundingBox(),speed.z));
-		setBoundingBox(getBoundingBox().offset(0.0D,0.0D,speed.z));
+		List<AxisAlignedBB> boundingBoxes=getWorld().getCollisionBoxes(getBoundingBox().addCoord(speed.x(),speed.y(),speed.z()));
+		boundingBoxes.forEach(box->speed.setX(box.calculateXOffset(getBoundingBox(),speed.x())));
+		setBoundingBox(getBoundingBox().offset(speed.x(),0,0));
+		boundingBoxes.forEach(box->speed.setY(box.calculateYOffset(getBoundingBox(),speed.y())));
+		setBoundingBox(getBoundingBox().offset(0,speed.y(),0));
+		boundingBoxes.forEach(box->speed.setZ(box.calculateZOffset(getBoundingBox(),speed.z())));
+		setBoundingBox(getBoundingBox().offset(0,0,speed.z()));
 		setPosFromBoundingBox();
-		final boolean xColided=originalSpeed.x!=speed.x,yColided=originalSpeed.y!=speed.y,zColided=originalSpeed.z!=speed.z;
+		final boolean xColided=originalSpeed.x()!=speed.x(),yColided=originalSpeed.y()!=speed.y(),zColided=originalSpeed.z()!=speed.z();
 		setCollided(xColided||yColided||zColided);
 		if(isCollided()){
 			int x=0,y=0,z=0;
-			if(xColided&&getSpeed().x!=0)x=MathUtil.getNumPrefix(getSpeed().x);
-			if(yColided&&getSpeed().y!=0)y=MathUtil.getNumPrefix(getSpeed().y);
-			if(zColided&&getSpeed().z!=0)z=MathUtil.getNumPrefix(getSpeed().z);
+			if(xColided&&getSpeed().x()!=0)x=MathUtil.getNumPrefix(getSpeed().x());
+			if(yColided&&getSpeed().y()!=0)y=MathUtil.getNumPrefix(getSpeed().y());
+			if(zColided&&getSpeed().z()!=0)z=MathUtil.getNumPrefix(getSpeed().z());
 			onCollided(new Vec3i(x,y,z));
 		}
 	}
@@ -134,7 +129,7 @@ public abstract class IParticle{
 	public void setBoundingBoxFromPos(){
 		Vec3M pos=getPos();
 		float size=getSize()/2.0F;
-		setBoundingBox(new AxisAlignedBB(pos.x-size,pos.y-size,pos.z-size,pos.x+size,pos.y+size,pos.z+size));
+		setBoundingBox(new AxisAlignedBB(pos.x()-size,pos.y()-size,pos.z()-size,pos.x()+size,pos.y()+size,pos.z()+size));
 	}
 	
 	public void setPosTo(Vec3M pos){
@@ -192,40 +187,41 @@ public abstract class IParticle{
 			
 			AxisAlignedBB box=boundingBoxes.get(0);
 			
-			if((box.minX+box.maxX)/2<pos.x)push.x=box.maxX-bb.minX+growth;
-			else push.x=box.maxX-bb.minX-growth;
+			if((box.minX+box.maxX)/2<pos.x())push.setX(box.maxX-bb.minX+growth);
+			else push.setX(box.maxX-bb.minX-growth);
 			
-			if((box.minY+box.maxY)/2<pos.y)push.y=box.maxY-bb.minY+growth;
-			else push.y=box.minY-bb.maxY-growth;
+			if((box.minY+box.maxY)/2<pos.y())push.setY(box.maxY-bb.minY+growth);
+			else push.setY(box.minY-bb.maxY-growth);
 			
-			if((box.minZ+box.maxZ)/2<pos.z)push.z=box.maxZ-bb.minZ+growth;
-			else push.z=box.minZ-bb.maxZ-growth;
+			if((box.minZ+box.maxZ)/2<pos.z())push.setZ(box.maxZ-bb.minZ+growth);
+			else push.setZ(box.minZ-bb.maxZ-growth);
 			
 		}else for(AxisAlignedBB box:boundingBoxes){
+
+			if((box.minX+box.maxX)/2<pos.x())push.setX(Math.max(push.x(), box.maxX-bb.minX+growth));
+			else push.setX(Math.min(push.x(), box.maxX-bb.minX-growth));
 			
-			if((box.minX+box.maxX)/2<pos.x)push.x=Math.max(push.x, box.maxX-bb.minX+growth);
-			else push.x=Math.min(push.x, box.maxX-bb.minX-growth);
+			if((box.minY+box.maxY)/2<pos.y())push.setY(Math.max(push.y(), box.maxY-bb.minY+growth));
+			else push.setY(Math.min(push.y(), box.minY-bb.maxY-growth));
 			
-			if((box.minY+box.maxY)/2<pos.y)push.y=Math.max(push.y, box.maxY-bb.minY+growth);
-			else push.y=Math.min(push.y, box.minY-bb.maxY-growth);
+			if((box.minZ+box.maxZ)/2<pos.z())push.setZ(Math.max(push.z(), box.maxZ-bb.minZ+growth));
+			else push.setZ(Math.min(push.z(), box.minZ-bb.maxZ-growth));
 			
-			if((box.minZ+box.maxZ)/2<pos.z)push.z=Math.max(push.z, box.maxZ-bb.minZ+growth);
-			else push.z=Math.min(push.z, box.minZ-bb.maxZ-growth);
 		}
 		
 		//absolute vector of push used to determine that plane should be used to minimize distance pushed
 		Vec3M absPush=push.abs();
 		
-		if(absPush.x<absPush.y&&absPush.x<absPush.z){
-			setPosX(pos.x+push.x*1.01);
+		if(absPush.x()<absPush.y()&&absPush.x()<absPush.z()){
+			setPosX(pos.x()+push.x()*1.01);
 			return;
 		}
-		if(absPush.y<absPush.x&&absPush.y<absPush.z){
-			setPosY(pos.y+push.y*1.01);
+		if(absPush.y()<absPush.x()&&absPush.y()<absPush.z()){
+			setPosY(pos.y()+push.y()*1.01);
 			return;
 		}
-		if(absPush.z<absPush.x&&absPush.z<absPush.x){
-			setPosZ(pos.z+push.z*1.01);
+		if(absPush.z()<absPush.x()&&absPush.z()<absPush.x()){
+			setPosZ(pos.z()+push.z()*1.01);
 		}
 	}
 

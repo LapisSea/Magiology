@@ -1,23 +1,18 @@
 package com.magiology.mc_objects.particles;
 
 import com.magiology.client.renderers.AdvancedRenderer;
-import com.magiology.handlers.particle.ParticleFactory;
-import com.magiology.handlers.particle.ParticleM;
+import com.magiology.handlers.particle.*;
 import com.magiology.util.objs.ColorF;
-import com.magiology.util.objs.Vec3M;
-import com.magiology.util.statics.OpenGLM;
-import com.magiology.util.statics.OpenGLM.AlphaFunc;
-import com.magiology.util.statics.OpenGLM.BlendFunc;
-import com.magiology.util.statics.RandUtil;
+import com.magiology.util.objs.vec.Vec3M;
+import com.magiology.util.statics.*;
+import com.magiology.util.statics.OpenGLM.*;
 import com.magiology.util.statics.math.PartialTicksUtil;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.*;
 import net.minecraft.util.math.Vec3i;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.*;
 
 public class ParticleBubbleFactory extends ParticleFactory{
 
@@ -142,10 +137,8 @@ public class ParticleBubbleFactory extends ParticleFactory{
 			setSize(originalSize*(float)Math.sqrt(mul));
 			prevRotation.set(rotation);
 			
-			rotationSpeed=rotationSpeed.add(RandUtil.CRF(1)*getSpeed().x*120,RandUtil.CRF(1)*getSpeed().y*120,RandUtil.CRF(1)*getSpeed().z*120);
-			rotation.x+=rotationSpeed.x;
-			rotation.y+=rotationSpeed.y;
-			rotation.y+=rotationSpeed.z;
+			rotationSpeed.addSelf(RandUtil.CRF(1)*getSpeed().x()*120,RandUtil.CRF(1)*getSpeed().y()*120,RandUtil.CRF(1)*getSpeed().z()*120);
+			rotation.addSelf(rotationSpeed);
 			
 			if(getParticleAge()>lifeTime){
 				kill();
@@ -159,7 +152,7 @@ public class ParticleBubbleFactory extends ParticleFactory{
 		
 		@Override
 		public void moveParticle(Vec3M speed){
-			setBoundingBox(getBoundingBox().offset(speed.x,speed.y,speed.z));
+			setBoundingBox(getBoundingBox().offset(speed.x(),speed.y(),speed.z()));
 			setPosFromBoundingBox();
 		}
 		@Override

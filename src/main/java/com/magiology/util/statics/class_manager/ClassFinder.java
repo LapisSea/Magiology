@@ -1,15 +1,11 @@
 package com.magiology.util.statics.class_manager;
 
 import java.lang.reflect.Modifier;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 import com.google.common.base.Joiner;
 import com.magiology.core.MReference;
-import com.magiology.util.statics.PrintUtil;
-import com.magiology.util.statics.UtilM;
+import com.magiology.util.statics.*;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -35,7 +31,7 @@ class ClassFinder{
 		});
 		ClassList.getClassesToSort().clear();
 		
-		if(!sorted.isEmpty())PrintUtil.println(Joiner.on(", ").appendTo(new StringBuilder(sorted.size()==1?"Sorted class: ":"Sorted classes: "), sorted));
+		if(!sorted.isEmpty())LogUtil.println(Joiner.on(", ").appendTo(new StringBuilder(sorted.size()==1?"Sorted class: ":"Sorted classes: "), sorted));
 	}
 	private static void exploreType(Class targetType){
 		List<Class<?>> impl=ClassList.implementations.get(targetType);
@@ -51,28 +47,28 @@ class ClassFinder{
 		if(ClassList.allClasses.isEmpty()){
 			List<String> failed=new ArrayList<>();
 			ClassLoader loader=ClassFinder.class.getClassLoader();
-			PrintUtil.println("Starting to load all classes from "+MReference.NAME+"!");
+			LogUtil.println("Starting to load all classes from "+MReference.NAME+"!");
 			UtilM.startTime();
 			
 			for(String clazz:ClassList.classes){
 				exploreAndLoadClass(loader,failed,clazz,null);
 			}
+			
+			LogUtil.println("Loading of all classes is done in "+UtilM.endTime()+"ms.");
+			if(failed.isEmpty())LogUtil.println("Generated class list is ok! ^_^");
+			else{
+				LogUtil.println("Something changed! Class list or black list needs to be updated!");
+				LogUtil.println("Failed class list:");
+				for(String string:failed)LogUtil.println(string);
+
+				LogUtil.println("\nUpdating list...");
+				ListCompiler.generateAndInject();
+				LogUtil.println("List updated!");
+				
+				UtilM.exit(0);
+			}
 			//set array to null so garbage collection can free more RAM
 			ClassList.classes=null;
-			
-			PrintUtil.println("Loading of all classes is done in "+UtilM.endTime()+"ms.");
-			if(failed.isEmpty())PrintUtil.println("Generated class list is ok! ^_^");
-			else{
-				PrintUtil.println("Something changed! Class list or black list needs to be updated!");
-				PrintUtil.println("Failed class list:");
-				for(String string:failed)PrintUtil.println(string);
-
-				PrintUtil.println("\nUpdating list...");
-				ListCompiler.generateAndInject();
-				PrintUtil.println("List updated!");
-				
-				UtilM.exit(36042069);//https://goo.gl/B4FxBe
-			}
 		}
 	}
 	private static void exploreAndLoadClass(ClassLoader loader,List<String> failed,String clazz,Class clazs){

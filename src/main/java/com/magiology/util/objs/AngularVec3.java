@@ -1,5 +1,6 @@
 package com.magiology.util.objs;
 
+import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.math.MathUtil;
 
 import org.lwjgl.util.vector.Vector2f;
@@ -21,9 +22,9 @@ public class AngularVec3{
 	}
 	public AngularVec3(Vec3M vec){
 		float
-				distanceX=(float)-vec.x,
-				distanceY=(float)-vec.y,
-				distanceZ=(float)-vec.z,
+				distanceX=-vec.getX(),
+				distanceY=-vec.getY(),
+				distanceZ=-vec.getZ(),
 				rotationX=(float)-Math.toDegrees(Math.atan2(distanceY,new Vec3M(-distanceX, 0, -distanceZ).lengthVector())),
 				rotationY=(float)-Math.toDegrees(Math.atan2(distanceX, -distanceZ));
 
@@ -89,10 +90,6 @@ public class AngularVec3{
 	}
 	
 	public Vec3M toVec3M(){
-		Vec3M result=new Vec3M();
-		result.x=-MathUtil.sin((int)getXRotation())*MathUtil.cos((int)getYRotation())*length;
-		result.z= MathUtil.cos((int)getXRotation())*MathUtil.cos((int)getYRotation())*length;
-		result.y=-MathUtil.sin((int)getYRotation())*length;
-		return result;
+		return new Vec3M(-MathUtil.sin(getXRotation())*MathUtil.cos(getYRotation())*length,MathUtil.cos(getXRotation())*MathUtil.cos(getYRotation())*length,-MathUtil.sin(getYRotation())*length);
 	}
 }

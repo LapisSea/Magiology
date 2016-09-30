@@ -1,10 +1,8 @@
 package com.magiology.util.statics.math;
 
-import com.magiology.util.objs.Vec3M;
+import com.magiology.util.objs.vec.Vec3M;
 
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
-import org.lwjgl.util.vector.Vector4f;
+import org.lwjgl.util.vector.*;
 
 import net.minecraft.util.math.Vec3d;
 
@@ -42,7 +40,7 @@ public final class MatrixUtil{
 	}
 	
 	public static MatrixUtil createMatrix(Vec3M translation,float rotationX,float rotationY,float rotationZ, float scale){
-		createMatrix(new Vector3f((float)translation.x, (float)translation.y, (float)translation.z), rotationX, rotationY, rotationZ, scale);
+		createMatrix(translation.toLWJGLVec());
 		return instance;
 	}
 	public static MatrixUtil createMatrix(Vector3f translation){
@@ -108,9 +106,9 @@ public final class MatrixUtil{
 		return instance;
 	}
 	public static Matrix4f rotate(Vec3M rot, Matrix4f mat){
-		Matrix4f.rotate((float)Math.toRadians(rot.x), new Vector3f(1, 0, 0), mat, mat);
-		Matrix4f.rotate((float)Math.toRadians(rot.y), new Vector3f(0, 1, 0), mat, mat);
-		Matrix4f.rotate((float)Math.toRadians(rot.z), new Vector3f(0, 0, 1), mat, mat);
+		Matrix4f.rotate((float)Math.toRadians(rot.x()), new Vector3f(1, 0, 0), mat, mat);
+		Matrix4f.rotate((float)Math.toRadians(rot.y()), new Vector3f(0, 1, 0), mat, mat);
+		Matrix4f.rotate((float)Math.toRadians(rot.z()), new Vector3f(0, 0, 1), mat, mat);
 		return mat;
 	}
 	public static Matrix4f rotate(Vector3f rot, Matrix4f mat){
@@ -153,9 +151,9 @@ public final class MatrixUtil{
 		return mat;
 	}
 	public static Matrix4f rotateZYX(Vec3M rot, Matrix4f mat){
-		Matrix4f.rotate((float)Math.toRadians(rot.z), new Vector3f(0, 0, 1), mat, mat);
-		Matrix4f.rotate((float)Math.toRadians(rot.y), new Vector3f(0, 1, 0), mat, mat);
-		Matrix4f.rotate((float)Math.toRadians(rot.x), new Vector3f(1, 0, 0), mat, mat);
+		Matrix4f.rotate((float)Math.toRadians(rot.z()), new Vector3f(0, 0, 1), mat, mat);
+		Matrix4f.rotate((float)Math.toRadians(rot.y()), new Vector3f(0, 1, 0), mat, mat);
+		Matrix4f.rotate((float)Math.toRadians(rot.x()), new Vector3f(1, 0, 0), mat, mat);
 		return mat;
 	}
 	
@@ -170,24 +168,19 @@ public final class MatrixUtil{
 		return transformVector(new Vec3M(vectorForTransformation), transformation).conv();
 	}
 	public static Vec3M transformVector(Vec3M vectorForTransformation,Matrix4f transformation){
-		Vector3f result=transformVector(new Vector3f((float)vectorForTransformation.x, (float)vectorForTransformation.y, (float)vectorForTransformation.z), transformation);
+		Vector3f result=transformVector(vectorForTransformation.toLWJGLVec(), transformation);
 		return new Vec3M(result.x, result.y, result.z);
 	}
 	public static Vec3M transformVector(Vec3M vectorForTransformation,Vector3f translation,double rotationX,double rotationY,double rotationZ, double scale){
 		if(vectorForTransformation==null)vectorForTransformation=new Vec3M();
-		Vector3f vec=transformVector(new Vector3f((float)vectorForTransformation.x, (float)vectorForTransformation.y, (float)vectorForTransformation.z), translation, rotationX, rotationY, rotationZ, scale);
-		vectorForTransformation.x=vec.x;
-		vectorForTransformation.y=vec.y;
-		vectorForTransformation.z=vec.z;
+		Vector3f vec=transformVector(vectorForTransformation.toLWJGLVec(), translation, rotationX, rotationY, rotationZ, scale);
+		vectorForTransformation.set(vec);
 		return vectorForTransformation;
 	}
-	public static Vector3f transformVector(Vector3f vectorForTransformation,Matrix4f transformation){
-		if(vectorForTransformation==null)vectorForTransformation=new Vector3f();
-		Vector4f vec4=Matrix4f.transform(transformation, new Vector4f(vectorForTransformation.x,vectorForTransformation.y,vectorForTransformation.z,1), null);
-		vectorForTransformation.x=vec4.x;
-		vectorForTransformation.y=vec4.y;
-		vectorForTransformation.z=vec4.z;
-		return vectorForTransformation;
+	public static Vector3f transformVector(Vector3f vec,Matrix4f transformation){
+		Vector4f vec4=Matrix4f.transform(transformation, new Vector4f(vec.x,vec.y,vec.z,1), null);
+		vec.set(vec4);
+		return vec;
 	}
 	public static Vector3f transformVector(Vector3f vectorForTransformation,Vector3f translation,double rotationX,double rotationY,double rotationZ, double scale){
 		if(vectorForTransformation==null)vectorForTransformation=new Vector3f();
@@ -202,9 +195,9 @@ public final class MatrixUtil{
 	}
 	
 	public MatrixUtil rotate(Vec3M rot){
-		Matrix4f.rotate((float)Math.toRadians(rot.x), new Vector3f(1, 0, 0), matrix, matrix);
-		Matrix4f.rotate((float)Math.toRadians(rot.y), new Vector3f(0, 1, 0), matrix, matrix);
-		Matrix4f.rotate((float)Math.toRadians(rot.z), new Vector3f(0, 0, 1), matrix, matrix);
+		Matrix4f.rotate((float)Math.toRadians(rot.x()), new Vector3f(1, 0, 0), matrix, matrix);
+		Matrix4f.rotate((float)Math.toRadians(rot.y()), new Vector3f(0, 1, 0), matrix, matrix);
+		Matrix4f.rotate((float)Math.toRadians(rot.z()), new Vector3f(0, 0, 1), matrix, matrix);
 		return instance;
 	}
 	
@@ -231,9 +224,9 @@ public final class MatrixUtil{
 	}
 
 	public MatrixUtil rotateZYX(Vec3M rot){
-		Matrix4f.rotate((float)Math.toRadians(rot.z), new Vector3f(0, 0, 1), matrix, matrix);
-		Matrix4f.rotate((float)Math.toRadians(rot.y), new Vector3f(0, 1, 0), matrix, matrix);
-		Matrix4f.rotate((float)Math.toRadians(rot.x), new Vector3f(1, 0, 0), matrix, matrix);
+		Matrix4f.rotate((float)Math.toRadians(rot.z()), new Vector3f(0, 0, 1), matrix, matrix);
+		Matrix4f.rotate((float)Math.toRadians(rot.y()), new Vector3f(0, 1, 0), matrix, matrix);
+		Matrix4f.rotate((float)Math.toRadians(rot.x()), new Vector3f(1, 0, 0), matrix, matrix);
 		return instance;
 	}
 

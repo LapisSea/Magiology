@@ -7,7 +7,7 @@ import com.magiology.core.MReference;
 import com.magiology.handlers.particle.ParticleFactory;
 import com.magiology.handlers.particle.ParticleM;
 import com.magiology.util.objs.ColorF;
-import com.magiology.util.objs.Vec3M;
+import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.OpenGLM.BlendFunc;
 import com.magiology.util.statics.UtilC;

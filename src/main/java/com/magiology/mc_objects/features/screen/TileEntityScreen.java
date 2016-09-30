@@ -4,10 +4,10 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import com.magiology.handlers.frame_buff.InWorldFrame;
+import com.magiology.handlers.frame_buff.TemporaryFrame;
 import com.magiology.util.interf.IBlockBreakListener;
 import com.magiology.util.m_extensions.*;
-import com.magiology.util.objs.Vec3M;
+import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.*;
 
 import net.minecraft.block.state.IBlockState;
@@ -22,7 +22,7 @@ public class TileEntityScreen extends TileEntityM implements IBlockBreakListener
 	public int xScreenOff,yScreenOff;
 	public Plane screen;
 	@SideOnly(Side.CLIENT)
-	public InWorldFrame screenTexture;
+	public TemporaryFrame screenTexture;
 	
 	private TileEntityScreen brain;
 	
@@ -58,7 +58,7 @@ public class TileEntityScreen extends TileEntityM implements IBlockBreakListener
 					tile.brain=brain;
 					if(tile.screenTexture!=null)tile.screenTexture=null;
 					BlockPos off=tile.getPos().subtract(new BlockPos(brain.screen.minX,brain.screen.minY,brain.screen.minZ));
-					PrintUtil.println(brain.screen.isVerticalX,brain.screen.isHorisontal);
+					LogUtil.println(brain.screen.isVerticalX,brain.screen.isHorisontal);
 					tile.xScreenOff=brain.screen.isVerticalX? off.getX():off.getZ();
 					tile.yScreenOff=brain.screen.isHorisontal?off.getZ():off.getY();
 				}

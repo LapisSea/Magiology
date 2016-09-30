@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.magiology.util.objs.ColorF;
-import com.magiology.util.objs.Vec2FM;
-import com.magiology.util.objs.Vec3M;
+import com.magiology.util.objs.vec.*;
 
 import org.lwjgl.util.vector.Vector2f;
 

@@ -1,7 +1,7 @@
 package com.magiology.util.m_extensions;
 
 import com.magiology.util.interf.Worldabale;
-import com.magiology.util.objs.Vec3M;
+import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.UtilM;
 
 import net.minecraft.entity.EntityAgeable;

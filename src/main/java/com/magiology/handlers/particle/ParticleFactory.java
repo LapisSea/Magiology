@@ -3,7 +3,7 @@ package com.magiology.handlers.particle;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.magiology.util.objs.Vec3M;
+import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.UtilC;
 
 import net.minecraft.client.renderer.GLAllocation;

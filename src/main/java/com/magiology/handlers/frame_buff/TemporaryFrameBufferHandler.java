@@ -1,29 +1,24 @@
 package com.magiology.handlers.frame_buff;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
-import com.magiology.util.statics.OpenGLM;
-import com.magiology.util.statics.PrintUtil;
-import com.magiology.util.statics.UtilC;
+import com.magiology.util.statics.*;
 
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 
-public class InWorldFrameBufferHandler{
+public class TemporaryFrameBufferHandler{
 	
-	public static final InWorldFrameBufferHandler instance=new InWorldFrameBufferHandler();
-	private InWorldFrameBufferHandler(){}
+	public static final TemporaryFrameBufferHandler instance=new TemporaryFrameBufferHandler();
+	private TemporaryFrameBufferHandler(){}
 
-	private final Queue<InWorldFrame> renderQueue=new ArrayDeque<>();
+	private final Queue<TemporaryFrame> renderQueue=new ArrayDeque<>();
 	
 	private int bufferSizeRedFlag=12,periodicChecksSize=30;
 	
-	final List<InWorldFrame> allBuffers=new ArrayList<InWorldFrame>(){
+	final List<TemporaryFrame> allBuffers=new ArrayList<TemporaryFrame>(){
 		@Override
-		public boolean add(InWorldFrame obj){
+		public boolean add(TemporaryFrame obj){
 			if(size()>=bufferSizeRedFlag)bufferGC();
 			return super.add(obj);
 		}
@@ -31,24 +26,24 @@ public class InWorldFrameBufferHandler{
 	
 	public void bufferGC(){
 		long time=System.currentTimeMillis();
-		Queue<InWorldFrame> unused=new ArrayDeque<>();
+		Queue<TemporaryFrame> unused=new ArrayDeque<>();
 		allBuffers.forEach(f->{
 			if(f.lastTimeUsed+4000<time){
 				unused.add(f);
 				f.dirty=true;
-				PrintUtil.println("Deleted InWorldFrame id=",f.frameBuffer.framebufferObject);
+				LogUtil.println("Deleted InWorldFrame id=",f.frameBuffer.framebufferObject);
 				f.frameBuffer.deleteFramebuffer();
 			}
 		});
 		int siz=allBuffers.size();
 		allBuffers.removeAll(unused);
 		if(allBuffers.size()!=siz){
-			PrintUtil.println("Old InWorldFrame list size:",siz);
-			PrintUtil.println("New InWorldFrame list size:",allBuffers.size());
+			LogUtil.println("Old InWorldFrame list size:",siz);
+			LogUtil.println("New InWorldFrame list size:",allBuffers.size());
 		}
 	}
 	
-	void requestRender(InWorldFrame frame){
+	void requestRender(TemporaryFrame frame){
 		renderQueue.add(frame);
 	}
 	
@@ -59,7 +54,7 @@ public class InWorldFrameBufferHandler{
 		OpenGLM.pushMatrix();
 
 		OpenGLM.disableLighting();
-		renderQueue.forEach(InWorldFrame::render);
+		renderQueue.forEach(TemporaryFrame::render);
 		renderQueue.clear();
 		UtilC.getMC().getFramebuffer().bindFramebuffer(true);
 		ScaledResolution scaledresolution=new ScaledResolution(UtilC.getMC());
@@ -72,8 +67,8 @@ public class InWorldFrameBufferHandler{
 		GlStateManager.translate(0.0F, 0.0F, -2000.0F);
 		OpenGLM.popMatrix();
 	}
-
-	public void checkList(InWorldFrame frame){
+	
+	public void resurrectList(TemporaryFrame frame){
 		if(frame.gcPossible){
 			frame.gcPossible=false;
 			allBuffers.add(frame);

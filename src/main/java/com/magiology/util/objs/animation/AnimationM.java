@@ -7,10 +7,9 @@ import java.util.Map;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import com.magiology.util.objs.CalculableFloat;
-import com.magiology.util.objs.PairM;
-import com.magiology.util.objs.Vec2FM;
+import com.magiology.util.objs.*;
 import com.magiology.util.objs.animation.LinearAnimation.Point;
+import com.magiology.util.objs.vec.Vec2FM;
 import com.magiology.util.statics.math.MathUtil;
 
 import net.minecraft.util.math.MathHelper;

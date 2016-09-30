@@ -2,30 +2,24 @@ package com.magiology.forge_powered.events;
 
 import java.util.Queue;
 
-import org.lwjgl.opengl.GL11;
-
 import com.google.common.collect.Queues;
 import com.magiology.client.shaders.ShaderHandler;
 import com.magiology.client.shaders.effects.PositionAwareEffect;
 import com.magiology.client.shaders.programs.InvisibleEffect;
 import com.magiology.handlers.particle.ParticleHandler;
-import com.magiology.util.objs.Vec3M;
-import com.magiology.util.statics.OpenGLM;
-import com.magiology.util.statics.UtilC;
+import com.magiology.util.objs.vec.Vec3M;
+import com.magiology.util.statics.*;
 import com.magiology.util.statics.math.PartialTicksUtil;
+
+import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.*;
 import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.client.event.*;
+import net.minecraftforge.fml.common.eventhandler.*;
 
 public class RenderEvents{
 	
@@ -54,7 +48,7 @@ public class RenderEvents{
 					GL11.glAlphaFunc(GL11.GL_GREATER, 0);
 					GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 					entity.setInvisible(false);
-					renderManager.doRenderEntity(entity, pos.x, pos.y, pos.z, 0, PartialTicksUtil.partialTicks, false);
+					renderManager.doRenderEntity(entity, pos.x(), pos.y(), pos.z(), 0, PartialTicksUtil.partialTicks, false);
 					entity.setInvisible(true);
 				}
 				GlStateManager.disableBlend();

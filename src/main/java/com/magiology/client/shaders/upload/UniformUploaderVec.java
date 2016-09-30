@@ -1,7 +1,7 @@
 package com.magiology.client.shaders.upload;
 
 import com.magiology.client.shaders.ShaderProgram;
-import com.magiology.util.objs.Vec3M;
+import com.magiology.util.objs.vec.Vec3M;
 
 public class UniformUploaderVec<T extends Vec3M> extends UniformUploaderBase<T>{
 	

@@ -1,14 +1,8 @@
 package com.magiology.util.statics.class_manager;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.nio.file.*;
+import java.util.*;
 
 import com.magiology.core.Magiology;
 import com.magiology.util.statics.FileUtil;
@@ -38,7 +32,7 @@ public class ListCompiler{
 					originalFile1.append(line).append("\n");
 					if(!listStarted){
 						beforeList.add(line);
-						if(line.endsWith("classes={")){
+						if(line.endsWith("classes=new String[]{")){
 							listStarted=true;
 							int tabCount=0;
 							while(line.length()>=tabCount&&line.charAt(tabCount)=='\t'){
@@ -78,9 +72,22 @@ public class ListCompiler{
 			}
 			
 			afterList.forEach(line->newFile.append(line).append("\n"));
-			
+//			PrintUtil.println("Old size:",thisClass.length());
 			FileUtil.setFileTxt(thisClass, newFile.toString());
-			
+//			PrintUtil.println("New size:",thisClass.length());
+//			
+//			//reload class at running time
+//			JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+//			PrintUtil.println(compiler.run(null, null, null, thisClass.getPath()));
+//			PrintUtil.println(ListCompiler.class.getResource("com"));
+//			// Load and instantiate compiled class.
+//			URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] { new File("src/main/java").toURI().toURL() });
+//			try{
+//				Class<?> cls = Class.forName(ClassList.class.getName(), true, classLoader);
+//				cls.newInstance();
+//			}catch(ClassNotFoundException | InstantiationException | IllegalAccessException e){
+//				e.printStackTrace();
+//			}
 		}catch(IOException e){
 		}
 	}
@@ -92,7 +99,7 @@ public class ListCompiler{
 					getFileNames(fileNames, path);
 				}else{
 					String path1=path.toString();
-					if(path1.endsWith(".java"))fileNames.add('"'+path1.substring(startPathLength, path1.length()-5)+"\"");
+					if(path1.endsWith(".java")&&!path1.endsWith("package-info.java"))fileNames.add('"'+path1.substring(startPathLength, path1.length()-5)+"\"");
 				}
 			}
 		}catch(IOException e){

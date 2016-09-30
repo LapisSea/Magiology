@@ -1,23 +1,18 @@
 package com.magiology.mc_objects.particles;
 
 import com.magiology.client.renderers.AdvancedRenderer;
-import com.magiology.handlers.particle.ParticleFactory;
-import com.magiology.handlers.particle.ParticleM;
+import com.magiology.handlers.particle.*;
 import com.magiology.util.objs.ColorF;
-import com.magiology.util.objs.Vec3M;
-import com.magiology.util.statics.OpenGLM;
+import com.magiology.util.objs.vec.Vec3M;
+import com.magiology.util.statics.*;
 import com.magiology.util.statics.OpenGLM.AlphaFunc;
-import com.magiology.util.statics.RandUtil;
-import com.magiology.util.statics.UtilM;
 import com.magiology.util.statics.math.PartialTicksUtil;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.*;
 import net.minecraft.util.math.Vec3i;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.*;
 
 public class ParticleCubeFactory extends ParticleFactory{
 	
@@ -133,10 +128,8 @@ public class ParticleCubeFactory extends ParticleFactory{
 			setSize(originalSize*(float)Math.sqrt(mul));
 			prevRotation.set(rotation);
 			if(!isCollided()){
-				rotationSpeed=rotationSpeed.add(RandUtil.CRF(1)*getSpeed().x*120,RandUtil.CRF(1)*getSpeed().y*120,RandUtil.CRF(1)*getSpeed().z*120);
-				rotation.x+=rotationSpeed.x;
-				rotation.y+=rotationSpeed.y;
-				rotation.y+=rotationSpeed.z;
+				rotationSpeed=rotationSpeed.add(RandUtil.CRF(1)*getSpeed().x()*120,RandUtil.CRF(1)*getSpeed().y()*120,RandUtil.CRF(1)*getSpeed().z()*120);
+				rotation.addSelf(rotationSpeed);
 			}
 			if(getParticleAge()>lifeTime){
 				kill();
@@ -149,17 +142,12 @@ public class ParticleCubeFactory extends ParticleFactory{
 		@Override
 		public void onCollided(Vec3i direction){
 //			PrintUtil.println(getSpeed());
-			if(direction.getX()!=0)getSpeed().x*=-1;
-			if(direction.getY()!=0)getSpeed().y*=-1;
-			if(direction.getZ()!=0)getSpeed().z*=-1;
+			if(direction.getX()!=0)getSpeed().mulSelfX(-1);
+			if(direction.getY()!=0)getSpeed().mulSelfY(-1);
+			if(direction.getZ()!=0)getSpeed().mulSelfZ(-1);
 			
 			rotationSpeed=rotationSpeed.mul(-0.3);
-			rotation.x=(rotation.x*2+Math.round(rotation.x/90)*90)/3;
-			rotation.y=(rotation.y*2+Math.round(rotation.y/90)*90)/3;
-			rotation.z=(rotation.z*2+Math.round(rotation.z/90)*90)/3;
-//			PrintUtil.println(getSpeed());
-//			PrintUtil.println(direction);
-//			super.onCollided(direction);
+			rotation.set((rotation.x()*2+Math.round(rotation.x()/90)*90)/3,(rotation.y()*2+Math.round(rotation.y()/90)*90)/3,(rotation.z()*2+Math.round(rotation.z()/90)*90)/3);
 		}
 		
 		@Override

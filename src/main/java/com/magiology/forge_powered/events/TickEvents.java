@@ -1,10 +1,10 @@
 package com.magiology.forge_powered.events;
 
-import com.magiology.handlers.frame_buff.InWorldFrameBufferHandler;
+import com.magiology.handlers.frame_buff.TemporaryFrameBufferHandler;
 import com.magiology.handlers.particle.ParticleHandler;
 import com.magiology.mc_objects.particles.Particles;
 import com.magiology.util.objs.ColorF;
-import com.magiology.util.objs.Vec3M;
+import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.RandUtil;
 import com.magiology.util.statics.UtilC;
 import com.magiology.util.statics.math.PartialTicksUtil;
@@ -25,7 +25,7 @@ public class TickEvents{
 	public void onClientTick(TickEvent.ClientTickEvent event){
 		if(event.phase!=Phase.START){
 			if(UtilC.isWorldOpen()){
-				if(UtilC.getWorldTime()%50==0)InWorldFrameBufferHandler.instance.bufferGC();
+				if(UtilC.getWorldTime()%50==0)TemporaryFrameBufferHandler.instance.bufferGC();
 				if(!UtilC.getMC().isGamePaused()){
 					Vec3M pos=new Vec3M(UtilC.getThePlayer().getPositionEyes(0));
 					
@@ -40,7 +40,7 @@ public class TickEvents{
 	@SubscribeEvent
 	public void onRenderTick(TickEvent.RenderTickEvent event){
 		PartialTicksUtil.partialTicks=event.renderTickTime;
-		InWorldFrameBufferHandler.instance.renderFrames();
+		TemporaryFrameBufferHandler.instance.renderFrames();
 //		if(Mouse.isButtonDown(0)){
 //
 //			try{

@@ -1,6 +1,6 @@
 package com.magiology.util.objs.physics;
 
-import com.magiology.util.objs.Vec3M;
+import com.magiology.util.objs.vec.Vec3M;
 
 public class PhysicsVec3F{
 	
@@ -11,10 +11,10 @@ public class PhysicsVec3F{
 		y=new PhysicsFloat(startingPoint.getY(), acceleration.getY());
 		z=new PhysicsFloat(startingPoint.getZ(), acceleration.getZ());
 	}
-	public PhysicsVec3F(Vec3M startingPoint,Vec3M acceleration, boolean[] simple){
-		x=new PhysicsFloat(startingPoint.getX(), acceleration.getX(),simple[0]);
-		y=new PhysicsFloat(startingPoint.getY(), acceleration.getY(),simple[1]);
-		z=new PhysicsFloat(startingPoint.getZ(), acceleration.getZ(),simple[2]);
+	public PhysicsVec3F(Vec3M startingPoint,Vec3M acceleration, boolean simple1, boolean simple2, boolean simple3){
+		x=new PhysicsFloat(startingPoint.getX(), acceleration.getX(),simple1);
+		y=new PhysicsFloat(startingPoint.getY(), acceleration.getY(),simple2);
+		z=new PhysicsFloat(startingPoint.getZ(), acceleration.getZ(),simple3);
 	}
 	public void addWall(String key, float wallPos,boolean pointOnSideOfTheWall){
 		x.addWall(key, wallPos, pointOnSideOfTheWall);

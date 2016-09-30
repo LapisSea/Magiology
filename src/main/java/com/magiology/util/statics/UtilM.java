@@ -3,54 +3,35 @@ package com.magiology.util.statics;
 import static com.mojang.realmsclient.gui.ChatFormatting.*;
 
 import java.awt.Color;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.math.BigDecimal;
 import java.nio.FloatBuffer;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.*;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.ArrayUtils;
-
-import com.google.common.collect.ImmutableMap;
 import com.magiology.SoundM;
 import com.magiology.core.MReference;
 import com.magiology.util.m_extensions.BlockPosM;
 import com.magiology.util.objs.ColorF;
-import com.magiology.util.objs.Vec3M;
+import com.magiology.util.objs.vec.Vec3M;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import net.minecraft.block.Block;
-import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.item.*;
+import net.minecraft.nbt.*;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
+import net.minecraft.util.text.translation.I18n;
+import net.minecraft.world.*;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -61,7 +42,6 @@ public class UtilM{
 	
 	public class U extends UtilM{}
 	
-	@Deprecated
 	public static final float p=1F/16F;
 	private static long startTime;
 	
@@ -452,10 +432,10 @@ public class UtilM{
 	}
 	public static void playSoundAtEntity(SoundM sound, World world, Vec3M pos,float volume,float pitch){
 		if(world.isRemote)return;
-		world.playSound(pos.x, pos.y, pos.z, sound.toSoundEvent(), sound.category, volume, pitch, false);
+		world.playSound(pos.x(), pos.y(), pos.z(), sound.toSoundEvent(), sound.category, volume, pitch, false);
 	}
 	public static void printTime(){
-		PrintUtil.println(endTime());
+		LogUtil.println(endTime());
 	}
 	public static int rgbByteToCode(int r,int g,int b,int alpha){
 		return colorToCode(new Color(r, g, b, alpha));
@@ -708,4 +688,8 @@ public class UtilM{
 		
 		return map;
 	}
+
+	public static String localize(String input, Object ... format){
+        return I18n.translateToLocalFormatted(input, format);
+    }
 }

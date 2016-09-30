@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.magiology.core.Config;
-import com.magiology.util.objs.Vec3M;
+import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.UtilC;
 import com.magiology.util.statics.UtilM;

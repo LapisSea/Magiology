@@ -3,20 +3,15 @@ package com.magiology.util.objs.physics.real;
 import java.util.List;
 
 import com.magiology.util.m_extensions.BlockPosM;
-import com.magiology.util.objs.AngularVec3;
-import com.magiology.util.objs.PairM;
-import com.magiology.util.objs.Vec3M;
+import com.magiology.util.objs.*;
 import com.magiology.util.objs.physics.real.entitymodel.Colideable;
-import com.magiology.util.statics.PhysicsUtil;
-import com.magiology.util.statics.UtilM;
-import com.magiology.util.statics.math.MathUtil;
-import com.magiology.util.statics.math.MatrixUtil;
+import com.magiology.util.objs.vec.Vec3M;
+import com.magiology.util.statics.*;
+import com.magiology.util.statics.math.*;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 
 public abstract class AbstractRealPhysicsVec3F{
@@ -49,12 +44,12 @@ public abstract class AbstractRealPhysicsVec3F{
 						Vec3M pos=getPos();
 						if(bounding.isVecInside(pos.conv())){
 							double 
-								toMaxYDist=Math.abs(pos.y-bounding.maxY),
-								toMinYDist=Math.abs(pos.y-bounding.minY),
-								toMinXDist=Math.abs(pos.x-bounding.minX),
-								toMaxXDist=Math.abs(pos.x-bounding.maxX),
-								toMinZDist=Math.abs(pos.z-bounding.minZ),
-								toMaxZDist=Math.abs(pos.z-bounding.maxZ),
+								toMaxYDist=Math.abs(pos.y()-bounding.maxY),
+								toMinYDist=Math.abs(pos.y()-bounding.minY),
+								toMinXDist=Math.abs(pos.x()-bounding.minX),
+								toMaxXDist=Math.abs(pos.x()-bounding.maxX),
+								toMinZDist=Math.abs(pos.z()-bounding.minZ),
+								toMaxZDist=Math.abs(pos.z()-bounding.maxZ),
 								min=Math.min(toMaxYDist, Math.min(toMinYDist, Math.min(toMinXDist, Math.min(toMaxXDist, Math.min(toMinZDist, toMaxZDist)))));
 							if(min==toMaxYDist)addPos(new Vec3M(0, toMaxYDist, 0));
 							else if(min==toMinYDist)addPos(new Vec3M(0, -toMinYDist, 0));
@@ -138,9 +133,9 @@ public abstract class AbstractRealPhysicsVec3F{
 
 		setPrevPos(getPos());
 		setPrevVelocity(getVelocity().copy());
-		getVelocity().y-=getMass();
-		if(!MathUtil.isNumValid(getVelocity().x)){
-			if(MathUtil.isNumValid(getPrevVelocity().x))setVelocity(getPrevVelocity());
+		getVelocity().subSelfY(getMass());
+		if(!MathUtil.isNumValid(getVelocity().x())){
+			if(MathUtil.isNumValid(getPrevVelocity().x()))setVelocity(getPrevVelocity());
 			else setVelocity(new Vec3M());
 		}
 		move(coliders);

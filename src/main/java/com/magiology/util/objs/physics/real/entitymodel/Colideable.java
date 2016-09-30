@@ -1,8 +1,8 @@
 package com.magiology.util.objs.physics.real.entitymodel;
 
 import com.magiology.util.objs.PairM;
-import com.magiology.util.objs.Vec3M;
 import com.magiology.util.objs.physics.real.AbstractRealPhysicsVec3F;
+import com.magiology.util.objs.vec.Vec3M;
 
 public interface Colideable{
 	public void applyColideableMove(AbstractRealPhysicsVec3F vec);

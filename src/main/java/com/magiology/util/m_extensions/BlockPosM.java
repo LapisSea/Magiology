@@ -1,6 +1,6 @@
 package com.magiology.util.m_extensions;
 
-import com.magiology.util.objs.Vec3M;
+import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.UtilM;
 
 import net.minecraft.block.Block;
@@ -9,11 +9,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
 
 public class BlockPosM extends BlockPos{
 	
@@ -54,7 +51,7 @@ public class BlockPosM extends BlockPos{
 	}
 	
 	public BlockPosM(Vec3M source){
-		this(source.x, source.y, source.z);
+		this(source.x(), source.y(), source.z());
 	}
 	
 	public BlockPosM(PathPoint point){
@@ -136,17 +133,11 @@ public class BlockPosM extends BlockPos{
 	}
 	
 	public Vec3M vecAdd(Vec3M vec){
-		vec.x+=getX();
-		vec.y+=getY();
-		vec.z+=getZ();
-		return vec;
+		return vec.addSelf(this);
 	}
 	
 	public Vec3M vecSub(Vec3M vec){
-		vec.x-=getX();
-		vec.y-=getY();
-		vec.z-=getZ();
-		return vec;
+		return vec.subSelf(this);
 	}
 	
 	@Override
@@ -165,7 +156,7 @@ public class BlockPosM extends BlockPos{
 	}
 	
 	public BlockPosM add(Vec3M vec){
-		return vec.getX()==0&&vec.getY()==0&&vec.getZ()==0?this:new BlockPosM(getX()+vec.x, getY()+vec.y, getZ()+vec.z);
+		return vec.x()==0&&vec.y()==0&&vec.z()==0?this:new BlockPosM(getX()+vec.x(), getY()+vec.y(), getZ()+vec.z());
 	}
 	
 	@Override

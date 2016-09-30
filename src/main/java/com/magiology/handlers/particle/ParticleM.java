@@ -2,17 +2,12 @@ package com.magiology.handlers.particle;
 
 import com.magiology.client.renderers.Renderer;
 import com.magiology.util.m_extensions.BlockPosM;
-import com.magiology.util.objs.ColorF;
-import com.magiology.util.objs.QuadUV;
-import com.magiology.util.objs.Vec2i;
-import com.magiology.util.objs.Vec3M;
+import com.magiology.util.objs.*;
+import com.magiology.util.objs.vec.*;
 import com.magiology.util.statics.math.PartialTicksUtil;
 
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.math.*;
+import net.minecraftforge.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public abstract class ParticleM extends IParticle{
@@ -116,8 +111,9 @@ public abstract class ParticleM extends IParticle{
 	public void setSize(float size){
 		if(size==size&&this.size!=size){
 			this.size=size;
-			Vec3M pos=getPos().sub(size/2);
-			this.setBoundingBox(new AxisAlignedBB(pos.x, pos.y, pos.z, pos.x+size, pos.y+size, pos.z+size));
+			float s2=size/2;
+			Vec3M pos=getPos();
+			this.setBoundingBox(new AxisAlignedBB(pos.x()-s2, pos.y()-s2, pos.z()-s2, pos.x()+s2, pos.y()+s2, pos.z()+s2));
 		}
 	}
 	@Override
@@ -132,9 +128,9 @@ public abstract class ParticleM extends IParticle{
 
 	@Override
 	public void onCollided(Vec3i direction){
-		if(direction.getX()!=0)getSpeed().x=0;
-		if(direction.getY()!=0)getSpeed().y=0;
-		if(direction.getZ()!=0)getSpeed().z=0;
+		if(direction.getX()!=0)getSpeed().setX(0);
+		if(direction.getY()!=0)getSpeed().setY(0);
+		if(direction.getZ()!=0)getSpeed().setZ(0);
 	}
 
 	@Override
@@ -218,14 +214,14 @@ public abstract class ParticleM extends IParticle{
 	}
 	@Override
 	public void setPosX(double x){
-		pos.x=x;
+		pos.setX(x);
 	}
 	@Override
 	public void setPosY(double y){
-		pos.y=y;
+		pos.setY(y);
 	}
 	@Override
 	public void setPosZ(double z){
-		pos.z=z;
+		pos.setZ(z);
 	}
 }

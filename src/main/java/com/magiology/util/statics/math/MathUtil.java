@@ -2,6 +2,8 @@ package com.magiology.util.statics.math;
 
 import com.magiology.util.statics.RandUtil;
 
+import net.minecraft.util.math.MathHelper;
+
 public class MathUtil{
 	
 	public static final double GOLDEN_RATIO=(1+Math.sqrt(5))/2;
@@ -27,7 +29,7 @@ public class MathUtil{
 	}
 
 	public static float cos(double a){
-		return (float)Math.cos((float)Math.toRadians(a));
+		return MathHelper.cos((float)Math.toRadians(a));
 	}
 
 	/**

@@ -1,6 +1,6 @@
 package com.magiology.mc_objects;
 
-public class MTabs{
+public class TabRegistry{
 	
 //	public static CreativeTabs Magiology
 	

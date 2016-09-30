@@ -2,7 +2,7 @@ package com.magiology.util.statics;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import com.magiology.util.objs.Vec2i;
+import com.magiology.util.objs.vec.Vec2i;
 import com.magiology.util.statics.math.PartialTicksUtil;
 
 import net.minecraft.client.Minecraft;

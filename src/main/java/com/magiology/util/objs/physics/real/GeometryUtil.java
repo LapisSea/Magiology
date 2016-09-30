@@ -1,21 +1,17 @@
 package com.magiology.util.objs.physics.real;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import com.magiology.util.objs.PairM;
-import com.magiology.util.objs.Vec3M;
+import com.magiology.util.objs.vec.*;
 import com.magiology.util.statics.math.MatrixUtil;
 
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.*;
 
 import net.minecraft.client.model.PositionTextureVertex;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.*;
 
 public class GeometryUtil{
 
@@ -365,5 +361,67 @@ public class GeometryUtil{
 	public static RayTraceResult rayTrace(Entity entity,boolean useLiquids){
 		PairM<Vec3d,Vec3d> look=getStartEndLook(entity);
 		return entity.worldObj.rayTraceBlocks(look.obj1,look.obj2,useLiquids,!useLiquids,false);
+	}
+	
+	public static List<Vec2FM> cricleSectorSize(double startDeg, double size, double degreeSpacing){
+		return cricleSector(startDeg,startDeg+size,1,degreeSpacing);
+	}
+	
+	public static List<Vec2FM> cricleSector(double startDeg, double endDeg, double degreeSpacing){
+		return cricleSector(startDeg,endDeg,1,degreeSpacing);
+	}
+	
+	public static List<Vec2FM> cricleSectorSize(double startDeg, double size, float radius, double degreeSpacing){
+		return cricleSector(startDeg,startDeg+size,radius,degreeSpacing);
+	}
+	
+	public static List<Vec2FM> cricleSector(double startDeg, double endDeg, float radius, double degreeSpacing){
+		if(degreeSpacing>120)throw new IllegalStateException("Minimal resolution is 120deg/point");
+		List<Vec2FM> points=new ArrayList<>();
+		
+		degreeSpacing=Math.toRadians(degreeSpacing);
+		startDeg=Math.toRadians(startDeg);
+		endDeg=Math.toRadians(endDeg);
+		
+		if(endDeg<startDeg)degreeSpacing*=-1;
+		int pointCount=(int)Math.floor((endDeg-startDeg)/degreeSpacing);
+		
+		points.add(anglePoint(startDeg));
+		if(pointCount>0){
+			double angle=startDeg;
+			for(int i=0;i<pointCount;i++){
+				angle+=degreeSpacing;
+				points.add(anglePoint(angle));
+			}
+		}
+		points.add(anglePoint(endDeg));
+		
+		if(radius!=1){
+			List<Vec2FM> scaled=new ArrayList<>();
+			points.forEach(p->scaled.add(p.mul(radius)));
+			return scaled;
+		}
+		return points;
+	}
+	public static Vec2FM anglePoint(double rad){
+		return new Vec2FM((float)Math.sin(rad),(float)Math.cos(rad));
+	}
+	
+	private static final List<Vec3M> facingRotations=new ArrayList<>();
+	static{
+		for(EnumFacing facing:EnumFacing.values()){
+			Vec3i rotVec=facing.getDirectionVec();
+			Vec3M rot3d=new Vec3M();
+			
+			if(rotVec.getY()==1)rot3d.setX(-90);
+			else if(rotVec.getY()==-1)rot3d.setX(90);
+			if(rotVec.getX()!=0||rotVec.getZ()!=0)rot3d.setY(Math.toDegrees(Math.atan2(rotVec.getX(),rotVec.getZ())));
+			
+			facingRotations.add(rot3d);
+		}
+	}
+	
+	public static Vec3M rotFromFacing(EnumFacing facing){
+		return facingRotations.get(facing.getIndex());
 	}
 }

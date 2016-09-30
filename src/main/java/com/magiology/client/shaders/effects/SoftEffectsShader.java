@@ -7,10 +7,8 @@ import com.magiology.client.shaders.programs.InvisibleEffect;
 import com.magiology.client.shaders.upload.UniformUploaderColor;
 import com.magiology.client.shaders.upload.UniformUploaderF1;
 import com.magiology.client.shaders.upload.UniformUploaderF2;
-import com.magiology.util.objs.ColorF;
-import com.magiology.util.objs.PairM;
-import com.magiology.util.objs.Vec2FM;
-import com.magiology.util.objs.Vec3M;
+import com.magiology.util.objs.*;
+import com.magiology.util.objs.vec.*;
 
 import org.lwjgl.opengl.Display;
 

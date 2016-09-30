@@ -2,7 +2,7 @@ package com.magiology.client.rendering.tile_render;
 
 import com.magiology.mc_objects.features.dimension_stabiliser.TileEntityDimensionStabiliser;
 import com.magiology.util.m_extensions.TileEntitySpecialRendererM;
-import com.magiology.util.objs.Vec3M;
+import com.magiology.util.objs.vec.Vec3M;
 
 public class DummyTileEntityRenderer extends TileEntitySpecialRendererM<TileEntityDimensionStabiliser>{
 	

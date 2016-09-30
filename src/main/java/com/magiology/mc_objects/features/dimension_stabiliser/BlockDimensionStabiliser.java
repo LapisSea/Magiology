@@ -4,16 +4,20 @@ import com.magiology.util.m_extensions.BlockContainerM;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.*;
+import net.minecraft.world.IBlockAccess;
 
 public class BlockDimensionStabiliser extends BlockContainerM{
 	
+	private static BlockDimensionStabiliser instance;
+	public static BlockDimensionStabiliser get(){
+		return instance;
+	}
 	public BlockDimensionStabiliser(){
-		super(Material.IRON);
+		super(Material.IRON,()->new TileEntityDimensionStabiliser());
 		setBlockBounds(0,0,0,1,8/16F,1);
+		instance=this;
 	}
 	
 	@Override
@@ -45,9 +49,5 @@ public class BlockDimensionStabiliser extends BlockContainerM{
 	public boolean canRenderInLayer(IBlockState state,BlockRenderLayer layer){
 		return layer==BlockRenderLayer.CUTOUT;
 	}
-	
-	@Override
-	public TileEntity createNewTileEntity(World world,int metadata){
-		return new TileEntityDimensionStabiliser();
-	}
+
 }

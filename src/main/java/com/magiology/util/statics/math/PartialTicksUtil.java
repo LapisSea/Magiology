@@ -4,13 +4,12 @@ package com.magiology.util.statics.math;
 import com.magiology.handlers.particle.IParticle;
 import com.magiology.util.interf.Calculable;
 import com.magiology.util.objs.ColorF;
-import com.magiology.util.objs.Vec3M;
+import com.magiology.util.objs.vec.Vec3M;
 
 import org.lwjgl.util.vector.Vector2f;
 
 import net.minecraft.entity.Entity;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class PartialTicksUtil{
@@ -50,9 +49,9 @@ public class PartialTicksUtil{
 	}
 	public static Vec3M calculate(Vec3M prevPos, Vec3M pos){
 		return new Vec3M(
-			calculate(prevPos.x, pos.x),
-			calculate(prevPos.y, pos.y),
-			calculate(prevPos.z, pos.z)
+			calculate(prevPos.x(), pos.x()),
+			calculate(prevPos.y(), pos.y()),
+			calculate(prevPos.z(), pos.z())
 		);
 	}
 	public static Vector2f calculate(Vector2f prevVec, Vector2f vec){

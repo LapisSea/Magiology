@@ -7,9 +7,8 @@ import java.util.List;
 import com.magiology.util.interf.ObjectProcessor;
 import com.magiology.util.m_extensions.BlockPosM;
 import com.magiology.util.objs.PairM;
-import com.magiology.util.objs.Vec2i;
-import com.magiology.util.objs.Vec3M;
 import com.magiology.util.objs.physics.real.entitymodel.Colideable;
+import com.magiology.util.objs.vec.*;
 import com.magiology.util.statics.RandUtil;
 import com.magiology.util.statics.math.MathUtil;
 

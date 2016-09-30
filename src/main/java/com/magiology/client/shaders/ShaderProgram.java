@@ -3,11 +3,10 @@ package com.magiology.client.shaders;
 import java.nio.FloatBuffer;
 
 import com.magiology.util.objs.ColorF;
-import com.magiology.util.objs.Vec3M;
+import com.magiology.util.objs.vec.Vec3M;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.*;
 import org.lwjgl.util.vector.Matrix4f;
 
 public abstract class ShaderProgram{
@@ -81,7 +80,7 @@ public abstract class ShaderProgram{
 		upload(location, color.r, color.g, color.b, color.a);
 	}
 	public void upload(int location, Vec3M vec){
-		upload(location, (float)vec.x,(float)vec.y,(float)vec.z);
+		upload(location, vec.getX(),vec.getY(),vec.getZ());
 	}
 	
 	protected void loadMatrix4F(int location, Matrix4f value){

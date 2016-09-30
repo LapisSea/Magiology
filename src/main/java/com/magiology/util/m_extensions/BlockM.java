@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.*;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.util.math.*;
 import net.minecraft.world.IBlockAccess;
 
@@ -146,5 +147,7 @@ public abstract class BlockM extends Block{
 	public BlockM setCreativeTab(CreativeTabs tab){
 		return (BlockM)super.setCreativeTab(tab);
 	}
-	
+	public Item toItem(){
+		return Item.getItemFromBlock(this);
+	}
 }
