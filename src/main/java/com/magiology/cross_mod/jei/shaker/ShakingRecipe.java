@@ -14,6 +14,7 @@ public class ShakingRecipe extends BlankRecipeWrapper{
 	public ShakingRecipe(List<ItemStack> inputs,List<ItemStack> outputs){
 		this.inputs=Collections.singletonList(inputs);
 		this.outputs=outputs;
+		
 	}
 	
 	@Override
