@@ -8,10 +8,11 @@ import java.security.cert.Certificate;
 import java.util.*;
 
 import com.google.common.eventbus.EventBus;
-import com.magiology.forge_powered.networking.SimpleNetworkWrapperM;
-import com.magiology.forge_powered.proxy.CommonProxy;
+import com.magiology.forge.networking.SimpleNetworkWrapperM;
+import com.magiology.forge.proxy.CommonProxy;
 import com.magiology.io.IOManager;
 import com.magiology.util.statics.LogUtil;
+import com.magiology.util.statics.UtilM;
 import com.magiology.util.statics.class_manager.ClassList;
 
 import net.minecraftforge.fml.common.*;
@@ -30,15 +31,14 @@ public class Magiology implements ModContainer{
 		if(IS_DEV)LogUtil.printWrapped(NAME+" is running in development environment! Work Lapis! Work! NO! CLOSE THAT YOUTUBE VIDEO! ");
 	}
 	/***//** variables *//***/
-	public static SimpleNetworkWrapperM NETWORK_CHANNEL;
+	@SidedProxy(modId=MODID, clientSide=CLIENT_PROXY_LOCATION, serverSide=SERVER_PROXY_LOCATION)
+	public static CommonProxy			sideProxy;
+	public static CommonProxy			commonProxy	=new CommonProxy();
+	public static SimpleNetworkWrapperM	NETWORK_CHANNEL;
 	@Instance(value=MODID)
-	private static Magiology instance;
-	@SidedProxy(modId=MODID, clientSide=ClIENT_PROXY_LOCATION, serverSide=SERVER_PROXY_LOCATION)
-	public static CommonProxy sideProxy;
-	public static CommonProxy commonProxy=new CommonProxy();
-	private static String marker=NAME+"_"+MC_VERSION+"-"+VERSION;
-	
-	public static IOManager extraFiles=new IOManager();
+	private static Magiology			instance;
+	private static String				marker		=NAME+"_"+MC_VERSION+"-"+VERSION;
+	public static IOManager				extraFiles	=new IOManager();
 	
 	public Magiology(){
 		instance=this;

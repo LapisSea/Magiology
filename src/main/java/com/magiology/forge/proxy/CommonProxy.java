@@ -1,4 +1,4 @@
-package com.magiology.forge_powered.proxy;
+package com.magiology.forge.proxy;
 
 import static com.magiology.core.MReference.*;
 
@@ -6,8 +6,8 @@ import java.awt.Color;
 
 import com.magiology.core.Magiology;
 import com.magiology.cross_mod.ModChecker;
-import com.magiology.forge_powered.events.*;
-import com.magiology.forge_powered.networking.SimpleNetworkWrapperM;
+import com.magiology.forge.events.*;
+import com.magiology.forge.networking.*;
 import com.magiology.io.IOManager;
 import com.magiology.mc_objects.*;
 import com.magiology.mc_objects.entitys.EntityPenguin;
@@ -33,7 +33,7 @@ public class CommonProxy{
 	public void preInit(){
 		
 		Magiology.getMagiology().NETWORK_CHANNEL=new SimpleNetworkWrapperM(CHANNEL_NAME);
-		
+		Packets.register();
 		BlockRegistry.get().register();
 		ItemRegistry.get().register();
 		ClassList.getImplementations(TileEntityM.class).forEach((clazz)->GameRegistry.registerTileEntity(clazz, "te_"+UtilM.classNameToMcName(clazz.getSimpleName())));

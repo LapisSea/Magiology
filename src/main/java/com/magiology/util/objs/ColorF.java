@@ -6,6 +6,7 @@ import com.magiology.util.statics.RandUtil;
 import com.magiology.util.statics.math.MathUtil;
 
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraftforge.fml.relauncher.*;
 
 public class ColorF{
 	public static final ColorF 
@@ -49,6 +50,7 @@ public class ColorF{
 	public ColorF add(ColorF color){
 		return new ColorF(color.r+r,color.g+g,color.b+b,color.a+a);
 	}
+	@SideOnly(Side.CLIENT)
 	public void bind(){
 		GlStateManager.color(r,g,b,a);
 	}

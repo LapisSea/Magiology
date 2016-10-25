@@ -1,4 +1,4 @@
-package com.magiology.forge_powered.proxy;
+package com.magiology.forge.proxy;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

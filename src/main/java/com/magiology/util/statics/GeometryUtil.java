@@ -1,4 +1,4 @@
-package com.magiology.util.objs.physics.real;
+package com.magiology.util.statics;
 
 import java.util.*;
 
@@ -407,21 +407,28 @@ public class GeometryUtil{
 		return new Vec2FM((float)Math.sin(rad),(float)Math.cos(rad));
 	}
 	
-	private static final List<Vec3M> facingRotations=new ArrayList<>();
+	private static final List<IVec3M> facingRotations;
+	
 	static{
+		List<IVec3M> arList=new ArrayList<>();
+		
 		for(EnumFacing facing:EnumFacing.values()){
 			Vec3i rotVec=facing.getDirectionVec();
-			Vec3M rot3d=new Vec3M();
+			double x,y;
 			
-			if(rotVec.getY()==1)rot3d.setX(-90);
-			else if(rotVec.getY()==-1)rot3d.setX(90);
-			if(rotVec.getX()!=0||rotVec.getZ()!=0)rot3d.setY(Math.toDegrees(Math.atan2(rotVec.getX(),rotVec.getZ())));
+			if(rotVec.getY()==1)x=-90;
+			else if(rotVec.getY()==-1)x=90;
+			else x=0;
 			
-			facingRotations.add(rot3d);
+			if(rotVec.getX()!=0||rotVec.getZ()!=0)y=Math.toDegrees(Math.atan2(rotVec.getX(),rotVec.getZ()));
+			else y=0;
+			
+			arList.add(new Vec3MFinal(x,y,0));
 		}
+		facingRotations=Collections.unmodifiableList(arList);
 	}
 	
-	public static Vec3M rotFromFacing(EnumFacing facing){
+	public static IVec3M rotFromFacing(EnumFacing facing){
 		return facingRotations.get(facing.getIndex());
 	}
 }

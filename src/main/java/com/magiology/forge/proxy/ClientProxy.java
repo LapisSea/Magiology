@@ -1,9 +1,9 @@
-package com.magiology.forge_powered.proxy;
+package com.magiology.forge.proxy;
 
 import com.magiology.client.entity.EntityPenguinRenderer;
 import com.magiology.client.shaders.ShaderHandler;
 import com.magiology.core.MReference;
-import com.magiology.forge_powered.events.RenderEvents;
+import com.magiology.forge.events.RenderEvents;
 import com.magiology.mc_objects.BlockRegistry;
 import com.magiology.mc_objects.entitys.EntityPenguin;
 import com.magiology.mc_objects.particles.Particles;

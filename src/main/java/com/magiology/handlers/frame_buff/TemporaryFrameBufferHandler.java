@@ -1,8 +1,13 @@
 package com.magiology.handlers.frame_buff;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
 
-import com.magiology.util.statics.*;
+import com.magiology.util.statics.LogUtil;
+import com.magiology.util.statics.OpenGLM;
+import com.magiology.util.statics.UtilC;
 
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -12,14 +17,14 @@ public class TemporaryFrameBufferHandler{
 	public static final TemporaryFrameBufferHandler instance=new TemporaryFrameBufferHandler();
 	private TemporaryFrameBufferHandler(){}
 
-	private final Queue<TemporaryFrame> renderQueue=new ArrayDeque<>();
+	private final List<TemporaryFrame> renderQueue=new ArrayList<>();
 	
 	private int bufferSizeRedFlag=12,periodicChecksSize=30;
 	
 	final List<TemporaryFrame> allBuffers=new ArrayList<TemporaryFrame>(){
 		@Override
 		public boolean add(TemporaryFrame obj){
-			if(size()>=bufferSizeRedFlag)bufferGC();
+			if(size()>=bufferSizeRedFlag||true)bufferGC();
 			return super.add(obj);
 		}
 	},trashBank=new ArrayList();
@@ -31,7 +36,7 @@ public class TemporaryFrameBufferHandler{
 			if(f.lastTimeUsed+4000<time){
 				unused.add(f);
 				f.dirty=true;
-				LogUtil.println("Deleted InWorldFrame id=",f.frameBuffer.framebufferObject);
+				LogUtil.println("Deleted InWorldFrame id=",f.frameBuffer.framebufferObject,f);
 				f.frameBuffer.deleteFramebuffer();
 			}
 		});
@@ -54,7 +59,7 @@ public class TemporaryFrameBufferHandler{
 		OpenGLM.pushMatrix();
 
 		OpenGLM.disableLighting();
-		renderQueue.forEach(TemporaryFrame::render);
+		renderQueue.stream().forEach(TemporaryFrame::render);
 		renderQueue.clear();
 		UtilC.getMC().getFramebuffer().bindFramebuffer(true);
 		ScaledResolution scaledresolution=new ScaledResolution(UtilC.getMC());
@@ -71,7 +76,10 @@ public class TemporaryFrameBufferHandler{
 	public void resurrectList(TemporaryFrame frame){
 		if(frame.gcPossible){
 			frame.gcPossible=false;
+		}
+		if(allBuffers.stream().noneMatch(f->frame==f)){
 			allBuffers.add(frame);
+			allBuffers.stream().forEach(TemporaryFrame::requestRender);
 		}
 	}
 }

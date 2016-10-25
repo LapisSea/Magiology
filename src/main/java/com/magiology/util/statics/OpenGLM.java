@@ -3,7 +3,7 @@ package com.magiology.util.statics;
 import static org.lwjgl.opengl.GL11.*;
 
 import com.magiology.util.objs.ColorF;
-import com.magiology.util.objs.vec.Vec3M;
+import com.magiology.util.objs.vec.*;
 
 import org.lwjgl.opengl.GL11;
 
@@ -117,13 +117,10 @@ public class OpenGLM extends GlStateManager{
 		AlphaFunc.NORMAL.bind();
 	}
 	
-	public static void rotate(Vec3M rot){
-		if(rot.x()!=0)
-			rotateX(rot.x());
-		if(rot.y()!=0)
-			rotateY(rot.y());
-		if(rot.z()!=0)
-			rotateZ(rot.z());
+	public static void rotate(IVec3M rot){
+		if(rot.x()!=0)rotateX(rot.x());
+		if(rot.y()!=0)rotateY(rot.y());
+		if(rot.z()!=0)rotateZ(rot.z());
 	}
 
 	public static void rotateX(double x){

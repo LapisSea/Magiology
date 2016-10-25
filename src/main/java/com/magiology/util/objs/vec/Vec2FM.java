@@ -57,5 +57,15 @@ public class Vec2FM implements Calculable<Vec2FM>{
 	public Vec2FM copy(){
 		return new Vec2FM(x,y);
 	}
+	public void set(Vec2FM vec){
+		set(vec.x,vec.y);
+	}
+	@Override
+	public String toString(){
+		return "["+x+", "+y+"]";
+	}
 	
+	public Vec2i toVec2i(){
+		return new Vec2i((int)x, (int)y);
+	}
 }

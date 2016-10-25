@@ -1,6 +1,6 @@
 package com.magiology.mc_objects.particles;
 
-import com.magiology.client.renderers.AdvancedRenderer;
+import com.magiology.client.renderers.FastNormalRenderer;
 import com.magiology.handlers.particle.*;
 import com.magiology.util.objs.ColorF;
 import com.magiology.util.objs.vec.Vec3M;
@@ -53,7 +53,7 @@ public class ParticleBubbleFactory extends ParticleFactory{
 		GlStateManager.enableLighting();
 		RenderHelper.enableStandardItemLighting();
 		GlStateManager.enableRescaleNormal();
-//		if(UtilC.getThePlayer().isSneaking())compileDisplayList();
+		if(UtilC.getThePlayer().isSneaking())compileDisplayList();
 	}
 	
 	@Override
@@ -68,37 +68,40 @@ public class ParticleBubbleFactory extends ParticleFactory{
 	public void compileDisplayList(){
 		if(defultModel!=-1)GL11.glDeleteLists(defultModel, 1);
 		startList();
-		AdvancedRenderer buff=new AdvancedRenderer();
 		
-		buff.addVertex( 0.5, -0.5, -0.5);
-		buff.addVertex( 0.5,  0.5, -0.5);
-		buff.addVertex( 0.5,  0.5,  0.5);
-		buff.addVertex( 0.5, -0.5,  0.5);
 		
-		buff.addVertex(-0.5, -0.5,  0.5);
-		buff.addVertex(-0.5,  0.5,  0.5);
-		buff.addVertex(-0.5,  0.5, -0.5);
-		buff.addVertex(-0.5, -0.5, -0.5);
+		FastNormalRenderer buff=new FastNormalRenderer();
+		buff.begin(true,FastNormalRenderer.POS);
+		
+		buff.add( 0.5, -0.5, -0.5);
+		buff.add( 0.5,  0.5, -0.5);
+		buff.add( 0.5,  0.5,  0.5);
+		buff.add( 0.5, -0.5,  0.5);
+		
+		buff.add(-0.5, -0.5,  0.5);
+		buff.add(-0.5,  0.5,  0.5);
+		buff.add(-0.5,  0.5, -0.5);
+		buff.add(-0.5, -0.5, -0.5);
 
-		buff.addVertex(-0.5,  0.5, -0.5);
-		buff.addVertex(-0.5,  0.5,  0.5);
-		buff.addVertex( 0.5,  0.5,  0.5);
-		buff.addVertex( 0.5,  0.5, -0.5);
+		buff.add(-0.5,  0.5, -0.5);
+		buff.add(-0.5,  0.5,  0.5);
+		buff.add( 0.5,  0.5,  0.5);
+		buff.add( 0.5,  0.5, -0.5);
 		
-		buff.addVertex( 0.5, -0.5, -0.5);
-		buff.addVertex( 0.5, -0.5,  0.5);
-		buff.addVertex(-0.5, -0.5,  0.5);
-		buff.addVertex(-0.5, -0.5, -0.5);
+		buff.add( 0.5, -0.5, -0.5);
+		buff.add( 0.5, -0.5,  0.5);
+		buff.add(-0.5, -0.5,  0.5);
+		buff.add(-0.5, -0.5, -0.5);
 
-		buff.addVertex( 0.5,  0.5, -0.5);
-		buff.addVertex( 0.5, -0.5, -0.5);
-		buff.addVertex(-0.5, -0.5, -0.5);
-		buff.addVertex(-0.5,  0.5, -0.5);
+		buff.add( 0.5,  0.5, -0.5);
+		buff.add( 0.5, -0.5, -0.5);
+		buff.add(-0.5, -0.5, -0.5);
+		buff.add(-0.5,  0.5, -0.5);
 		
-		buff.addVertex(-0.5,  0.5,  0.5);
-		buff.addVertex(-0.5, -0.5,  0.5);
-		buff.addVertex( 0.5, -0.5,  0.5);
-		buff.addVertex( 0.5,  0.5,  0.5);
+		buff.add(-0.5,  0.5,  0.5);
+		buff.add(-0.5, -0.5,  0.5);
+		buff.add( 0.5, -0.5,  0.5);
+		buff.add( 0.5,  0.5,  0.5);
 		
 		buff.draw();
 		
@@ -167,9 +170,9 @@ public class ParticleBubbleFactory extends ParticleFactory{
 			double angle=(getParticleAge()+PartialTicksUtil.partialTicks)/3,mul=0.15;
 			OpenGLM.scale(1+Math.sin(angle)*mul-mul,1+Math.sin(angle+1.5)*mul-mul,1+Math.sin(angle+3)*mul-mul);
 			ColorF color=getColor();
-			OpenGLM.color(color);
 			if(color.a<254/255F)OpenGLM.setUpOpaqueRendering(BlendFunc.NORMAL);
 			else OpenGLM.endOpaqueRendering();
+			OpenGLM.color(color);
 		}
 
 		@Override

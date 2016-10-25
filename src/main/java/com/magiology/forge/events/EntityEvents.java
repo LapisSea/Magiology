@@ -1,4 +1,4 @@
-package com.magiology.forge_powered.events;
+package com.magiology.forge.events;
 
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;

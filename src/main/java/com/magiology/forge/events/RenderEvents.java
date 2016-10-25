@@ -1,4 +1,4 @@
-package com.magiology.forge_powered.events;
+package com.magiology.forge.events;
 
 import java.util.Queue;
 

@@ -1,18 +1,18 @@
 package com.magiology.util.statics;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import com.magiology.util.interf.ObjectConverterThrows;
 
 public class CollectionConverter{
 
-	public static<T,Col extends List<T>,result> result[] convAr(Col collection,Class<result> resultType, ObjectConverterThrows<T,result>  action){
+	public static<T,Col extends Collection<T>,result> result[] convAr(Col collection,Class<result> resultType, ObjectConverterThrows<T,result>  action){
 		result[] resultAr=(result[])Array.newInstance(resultType, collection.size());
+		Iterator<T> iter=collection.iterator();
 		for(int i=0;i<resultAr.length;i++){
 			try{
-				resultAr[i]=action.convert(collection.get(i));
+				resultAr[i]=action.convert(iter.next());
 			}catch(Exception e){
 				throw new RuntimeException(e);
 			}

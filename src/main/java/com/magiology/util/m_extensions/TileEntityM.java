@@ -11,6 +11,8 @@ import net.minecraft.tileentity.TileEntity;
 public abstract class TileEntityM extends TileEntity{
 	public static final float p=1F/16F;
 	
+	private boolean nbtLoaded=false;
+	
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket(){
 		return new SPacketUpdateTileEntity(pos, 100, getUpdateTag());
@@ -55,5 +57,13 @@ public abstract class TileEntityM extends TileEntity{
 	
 	public IBlockState getState(){
 		return getWorld().getBlockState(getPos());
+	}
+	@Override
+	public void readFromNBT(NBTTagCompound compound){
+		nbtLoaded=true;
+		super.readFromNBT(compound);
+	}
+	public boolean isNbtLoaded(){
+		return nbtLoaded;
 	}
 }

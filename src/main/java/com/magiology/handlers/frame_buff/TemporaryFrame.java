@@ -23,6 +23,7 @@ public class TemporaryFrame{
 		this.height=height;
 		this.useDepth=useDepth;
 		TemporaryFrameBufferHandler.instance.resurrectList(this);
+//		LogUtil.printStackTrace();
 	}
 	public TemporaryFrame setSize(int width, int height){
 		TemporaryFrameBufferHandler.instance.resurrectList(this);
@@ -66,8 +67,9 @@ public class TemporaryFrame{
 			frameBuffer.setFramebufferColor(0, 0, 0, 0);
 			frameBuffer.createBindFramebuffer(width,height);
 			onBufferInit();
-			LogUtil.println("Created InWorldFrame id=",frameBuffer.framebufferObject);
+			LogUtil.println("Created InWorldFrame id="+frameBuffer.framebufferObject);
 			requestRender();
+			
 		}
 		frameBuffer.framebufferClear();
 		frameBuffer.bindFramebuffer(true);

@@ -1,41 +1,39 @@
 package com.magiology.util.objs.vec;
 
-import java.nio.FloatBuffer;
-
 import net.minecraft.util.math.*;
 
-public class Vec3MRead implements IVec3M<Vec3MRead>{
+public class Vec3MFinal implements IVec3M<Vec3MFinal>{
 	
-	protected double x,y,z;
+	private final double x,y,z;
 	
-	public Vec3MRead(double x, double y, double z){
+	public Vec3MFinal(Vec3i vec){
+		this(vec.getX(),vec.getY(),vec.getZ());
+	}
+	
+	public Vec3MFinal(Vec3d vec){
+		this(vec.xCoord,vec.yCoord,vec.zCoord);
+	}
+	
+	public Vec3MFinal(IVec3M vec){
+		this(vec.x(),vec.y(),vec.z());
+	}
+	
+	public Vec3MFinal(double x,double y,double z){
 		this.x=x;
 		this.y=y;
 		this.z=z;
 	}
-	
-	public Vec3MRead(Vec3i vec){
-		this.x=vec.getX();
-		this.y=vec.getY();
-		this.z=vec.getZ();
-	}
-	
-	public Vec3MRead(Vec3d vec){
-		this.x=vec.xCoord;
-		this.y=vec.yCoord;
-		this.z=vec.zCoord;
-	}
-	
+
 	@Override
 	public double x(){
 		return x;
 	}
-	
+
 	@Override
 	public double y(){
 		return y;
 	}
-	
+
 	@Override
 	public double z(){
 		return z;
@@ -44,63 +42,35 @@ public class Vec3MRead implements IVec3M<Vec3MRead>{
 	public float getX(){
 		return (float)x;
 	}
-	
+
 	public float getY(){
 		return (float)y;
 	}
-	
+
 	public float getZ(){
 		return (float)z;
 	}
-	
-	public Vec3MRead(){
-		this(0, 0, 0);
-	}
-	
-	public Vec3MRead(IVec3M vec){
-		this(vec.x(), vec.y(), vec.z());
-	}
-	
-	public Vec3MRead load(FloatBuffer buf){
-		x=buf.get();
-		y=buf.get();
-		z=buf.get();
-		return this;
-	}
-	
-	public Vec3MRead store(FloatBuffer buf){
-		buf.put((float)x);
-		buf.put((float)y);
-		buf.put((float)z);
-		return this;
-	}
-	
-	public float lengthSquared(){
-		return (float)(this.x*this.x+this.y*this.y+this.z*this.z);
-	}
-	
-	public Vec3MRead negate(){
-		return new Vec3MRead(-x, -y, -z);
-	}
-	
-	public Vec3MRead scale(float scale){
-		return new Vec3MRead(x*scale, y*scale, z*scale);
-	}
-	
-	public final float length(){
-		return (float)Math.sqrt(lengthSquared());
-	}
-	
-	public Vec3M normalize(){// normalise
-		double d0=MathHelper.sqrt_double(this.x*this.x+this.y*this.y+this.z*this.z);
-		return d0<1.0E-4D?new Vec3M():new Vec3M(this.x/d0, this.y/d0, this.z/d0);
-	}
-	
 	@Override
 	public String toString(){
-		return "R("+this.x+", "+this.y+", "+this.z+")";
+		return "F("+x()+", "+y()+", "+z()+")";
 	}
 	
+	
+	public Vec2FM popX(Vec2FM destination){
+		destination.set(getY(),getZ());
+		return destination;
+	}
+	
+	public Vec2FM popY(Vec2FM destination){
+		destination.set(getX(),getZ());
+		return destination;
+	}
+	
+	public Vec2FM popZ(Vec2FM destination){
+		destination.set(getX(),getY());
+		return destination;
+	}
+
 	@Override
 	public Vec2FM swizzleXY(){
 		return new Vec2FM(getX(), getY());
@@ -132,33 +102,33 @@ public class Vec3MRead implements IVec3M<Vec3MRead>{
 	}
 	
 	@Override
-	public Vec3MRead swizzleXYZ(){
-		return new Vec3MRead(this);
+	public Vec3MFinal swizzleXYZ(){
+		return new Vec3MFinal(this);
 	}
 	
 	@Override
-	public Vec3MRead swizzleXZY(){
-		return new Vec3MRead(x(), z(), y());
+	public Vec3MFinal swizzleXZY(){
+		return new Vec3MFinal(x(), z(), y());
 	}
 	
 	@Override
-	public Vec3MRead swizzleYXZ(){
-		return new Vec3MRead(y(), x(), z());
+	public Vec3MFinal swizzleYXZ(){
+		return new Vec3MFinal(y(), x(), z());
 	}
 	
 	@Override
-	public Vec3MRead swizzleYZX(){
-		return new Vec3MRead(y(), z(), x());
+	public Vec3MFinal swizzleYZX(){
+		return new Vec3MFinal(y(), z(), x());
 	}
 	
 	@Override
-	public Vec3MRead swizzleZXY(){
-		return new Vec3MRead(z(), x(), y());
+	public Vec3MFinal swizzleZXY(){
+		return new Vec3MFinal(z(), x(), y());
 	}
 	
 	@Override
-	public Vec3MRead swizzleZYX(){
-		return new Vec3MRead(z(), y(), x());
+	public Vec3MFinal swizzleZYX(){
+		return new Vec3MFinal(z(), y(), x());
 	}
 	
 	@Override
@@ -232,5 +202,4 @@ public class Vec3MRead implements IVec3M<Vec3MRead>{
 		dest.set(z(), y(), x());
 		return dest;
 	}
-	
 }

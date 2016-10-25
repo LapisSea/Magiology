@@ -1,4 +1,4 @@
-package com.magiology.forge_powered.networking;
+package com.magiology.forge.networking;
 
 import java.util.ArrayList;
 import java.util.List;

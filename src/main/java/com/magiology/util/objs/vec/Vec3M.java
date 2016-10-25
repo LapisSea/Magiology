@@ -11,24 +11,28 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.*;
 import net.minecraftforge.fml.relauncher.*;
 
-public class Vec3M extends BazeVec3M implements Serializable, WritableVector3f, Calculable<Vec3M>{
-
+public class Vec3M extends Vec3MRead implements Serializable, WritableVector3f, Calculable<Vec3M>{
+	
 	
 	public Vec3M(){
 		super();
 	}
-
+	
 	public Vec3M(double x,double y,double z){
 		super(x,y,z);
 	}
-
+	
 	public Vec3M(Vec3d vec){
 		super(vec);
 	}
-
+	
 	public Vec3M(Vec3i vec){
 		super(vec);
 	}
+	public Vec3M(IVec3M vec){
+		super(vec);
+	}
+	
 	public void setX(double x){
 		this.x=x;
 	}
@@ -53,6 +57,9 @@ public class Vec3M extends BazeVec3M implements Serializable, WritableVector3f, 
 		return new Vec3M(this.x+x, this.y+y, this.z+z);
 	}
 	
+	public Vec3M add(double var){
+		return this.add(var, var, var);
+	}
 	@Override
 	public Vec3M add(float var){
 		return this.add(var, var, var);
@@ -65,6 +72,9 @@ public class Vec3M extends BazeVec3M implements Serializable, WritableVector3f, 
 	@Override
 	public Vec3M add(Vec3M vec){
 		return this.add(vec.x, vec.y, vec.z);
+	}
+	public Vec3M add(IVec3M vec){
+		return this.add(vec.x(), vec.y(), vec.z());
 	}
 	
 	
@@ -89,10 +99,10 @@ public class Vec3M extends BazeVec3M implements Serializable, WritableVector3f, 
 		return this;
 	}
 	
-	public Vec3M addSelf(Vec3M vec){
-		this.x+=vec.x;
-		this.y+=vec.y;
-		this.z+=vec.z;
+	public Vec3M addSelf(IVec3M vec){
+		this.x+=vec.x();
+		this.y+=vec.y();
+		this.z+=vec.z();
 		return this;
 	}
 
@@ -213,8 +223,8 @@ public class Vec3M extends BazeVec3M implements Serializable, WritableVector3f, 
 		return new Vec3M(x, y, z);
 	}
 	
-	public Vec3M crossProduct(Vec3M vec){
-		return new Vec3M(this.y*vec.z-this.z*vec.y, this.z*vec.x-this.x*vec.z, this.x*vec.y-this.y*vec.x);
+	public Vec3M crossProduct(IVec3M vec){
+		return new Vec3M(this.y*vec.z()-this.z*vec.y(), this.z*vec.x()-this.x*vec.z(), this.x*vec.y()-this.y*vec.x());
 	}
 	
 	public double distanceTo(double x, double y, double z){
@@ -238,10 +248,10 @@ public class Vec3M extends BazeVec3M implements Serializable, WritableVector3f, 
 		return MathHelper.sqrt_double(d0*d0+d1*d1+d2*d2);
 	}
 	
-	public double distanceTo(Vec3M vec){
-		double d0=vec.x-this.x;
-		double d1=vec.y-this.y;
-		double d2=vec.z-this.z;
+	public double distanceTo(IVec3M vec){
+		double d0=vec.x()-this.x;
+		double d1=vec.y()-this.y;
+		double d2=vec.z()-this.z;
 		return MathHelper.sqrt_double(d0*d0+d1*d1+d2*d2);
 	}
 	public double distanceTo(ReadableVector3f vec){
@@ -260,9 +270,12 @@ public class Vec3M extends BazeVec3M implements Serializable, WritableVector3f, 
 	public Vec3M div(Vec3M var){
 		return new Vec3M(x/var.x, y/var.y, z/var.z);
 	}
+	public Vec3M div(IVec3M var){
+		return new Vec3M(x/var.x(), y/var.y(), z/var.z());
+	}
 	
-	public double dotProduct(Vec3M vec){
-		return this.x*vec.x+this.y*vec.x+this.z*vec.x;
+	public double dotProduct(IVec3M vec){
+		return this.x*vec.x()+this.y*vec.x()+this.z*vec.x();
 	}
 	
 	@Override
@@ -273,40 +286,28 @@ public class Vec3M extends BazeVec3M implements Serializable, WritableVector3f, 
 		return vec.x==x&&vec.y==y&&vec.z==z;
 	}
 	
-	public Vec3M getIntermediateWithXValue(Vec3M vec, double x){
-		double d1=vec.x-this.x;
-		double d2=vec.x-this.y;
-		double d3=vec.x-this.z;
-		if(d1*d1<1.0000000116860974E-7D){
-			return null;
-		}else{
-			double d4=(x-this.x)/d1;
-			return d4>=0.0D&&d4<=1.0D?new Vec3M(this.x+d1*d4, this.y+d2*d4, this.z+d3*d4):null;
-		}
+	public Vec3M getIntermediateWithXValue(IVec3M vec, double x){
+		double d1=vec.x()-this.x;
+		if(d1*d1<1.0000000116860974E-7D)return null;
+		double d2=vec.x()-this.y,d3=vec.x()-this.z,d4=(x-this.x)/d1;
+		return d4>=0.0D&&d4<=1.0D?new Vec3M(this.x+d1*d4, this.y+d2*d4, this.z+d3*d4):null;
+		
 	}
 	
-	public Vec3M getIntermediateWithYValue(Vec3M vec, double y){
-		double d1=vec.x-this.x;
-		double d2=vec.x-this.y;
-		double d3=vec.x-this.z;
-		if(d2*d2<1.0000000116860974E-7D){
-			return null;
-		}else{
-			double d4=(y-this.y)/d2;
-			return d4>=0.0D&&d4<=1.0D?new Vec3M(this.x+d1*d4, this.y+d2*d4, this.z+d3*d4):null;
-		}
+	public Vec3M getIntermediateWithYValue(IVec3M vec, double y){
+		double d2=vec.x()-this.y;
+		if(d2*d2<1.0000000116860974E-7D)return null;
+		double d1=vec.x()-this.x,d3=vec.x()-this.z,d4=(y-this.y)/d2;
+		return d4>=0.0D&&d4<=1.0D?new Vec3M(this.x+d1*d4, this.y+d2*d4, this.z+d3*d4):null;
+		
 	}
 	
 	public Vec3M getIntermediateWithZValue(Vec3M vec, double z){
-		double d1=vec.x-this.x;
-		double d2=vec.x-this.y;
 		double d3=vec.x-this.z;
-		if(d3*d3<1.0000000116860974E-7D){
-			return null;
-		}else{
-			double d4=(z-this.z)/d3;
-			return d4>=0.0D&&d4<=1.0D?new Vec3M(this.x+d1*d4, this.y+d2*d4, this.z+d3*d4):null;
-		}
+		if(d3*d3<1.0000000116860974E-7D)return null;
+		double d1=vec.x-this.x,d2=vec.x-this.y,d4=(z-this.z)/d3;
+		return d4>=0.0D&&d4<=1.0D?new Vec3M(this.x+d1*d4, this.y+d2*d4, this.z+d3*d4):null;
+		
 	}
 	
 	
@@ -314,17 +315,17 @@ public class Vec3M extends BazeVec3M implements Serializable, WritableVector3f, 
 		return MathHelper.sqrt_double(this.x*this.x+this.y*this.y+this.z*this.z);
 	}
 	
-	public double lightProduct(Vec3M vec){
+	public double lightProduct(Vec3MRead vec){
 		return 1-MathUtil.snap(normalize().distanceTo(vec.normalize()), 0, 1);
 	}
 	
 	
-	public Vec3M max(Vec3M other){
-		return new Vec3M(Math.max(x, other.x), Math.max(y, other.y), Math.max(z, other.z));
+	public Vec3M max(IVec3M other){
+		return new Vec3M(Math.max(x, other.x()), Math.max(y, other.y()), Math.max(z, other.z()));
 	}
 	
-	public Vec3M min(Vec3M other){
-		return new Vec3M(Math.min(x, other.x), Math.min(y, other.y), Math.min(z, other.z));
+	public Vec3M min(IVec3M other){
+		return new Vec3M(Math.min(x, other.x()), Math.min(y, other.y()), Math.min(z, other.z()));
 	}
 	
 	public Vec3M mul(double value){
@@ -344,6 +345,9 @@ public class Vec3M extends BazeVec3M implements Serializable, WritableVector3f, 
 	public Vec3M mul(Vec3M vec){
 		return new Vec3M(x()*vec.x(), y()*vec.y(), z()*vec.z());
 	}
+	public Vec3M mul(IVec3M vec){
+		return new Vec3M(x()*vec.x(), y()*vec.y(), z()*vec.z());
+	}
 	
 	public Vec3M offset(EnumFacing facing){
 		return offset(facing, 1);
@@ -353,7 +357,7 @@ public class Vec3M extends BazeVec3M implements Serializable, WritableVector3f, 
 		return new Vec3M(x+facing.getFrontOffsetX()*mul, y+facing.getFrontOffsetY()*mul, z+facing.getFrontOffsetZ()*mul);
 	}
 	
-	public Vec3M reflect(Vec3M normal){
+	public Vec3M reflect(Vec3MRead normal){
 		Vec3M norm=normal.normalize();
 		Vec3M base=normalize();
 		Vec3M difference=base.sub(norm);
@@ -431,15 +435,11 @@ public class Vec3M extends BazeVec3M implements Serializable, WritableVector3f, 
 		setY(y);
 	}
 
-	public void set(Vec3M vec){
-		x=vec.x;
-		y=vec.y;
-		z=vec.z;
+	public void set(IVec3M vec){
+		set(vec.x(),vec.y(),vec.z());
 	}
 	public void set(ReadableVector3f vec){
-		x=vec.getX();
-		y=vec.getY();
-		z=vec.getZ();
+		set(vec.getX(),vec.getY(),vec.getZ());
 	}
 	
 	@Override
@@ -474,10 +474,10 @@ public class Vec3M extends BazeVec3M implements Serializable, WritableVector3f, 
 		return new Vec3M(Math.sqrt(x*x1)*x1, Math.sqrt(y*y1)*y1, Math.sqrt(z*z1)*z1);
 	}
 	
-	public double squareDistanceTo(Vec3M vec){
-		double d0=vec.x-this.x;
-		double d1=vec.x-this.y;
-		double d2=vec.x-this.z;
+	public double squareDistanceTo(IVec3M vec){
+		double d0=vec.x()-this.x;
+		double d1=vec.y()-this.y;
+		double d2=vec.z()-this.z;
 		return d0*d0+d1*d1+d2*d2;
 	}
 	
@@ -511,13 +511,25 @@ public class Vec3M extends BazeVec3M implements Serializable, WritableVector3f, 
 	public Vec3M sub(Vec3M vec){
 		return this.sub(vec.x, vec.y, vec.z);
 	}
-	
+	public Vec3M sub(IVec3M vec){
+		return this.sub(vec.x(), vec.y(), vec.z());
+	}
+
 	public Vec3M subtractReverse(double x, double y, double z){
 		return new Vec3M(x-this.x, x-this.y, x-this.z);
 	}
 	
-	public Vec3M subtractReverse(Vec3M vec){
-		return new Vec3M(vec.x-this.x, vec.y-this.y, vec.z-this.z);
+	public Vec3M subtractReverse(IVec3M vec){
+		return new Vec3M(vec.x()-this.x, vec.y()-this.y, vec.z()-this.z);
+	}
+	public Vec3M subtractReverseSelf(double x, double y, double z){
+		set(x-this.x, x-this.y, x-this.z);
+		return this;
+	}
+	
+	public Vec3M subtractReverseSelf(IVec3M vec){
+		set(vec.x()-this.x, vec.y()-this.y, vec.z()-this.z);
+		return this;
 	}
 	
 	public Vector3f toLWJGLVec(){
@@ -526,7 +538,7 @@ public class Vec3M extends BazeVec3M implements Serializable, WritableVector3f, 
 	
 	@Override
 	public String toString(){
-		return "("+this.x+", "+this.y+", "+this.z+")";
+		return "M("+this.x+", "+this.y+", "+this.z+")";
 	}
 	
 	public Vec3M transform(Matrix4f matrix){

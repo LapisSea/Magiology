@@ -1,22 +1,18 @@
 package com.magiology.mc_objects.particles;
 
-import org.lwjgl.opengl.GL11;
-
 import com.magiology.client.renderers.Renderer;
 import com.magiology.core.MReference;
-import com.magiology.handlers.particle.ParticleFactory;
-import com.magiology.handlers.particle.ParticleM;
+import com.magiology.handlers.particle.*;
 import com.magiology.util.objs.ColorF;
 import com.magiology.util.objs.vec.Vec3M;
-import com.magiology.util.statics.OpenGLM;
+import com.magiology.util.statics.*;
 import com.magiology.util.statics.OpenGLM.BlendFunc;
-import com.magiology.util.statics.UtilC;
-import com.magiology.util.statics.UtilM;
+
+import org.lwjgl.opengl.GL11;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3i;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.*;
 
 public class ParticleMistBubbleFactory extends ParticleFactory{
 	

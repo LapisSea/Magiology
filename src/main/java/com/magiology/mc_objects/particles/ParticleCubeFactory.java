@@ -1,6 +1,6 @@
 package com.magiology.mc_objects.particles;
 
-import com.magiology.client.renderers.AdvancedRenderer;
+import com.magiology.client.renderers.FastNormalRenderer;
 import com.magiology.handlers.particle.*;
 import com.magiology.util.objs.ColorF;
 import com.magiology.util.objs.vec.Vec3M;
@@ -66,37 +66,38 @@ public class ParticleCubeFactory extends ParticleFactory{
 	public void compileDisplayList(){
 		if(defultModel!=-1)GL11.glDeleteLists(defultModel, 1);
 		startList();
-		AdvancedRenderer buff=new AdvancedRenderer();
+		FastNormalRenderer buff=new FastNormalRenderer();
+		buff.begin(true,FastNormalRenderer.POS);
 		
-		buff.addVertex( 0.5, -0.5, -0.5);
-		buff.addVertex( 0.5,  0.5, -0.5);
-		buff.addVertex( 0.5,  0.5,  0.5);
-		buff.addVertex( 0.5, -0.5,  0.5);
+		buff.add( 0.5, -0.5, -0.5);
+		buff.add( 0.5,  0.5, -0.5);
+		buff.add( 0.5,  0.5,  0.5);
+		buff.add( 0.5, -0.5,  0.5);
 		
-		buff.addVertex(-0.5, -0.5,  0.5);
-		buff.addVertex(-0.5,  0.5,  0.5);
-		buff.addVertex(-0.5,  0.5, -0.5);
-		buff.addVertex(-0.5, -0.5, -0.5);
+		buff.add(-0.5, -0.5,  0.5);
+		buff.add(-0.5,  0.5,  0.5);
+		buff.add(-0.5,  0.5, -0.5);
+		buff.add(-0.5, -0.5, -0.5);
 
-		buff.addVertex(-0.5,  0.5, -0.5);
-		buff.addVertex(-0.5,  0.5,  0.5);
-		buff.addVertex( 0.5,  0.5,  0.5);
-		buff.addVertex( 0.5,  0.5, -0.5);
+		buff.add(-0.5,  0.5, -0.5);
+		buff.add(-0.5,  0.5,  0.5);
+		buff.add( 0.5,  0.5,  0.5);
+		buff.add( 0.5,  0.5, -0.5);
 		
-		buff.addVertex( 0.5, -0.5, -0.5);
-		buff.addVertex( 0.5, -0.5,  0.5);
-		buff.addVertex(-0.5, -0.5,  0.5);
-		buff.addVertex(-0.5, -0.5, -0.5);
+		buff.add( 0.5, -0.5, -0.5);
+		buff.add( 0.5, -0.5,  0.5);
+		buff.add(-0.5, -0.5,  0.5);
+		buff.add(-0.5, -0.5, -0.5);
 
-		buff.addVertex( 0.5,  0.5, -0.5);
-		buff.addVertex( 0.5, -0.5, -0.5);
-		buff.addVertex(-0.5, -0.5, -0.5);
-		buff.addVertex(-0.5,  0.5, -0.5);
+		buff.add( 0.5,  0.5, -0.5);
+		buff.add( 0.5, -0.5, -0.5);
+		buff.add(-0.5, -0.5, -0.5);
+		buff.add(-0.5,  0.5, -0.5);
 		
-		buff.addVertex(-0.5,  0.5,  0.5);
-		buff.addVertex(-0.5, -0.5,  0.5);
-		buff.addVertex( 0.5, -0.5,  0.5);
-		buff.addVertex( 0.5,  0.5,  0.5);
+		buff.add(-0.5,  0.5,  0.5);
+		buff.add(-0.5, -0.5,  0.5);
+		buff.add( 0.5, -0.5,  0.5);
+		buff.add( 0.5,  0.5,  0.5);
 		
 		buff.draw();
 		

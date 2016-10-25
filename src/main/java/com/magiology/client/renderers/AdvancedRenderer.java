@@ -3,7 +3,6 @@ package com.magiology.client.renderers;
 import java.util.*;
 
 import com.magiology.client.renderers.Renderer.RendererBase;
-import com.magiology.util.objs.physics.real.GeometryUtil;
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.*;
 import com.magiology.util.statics.math.MatrixUtil;

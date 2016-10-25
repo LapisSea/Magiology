@@ -1,4 +1,4 @@
-package com.magiology.forge_powered.networking;
+package com.magiology.forge.networking;
 
 import java.io.IOException;
 
@@ -21,7 +21,7 @@ public abstract class NBTPacket extends PacketM{
 			nbt=buf.readNBTTagCompoundFromBuffer();
 		}catch(IOException e){
 			e.printStackTrace();
-			UtilM.exit(42);
+			UtilM.exit(420);
 		}
 	}
 

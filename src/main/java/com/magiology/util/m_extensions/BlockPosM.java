@@ -1,5 +1,7 @@
 package com.magiology.util.m_extensions;
 
+import java.util.function.Consumer;
+
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.UtilM;
 
@@ -222,5 +224,13 @@ public class BlockPosM extends BlockPos{
 	@Override
 	public BlockPosM subtract(Vec3i vec){
 		return vec.getX()==0&&vec.getY()==0&&vec.getZ()==0?this:new BlockPosM(this.getX()-vec.getX(), this.getY()-vec.getY(), this.getZ()-vec.getZ());
+	}
+	
+	public static void iterateBlocks(BlockPos start,BlockPos end, Consumer<BlockPos> callback){
+		MutableBlockPos.getAllInBox(start,end).forEach(callback::accept);
+	}
+	
+    public static BlockPosM fromLong(long serialized){
+		return new BlockPosM(BlockPos.fromLong(serialized));
 	}
 }
