@@ -379,11 +379,15 @@ public class UtilM{
 	 * @param stack a
 	 * @return a
 	 */
-	public static boolean isItemInStack(Class<?extends Item> item,ItemStack stack){
-		return stack!=null&&stack.getItem()!=null&&stack.getItem().getClass()==item;
+	public static boolean isItemInStack(Class<?extends Item> itemClass,ItemStack stack){
+		if(stack==null)return false;
+		Item item=stack.getItem();
+		if(item==null)return false;
+		return item.getClass()==itemClass;
 	}
 	public static boolean isItemInStack(Item item,ItemStack stack){
-		return stack!=null&&stack.getItem()==item;
+		if(stack==null)return false;
+		return stack.getItem()==item;
 	}
 	/**
 	 * Returns false if all objects are not null and it returns true if any of object/s are true

@@ -7,6 +7,7 @@ import com.magiology.client.shaders.ShaderHandler;
 import com.magiology.client.shaders.effects.PositionAwareEffect;
 import com.magiology.client.shaders.programs.InvisibleEffect;
 import com.magiology.handlers.particle.ParticleHandler;
+import com.magiology.mc_objects.features.screen.TileEntityScreen;
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.*;
 import com.magiology.util.statics.math.PartialTicksUtil;
@@ -18,6 +19,10 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.*;
 import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.fml.common.eventhandler.*;
 
@@ -28,6 +33,23 @@ public class RenderEvents{
 	@SubscribeEvent(priority=EventPriority.LOWEST)
 	public void render2Dscreem(RenderGameOverlayEvent e){
 		
+	}
+
+	@SubscribeEvent()
+	public void renderDrawBlockHighlight(DrawBlockHighlightEvent e){
+		RayTraceResult hit=e.getTarget();
+		
+		TileEntityScreen highlighted=null;
+		BlockPos pos=hit.getBlockPos();
+		
+		if(hit.typeOfHit==Type.BLOCK){
+			TileEntity tile=UtilC.getTheWorld().getTileEntity(pos);
+			if(tile instanceof TileEntityScreen){
+				highlighted=(TileEntityScreen)tile;
+			}
+		}
+		if(pos==null)TileEntityScreen.setHighlighted(highlighted,0,0,0);
+		else TileEntityScreen.setHighlighted(highlighted,(float)hit.hitVec.xCoord-pos.getX(),(float)hit.hitVec.yCoord-pos.getY(),(float)hit.hitVec.zCoord-pos.getZ());
 	}
 	
 	@SubscribeEvent(priority=EventPriority.HIGHEST)

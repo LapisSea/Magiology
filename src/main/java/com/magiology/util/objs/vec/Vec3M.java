@@ -503,7 +503,10 @@ public class Vec3M extends Vec3MRead implements Serializable, WritableVector3f, 
 	}
 	
 	public Vec3M subSelf(Vec3i vec){
-		return sub(vec.getX(), vec.getY(), vec.getZ());
+		this.x-=vec.getX();
+		this.y-=vec.getY();
+		this.z-=vec.getZ();
+		return this;
 	}
 	
 	

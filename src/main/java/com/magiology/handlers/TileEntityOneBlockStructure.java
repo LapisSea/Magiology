@@ -10,6 +10,7 @@ import com.magiology.util.objs.MultiTypeContainers.MultiTypeContainerX;
 import com.magiology.util.objs.vec.Vec3MRead;
 import com.magiology.util.statics.*;
 
+import jline.internal.Log;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -107,7 +108,9 @@ public abstract class TileEntityOneBlockStructure<T extends TileEntityOneBlockSt
 	}
 	@Override
 	public void onBroken(World world,BlockPos pos,IBlockState state){
-		if(!isRemote()&&hasBrain())getBrain().setBrain(null,null);
+		if(!isRemote()&&hasBrain()){
+			TickEvents.nextTick(false, ()->getBrain().setBrain(null,null));
+		}
 	}
 	
 	@Override

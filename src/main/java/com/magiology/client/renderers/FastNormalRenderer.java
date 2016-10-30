@@ -16,7 +16,7 @@ import org.lwjgl.opengl.GL11;
  */
 public class FastNormalRenderer{
 	
-	public static final int				POS		=0,POS_UV=1,POS_UV_COLOR=2,POS_COLOR=3,BLOCK=3;
+	public static final int				POS		=0,POS_UV=1,POS_UV_COLOR=2,POS_COLOR=3,BLOCK=4;
 	private static final String[]		names	={"POS","POS_UV","POS_UV_COLOR","POS_COLOR","BLOCK"};
 	private static final RendererBase[]	formats	={Renderer.POS_NORMAL,Renderer.POS_UV_NORMAL,Renderer.POS_UV_COLOR_NORMAL,Renderer.POS_COLOR_NORMAL,Renderer.BLOCK};
 	
@@ -279,7 +279,7 @@ public class FastNormalRenderer{
 		
 		@Override
 		void upload(){
-			Renderer.POS_UV_COLOR_NORMAL.addVertex(x,y,z,u,v,r,g,b,a,nx,ny,nz);
+			Renderer.BLOCK.addVertex(x, y, z, r, g, b, a, u, v, lx, ly);
 		}
 		@Override
 		public Vertex clone(){

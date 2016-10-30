@@ -14,6 +14,7 @@ public class ClassList{
 		classes=new String[]{
 			"com.magiology.client.entity.EntityPenguinRenderer",
 			"com.magiology.client.renderers.AdvancedRenderer",
+			"com.magiology.client.renderers.FastNormalRenderer",
 			"com.magiology.client.renderers.GenericModels",
 			"com.magiology.client.renderers.Renderer",
 			"com.magiology.client.rendering.tile_render.DummyTileEntityRenderer",
@@ -56,6 +57,7 @@ public class ClassList{
 			"com.magiology.forge.networking.PacketM",
 			"com.magiology.forge.networking.Packets",
 			"com.magiology.forge.networking.SimpleNetworkWrapperM",
+			"com.magiology.forge.networking.UpdateMultiblocksPacket",
 			"com.magiology.forge.proxy.ClientProxy",
 			"com.magiology.forge.proxy.CommonProxy",
 			"com.magiology.forge.proxy.ServerProxy",
@@ -80,6 +82,8 @@ public class ClassList{
 			"com.magiology.mc_objects.features.screen.TileEntityScreen",
 			"com.magiology.mc_objects.ItemRegistry",
 			"com.magiology.mc_objects.items.ItemJetpack",
+			"com.magiology.mc_objects.items.ItemMatterJumper",
+			"com.magiology.mc_objects.items.ItemOwnable",
 			"com.magiology.mc_objects.items.SimpleItems",
 			"com.magiology.mc_objects.particles.ParticleBubbleFactory",
 			"com.magiology.mc_objects.particles.ParticleCubeFactory",
@@ -164,6 +168,7 @@ public class ClassList{
 			"com.magiology.util.statics.OpenGLM",
 			"com.magiology.util.statics.PhysicsUtil",
 			"com.magiology.util.statics.RandUtil",
+			"com.magiology.util.statics.Structure",
 			"com.magiology.util.statics.TestingAnimationM",
 			"com.magiology.util.statics.UtilC",
 			"com.magiology.util.statics.UtilM"

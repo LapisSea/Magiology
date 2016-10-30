@@ -1,8 +1,11 @@
 package com.magiology.util.statics.math;
 
-import com.magiology.util.objs.vec.Vec3M;
+import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
-import org.lwjgl.util.vector.*;
+import com.magiology.util.objs.vec.IVec3M;
+import com.magiology.util.objs.vec.Vec3M;
 
 import net.minecraft.util.math.Vec3d;
 
@@ -34,12 +37,12 @@ public final class MatrixUtil{
 		matrix=result;
 		return instance;
 	}
-	public static MatrixUtil createMatrix(Vec3M translation){
+	public static MatrixUtil createMatrix(IVec3M translation){
 		matrix=new Matrix4f().translate(translation.toLWJGLVec());
 		return instance;
 	}
 	
-	public static MatrixUtil createMatrix(Vec3M translation,float rotationX,float rotationY,float rotationZ, float scale){
+	public static MatrixUtil createMatrix(IVec3M translation,float rotationX,float rotationY,float rotationZ, float scale){
 		createMatrix(translation.toLWJGLVec());
 		return instance;
 	}
@@ -105,7 +108,7 @@ public final class MatrixUtil{
 		matrix=result;
 		return instance;
 	}
-	public static Matrix4f rotate(Vec3M rot, Matrix4f mat){
+	public static Matrix4f rotate(IVec3M rot, Matrix4f mat){
 		Matrix4f.rotate((float)Math.toRadians(rot.x()), new Vector3f(1, 0, 0), mat, mat);
 		Matrix4f.rotate((float)Math.toRadians(rot.y()), new Vector3f(0, 1, 0), mat, mat);
 		Matrix4f.rotate((float)Math.toRadians(rot.z()), new Vector3f(0, 0, 1), mat, mat);
@@ -117,10 +120,10 @@ public final class MatrixUtil{
 		Matrix4f.rotate((float)Math.toRadians(rot.z), new Vector3f(0, 0, 1), mat, mat);
 		return mat;
 	}
-	public static MatrixUtil rotateAt(Vec3M rotationOffset, Vec3M rot){
+	public static MatrixUtil rotateAt(IVec3M rotationOffset, IVec3M rot){
 		return rotateAt(rotationOffset.toLWJGLVec(), rot.toLWJGLVec());
 	}
-	public static Matrix4f rotateAt(Vec3M rotationOffset, Vec3M rot, Matrix4f mat){
+	public static Matrix4f rotateAt(IVec3M rotationOffset, IVec3M rot, Matrix4f mat){
 		return rotateAt(rotationOffset.toLWJGLVec(), rot.toLWJGLVec(), mat);
 	}
 	public static MatrixUtil rotateAt(Vector3f rotationOffset, Vector3f rot){
@@ -150,7 +153,7 @@ public final class MatrixUtil{
 		Matrix4f.rotate((float)Math.toRadians(rot), new Vector3f(0, 0, 1), mat, mat);
 		return mat;
 	}
-	public static Matrix4f rotateZYX(Vec3M rot, Matrix4f mat){
+	public static Matrix4f rotateZYX(IVec3M rot, Matrix4f mat){
 		Matrix4f.rotate((float)Math.toRadians(rot.z()), new Vector3f(0, 0, 1), mat, mat);
 		Matrix4f.rotate((float)Math.toRadians(rot.y()), new Vector3f(0, 1, 0), mat, mat);
 		Matrix4f.rotate((float)Math.toRadians(rot.x()), new Vector3f(1, 0, 0), mat, mat);
@@ -167,7 +170,7 @@ public final class MatrixUtil{
 	public static Vec3d transformVector(Vec3d vectorForTransformation,Matrix4f transformation){
 		return transformVector(new Vec3M(vectorForTransformation), transformation).conv();
 	}
-	public static Vec3M transformVector(Vec3M vectorForTransformation,Matrix4f transformation){
+	public static Vec3M transformVector(IVec3M vectorForTransformation,Matrix4f transformation){
 		Vector3f result=transformVector(vectorForTransformation.toLWJGLVec(), transformation);
 		return new Vec3M(result.x, result.y, result.z);
 	}
@@ -194,7 +197,7 @@ public final class MatrixUtil{
 		return result;
 	}
 	
-	public MatrixUtil rotate(Vec3M rot){
+	public MatrixUtil rotate(IVec3M rot){
 		Matrix4f.rotate((float)Math.toRadians(rot.x()), new Vector3f(1, 0, 0), matrix, matrix);
 		Matrix4f.rotate((float)Math.toRadians(rot.y()), new Vector3f(0, 1, 0), matrix, matrix);
 		Matrix4f.rotate((float)Math.toRadians(rot.z()), new Vector3f(0, 0, 1), matrix, matrix);
@@ -223,7 +226,7 @@ public final class MatrixUtil{
 		return instance;
 	}
 
-	public MatrixUtil rotateZYX(Vec3M rot){
+	public MatrixUtil rotateZYX(IVec3M rot){
 		Matrix4f.rotate((float)Math.toRadians(rot.z()), new Vector3f(0, 0, 1), matrix, matrix);
 		Matrix4f.rotate((float)Math.toRadians(rot.y()), new Vector3f(0, 1, 0), matrix, matrix);
 		Matrix4f.rotate((float)Math.toRadians(rot.x()), new Vector3f(1, 0, 0), matrix, matrix);

@@ -1,5 +1,7 @@
 package com.magiology.util.objs;
 
+import java.util.UUID;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -96,20 +98,33 @@ public class NBTUtil{
 	public static void setString(ItemStack stack, String key, String keyValue){
 		createNBT(stack).setString(key, keyValue);
 	}
-	@Deprecated
-	public void readNbtFromPacketBuffer(NBTTagCompound nbt, PacketBuffer buff){
-		
-		
-		
+	public static void setUUID(ItemStack stack, String key, UUID keyValue){
+		NBTTagCompound nbt=createNBT(stack),wrap=new NBTTagCompound();
+		wrap.setLong("0", keyValue.getMostSignificantBits());
+		wrap.setLong("1", keyValue.getLeastSignificantBits());
+		nbt.setTag(key, wrap);
 	}
-	@Deprecated
-	public void writeNbtToPacketBuffer(NBTTagCompound nbt, PacketBuffer buff){
-//		Set<String> keys=nbt.getKeySet();
-//		for(String key:keys){
-//			if(nbt.getInteger(key)){
-//				ByteBufUtils.writeUTF8String(buff, key);
-//			}
-//			
-//		}
+	public static UUID getUUID(ItemStack stack, String key){
+		NBTTagCompound nbt=createNBT(stack);
+		if(!nbt.hasKey(key))return null;
+		NBTTagCompound wrap=nbt.getCompoundTag(key);
+		return new UUID(wrap.getLong("0"), wrap.getLong("1"));
+	}
+	
+	public static boolean initUUID(ItemStack stack, String key, UUID keyValue){
+		NBTTagCompound nbt=createNBT(stack);
+		if(!nbt.hasKey(key)){
+			setUUID(stack, key, keyValue);
+			return true;
+		}
+		return false;
+	}
+	public static boolean initBoolean(ItemStack stack, String key, boolean keyValue){
+		NBTTagCompound nbt=createNBT(stack);
+		if(!nbt.hasKey(key)){
+			setBoolean(stack, key, keyValue);
+			return true;
+		}
+		return false;
 	}
 }

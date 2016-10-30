@@ -2,6 +2,8 @@ package com.magiology.util.objs.vec;
 
 import java.nio.FloatBuffer;
 
+import org.lwjgl.util.vector.Vector3f;
+
 import net.minecraft.util.math.*;
 
 public class Vec3MRead implements IVec3M<Vec3MRead>{
@@ -233,4 +235,16 @@ public class Vec3MRead implements IVec3M<Vec3MRead>{
 		return dest;
 	}
 	
+	@Override
+	public Vector3f toLWJGLVec(){
+		return toLWJGLVec(new Vector3f());
+	}
+	
+	@Override
+	public Vector3f toLWJGLVec(Vector3f dest){
+		dest.x=getX();
+		dest.y=getY();
+		dest.z=getZ();
+		return dest;
+	}
 }

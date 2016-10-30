@@ -1,5 +1,7 @@
 package com.magiology.util.objs.vec;
 
+import org.lwjgl.util.vector.Vector3f;
+
 import net.minecraft.util.math.*;
 
 public class Vec3MFinal implements IVec3M<Vec3MFinal>{
@@ -7,33 +9,33 @@ public class Vec3MFinal implements IVec3M<Vec3MFinal>{
 	private final double x,y,z;
 	
 	public Vec3MFinal(Vec3i vec){
-		this(vec.getX(),vec.getY(),vec.getZ());
+		this(vec.getX(), vec.getY(), vec.getZ());
 	}
 	
 	public Vec3MFinal(Vec3d vec){
-		this(vec.xCoord,vec.yCoord,vec.zCoord);
+		this(vec.xCoord, vec.yCoord, vec.zCoord);
 	}
 	
 	public Vec3MFinal(IVec3M vec){
-		this(vec.x(),vec.y(),vec.z());
+		this(vec.x(), vec.y(), vec.z());
 	}
 	
-	public Vec3MFinal(double x,double y,double z){
+	public Vec3MFinal(double x, double y, double z){
 		this.x=x;
 		this.y=y;
 		this.z=z;
 	}
-
+	
 	@Override
 	public double x(){
 		return x;
 	}
-
+	
 	@Override
 	public double y(){
 		return y;
 	}
-
+	
 	@Override
 	public double z(){
 		return z;
@@ -42,35 +44,35 @@ public class Vec3MFinal implements IVec3M<Vec3MFinal>{
 	public float getX(){
 		return (float)x;
 	}
-
+	
 	public float getY(){
 		return (float)y;
 	}
-
+	
 	public float getZ(){
 		return (float)z;
 	}
+	
 	@Override
 	public String toString(){
 		return "F("+x()+", "+y()+", "+z()+")";
 	}
 	
-	
 	public Vec2FM popX(Vec2FM destination){
-		destination.set(getY(),getZ());
+		destination.set(getY(), getZ());
 		return destination;
 	}
 	
 	public Vec2FM popY(Vec2FM destination){
-		destination.set(getX(),getZ());
+		destination.set(getX(), getZ());
 		return destination;
 	}
 	
 	public Vec2FM popZ(Vec2FM destination){
-		destination.set(getX(),getY());
+		destination.set(getX(), getY());
 		return destination;
 	}
-
+	
 	@Override
 	public Vec2FM swizzleXY(){
 		return new Vec2FM(getX(), getY());
@@ -200,6 +202,19 @@ public class Vec3MFinal implements IVec3M<Vec3MFinal>{
 	@Override
 	public <V extends Vec3M> V swizzleZYX(V dest){
 		dest.set(z(), y(), x());
+		return dest;
+	}
+	
+	@Override
+	public Vector3f toLWJGLVec(){
+		return toLWJGLVec(new Vector3f());
+	}
+	
+	@Override
+	public Vector3f toLWJGLVec(Vector3f dest){
+		dest.x=getX();
+		dest.y=getY();
+		dest.z=getZ();
 		return dest;
 	}
 }

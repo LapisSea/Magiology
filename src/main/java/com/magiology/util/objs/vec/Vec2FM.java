@@ -9,6 +9,9 @@ public class Vec2FM implements Calculable<Vec2FM>{
 	public Vec2FM(){
 		
 	}
+	public Vec2FM(Vec2i vec2i){
+		this(vec2i.x,vec2i.y);
+	}
 	public Vec2FM(float x, float y){
 		set(x, y);
 	}
@@ -67,5 +70,13 @@ public class Vec2FM implements Calculable<Vec2FM>{
 	
 	public Vec2i toVec2i(){
 		return new Vec2i((int)x, (int)y);
+	}
+	public Vec2FM mul(float x, float y){
+		return new Vec2FM(x+this.x, y+this.y);
+	}
+	public Vec2FM mulSelf(float x, float y){
+		this.x*=x;
+		this.y*=y;
+		return this;
 	}
 }

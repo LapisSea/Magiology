@@ -2,8 +2,15 @@ package com.magiology.mc_objects.features.screen;
 
 import com.magiology.mc_objects.BlockStates;
 import com.magiology.mc_objects.BlockStates.*;
+import com.magiology.mc_objects.items.ItemMatterJumper;
+import com.magiology.mc_objects.items.ItemMatterJumper.MatterJumperMode;
 import com.magiology.util.m_extensions.*;
+import com.magiology.util.objs.vec.Vec2FM;
+import com.magiology.util.objs.vec.Vec2i;
+import com.magiology.util.statics.LogUtil;
+import com.magiology.util.statics.UtilM;
 
+import jline.internal.Log;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -54,13 +61,43 @@ public class BlockScreen extends BlockContainerM<TileEntityScreen>{
 	}
 	
 	@Override
-	public boolean onBlockActivated(World world,BlockPos pos,IBlockState state,EntityPlayer playerIn,EnumHand hand,ItemStack heldItem,EnumFacing side,float hitX,float hitY,float hitZ){
-		if(hand==EnumHand.OFF_HAND)return false;
+	public boolean onBlockActivated(World world,BlockPos pos,IBlockState state,EntityPlayer player,EnumHand hand,ItemStack heldItem,EnumFacing side,float hitX,float hitY,float hitZ){
 		TileEntityScreen tile=new BlockPosM(pos).getTile(world,TileEntityScreen.class);
-		if(tile!=null){
-			tile.formMultiblock(pos);
+		if(tile==null)return false;
+		
+		if(UtilM.isItemInStack(ItemMatterJumper.class, heldItem)){
+			MatterJumperMode mode=ItemMatterJumper.getMode(heldItem);
+			
+			if(mode==MatterJumperMode.WRENCH){
+				tile.formMultiblock(pos);
+				return true;
+			}
+			
+		}else if(tile.hasBrain()){
+			TileEntityScreen brain=tile.getBrain();
+			brain.onClick(calcScreenPos(tile, hitX, hitY, hitZ));
+			
+			return true;
 		}
-		return tile!=null;
+		
+		return false;
 	}
+	public static Vec2FM calcScreenPos(TileEntityScreen tile, float hitX,float hitY,float hitZ){
+		
+		
+		TileEntityScreen brain=tile.getBrain();
+		int pixels=64;
+		Vec2FM offset=new Vec2FM(brain.getBrainObjects().get1().get(tile.getMbId())).mulSelf(pixels,-pixels);
+		switch(brain.getRotation()){
+		case NORTH:{
+			offset.y+=(1-hitY)*pixels;
+			offset.x+=(1-hitX)*pixels;
+		}break;
 	
+		default:
+		break;
+		}
+		
+		return offset;
+	}
 }

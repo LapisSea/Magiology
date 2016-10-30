@@ -1,5 +1,6 @@
 package com.magiology.util.m_extensions;
 
+import com.magiology.util.statics.LogUtil;
 import com.magiology.util.statics.UtilM;
 
 import net.minecraft.block.state.IBlockState;

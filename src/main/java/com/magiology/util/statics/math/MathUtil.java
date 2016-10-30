@@ -165,16 +165,26 @@ public class MathUtil{
 	}
 	public static double snap(double value,double min,double max){
 		if(min>max)return value;
-		if(value<min)value=min;
-		if(value>max)value=max;
+		if(value<min)return min;
+		if(value>max)return max;
 		return value;
 	}
 	public static float snap(float value,float min,float max){
-		return (float)snap((double)value, (double)min, (double)max);
+		if(min>max)return value;
+		if(value<min)return min;
+		if(value>max)return max;
+		return value;
 	}
 	public static int snap(int value,int min,int max){
-		return (int)snap((double)value, (double)min, (double)max);
+		if(min>max)return value;
+		if(value<min)return min;
+		if(value>max)return max;
+		return value;
 	}
+	public static int snapToArray(int value,Object[] arr){
+		return snap(value, 0, arr.length-1);
+	}
+	
 
 	public static double sq(double var){
 		return var*var;

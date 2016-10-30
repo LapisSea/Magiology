@@ -1,5 +1,7 @@
 package com.magiology.util.objs.vec;
 
+import org.lwjgl.util.vector.Vector3f;
+
 public interface IVec3M<T extends IVec3M>{
 
 	double x();
@@ -34,4 +36,7 @@ public interface IVec3M<T extends IVec3M>{
 	<V extends Vec3M>V swizzleYZX(V dest);
 	<V extends Vec3M>V swizzleZXY(V dest);
 	<V extends Vec3M>V swizzleZYX(V dest);
+	
+	Vector3f toLWJGLVec();
+	Vector3f toLWJGLVec(Vector3f dest);
 }
