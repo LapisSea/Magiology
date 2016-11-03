@@ -2,9 +2,9 @@ package com.magiology.mc_objects.particles;
 
 import com.magiology.handlers.particle.ParticleFactory;
 import com.magiology.handlers.particle.ParticleHandler;
-import com.magiology.util.objs.RegistrableDatabaseStorage;
+import com.magiology.util.objs.data.RegistrableDatabaseStorageArray;
 
-public class Particles extends RegistrableDatabaseStorage<ParticleFactory>{
+public class Particles extends RegistrableDatabaseStorageArray<ParticleFactory>{
 	
 	public static final ParticleMistBubbleFactory MIST_BUBBLE=ParticleMistBubbleFactory.get();
 	public static final ParticleCubeFactory CUBE=ParticleCubeFactory.get();

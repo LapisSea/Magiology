@@ -2,7 +2,7 @@ package com.magiology.cross_mod;
 
 import java.util.*;
 
-import com.magiology.cross_mod.jei.MagiologyPlugin;
+import com.magiology.cross_mod.jei.MagiologyPlugin_JEI;
 
 import net.minecraftforge.fml.common.Loader;
 
@@ -22,7 +22,7 @@ public class ModChecker{
 	public void detectMods(){
 		
 		jeiLoaded=Loader.isModLoaded("JEI")||Loader.isModLoaded("jei")||Loader.isModLoaded("Jei");
-		if(jeiLoaded)loaders.add(new MagiologyPlugin());
+		if(jeiLoaded)loaders.add(new MagiologyPlugin_JEI());
 		
 	}
 	

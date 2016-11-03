@@ -5,20 +5,33 @@ import static com.magiology.core.MReference.*;
 import java.io.File;
 import java.net.URL;
 import java.security.cert.Certificate;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.google.common.eventbus.EventBus;
+import com.magiology.DevOnly.DevOnlyBlockCutter;
 import com.magiology.forge.networking.SimpleNetworkWrapperM;
 import com.magiology.forge.proxy.CommonProxy;
 import com.magiology.io.IOManager;
 import com.magiology.util.statics.LogUtil;
-import com.magiology.util.statics.UtilM;
 import com.magiology.util.statics.class_manager.ClassList;
 
-import net.minecraftforge.fml.common.*;
-import net.minecraftforge.fml.common.Mod.*;
-import net.minecraftforge.fml.common.event.*;
-import net.minecraftforge.fml.common.versioning.*;
+import net.minecraft.launchwrapper.LaunchClassLoader;
+import net.minecraftforge.fml.common.LoadController;
+import net.minecraftforge.fml.common.MetadataCollection;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.common.ModMetadata;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.versioning.ArtifactVersion;
+import net.minecraftforge.fml.common.versioning.DefaultArtifactVersion;
+import net.minecraftforge.fml.common.versioning.VersionRange;
 import scala.actors.threadpool.Arrays;
 
 @Mod(modid=MODID, version=VERSION, name=NAME, acceptedMinecraftVersions=ACCEPTED_MC_VERSION)
@@ -29,7 +42,9 @@ public class Magiology implements ModContainer{
 		CompatibilityChecker.checkJava8();
 		IS_DEV=SOURCE_FILE==null;
 		if(IS_DEV)LogUtil.printWrapped(NAME+" is running in development environment! Work Lapis! Work! NO! CLOSE THAT YOUTUBE VIDEO! ");
+		else ((LaunchClassLoader)Magiology.class.getClassLoader()).registerTransformer(DevOnlyBlockCutter.class.getName());
 	}
+	
 	/***//** variables *//***/
 	@SidedProxy(modId=MODID, clientSide=CLIENT_PROXY_LOCATION, serverSide=SERVER_PROXY_LOCATION)
 	public static CommonProxy			sideProxy;

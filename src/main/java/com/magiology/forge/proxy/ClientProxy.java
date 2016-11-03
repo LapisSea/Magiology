@@ -1,8 +1,11 @@
 package com.magiology.forge.proxy;
 
 import com.magiology.client.entity.EntityPenguinRenderer;
+import com.magiology.client.rendering.item.MagiologyTEISR;
+import com.magiology.client.rendering.item.SIRRegistry;
 import com.magiology.client.shaders.ShaderHandler;
 import com.magiology.core.MReference;
+import com.magiology.core.Magiology;
 import com.magiology.forge.events.RenderEvents;
 import com.magiology.mc_objects.BlockRegistry;
 import com.magiology.mc_objects.entitys.EntityPenguin;
@@ -58,6 +61,7 @@ public class ClientProxy extends CommonProxy{
 	
 	@Override
 	public void postInit(){
+		SIRRegistry.register();
 	}
 	
 	@Override
@@ -79,7 +83,7 @@ public class ClientProxy extends CommonProxy{
 					
 					try{
 						Class tileClass=i.createNewTileEntity(null, 0).getClass();
-						Class rederer=Class.forName("com.magiology.client.rendering.tile_render."+tileClass.getSimpleName()+"Renderer");
+						Class rederer=Class.forName("com.magiology.client.rendering.tile."+tileClass.getSimpleName()+"Renderer");
 						ClientRegistry.bindTileEntitySpecialRenderer(tileClass,(TileEntitySpecialRenderer)rederer.newInstance());
 					}catch(Exception e){}
 				}

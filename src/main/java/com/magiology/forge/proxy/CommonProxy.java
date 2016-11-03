@@ -4,6 +4,7 @@ import static com.magiology.core.MReference.*;
 
 import java.awt.Color;
 
+import com.magiology.DevOnly;
 import com.magiology.core.Magiology;
 import com.magiology.cross_mod.ModChecker;
 import com.magiology.forge.events.*;
@@ -24,9 +25,15 @@ public class CommonProxy{
 	
 	public void loadModFiles(){
 		IOManager manager=Magiology.extraFiles;
+		
+		manager.addFile("READ_ME.txt");
+		
 		manager.addFolder("animations/user");
-		manager.addFile("animations/penguin/swimming.la");
-		manager.addFile("animations/user/READ_ME.txt");
+		manager.addFile  ("animations/penguin/swimming.la");
+		
+		manager.addFolder("shaders/user");
+		manager.addFile  ("shaders/invisible.fs");
+		
 		manager.checkAndExtract();
 	}
 	

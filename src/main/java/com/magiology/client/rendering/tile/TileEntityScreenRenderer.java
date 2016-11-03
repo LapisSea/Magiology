@@ -1,4 +1,4 @@
-package com.magiology.client.rendering.tile_render;
+package com.magiology.client.rendering.tile;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;

@@ -1,11 +1,11 @@
-package com.magiology.util.objs;
+package com.magiology.util.objs.data;
 
 
-public abstract class RegistrableDatabaseStorage<T> extends DatabaseStorage<T>{
+public abstract class RegistrableDatabaseStorageCollection<T> extends DatabaseStorageCollection<T>{
 	
 	private boolean registered=false;
 	
-	public RegistrableDatabaseStorage(Class<?extends T> base){
+	public RegistrableDatabaseStorageCollection(Class<?extends T> base){
 		super(base);
 	}
 

@@ -30,7 +30,6 @@ public class ShaderHandler{
 			});
 		}
 		shaders.entrySet().forEach(e->{
-			LogUtil.println(e.getValue());
 			e.getValue().compile();
 		});
 	}

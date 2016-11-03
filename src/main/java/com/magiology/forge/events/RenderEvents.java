@@ -1,34 +1,44 @@
 package com.magiology.forge.events;
 
-import java.util.Queue;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.google.common.collect.Queues;
+import org.lwjgl.opengl.GL11;
+
+import com.magiology.client.post.PostProcessFX;
 import com.magiology.client.shaders.ShaderHandler;
 import com.magiology.client.shaders.effects.PositionAwareEffect;
 import com.magiology.client.shaders.programs.InvisibleEffect;
 import com.magiology.handlers.particle.ParticleHandler;
 import com.magiology.mc_objects.features.screen.TileEntityScreen;
 import com.magiology.util.objs.vec.Vec3M;
-import com.magiology.util.statics.*;
+import com.magiology.util.statics.OpenGLM;
+import com.magiology.util.statics.UtilC;
 import com.magiology.util.statics.math.PartialTicksUtil;
-
-import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
-import net.minecraftforge.client.event.*;
-import net.minecraftforge.fml.common.eventhandler.*;
+import net.minecraftforge.client.event.DrawBlockHighlightEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class RenderEvents{
+
+	public static List<EntityLivingBase> invisibleEntitys=new ArrayList<>();
 	
-	public static Queue<EntityLivingBase> invisibleEntitys=Queues.newArrayDeque();
+	public static List<PostProcessFX> postProcessFXes=new ArrayList<>();
 	
 	@SubscribeEvent(priority=EventPriority.LOWEST)
 	public void render2Dscreem(RenderGameOverlayEvent e){

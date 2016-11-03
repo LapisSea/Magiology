@@ -2,14 +2,21 @@ package com.magiology.mc_objects.items;
 
 import java.util.List;
 
+import com.magiology.client.rendering.item.renderers.ItemMatterJumperRenderer;
+import com.magiology.util.interf.Renderable;
+import com.magiology.util.interf.SpecialRender;
 import com.magiology.util.objs.NBTUtil;
+import com.magiology.util.statics.LogUtil;
+import com.magiology.util.statics.UtilM;
 import com.magiology.util.statics.math.MathUtil;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemMatterJumper extends ItemOwnable{
+public class ItemMatterJumper extends ItemOwnable implements SpecialRender{
 	
 	
 	public static enum MatterJumperMode{
@@ -44,5 +51,11 @@ public class ItemMatterJumper extends ItemOwnable{
 	}
 	public static void setMode(ItemStack stack, MatterJumperMode mode){
 		NBTUtil.setInt(stack, MatterJumperMode.MARKER, mode==null?0:mode.id);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public Renderable getRenderer(){
+		return ItemMatterJumperRenderer.get();
 	}
 }

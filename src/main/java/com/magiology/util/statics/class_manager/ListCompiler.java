@@ -1,14 +1,20 @@
 package com.magiology.util.statics.class_manager;
 
-import java.io.*;
-import java.nio.file.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.magiology.core.Magiology;
+import com.magiology.DevOnly;
 import com.magiology.util.statics.FileUtil;
 
+@DevOnly
 public class ListCompiler{
-	static{if(!Magiology.isDev())throw new IllegalStateException("It is forbidden to compile class list in user environment! This is a bug!");}
 	
 	private static String startPath="..\\src\\main\\java\\";
 	private static int startPathLength=startPath.length();

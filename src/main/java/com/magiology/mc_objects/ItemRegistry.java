@@ -1,14 +1,16 @@
 package com.magiology.mc_objects;
 
-import com.magiology.core.MReference;
-import com.magiology.util.objs.RegistrableDatabaseStorage;
-import com.magiology.util.statics.*;
+import com.magiology.util.m_extensions.ResourceLocationM;
+import com.magiology.util.objs.data.RegistrableDatabaseStorageArray;
+import com.magiology.util.statics.CollectionConverter;
+import com.magiology.util.statics.LogUtil;
+import com.magiology.util.statics.UtilM;
 import com.magiology.util.statics.class_manager.ClassList;
 
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class ItemRegistry extends RegistrableDatabaseStorage<Item>{
+public class ItemRegistry extends RegistrableDatabaseStorageArray<Item>{
 
 	private static final ItemRegistry instance=new ItemRegistry();
 	
@@ -23,11 +25,9 @@ public class ItemRegistry extends RegistrableDatabaseStorage<Item>{
 	@Override
 	public void registerObj(Item obj){
 		String name=UtilM.classNameToMcName(obj.getClass());
-		LogUtil.println("(UAHSDUABSUIDN1",obj,name);
-		obj.setRegistryName(MReference.MODID, name);
+		obj.setRegistryName(new ResourceLocationM(name));
 		obj.setUnlocalizedName(name);
 		GameRegistry.register(obj);
-		LogUtil.println("(UAHSDUABSUIDN2",obj.getRegistryName(),name);
 	}
 	
 

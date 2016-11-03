@@ -9,6 +9,7 @@ import com.magiology.client.shaders.effects.PositionAwareEffect;
 import com.magiology.client.shaders.effects.SoftEffectsShader;
 import com.magiology.client.shaders.upload.UniformUploaderF1;
 import com.magiology.client.shaders.upload.UniformUploaderF2;
+import com.magiology.core.Magiology;
 import com.magiology.util.objs.vec.Vec2FM;
 import com.magiology.util.statics.FileUtil;
 
@@ -33,16 +34,15 @@ public class InvisibleEffect extends ShaderProgram{
 	
 	@Override
 	protected CharSequence getVertexShaderSrc(){
-//		return FileUtil.getFileTxt(new File("vertex.vs"));
 		return null;
 	}
 	    
 	
 	@Override
 	protected CharSequence getFragmentShaderSrc(){
-		return FileUtil.getFileTxt(new File("fragmentShader.fs"));
+		return getShaderFile("invisible.fs");
 	}
-	
+
 	@Override
 	protected void bindAtributes(){
 		

@@ -13,6 +13,8 @@ import org.apache.commons.io.FileUtils;
 
 import com.magiology.core.MReference;
 import com.magiology.core.Magiology;
+import com.magiology.util.statics.LogUtil;
+import com.magiology.util.statics.UtilM;
 
 public class IOManager{
 	
@@ -45,16 +47,18 @@ public class IOManager{
 	}
 	
 	public void checkAndExtract(){
+		String md5=UtilM.bytesToHex(MReference.MD5_ID.getBytes());
 		File versionFile=new File(getRoot()+"version.check");
 		boolean versionOk=false;
 		if(versionFile.exists()&&versionFile.isFile()){
 			try{
 				String content=FileUtils.readFileToString(versionFile);
-				versionOk=content.equals(MReference.MD5_ID);
+				versionOk=content.equals(md5);
 			}catch(IOException e){}
 		}
 		if(versionOk)return;
 		File root=new File(getRoot());
+		
 		try{
 			FileUtils.forceDelete(root);
 		}catch(IOException e2){
@@ -64,7 +68,7 @@ public class IOManager{
 		folders.forEach((f)->new File(getRoot()+f.getPath()).mkdirs());
 		try{
 			versionFile.createNewFile();
-			FileUtils.write(versionFile, MReference.MD5_ID);
+			FileUtils.write(versionFile, md5);
 		}catch(IOException e1){
 			e1.printStackTrace();
 		}

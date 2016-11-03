@@ -4,6 +4,7 @@ import com.magiology.client.renderers.Renderer;
 import com.magiology.core.MReference;
 import com.magiology.handlers.particle.ParticleFactory;
 import com.magiology.handlers.particle.ParticleM;
+import com.magiology.util.m_extensions.ResourceLocationM;
 import com.magiology.util.objs.ColorF;
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.OpenGLM;
@@ -26,7 +27,7 @@ public class ParticleMistyEnergyFactory extends ParticleFactory{
 	public static ParticleMistyEnergyFactory get(){return instance;}
 	private ParticleMistyEnergyFactory(){}
 	
-	public static final ResourceLocation texture=new ResourceLocation(MReference.MODID,"/textures/particle/explosion_stages.png");
+	public static final ResourceLocation texture=new ResourceLocationM("/textures/particle/explosion_stages.png");
 	public static int[] defultModel=new int[32];
 	
 	public void spawn(Vec3M pos, Vec3M speed, float size, float gravity, ColorF color){

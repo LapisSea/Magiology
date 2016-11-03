@@ -30,14 +30,14 @@ public class TileEntityScreen extends TileEntityOneBlockStructure<TileEntityScre
 		}
 		
 		if(highlightedTile==tile){
-			if(tile!=null)tile.getBrain().onHighlight(BlockScreen.calcScreenPos(tile, hitX, hitY, hitZ));
+			if(brain!=null)brain.onHighlight(BlockScreen.calcScreenPos(tile, hitX, hitY, hitZ));
 			return;
 		}
 		
 		if(highlightedTile!=null){
 			if(tile==null&&highlightedTile.hasBrain())highlightedTile.getBrain().onExit();
 		}else if(brain!=null){
-			tile.getBrain().onHighlight(BlockScreen.calcScreenPos(tile, hitX, hitY, hitZ));
+			brain.onHighlight(BlockScreen.calcScreenPos(tile, hitX, hitY, hitZ));
 			brain.onEnter();
 		}
 		highlightedTile=tile;

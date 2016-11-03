@@ -7,7 +7,7 @@ import mezz.jei.api.*;
 import mezz.jei.api.ingredients.*;
 
 @JEIPlugin
-public class MagiologyPlugin extends BlankModPlugin implements ExtensionLoader{
+public class MagiologyPlugin_JEI extends BlankModPlugin implements ExtensionLoader{
 	
 	@Override
 	public void init(){

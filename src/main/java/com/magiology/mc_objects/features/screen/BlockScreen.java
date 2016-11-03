@@ -63,6 +63,7 @@ public class BlockScreen extends BlockContainerM<TileEntityScreen>{
 	@Override
 	public boolean onBlockActivated(World world,BlockPos pos,IBlockState state,EntityPlayer player,EnumHand hand,ItemStack heldItem,EnumFacing side,float hitX,float hitY,float hitZ){
 		TileEntityScreen tile=new BlockPosM(pos).getTile(world,TileEntityScreen.class);
+		LogUtil.println(tile);
 		if(tile==null)return false;
 		
 		if(UtilM.isItemInStack(ItemMatterJumper.class, heldItem)){
@@ -83,7 +84,6 @@ public class BlockScreen extends BlockContainerM<TileEntityScreen>{
 		return false;
 	}
 	public static Vec2FM calcScreenPos(TileEntityScreen tile, float hitX,float hitY,float hitZ){
-		
 		
 		TileEntityScreen brain=tile.getBrain();
 		int pixels=64;

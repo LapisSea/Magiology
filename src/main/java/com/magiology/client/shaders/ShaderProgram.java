@@ -1,13 +1,17 @@
 package com.magiology.client.shaders;
 
+import java.io.File;
 import java.nio.FloatBuffer;
 
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.util.vector.Matrix4f;
+
+import com.magiology.core.Magiology;
 import com.magiology.util.objs.ColorF;
 import com.magiology.util.objs.vec.Vec3M;
-
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.*;
-import org.lwjgl.util.vector.Matrix4f;
+import com.magiology.util.statics.FileUtil;
 
 public abstract class ShaderProgram{
 	
@@ -58,7 +62,10 @@ public abstract class ShaderProgram{
 	public void bindAtribute(int attributeID,String name){
 		GL20.glBindAttribLocation(programID, attributeID, name);
 	}
-	
+
+	public void upload(int location, int value){
+		GL20.glUniform1i(location, value);
+	}
 	public void upload(int location, float value){
 		GL20.glUniform1f(location, value);
 	}
@@ -120,5 +127,9 @@ public abstract class ShaderProgram{
 		}
 		GL20.glDeleteProgram(programID);
 		programID=-1;
+	}
+	
+	protected CharSequence getShaderFile(String path){
+		return FileUtil.getFileTxt(new File(Magiology.extraFiles.getRoot()+"shaders/"+path));
 	}
 }

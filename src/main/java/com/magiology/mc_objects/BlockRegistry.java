@@ -2,14 +2,14 @@ package com.magiology.mc_objects;
 
 import com.magiology.core.MReference;
 import com.magiology.util.m_extensions.BlockM;
-import com.magiology.util.objs.RegistrableDatabaseStorage;
+import com.magiology.util.objs.data.RegistrableDatabaseStorageArray;
 import com.magiology.util.statics.*;
 import com.magiology.util.statics.class_manager.ClassList;
 
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public final class BlockRegistry extends RegistrableDatabaseStorage<BlockM>{
+public final class BlockRegistry extends RegistrableDatabaseStorageArray<BlockM>{
 	
 	private static final BlockRegistry instance=new BlockRegistry();
 	
