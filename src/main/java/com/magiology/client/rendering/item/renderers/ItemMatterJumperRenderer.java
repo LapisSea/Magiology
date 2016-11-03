@@ -79,9 +79,6 @@ public class ItemMatterJumperRenderer implements IItemRenderer{
 		buff.draw();
 		if(shader!=null)shader.deactivate();
 		
-//		OpenGLM.scale(-0.5F/16F);
-//		UtilC.getMC().fontRendererObj.drawString("Penis, your mum. Thank you.", -30, -5, ColorF.WHITE.toCode());
-		
 //		OpenGLM.enableTexture2D();
 		OpenGLM.popMatrix();
 	}
