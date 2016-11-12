@@ -46,8 +46,7 @@ public abstract class PacketM<T extends IMessage> implements IMessage,IMessageHa
 			player=ctx.getServerHandler().playerEntity;
 		}
 		
-		listener.addScheduledTask(()->((PacketM)message).onMessage(ctx.getServerHandler().playerEntity.worldObj, ctx.getServerHandler().playerEntity, isRemote));
-		
+		listener.addScheduledTask(()->((PacketM)message).onMessage(player.worldObj, player, isRemote));
 		return null;
 	}
 }

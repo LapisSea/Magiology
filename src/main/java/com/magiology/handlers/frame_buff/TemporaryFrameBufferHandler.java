@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
+import com.magiology.forge.events.RenderEvents;
 import com.magiology.util.statics.LogUtil;
 import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.UtilC;
@@ -59,8 +60,13 @@ public class TemporaryFrameBufferHandler{
 		OpenGLM.pushMatrix();
 
 		OpenGLM.disableLighting();
-		renderQueue.stream().forEach(TemporaryFrame::render);
-		renderQueue.clear();
+		try{
+			synchronized(renderQueue){
+				renderQueue.forEach(TemporaryFrame::render);
+				renderQueue.clear();
+			}
+		}catch(Exception e){}
+		
 		UtilC.getMC().getFramebuffer().bindFramebuffer(true);
 		ScaledResolution scaledresolution=new ScaledResolution(UtilC.getMC());
 		int i=scaledresolution.getScaleFactor();

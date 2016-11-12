@@ -3,8 +3,8 @@ package com.magiology.client.shaders;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.magiology.core.class_manager.ClassList;
 import com.magiology.util.statics.LogUtil;
-import com.magiology.util.statics.class_manager.ClassList;
 
 public class ShaderHandler{
 	

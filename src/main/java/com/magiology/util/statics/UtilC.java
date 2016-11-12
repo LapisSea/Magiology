@@ -1,6 +1,11 @@
 package com.magiology.util.statics;
 
+import java.nio.FloatBuffer;
+
 import org.apache.commons.lang3.ArrayUtils;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Matrix4f;
 
 import com.magiology.util.objs.vec.Vec2i;
 import com.magiology.util.statics.math.PartialTicksUtil;
@@ -19,6 +24,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class UtilC{
+	
+	public static final FloatBuffer BUF = BufferUtils.createFloatBuffer(16);
 	
 	public static Minecraft getMC(){
 		return Minecraft.getMinecraft();
@@ -40,17 +47,30 @@ public class UtilC{
 		return getTheWorld()!=null;
 	}
 	
-	public static float fluctuate(double speed, double offset){
-		double wtt=getWorldTime()+offset;
-		double helper=wtt%speed/(speed/2F);
-		return (float)(helper>1?2-helper:helper);
+	public static float fluctuateLin(double speed, double offset, double min, double max){
+		return UtilM.fluctuateLin(getTheWorld(), speed, offset, min, max);
 	}
 	
-	public static float fluctuateSmooth(double speed, double offset){
-		float fluctuate=fluctuate(speed, offset),
-				prevFluctuate=fluctuate(speed, offset-1);
+	public static float fluctuateExp(double speed, double offset, double min, double max){
+		return UtilM.fluctuateExp(getTheWorld(), speed, offset, min, max);
+	}
+	
+	public static float fluctuateLinSmooth(double speed, double offset, double min, double max){
+		float fluctuate=fluctuateLin(speed, offset, min, max),prevFluctuate=fluctuateLin(speed, offset-1, min, max);
 		return PartialTicksUtil.calculate(prevFluctuate, fluctuate);
 	}
+	
+	public static float fluctuateExpSmooth(double speed, double offset, double min, double max){
+		return UtilM.fluctuateExp(getTheWorld(), speed, offset, min, max);
+	}
+	
+	public static float fluctuateLin_0_1(double speed, double offset){
+		return fluctuateLin(speed, offset, 0, 1);
+	}
+	public static float fluctuateLin_N1_1(double speed, double offset){
+		return fluctuateLin(speed, offset, -1, 1);
+	}
+	
 	
 	public static void exitSoft(){
 		getMC().shutdown();
@@ -127,5 +147,15 @@ public class UtilC{
 	public static RenderItem getRI(){
 		return getMC().getRenderItem();
 	}
-	
+
+	public static void loadModelViewToBuffer(){
+		BUF.clear();
+		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, BUF);
+	}
+	public static Matrix4f getModelView(){
+		loadModelViewToBuffer();
+		Matrix4f mat = new Matrix4f();
+		mat.load(BUF);
+		return mat;
+	}
 }

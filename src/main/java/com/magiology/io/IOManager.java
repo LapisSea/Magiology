@@ -5,6 +5,10 @@ import static com.magiology.core.MReference.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipFile;
@@ -19,6 +23,7 @@ import com.magiology.util.statics.UtilM;
 public class IOManager{
 	
 	private List<File> files=new ArrayList<>(),folders=new ArrayList<>();
+	private List<IODirectory> dirs=new ArrayList<>();
 	
 	public void addFolder(String path){
 		folders.add(new File(path));
@@ -120,5 +125,50 @@ public class IOManager{
 	public String getRoot(){
 		return "mods/"+MC_VERSION+"/"+MODID+"/";
 	}
-
+	
+	public IODirectory getDirectoryManager(String name){
+		final String normalName=new File(name).getPath();
+		
+		IODirectory dir=dirs.stream().filter(p->p.name.equals(normalName)).findFirst().orElse(null);
+		
+		if(dir==null){
+			dir=new IODirectory(normalName);
+			dirs.add(dir);
+		}
+		return dir;
+	}
+	
+	public class IODirectory{
+		
+		private final String name;
+		
+		private IODirectory(String name){
+			this.name=name;
+		}
+		
+		private Path getPath(String localPath){
+			return new File(getRoot()+name+"/"+localPath).toPath();
+		}
+		
+		public String read(String localPath) throws IOException{
+			return new String(Files.readAllBytes(getPath(localPath)));
+		}
+		public String readOr(String localPath, String fail){
+			try{
+				return read(localPath);
+			}catch(IOException e){
+				return fail;
+			}
+		}
+		
+		public void write(String localPath, String data){
+			try{
+				Files.write(getPath(localPath), data.getBytes());
+			}catch(IOException e){
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
 }

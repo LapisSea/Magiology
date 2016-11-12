@@ -39,6 +39,7 @@ public abstract class ParticleM extends IParticle{
 	@Override
 	public void kill(){
 		isDead=true;
+		getFactorfy().markDeadDirty();
 	}
 
 	@Override

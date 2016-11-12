@@ -5,6 +5,7 @@ import org.lwjgl.util.vector.Matrix4f;
 
 import com.magiology.client.renderers.FastNormalRenderer;
 import com.magiology.client.renderers.Renderer;
+import com.magiology.forge.events.RenderEvents;
 import com.magiology.handlers.frame_buff.TemporaryFrame;
 import com.magiology.mc_objects.features.screen.TileEntityScreen;
 import com.magiology.util.m_extensions.TileEntitySpecialRendererM;

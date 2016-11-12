@@ -75,7 +75,8 @@ public class TileEntityScreen extends TileEntityOneBlockStructure<TileEntityScre
 	}
 	@Override
 	public void filterBlocks(List<TileEntityScreen> parts,Vec3i clickedPos){
-		
+		parts.removeIf(t->t.hasBrain());
+		if(parts.isEmpty())return;
 		TileEntityScreen clicked=new BlockPosM(clickedPos).getTile(worldObj, TileEntityScreen.class);
 		Plane<TileEntityScreen> i=Structure.buildScreen(parts,clicked);
 		

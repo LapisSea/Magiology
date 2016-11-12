@@ -102,4 +102,9 @@ public class ColorF{
 	public String toString(){
 		return "("+(r+"").substring(0, Math.min((r+"").length(),4))+", "+(g+"").substring(0, Math.min((g+"").length(),4))+", "+(b+"").substring(0, Math.min((b+"").length(),4))+", "+(a+"").substring(0, Math.min((a+"").length(),4))+")";
 	}
+
+	@SideOnly(Side.CLIENT)
+	public void bindWithA(float a){
+		GlStateManager.color(r,g,b,a);
+	}
 }

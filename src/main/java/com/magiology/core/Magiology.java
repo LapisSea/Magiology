@@ -11,11 +11,15 @@ import java.util.Set;
 
 import com.google.common.eventbus.EventBus;
 import com.magiology.DevOnly.DevOnlyBlockCutter;
+import com.magiology.core.class_manager.ClassList;
 import com.magiology.forge.networking.SimpleNetworkWrapperM;
 import com.magiology.forge.proxy.CommonProxy;
+import com.magiology.handlers.scripting.ScriptLog.ScriptLogLine;
+import com.magiology.handlers.scripting.ScriptWrapper;
+import com.magiology.handlers.scripting.script_types.JsScript;
 import com.magiology.io.IOManager;
 import com.magiology.util.statics.LogUtil;
-import com.magiology.util.statics.class_manager.ClassList;
+import com.magiology.util.statics.UtilM;
 
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import net.minecraftforge.fml.common.LoadController;
@@ -39,10 +43,12 @@ public class Magiology implements ModContainer{
 	
 	private static final boolean IS_DEV;
 	static{
+		getClassLoader().addClassLoaderExclusion("jdk.nashorn");
+		
 		CompatibilityChecker.checkJava8();
 		IS_DEV=SOURCE_FILE==null;
-		if(IS_DEV)LogUtil.printWrapped(NAME+" is running in development environment! Work Lapis! Work! NO! CLOSE THAT YOUTUBE VIDEO! ");
-		else ((LaunchClassLoader)Magiology.class.getClassLoader()).registerTransformer(DevOnlyBlockCutter.class.getName());
+		if(IS_DEV)LogUtil.printWrapped(NAME+" is running in development environment! Work Lapis! Work! NO! CLOSE THAT YOUTUBE VIDEO!");
+		else getClassLoader().registerTransformer(DevOnlyBlockCutter.class.getName());
 	}
 	
 	/***//** variables *//***/
@@ -54,9 +60,31 @@ public class Magiology implements ModContainer{
 	private static Magiology			instance;
 	private static String				marker		=NAME+"_"+MC_VERSION+"-"+VERSION;
 	public static IOManager				extraFiles	=new IOManager();
-	
+
 	public Magiology(){
 		instance=this;
+		
+		
+		final String script ="\n"
+				+  "function main(){\n"
+				+  "	var JavaHomeGetter = Java.type(\"com.magiology.handlers.scripting.bridge.JavaHomeGetter\");\n"
+				+  "	print([JavaHomeGetter.get(),2+1.2]);\n"
+				+  "}\n";
+		LogUtil.println("\n\n-----------------------------------------------------------------");
+		try{
+			JsScript sc=new JsScript(script);
+			sc.run();
+			for(ScriptWrapper j:sc.getLogs()){
+				for(ScriptLogLine i:j.getLog().getAllLog())
+					LogUtil.println(i.type,i.isError,i.msg);
+				LogUtil.println("-----------------");
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		LogUtil.println("-----------------------------------------------------------------\n \n ");
+		UtilM.exit(404);
+		
 		ClassList.getImplementations();
 	}
 	
@@ -107,6 +135,10 @@ public class Magiology implements ModContainer{
 	
 	public static boolean isDev(){
 		return IS_DEV;
+	}
+	
+	public static LaunchClassLoader getClassLoader(){
+		return (LaunchClassLoader)Magiology.class.getClassLoader();
 	}
 	
 	/***/

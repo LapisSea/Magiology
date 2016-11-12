@@ -3,13 +3,13 @@ package com.magiology.client.rendering.item;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.magiology.core.class_manager.ClassList;
 import com.magiology.mc_objects.ItemRegistry;
 import com.magiology.util.interf.Renderable;
 import com.magiology.util.interf.SpecialRender;
 import com.magiology.util.objs.data.DatabaseStorageArray;
 import com.magiology.util.statics.LogUtil;
 import com.magiology.util.statics.UtilC;
-import com.magiology.util.statics.class_manager.ClassList;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemMeshDefinition;

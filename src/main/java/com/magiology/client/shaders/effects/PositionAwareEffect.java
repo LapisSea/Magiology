@@ -21,7 +21,7 @@ public abstract class PositionAwareEffect{
 	public abstract void initUniformLocations();
 	public abstract boolean shouldRender();
 	
-	private static Matrix4f viewTransformation=new Matrix4f();
+	public static Matrix4f viewTransformation=new Matrix4f();
 	private static Method setupCamViewFunc=((ObjectReturn<Method>)()->{
 		try{
 			Method meth=EntityRenderer.class.getDeclaredMethod("setupCameraTransform", float.class,int.class);

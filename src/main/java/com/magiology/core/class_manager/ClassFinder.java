@@ -1,4 +1,4 @@
-package com.magiology.util.statics.class_manager;
+package com.magiology.core.class_manager;
 
 import java.lang.reflect.Modifier;
 import java.util.*;

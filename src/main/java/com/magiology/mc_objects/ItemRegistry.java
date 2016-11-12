@@ -1,11 +1,11 @@
 package com.magiology.mc_objects;
 
+import com.magiology.core.class_manager.ClassList;
 import com.magiology.util.m_extensions.ResourceLocationM;
 import com.magiology.util.objs.data.RegistrableDatabaseStorageArray;
 import com.magiology.util.statics.CollectionConverter;
 import com.magiology.util.statics.LogUtil;
 import com.magiology.util.statics.UtilM;
-import com.magiology.util.statics.class_manager.ClassList;
 
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.registry.GameRegistry;

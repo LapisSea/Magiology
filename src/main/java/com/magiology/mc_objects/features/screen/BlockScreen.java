@@ -8,11 +8,13 @@ import com.magiology.util.m_extensions.*;
 import com.magiology.util.objs.vec.Vec2FM;
 import com.magiology.util.objs.vec.Vec2i;
 import com.magiology.util.statics.LogUtil;
+import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.UtilM;
 
 import jline.internal.Log;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -65,13 +67,14 @@ public class BlockScreen extends BlockContainerM<TileEntityScreen>{
 		TileEntityScreen tile=new BlockPosM(pos).getTile(world,TileEntityScreen.class);
 		LogUtil.println(tile);
 		if(tile==null)return false;
-		
 		if(UtilM.isItemInStack(ItemMatterJumper.class, heldItem)){
 			MatterJumperMode mode=ItemMatterJumper.getMode(heldItem);
 			
 			if(mode==MatterJumperMode.WRENCH){
-				tile.formMultiblock(pos);
-				return true;
+				if(!tile.hasBrain()){
+					tile.formMultiblock(pos);
+					return true;
+				}
 			}
 			
 		}else if(tile.hasBrain()){

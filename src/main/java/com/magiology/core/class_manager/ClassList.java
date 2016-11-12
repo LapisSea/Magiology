@@ -1,6 +1,10 @@
-package com.magiology.util.statics.class_manager;
+package com.magiology.core.class_manager;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.magiology.util.statics.LogUtil;
 
@@ -13,6 +17,7 @@ public class ClassList{
 	public ClassList(){
 		classes=new String[]{
 			"com.magiology.client.entity.EntityPenguinRenderer",
+			"com.magiology.client.post.PostProcessFX",
 			"com.magiology.client.renderers.AdvancedRenderer",
 			"com.magiology.client.renderers.FastNormalRenderer",
 			"com.magiology.client.renderers.GenericModels",
@@ -23,12 +28,15 @@ public class ClassList{
 			"com.magiology.client.rendering.item.ModelLoaderM",
 			"com.magiology.client.rendering.item.renderers.ItemMatterJumperRenderer",
 			"com.magiology.client.rendering.item.SIRRegistry",
+			"com.magiology.client.rendering.RandomAnimation",
+			"com.magiology.client.rendering.ShaderMultiTransformModel",
 			"com.magiology.client.rendering.tile.DummyTileEntityRenderer",
 			"com.magiology.client.rendering.tile.TileEntityScreenRenderer",
 			"com.magiology.client.shaders.effects.PositionAwareEffect",
 			"com.magiology.client.shaders.effects.SoftEffectsShader",
 			"com.magiology.client.shaders.programs.InvisibleEffect",
 			"com.magiology.client.shaders.programs.MatterJumperShader",
+			"com.magiology.client.shaders.programs.MultiTransformShader",
 			"com.magiology.client.shaders.programs.SepiaShader",
 			"com.magiology.client.shaders.ShaderHandler",
 			"com.magiology.client.shaders.ShaderProgram",
@@ -41,6 +49,9 @@ public class ClassList{
 			"com.magiology.client.shaders.upload.UniformUploaderF3",
 			"com.magiology.client.shaders.upload.UniformUploaderF4",
 			"com.magiology.client.shaders.upload.UniformUploaderVec",
+			"com.magiology.core.class_manager.ClassFinder",
+			"com.magiology.core.class_manager.ClassList",
+			"com.magiology.core.class_manager.ListCompiler",
 			"com.magiology.core.CompatibilityChecker",
 			"com.magiology.core.Config",
 			"com.magiology.core.Magiology",
@@ -75,6 +86,15 @@ public class ClassList{
 			"com.magiology.handlers.particle.ParticleFactory",
 			"com.magiology.handlers.particle.ParticleHandler",
 			"com.magiology.handlers.particle.ParticleM",
+			"com.magiology.handlers.scripting.bridge.ForbiddenClass",
+			"com.magiology.handlers.scripting.bridge.JavaHomeGetter",
+			"com.magiology.handlers.scripting.Script",
+			"com.magiology.handlers.scripting.ScriptLog",
+			"com.magiology.handlers.scripting.ScriptManager",
+			"com.magiology.handlers.scripting.ScriptResult",
+			"com.magiology.handlers.scripting.ScriptWrapper",
+			"com.magiology.handlers.scripting.script_types.JsScript",
+			"com.magiology.handlers.scripting.script_types.RenderScript",
 			"com.magiology.handlers.TileEntityOneBlockStructure",
 			"com.magiology.io.IOManager",
 			"com.magiology.mc_objects.BlockRegistry",
@@ -146,6 +166,8 @@ public class ClassList{
 			"com.magiology.util.objs.data_parameter_wappers.DataParamEnum",
 			"com.magiology.util.objs.data_parameter_wappers.DataParamFloat",
 			"com.magiology.util.objs.EnhancedRobot",
+			"com.magiology.util.objs.LockabaleArrayList",
+			"com.magiology.util.objs.LogBuffer",
 			"com.magiology.util.objs.ModelRendererDummy",
 			"com.magiology.util.objs.MultiTypeContainers",
 			"com.magiology.util.objs.NBTUtil",
@@ -166,9 +188,6 @@ public class ClassList{
 			"com.magiology.util.objs.vec.Vec3MFinal",
 			"com.magiology.util.objs.vec.Vec3MRead",
 			"com.magiology.util.statics.AxisAlignedBBFloat",
-			"com.magiology.util.statics.class_manager.ClassFinder",
-			"com.magiology.util.statics.class_manager.ClassList",
-			"com.magiology.util.statics.class_manager.ListCompiler",
 			"com.magiology.util.statics.CollectionBuilder",
 			"com.magiology.util.statics.CollectionConverter",
 			"com.magiology.util.statics.FileUtil",
@@ -241,6 +260,11 @@ public class ClassList{
 		}
 		return list;
 	}
+	
+	public static List<Class<?>> getByPackage(String packag2){
+		return allClasses.stream().filter(cl->cl.getPackage().getName().equals(packag2)).collect(Collectors.toList());
+	}
+	
 	public static Map<Class<?>, List<Class<?>>> getImplementations(){
 		return implementations;
 	}

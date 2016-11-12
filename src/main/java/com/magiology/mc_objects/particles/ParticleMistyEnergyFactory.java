@@ -137,5 +137,10 @@ public class ParticleMistyEnergyFactory extends ParticleFactory{
 		
 		@Override public int[] getModelIds(){return null;}
 		@Override public void renderModel(float xRotation, float zRotation, float yzRotation, float xyRotation, float xzRotation){}
+		
+		@Override
+		public ParticleFactory getFactorfy(){
+			return instance;
+		}
 	}
 }

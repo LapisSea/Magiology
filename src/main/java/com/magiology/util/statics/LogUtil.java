@@ -6,12 +6,12 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import org.apache.logging.log4j.Level;
+
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializer;
 import com.magiology.core.MReference;
-
-import org.apache.logging.log4j.Level;
 
 import net.minecraftforge.fml.common.FMLLog;
 
@@ -48,20 +48,17 @@ public class LogUtil{
 		
 		if(length>6){
 			line.append("<<");
-			for(int i=0, j=length-4;i<j;i++){
+			for(int i=0, j=length-4;i<j;i++)
 				line.append('=');
-			}
 			line.append(">>");
-		}else for(int i=0;i<length;i++){
+		}else for(int i=0;i<length;i++)
 			line.append('=');
-		}
 		
 		String lineS=line.toString();
 		
 		info(lineS);
-		for(String lin:data){
+		for(String lin:data)
 			info(lin);
-		}
 		info(lineS);
 	}
 	
@@ -153,7 +150,7 @@ public class LogUtil{
 	}
 	
 	private static void log(Level logLevel, String object){
-		String[] lines=object.split("\n");
+		String[] lines=object.split(UtilM.LINE_REG);
 		for(String line:lines)
 			FMLLog.log(MReference.NAME, logLevel, line);
 	}

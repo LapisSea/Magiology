@@ -173,5 +173,9 @@ public class ParticleCubeFactory extends ParticleFactory{
 		public int getModelId(){
 			return defultModel;
 		}
+		@Override
+		public ParticleFactory getFactorfy(){
+			return instance;
+		}
 	}
 }

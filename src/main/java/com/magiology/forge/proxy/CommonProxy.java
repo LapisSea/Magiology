@@ -6,6 +6,7 @@ import java.awt.Color;
 
 import com.magiology.DevOnly;
 import com.magiology.core.Magiology;
+import com.magiology.core.class_manager.ClassList;
 import com.magiology.cross_mod.ModChecker;
 import com.magiology.forge.events.*;
 import com.magiology.forge.networking.*;
@@ -14,7 +15,6 @@ import com.magiology.mc_objects.*;
 import com.magiology.mc_objects.entitys.EntityPenguin;
 import com.magiology.util.m_extensions.TileEntityM;
 import com.magiology.util.statics.UtilM;
-import com.magiology.util.statics.class_manager.ClassList;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.registry.*;

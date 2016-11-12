@@ -11,9 +11,9 @@ public abstract class PostProcessFX{
 	
 	private static final ObjectSimpleCallback<PostProcessFX> 
 		NOW=fx->{
-			INSTANT_PASS.clear();
 			fx.render(INSTANT_PASS);
 			processList(INSTANT_PASS);
+			INSTANT_PASS.clear();
 		},
 		OR_NEVER=fx->fx.render(BATCHED_PASS);
 	
@@ -22,8 +22,10 @@ public abstract class PostProcessFX{
 	public static void processAll(){
 		while(TO_RENDER.size()>0){
 			processList(TO_RENDER);
-			TO_RENDER=BATCHED_PASS;
-			BATCHED_PASS=new ArrayList<>();
+			if(BATCHED_PASS.size()>0){
+				TO_RENDER=BATCHED_PASS;
+				BATCHED_PASS=new ArrayList<>();
+			}
 		}
 	}
 	private static void processList(List<PostProcessFX> l){

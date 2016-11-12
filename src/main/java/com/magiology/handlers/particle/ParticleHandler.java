@@ -55,8 +55,6 @@ public class ParticleHandler{
 	
 
 	public void updateParticles(){
-//		if(UtilM.TRUE())return;
-//		PrintUtil.println(getCount());
 		if(UtilC.getMC().gameSettings.particleSetting==2)clearEffects();
 		else if(UtilC.getWorldTime()%20==0&&getCount()>Config.getMaxParticleCount()){
 			while(getCount()>Config.getMaxParticleCount()){

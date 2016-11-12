@@ -1,4 +1,4 @@
-package com.magiology.util.statics.class_manager;
+package com.magiology.core.class_manager;
 
 import java.io.BufferedReader;
 import java.io.File;
