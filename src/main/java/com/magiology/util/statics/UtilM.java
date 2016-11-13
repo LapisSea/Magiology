@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.nio.FloatBuffer;
 import java.text.DateFormat;
@@ -60,9 +61,9 @@ public class UtilM{
 	
 	public class U extends UtilM{}
 	
-	public static final float	p	=1F/16F;
+	public static final float	p		=1F/16F;
 	private static long			startTime;
-	public static final String LINE_REG="(\n|"+System.lineSeparator()+")";
+	public static final String	LINE_REG="(\n|"+System.lineSeparator()+")";
 	
 	public static String floatBufferToString(FloatBuffer buff){
 		StringBuilder print=new StringBuilder("Buffer{");
@@ -163,12 +164,12 @@ public class UtilM{
 	}
 	
 	public static int[] colorToRGBABByte(Color color){
-		return new int[]{color.getRed(),color.getGreen(),color.getBlue(),color.getAlpha()};
+		return new int[]{color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()};
 	}
 	
 	public static float[] colorToRGBABPercentage(Color color){
 		int[] data=colorToRGBABByte(color);
-		return new float[]{data[0]/255F,data[1]/255F,data[2]/255F,data[3]/255F};
+		return new float[]{data[0]/255F, data[1]/255F, data[2]/255F, data[3]/255F};
 	}
 	
 	public static float[] countedArray(float start, float end){
@@ -255,13 +256,13 @@ public class UtilM{
 		return getEntityPos(entity).addY(entity.getEyeHeight());
 	}
 	
-	public static <T,E> T getMapKey(Map<T,E> map, E value){
-		for(Entry<T,E> entry:map.entrySet())
+	public static <T, E> T getMapKey(Map<T, E> map, E value){
+		for(Entry<T, E> entry:map.entrySet())
 			if(Objects.equals(value, entry.getValue())) return entry.getKey();
 		return null;
 	}
 	
-	public static <T,E> Set<T> getMapKeySet(Map<T,E> map, E value){
+	public static <T, E> Set<T> getMapKeySet(Map<T, E> map, E value){
 		return map.entrySet()
 				.stream()
 				.filter(entry->Objects.equals(entry.getValue(), value))
@@ -543,7 +544,7 @@ public class UtilM{
 		return result.toString();
 	}
 	
-	public static Object objFromString(String s) throws IOException,ClassNotFoundException{
+	public static Object objFromString(String s) throws IOException, ClassNotFoundException{
 		byte[] data=Base64.getDecoder().decode(s);
 		ObjectInputStream ois=new ObjectInputStream(new ByteArrayInputStream(data));
 		Object o=ois.readObject();
@@ -582,7 +583,7 @@ public class UtilM{
 	}
 	
 	public static int rgbPercentageToCode(double r, double g, double b, double alpha){
-		int r1=(int)(255*r),g1=(int)(255*g),b1=(int)(255*b),alpha1=(int)(255*alpha);
+		int r1=(int)(255*r), g1=(int)(255*g), b1=(int)(255*b), alpha1=(int)(255*alpha);
 		return rgbByteToCode(r1, g1, b1, alpha1);
 	}
 	
@@ -821,8 +822,8 @@ public class UtilM{
 		return list;
 	}
 	
-	public static Map<EnumFacing,TileEntity> getTileSidesDir(World worldObj, BlockPos pos){
-		Map<EnumFacing,TileEntity> map=new HashMap<>();
+	public static Map<EnumFacing, TileEntity> getTileSidesDir(World worldObj, BlockPos pos){
+		Map<EnumFacing, TileEntity> map=new HashMap<>();
 		
 		for(EnumFacing side:EnumFacing.values()){
 			TileEntity tile=worldObj.getTileEntity(pos.offset(side));
@@ -832,19 +833,19 @@ public class UtilM{
 		return map;
 	}
 	
-	public static <T extends TileEntity> List<T> getTileSides(World worldObj, BlockPosM pos, Class<T> type){
+	public static <T> List<T> getTileSides(World worldObj, BlockPosM pos, Class<T> type){
 		List<T> list=new ArrayList<>();
 		
 		for(EnumFacing side:EnumFacing.values()){
-			TileEntity tile=pos.offset(side).getTile(worldObj, type);
-			if(tile!=null) list.add((T)tile);
+			T tile=pos.offset(side).getTile(worldObj, type);
+			if(tile!=null)list.add(tile);
 		}
 		
 		return list;
 	}
 	
-	public static <T extends TileEntity> Map<EnumFacing,T> getTileSidesDir(World worldObj, BlockPosM pos, Class<T> type){
-		Map<EnumFacing,T> map=new HashMap<>();
+	public static <T extends TileEntity> Map<EnumFacing, T> getTileSidesDir(World worldObj, BlockPosM pos, Class<T> type){
+		Map<EnumFacing, T> map=new HashMap<>();
 		
 		for(EnumFacing side:EnumFacing.values()){
 			TileEntity tile=pos.offset(side).getTile(worldObj, type);
@@ -876,5 +877,24 @@ public class UtilM{
 		double value=wtt%speed/(speed/2F);
 		double precent=Math.sin((value>1?2-value:value)*Math.PI);
 		return (float)(min+(max-min)*precent);
+	}
+	
+	public static <T> T[] mixedToArray(Class<T> type, Object...data){
+		List<T> list=new ArrayList<>();
+		add(list, data);
+		return list.toArray((T[])Array.newInstance(type, list.size()));
+	}
+	
+	private static <T> void add(List<T> list, Object o){
+		if(o==null){
+			list.add(null);
+			return;
+		}
+		if(o.getClass().isArray()){
+			for(Object object:(Object[])o)
+				add(list, object);
+			return;
+		}
+		list.add((T)o);
 	}
 }

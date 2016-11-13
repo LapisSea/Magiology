@@ -6,27 +6,21 @@ import com.magiology.util.objs.LockabaleArrayList;
 
 public class ScriptLog{
 		
-		private boolean locked=false;
 		
 		private LockabaleArrayList<ScriptLogLine> backDoorLog=new LockabaleArrayList<>(),
 				directLog=new LockabaleArrayList<>(),
 				allLog=new LockabaleArrayList<>();
 		
 		public void log(boolean isError, String msg){
-			if(locked) return;
-			for(String line:msg.split("\n")){
-				log(new ScriptLogLine(line, null, 0,isError));
-			}
+			for(String line:msg.split("\n"))log(new ScriptLogLine(line, null, 0,isError));
 		}
 		
 		public void log(ScriptLogLine line){
-			if(locked) return;
 			allLog.add(line);
 			(line.type==0?directLog:backDoorLog).add(line);
 		}
 		
 		public void lock(){
-			locked=true;
 			allLog.lock();
 			directLog.lock();
 			backDoorLog.lock();

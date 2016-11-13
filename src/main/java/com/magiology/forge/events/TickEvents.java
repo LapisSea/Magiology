@@ -4,7 +4,7 @@ import java.util.*;
 
 import org.lwjgl.opengl.Display;
 
-import com.magiology.forge.networking.UpdateMultiblocksPacket;
+import com.magiology.forge.networking.UpdateTileNBTPacket;
 import com.magiology.handlers.frame_buff.TemporaryFrameBufferHandler;
 import com.magiology.handlers.particle.ParticleHandler;
 import com.magiology.mc_objects.particles.Particles;
@@ -69,7 +69,7 @@ public class TickEvents{
 	public void onWorldTick(TickEvent.WorldTickEvent event){
 		if(event.phase==Phase.START)return;
 		tick(serverTickQueue);
-		UpdateMultiblocksPacket.upload();
+		UpdateTileNBTPacket.upload();
 	}
 	private void tick(List<Runnable> queue){
 		if(queue.isEmpty())return;

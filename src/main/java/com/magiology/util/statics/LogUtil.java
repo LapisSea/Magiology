@@ -19,6 +19,9 @@ public class LogUtil{
 	
 	
 	public static void printFunctionTrace(int count, CharSequence splitter){
+		println(getFunctionTrace(count, splitter));
+	}
+	public static String getFunctionTrace(int count, CharSequence splitter){
 		StringBuilder line=new StringBuilder();
 
 		StackTraceElement[] trace=Thread.currentThread().getStackTrace();
@@ -30,7 +33,7 @@ public class LogUtil{
 			line.append(trace[i].getMethodName()).append('(').append(trace[i].getLineNumber()).append(')');
 			if(i!=2)line.append(splitter);
 		}
-		println(line.toString());
+		return line.toString();
 	}
 	
 	/**

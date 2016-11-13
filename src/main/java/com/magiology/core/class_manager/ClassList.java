@@ -76,7 +76,7 @@ public class ClassList{
 			"com.magiology.forge.networking.PacketM",
 			"com.magiology.forge.networking.Packets",
 			"com.magiology.forge.networking.SimpleNetworkWrapperM",
-			"com.magiology.forge.networking.UpdateMultiblocksPacket",
+			"com.magiology.forge.networking.UpdateTileNBTPacket",
 			"com.magiology.forge.proxy.ClientProxy",
 			"com.magiology.forge.proxy.CommonProxy",
 			"com.magiology.forge.proxy.ServerProxy",
@@ -94,6 +94,7 @@ public class ClassList{
 			"com.magiology.handlers.scripting.ScriptResult",
 			"com.magiology.handlers.scripting.ScriptWrapper",
 			"com.magiology.handlers.scripting.script_types.JsScript",
+			"com.magiology.handlers.scripting.script_types.RenderNUpdateScript",
 			"com.magiology.handlers.scripting.script_types.RenderScript",
 			"com.magiology.handlers.TileEntityOneBlockStructure",
 			"com.magiology.io.IOManager",
@@ -106,6 +107,13 @@ public class ClassList{
 			"com.magiology.mc_objects.features.dimension_stabiliser.TileEntityDimensionStabiliser",
 			"com.magiology.mc_objects.features.machines.shaker.BlockShaker",
 			"com.magiology.mc_objects.features.machines.shaker.TileEntityShaker",
+			"com.magiology.mc_objects.features.neuro.BlockNeuroBase",
+			"com.magiology.mc_objects.features.neuro.BlockNeuroController",
+			"com.magiology.mc_objects.features.neuro.BlockNeuroDuct",
+			"com.magiology.mc_objects.features.neuro.NeuroPart",
+			"com.magiology.mc_objects.features.neuro.TileEntityNeuroBase",
+			"com.magiology.mc_objects.features.neuro.TileEntityNeuroController",
+			"com.magiology.mc_objects.features.neuro.TileEntityNeuroDuct",
 			"com.magiology.mc_objects.features.screen.BlockScreen",
 			"com.magiology.mc_objects.features.screen.TileEntityScreen",
 			"com.magiology.mc_objects.ItemRegistry",
@@ -212,7 +220,7 @@ public class ClassList{
 	static final List<Class<?>> allClasses=new ArrayList<>();
 	private static List<Class<?>> classesToGet=new ArrayList<>();
 	
-	static List<Class<?>> getClassesToSort(){		
+	static List<Class<?>> getClassesToSort(){
 		return classesToGet;
 	}
 	/**
@@ -223,12 +231,11 @@ public class ClassList{
 		List<Class<T>> list=new ArrayList<>();
 		
 		boolean added=false;
-		for(Class<? extends T> cl:classes){
+		for(Class<? extends T> cl:classes)
 			if(getDirectImplementations().get(cl)==null){
 				classesToGet.add(cl);
 				added=true;
 			}
-		}
 		if(added)ClassFinder.load();
 		
 		for(Class<T> cl:classes)getDirectImplementations().get(cl).forEach(c->list.add((Class<T>)c));
@@ -243,17 +250,15 @@ public class ClassList{
 		List<Class<T>> list=new ArrayList<>();
 		try{
 			boolean added=false;
-			for(Class<? extends T> cl:classes){
+			for(Class<? extends T> cl:classes)
 				if(getImplementations().get(cl)==null){
 					classesToGet.add(cl);
 					added=true;
 				}
-			}
 			if(added)ClassFinder.load();
 			
-			for(Class<? extends T> cl:classes){
+			for(Class<? extends T> cl:classes)
 				getImplementations().get(cl).forEach(c->list.add((Class<T>)c));
-			}
 		}catch(Exception e){
 			LogUtil.println((Object)classes);
 			throw e;

@@ -11,8 +11,11 @@ import net.minecraft.entity.Entity;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.*;
-import net.minecraft.world.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 
 public class BlockPosM extends BlockPos{
 	
@@ -118,7 +121,7 @@ public class BlockPosM extends BlockPos{
 		return world.getTileEntity(this);
 	}
 	
-	public <T extends TileEntity> T getTile(IBlockAccess world, Class<T> type){
+	public <T> T getTile(IBlockAccess world, Class<T> type){
 		TileEntity tile=getTile(world);
 		if(UtilM.instanceOf(tile, type))return (T)tile;
 		return null;

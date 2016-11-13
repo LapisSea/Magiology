@@ -20,55 +20,53 @@ public class LockabaleArrayList<E>extends ArrayList<E>{
 	
 	@Override
 	public boolean addAll(Collection<? extends E> c){
-		if(locked)return false;
+		lockList();
 		return super.addAll(c);
 	}
 	
 	@Override
 	public E remove(int index){
-		if(locked)return null;
+		lockList();
 		return super.remove(index);
 	}
 	
 	@Override
 	public boolean remove(Object o){
-		if(locked)return false;
+		lockList();
 		return super.remove(o);
 	}
 	
 	@Override
 	public boolean removeAll(Collection<?> c){
-		if(locked)return false;
+		lockList();
 		return super.removeAll(c);
 	}
 	
 	@Override
 	public boolean removeIf(java.util.function.Predicate<? super E> filter){
-		if(locked)return false;
+		lockList();
 		return super.removeIf(filter);
 	}
 	
 	@Override
 	public boolean add(E e){
-		if(locked)return false;
+		lockList();
 		return super.add(e);
 	}
 	
 	@Override
 	public void add(int index, E element){
-		if(locked)return;
+		lockList();
 		super.add(index, element);
 	}
 	
 	@Override
 	public boolean addAll(int index, Collection<? extends E> c){
-		if(locked)return false;
+		lockList();
 		return super.addAll(index, c);
 	}
 	
-	@Override
-	protected void removeRange(int fromIndex, int toIndex){
-		if(locked)return;
-		super.removeRange(fromIndex, toIndex);
+	protected void lockList(){
+		if(locked)throw new IllegalAccessError("This list is locked");
 	}
 }

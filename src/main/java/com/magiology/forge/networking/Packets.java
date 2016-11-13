@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.Side;
 public class Packets{
 	
 	public static void register(){
-		Magiology.NETWORK_CHANNEL.registerPacket(UpdateMultiblocksPacket.class,Side.CLIENT);
+		Magiology.NETWORK_CHANNEL.registerPacket(UpdateTileNBTPacket.class,Side.CLIENT);
 	}
 	
 	public static void sendTo(IMessage packet, EntityPlayerMP player){

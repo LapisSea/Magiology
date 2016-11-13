@@ -18,7 +18,7 @@ public abstract class BlockContainerM<T extends TileEntity> extends BlockM imple
 	
 	protected BlockContainerM(Material material, ObjectReturn<T> tileFactory,IPropertyM...properties){
 		super(material,properties);
-		this.isBlockContainer=true;
+		isBlockContainer=true;
 		
 		if(tileFactory==null)tileFactory=()->null;
 		this.tileFactory=tileFactory;
@@ -45,6 +45,14 @@ public abstract class BlockContainerM<T extends TileEntity> extends BlockM imple
 	}
 	public void removeTile(World world,BlockPos pos){
 		world.removeTileEntity(pos);
+	}
+	public T getTile(World world,BlockPos pos){
+		TileEntity tile=world.getTileEntity(pos);
+		try{
+			return (T)tile;
+		}catch(Exception e){
+			return null;
+		}
 	}
 	
 	@Override

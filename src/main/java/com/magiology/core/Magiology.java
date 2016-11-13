@@ -14,12 +14,8 @@ import com.magiology.DevOnly.DevOnlyBlockCutter;
 import com.magiology.core.class_manager.ClassList;
 import com.magiology.forge.networking.SimpleNetworkWrapperM;
 import com.magiology.forge.proxy.CommonProxy;
-import com.magiology.handlers.scripting.ScriptLog.ScriptLogLine;
-import com.magiology.handlers.scripting.ScriptWrapper;
-import com.magiology.handlers.scripting.script_types.JsScript;
 import com.magiology.io.IOManager;
 import com.magiology.util.statics.LogUtil;
-import com.magiology.util.statics.UtilM;
 
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import net.minecraftforge.fml.common.LoadController;
@@ -65,25 +61,32 @@ public class Magiology implements ModContainer{
 		instance=this;
 		
 		
-		final String script ="\n"
-				+  "function main(){\n"
-				+  "	var JavaHomeGetter = Java.type(\"com.magiology.handlers.scripting.bridge.JavaHomeGetter\");\n"
-				+  "	print([JavaHomeGetter.get(),2+1.2]);\n"
-				+  "}\n";
-		LogUtil.println("\n\n-----------------------------------------------------------------");
-		try{
-			JsScript sc=new JsScript(script);
-			sc.run();
-			for(ScriptWrapper j:sc.getLogs()){
-				for(ScriptLogLine i:j.getLog().getAllLog())
-					LogUtil.println(i.type,i.isError,i.msg);
-				LogUtil.println("-----------------");
-			}
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		LogUtil.println("-----------------------------------------------------------------\n \n ");
-		UtilM.exit(404);
+//		final String script ="\n"
+//				+  "function main(){\n"
+//				+  "	var JavaHomeGetter = Java.type(\"com.magiology.handlers.scripting.bridge.JavaHomeGetter\");\n"
+//				+  "	print([JavaHomeGetter.get(),2+1.2]);\n"
+//				+  "}\n"
+//				+  "function render(){\n"
+//				+  "	print(\"rendered\");\n"
+//				+  "}\n"
+//				+  "function update(){\n"
+//				+  "	print(\"updated\");\n"
+//				+  "}\n";
+//		LogUtil.println("\n \n \n-----------------------------------------------------------------");
+//		try{
+//			RenderNUpdateScript sc=new RenderNUpdateScript(script);
+//			sc.callMain();
+//			sc.update();
+//			sc.render();
+//			for(ScriptWrapper j:sc.getLogs()){
+//				for(ScriptLogLine i:j.getLog().getAllLog())LogUtil.println(i.type,i.isError,i.msg);
+//				LogUtil.println("-----------------");
+//			}
+//		}catch(Exception e){
+//			e.printStackTrace();
+//		}
+//		LogUtil.println("-----------------------------------------------------------------\n \n \n");
+//		UtilM.exit(404);
 		
 		ClassList.getImplementations();
 	}

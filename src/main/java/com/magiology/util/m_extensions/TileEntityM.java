@@ -1,6 +1,5 @@
 package com.magiology.util.m_extensions;
 
-import com.magiology.util.statics.LogUtil;
 import com.magiology.util.statics.UtilM;
 
 import net.minecraft.block.state.IBlockState;
@@ -16,7 +15,8 @@ public abstract class TileEntityM extends TileEntity{
 	
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket(){
-		return new SPacketUpdateTileEntity(pos, 100, getUpdateTag());
+		NBTTagCompound nbt=getUpdateTag();
+		return nbt.getSize()<=4?null:new SPacketUpdateTileEntity(pos, 100, nbt);
 	}
 
 	@Override

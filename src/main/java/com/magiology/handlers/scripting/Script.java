@@ -12,8 +12,6 @@ public abstract class Script{
 	protected final IODirectory		dir			=Magiology.extraFiles.getDirectoryManager("scripts");
 	protected static final String	NULL_PATH	="no_path_script";
 	protected List<ScriptWrapper>	logs		=new ArrayList<>();
-	protected ScriptWrapper			activeWrap;
-	private boolean					running;
 	protected boolean				compiled;
 	private String					sourcePath, source;
 	
@@ -36,9 +34,9 @@ public abstract class Script{
 		source=dir.readOr(getBasePath()+"."+getScriptExtension(), "");
 	}
 	
-	protected abstract ScriptResult compile();
+	protected abstract ScriptResult compile(ScriptWrapper activeWrap);
 	
-	protected abstract ScriptResult runScript();
+	protected abstract ScriptResult runMain(ScriptWrapper activeWrap);
 	
 	protected abstract String getScriptExtension();
 	
@@ -46,35 +44,33 @@ public abstract class Script{
 		return new ScriptWrapper();
 	}
 	
-	public ScriptResult run(){
-		if(running) throw new IllegalStateException("This script is already running");
-		running=true;
+	public ScriptResult callMain(){
+		ScriptResult compile=preRun();
+		if(compile!=null)return compile;
 		
-		while(logs.size()>20)
-			logs.remove(20);
+		ScriptWrapper activeWrap=newScriptWrapper();
+		logs.add(activeWrap);
+		ScriptResult result=runMain(activeWrap);
+		return result;
+	}
+	
+	protected ScriptResult preRun(){
+		
+		while(logs.size()>20)logs.remove(20);
 		
 		if(!compiled){
 			compiled=true;
-			activeWrap=newScriptWrapper();
+			ScriptWrapper activeWrap=newScriptWrapper();
 			logs.add(activeWrap);
-			ScriptResult result=compile();
-			activeWrap.finish();
-			if(result.isError) return result;
+			ScriptResult result=compile(activeWrap);
+			activeWrap.getLog().log(result.isError, result.toString());
+			if(result.isError)return result;
 		}
-		activeWrap=newScriptWrapper();
-		logs.add(activeWrap);
-		ScriptResult result=runScript();
-		activeWrap.finish();
-		running=false;
-		return result;
+		return null;
 	}
 	
 	public List<ScriptWrapper> getLogs(){
 		return Collections.unmodifiableList(logs);
-	}
-
-	public boolean isRunning(){
-		return running;
 	}
 	
 	public String getSource(){

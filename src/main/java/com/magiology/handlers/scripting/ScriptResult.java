@@ -47,8 +47,19 @@ public class ScriptResult{
 	
 	@Override
 	public String toString(){
-		if(isError)return "ScriptResult done in "+execTime+" as "+type+" with result of "+returnCode+": "+errorMsg;
-		return "ScriptResult successfully done in "+execTime+" as "+type+" with result of "+returnCode;
+		StringBuilder s=new StringBuilder("ScriptResult ");
+		if(!isError)s.append("successfully ");
+		s.append("done in ");
+		s.append(execTime);
+		s.append("ms as ");
+		s.append(type);
+		s.append(" with result of ");
+		s.append(returnCode);
+		if(isError){
+			s.append(": ");
+			s.append(errorMsg);
+		}
+		return s.toString();
 	}
 	
 }

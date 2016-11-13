@@ -3,7 +3,7 @@ package com.magiology.handlers;
 import java.util.*;
 
 import com.magiology.forge.events.TickEvents;
-import com.magiology.forge.networking.UpdateMultiblocksPacket;
+import com.magiology.forge.networking.UpdateTileNBTPacket;
 import com.magiology.util.interf.IBlockBreakListener;
 import com.magiology.util.m_extensions.*;
 import com.magiology.util.objs.MultiTypeContainers.MultiTypeContainerX;
@@ -206,7 +206,7 @@ public abstract class TileEntityOneBlockStructure<T extends TileEntityOneBlockSt
 		isBrain=isNowBrain;
 		hasBrain=brain!=null;
 		setMultiblock(multiblock);
-		if(worldObj!=null&&!isRemote())UpdateMultiblocksPacket.markForSync(this);
+		if(worldObj!=null&&!isRemote())UpdateTileNBTPacket.markForSync(this);
 	}
 	public MultiTypeContainerX getBrainObjects(){
 		if(isBrain())return brainObjects;
