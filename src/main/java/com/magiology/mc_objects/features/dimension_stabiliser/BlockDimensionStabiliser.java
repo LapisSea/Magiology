@@ -1,10 +1,13 @@
 package com.magiology.mc_objects.features.dimension_stabiliser;
 
 import com.magiology.util.m_extensions.BlockContainerM;
+import com.magiology.util.objs.block_bounds.BasicBlockBounds;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.*;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
@@ -16,7 +19,8 @@ public class BlockDimensionStabiliser extends BlockContainerM{
 	}
 	public BlockDimensionStabiliser(){
 		super(Material.IRON,()->new TileEntityDimensionStabiliser());
-		setBlockBounds(0,0,0,1,8/16F,1);
+		
+		setBlockBounds(new BasicBlockBounds(0,0,0,1,8/16F,1));
 		instance=this;
 	}
 	

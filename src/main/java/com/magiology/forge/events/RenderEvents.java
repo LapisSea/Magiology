@@ -13,11 +13,9 @@ import com.magiology.client.rendering.ShaderMultiTransformModel;
 import com.magiology.client.shaders.ShaderHandler;
 import com.magiology.client.shaders.effects.PositionAwareEffect;
 import com.magiology.client.shaders.programs.InvisibleEffect;
-import com.magiology.client.shaders.programs.MultiTransformShader;
 import com.magiology.handlers.frame_buff.TemporaryFrame;
 import com.magiology.handlers.particle.ParticleHandler;
 import com.magiology.mc_objects.features.screen.TileEntityScreen;
-import com.magiology.util.m_extensions.ResourceLocationM;
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.UtilC;
@@ -28,6 +26,7 @@ import com.magiology.util.statics.math.PartialTicksUtil;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.vertex.VertexBuffer;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -272,7 +271,10 @@ public class RenderEvents{
 	@SubscribeEvent(priority=EventPriority.LOWEST)
 	public void renderWorldLast(RenderWorldLastEvent e){
 		PostProcessFX.processAll();
+		Vec3M pos=new Vec3M(UtilC.getThePlayer().getPositionEyes(0));
 	}
+	
+	VertexBuffer vbo;
 	
 	private boolean flag;
 	@SubscribeEvent(priority=EventPriority.HIGHEST)
@@ -281,21 +283,10 @@ public class RenderEvents{
 		if(en.isInvisibleToPlayer(UtilC.getThePlayer()))invisibleEntitys.add(en);
 		Entity en1=e.getEntity();
 		
+		
 		if(en1 instanceof EntityPlayer){
-			EntityPlayer player=(EntityPlayer)en1;
-			if(UtilC.getThePlayer().isSneaking())ShaderHandler.get().load();
 			
-			en1=player.getRidingEntity();
-			
-			OpenGLM.pushMatrix();
-			
-			OpenGLM.translate(0.5, 2, 0);
-			OpenGLM.bindTexture(new ResourceLocationM("textures/blocks/CoalLevel2.png"));
-			
-			MultiTransformShader shader=ShaderHandler.get().getShader(MultiTransformShader.class);
-			shader.drawModel(model);
-			
-			OpenGLM.popMatrix();
+			OpenGLM.enableTexture2D();
 			
 			if(en1 instanceof EntitySquid){
 				EntitySquid squid=(EntitySquid)en1;

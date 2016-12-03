@@ -2,20 +2,28 @@ package com.magiology.util.statics;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import com.magiology.util.objs.ColorF;
-import com.magiology.util.objs.vec.*;
-
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.renderer.*;
+import com.magiology.util.objs.ColorF;
+import com.magiology.util.objs.vec.IVec3M;
+import com.magiology.util.objs.vec.Vec3M;
+
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Short for OpenGL Magiology
  */
 @SideOnly(Side.CLIENT)
 public class OpenGLM extends GlStateManager{
+	
+	public static final String GL_VERSION=GL11.glGetString(GL11.GL_VERSION);
+	public static final boolean GL_IS_30=Character.getNumericValue(GL_VERSION.charAt(0))>=3;
 	
 	public static enum BlendFunc{
 		

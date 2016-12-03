@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-import com.magiology.forge.events.RenderEvents;
 import com.magiology.util.statics.LogUtil;
 import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.UtilC;
@@ -34,7 +33,7 @@ public class TemporaryFrameBufferHandler{
 		long time=System.currentTimeMillis();
 		Queue<TemporaryFrame> unused=new ArrayDeque<>();
 		allBuffers.forEach(f->{
-			if(f.lastTimeUsed+4000<time){
+			if(f.lastTimeUsed+14000<time){
 				unused.add(f);
 				f.dirty=true;
 				LogUtil.println("Deleted InWorldFrame id=",f.frameBuffer.framebufferObject,f);

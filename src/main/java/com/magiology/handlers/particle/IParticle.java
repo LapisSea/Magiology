@@ -2,6 +2,7 @@ package com.magiology.handlers.particle;
 
 import java.util.List;
 
+import com.magiology.util.interf.Worldabale;
 import com.magiology.util.objs.ColorF;
 import com.magiology.util.objs.vec.Vec2i;
 import com.magiology.util.objs.vec.Vec3M;
@@ -19,7 +20,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public abstract class IParticle{
+public abstract class IParticle implements Worldabale{
 	
 	public IParticle(Vec3M pos){
 		this(pos, new Vec3M());
@@ -91,8 +92,24 @@ public abstract class IParticle{
 	
 	public abstract ParticleFactory getFactorfy();
 	
-	protected World getWorld(){
+	@Override
+	public World getWorld(){
 		return UtilC.getTheWorld();
+	}
+	
+	@Override
+	public boolean isRemote(){
+		return true;
+	}
+	
+	@Override
+	public boolean client(){
+		return true;
+	}
+	
+	@Override
+	public boolean server(){
+		return false;
 	}
 	
 	public abstract void update();
@@ -181,7 +198,7 @@ public abstract class IParticle{
 		
 		Vec3M pos=getPos();
 		
-		//pos = position of the entity and center position of bounding box 
+		//pos = position of the entity and center position of bounding box
 		
 		AxisAlignedBB bb=getBoundingBox();
 		

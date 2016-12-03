@@ -12,6 +12,7 @@ import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.IBlockAccess;
@@ -20,6 +21,15 @@ import net.minecraft.world.World;
 public class BlockPosM extends BlockPos{
 	
 	public static final BlockPosM ORIGIN=new BlockPosM();
+	
+	private static final int	NUM_X_BITS	=1+MathHelper.calculateLogBaseTwo(MathHelper.roundUpToPowerOfTwo(30000000));
+	private static final int	NUM_Z_BITS	=NUM_X_BITS;
+	private static final int	NUM_Y_BITS	=64-NUM_X_BITS-NUM_Z_BITS;
+	private static final int	Y_SHIFT		=0+NUM_Z_BITS;
+	private static final int	X_SHIFT		=Y_SHIFT+NUM_Y_BITS;
+	private static final long	X_MASK		=(1L<<NUM_X_BITS)-1L;
+	private static final long	Y_MASK		=(1L<<NUM_Y_BITS)-1L;
+	private static final long	Z_MASK		=(1L<<NUM_Z_BITS)-1L;
 	
 	public static BlockPosM get(Vec3i pos){
 		if(pos instanceof BlockPosM)
@@ -61,6 +71,10 @@ public class BlockPosM extends BlockPos{
 	
 	public BlockPosM(PathPoint point){
 		this(point.xCoord, point.yCoord, point.zCoord);
+	}
+	
+	public BlockPosM(long serialized){
+		this((int)(serialized<<64-X_SHIFT-NUM_X_BITS>>64-NUM_X_BITS), (int)(serialized<<64-Y_SHIFT-NUM_Y_BITS>>64-NUM_Y_BITS), (int)(serialized<<64-NUM_Z_BITS>>64-NUM_Z_BITS));
 	}
 	
 	public BlockPos conv(){
@@ -123,7 +137,7 @@ public class BlockPosM extends BlockPos{
 	
 	public <T> T getTile(IBlockAccess world, Class<T> type){
 		TileEntity tile=getTile(world);
-		if(UtilM.instanceOf(tile, type))return (T)tile;
+		if(UtilM.instanceOf(tile, type)) return (T)tile;
 		return null;
 	}
 	
@@ -229,11 +243,23 @@ public class BlockPosM extends BlockPos{
 		return vec.getX()==0&&vec.getY()==0&&vec.getZ()==0?this:new BlockPosM(this.getX()-vec.getX(), this.getY()-vec.getY(), this.getZ()-vec.getZ());
 	}
 	
-	public static void iterateBlocks(BlockPos start,BlockPos end, Consumer<BlockPos> callback){
-		MutableBlockPos.getAllInBox(start,end).forEach(callback::accept);
+	public static void iterateBlocks(BlockPos start, BlockPos end, Consumer<BlockPos> callback){
+		MutableBlockPos.getAllInBox(start, end).forEach(callback::accept);
 	}
 	
-    public static BlockPosM fromLong(long serialized){
-		return new BlockPosM(BlockPos.fromLong(serialized));
+	public static BlockPosM fromLong(long serialized){
+		return new BlockPosM(serialized);
+	}
+
+	public static boolean isPosNextTo(BlockPos p1, BlockPos p2){
+		int x=p1.getX()-p2.getX();
+		int y=p1.getY()-p2.getY();
+		int z=p1.getZ()-p2.getZ();
+
+		if(x*x==1)return y==0&&z==0;
+		if(y*y==1)return x==0&&z==0;
+		if(z*z==1)return x==0&&y==0;
+		
+		return false;
 	}
 }

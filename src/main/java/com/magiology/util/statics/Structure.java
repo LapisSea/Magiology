@@ -50,7 +50,7 @@ public class Structure{
 		
 	}
 	
-	public static <T extends TileEntityM> Plane<T> buildScreen(List<T> blocks,T clicked){
+	public static <T extends TileEntityM> Plane<T> buildPlane(List<T> blocks,T clicked){
 		
 		Map<Integer, List<PlanePart>> xBuildPlanes=new HashMap(), yBuildPlanes=new HashMap<>(), zBuildPlanes=new HashMap<>();
 		blocks.forEach(t->{

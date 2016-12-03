@@ -14,7 +14,6 @@ public class WorldEvents{
 	
 	@SubscribeEvent
 	public void blockBreakEvent(BreakEvent e){
-		
 		IBlockState state=e.getState();
 		Block block=state.getBlock();
 		if(block instanceof IBlockBreakListener)((IBlockBreakListener)block).onBroken(e.getWorld(), e.getPos(), state);

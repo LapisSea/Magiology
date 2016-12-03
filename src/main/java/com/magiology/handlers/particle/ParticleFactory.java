@@ -53,7 +53,7 @@ public abstract class ParticleFactory{
 	
 	@SideOnly(Side.CLIENT)
 	public abstract boolean hasDistanceLimit();
-	
+
 	@SideOnly(Side.CLIENT)
 	public abstract boolean hasStaticModel();
 	
@@ -63,7 +63,7 @@ public abstract class ParticleFactory{
 	@SideOnly(Side.CLIENT)
 	public abstract void resetOpenGl();
 	
-	//particle handling 
+	//particle handling
 	@SideOnly(Side.CLIENT)
 	protected void addParticle(IParticle particle){
 		particles.add(particles.size(), particle);
@@ -86,6 +86,7 @@ public abstract class ParticleFactory{
 	
 	@SideOnly(Side.CLIENT)
 	public void update(){
+		if(particles.isEmpty())return;
 		particles.stream().forEach(IParticle::update);
 		if(deadDirty){
 			particles.removeIf(IParticle::isDead);

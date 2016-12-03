@@ -4,7 +4,8 @@ import com.magiology.core.MReference;
 import com.magiology.core.class_manager.ClassList;
 import com.magiology.util.m_extensions.BlockM;
 import com.magiology.util.objs.data.RegistrableDatabaseStorageArray;
-import com.magiology.util.statics.*;
+import com.magiology.util.statics.CollectionConverter;
+import com.magiology.util.statics.UtilM;
 
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.fml.common.registry.GameRegistry;

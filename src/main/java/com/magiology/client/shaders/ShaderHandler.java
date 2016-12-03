@@ -4,18 +4,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.magiology.core.class_manager.ClassList;
-import com.magiology.util.statics.LogUtil;
 
 public class ShaderHandler{
 	
-	private static final ShaderHandler instance=new ShaderHandler(); 
+	private static final ShaderHandler instance=new ShaderHandler();
 	public static ShaderHandler get(){return instance;}
 	private ShaderHandler(){}
 	
 	private Map<Class<ShaderProgram>, ShaderProgram> shaders=new HashMap<>();
 	
 	public static <T extends ShaderProgram>T getShader(Class<T> clazz){
-//		PrintUtil.println(ClassList.getImplementations(ShaderProgram.class));
+//		LogUtil.println(ClassList.getImplementations(ShaderProgram.class));
 		return (T)get().shaders.get(clazz);
 	}
 	

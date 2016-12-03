@@ -17,21 +17,21 @@ import net.minecraftforge.fml.common.FMLLog;
 
 public class LogUtil{
 	
-	
 	public static void printFunctionTrace(int count, CharSequence splitter){
 		println(getFunctionTrace(count, splitter));
 	}
+	
 	public static String getFunctionTrace(int count, CharSequence splitter){
 		StringBuilder line=new StringBuilder();
-
+		
 		StackTraceElement[] trace=Thread.currentThread().getStackTrace();
-		if(count>=trace.length)count=trace.length-1;
-//		for(StackTraceElement stack:trace){
-//			stack.getMethodName()
-//		}
+		if(count>=trace.length) count=trace.length-1;
+		//		for(StackTraceElement stack:trace){
+		//			stack.getMethodName()
+		//		}
 		for(int i=count+1;i>=2;i--){
 			line.append(trace[i].getMethodName()).append('(').append(trace[i].getLineNumber()).append(')');
-			if(i!=2)line.append(splitter);
+			if(i!=2) line.append(splitter);
 		}
 		return line.toString();
 	}
@@ -154,8 +154,9 @@ public class LogUtil{
 	
 	private static void log(Level logLevel, String object){
 		String[] lines=object.split(UtilM.LINE_REG);
-		for(String line:lines)
+		for(String line:lines){
 			FMLLog.log(MReference.NAME, logLevel, line);
+		}
 	}
 	
 	private static void off(String object){

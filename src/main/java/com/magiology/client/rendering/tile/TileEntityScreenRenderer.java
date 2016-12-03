@@ -1,11 +1,7 @@
 package com.magiology.client.rendering.tile;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Matrix4f;
-
 import com.magiology.client.renderers.FastNormalRenderer;
 import com.magiology.client.renderers.Renderer;
-import com.magiology.forge.events.RenderEvents;
 import com.magiology.handlers.frame_buff.TemporaryFrame;
 import com.magiology.mc_objects.features.screen.TileEntityScreen;
 import com.magiology.util.m_extensions.TileEntitySpecialRendererM;
@@ -15,24 +11,13 @@ import com.magiology.util.objs.vec.Vec2FM;
 import com.magiology.util.objs.vec.Vec2i;
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.GeometryUtil;
-import com.magiology.util.statics.LogUtil;
 import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.UtilC;
-import com.magiology.util.statics.UtilM;
 import com.magiology.util.statics.math.MathUtil;
-import com.magiology.util.statics.math.MatrixUtil;
-import com.magiology.util.statics.math.PartialTicksUtil;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
 public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEntityScreen>{
@@ -54,14 +39,14 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 					TileEntityScreen brain=tile.getBrain();
 					TemporaryFrame screen=brain.screenTexture;
 					
-					Vec2i size=tile.getBrainObjects().get2();
+					Vec2i size=tile.getSize2d();
 					if(screen==null){
 						screen=brain.screenTexture=new TemporaryFrame(size.x*64,size.y*64,false);
 						screen.setRednerHook(f->renderScreen(brain,f.getWidth(),f.getHeight()));
 					}else{
 						screen.setSize(Math.max(size.x, 1)*64,Math.max(size.y, 1)*64);
 					}
-					Vec2i offset=brain.getBrainObjects().get1().get(tile.getMbId());
+					Vec2i offset=brain.getPositions().get(tile.getMbId());
 					if(tile.screenDirty)screen.requestRender();
 					screen.bindTexture();
 					
@@ -80,12 +65,11 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 					ColorF.BLUE.bind();
 					OpenGLM.disableTexture2D();
 				}
-			}else{
-				OpenGLM.disableTexture2D();
-			}
+			}else OpenGLM.disableTexture2D();
 			
 			OpenGLM.pushMatrix();
 			OpenGLM.translate(renderPos.addSelf(0.5F));
+			
 			OpenGLM.rotate(GeometryUtil.rotFromFacing(tile.getRotation()));
 			OpenGLM.translate(-0.5F,-0.5F,-0.5F);
 //			OpenGLM.translate(renderPos.addSelf(0.5F));
@@ -94,12 +78,12 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 			
 //			FastNormalRenderer renderer=new FastNormalRenderer();
 //			renderer.begin(true,FastNormalRenderer.POS_UV);
-//			
+//
 //			renderer.add(0, 1, 0.5,  minX-1,maxY+1);
 //			renderer.add(0, 0, 0.5,  minX-1,minY-1);
 //			renderer.add(1, 0, 0.5,  maxX+1,minY-1);
 //			renderer.add(1, 1, 0.5,  maxX+1,maxY+1);
-//			
+//
 //			renderer.draw();
             
             if(Minecraft.isAmbientOcclusionEnabled())GlStateManager.shadeModel(7425);
@@ -125,12 +109,12 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 //		        int j = i >> 16 & 65535;
 //		        int k = i & 65535;
 //				int l=getWorld().getLight(tile.getPos(), true);
-//		        
+//
 //				buf.pos(0D, 1D, 11/16D).color(255, 255, 255, 255).tex(minX,maxY).lightmap(j,k).endVertex();
 //				buf.pos(0D, 0D, 11/16D).color(255, 255, 255, 255).tex(minX,minY).lightmap(j,k).endVertex();
 //				buf.pos(1D, 0D, 11/16D).color(255, 255, 255, 255).tex(maxX,minY).lightmap(j,k).endVertex();
 //				buf.pos(1D, 1D, 11/16D).color(255, 255, 255, 255).tex(maxX,maxY).lightmap(j,k).endVertex();
-//				
+//
 //				Tessellator.getInstance().draw();
 			}catch(Exception e){
 				if(UtilC.getThePlayer().isSneaking())e.printStackTrace();
@@ -242,7 +226,7 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 	private void renderScreen(TileEntityScreen tile, int width, int height){
 		
 		TileEntityScreen brain=tile.getBrain();
-		
+
 		OpenGLM.disableTexture2D();
 		ColorF.WHITE.bind();
 		Renderer.POS.beginQuads();
@@ -259,13 +243,13 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 		Renderer.LINES.addVertex(1,height-1,0);
 		Renderer.LINES.addVertex(width-1,1,0);
 		Renderer.LINES.draw();
-		
-		
+
+
 		OpenGLM.pushMatrix();
 		Vec2FM pos=brain.click;
 		OpenGLM.translate(pos.x,pos.y,0);
-		
-		
+
+
 		ColorF.RED.bind();
 		Renderer.POS.beginQuads();
 		Renderer.POS.addVertex( 1,  1, 0);
@@ -273,14 +257,15 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 		Renderer.POS.addVertex(-1, -1, 0);
 		Renderer.POS.addVertex(-1,  1, 0);
 		Renderer.POS.draw();
-		
+
 		OpenGLM.popMatrix();
-		
+
 		if(brain.highlighted){
 			OpenGLM.pushMatrix();
+			
 			Vec2FM pos1=brain.highlight;
 			OpenGLM.translate(pos1.x,pos1.y,0);
-			
+
 			ColorF.BLUE.bind();
 			Renderer.POS.beginQuads();
 			Renderer.POS.addVertex( 1,  1, 0);
@@ -288,20 +273,20 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 			Renderer.POS.addVertex(-1, -1, 0);
 			Renderer.POS.addVertex(-1,  1, 0);
 			Renderer.POS.draw();
-			
+
 			OpenGLM.popMatrix();
 		}
-		
-		
-		
+
+
+
 		ColorF.BLACK.bind();
 		Renderer.POS.beginQuads();
-		
+
 		Renderer.POS.addVertex(0,     0, 0);
 		Renderer.POS.addVertex(0,     1, 0);
 		Renderer.POS.addVertex(width, 1, 0);
 		Renderer.POS.addVertex(width, 0, 0);
-		
+
 		Renderer.POS.addVertex(0,     height-1, 0);
 		Renderer.POS.addVertex(0,     height,   0);
 		Renderer.POS.addVertex(width, height,   0);
@@ -316,7 +301,7 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 		Renderer.POS.addVertex(width-1, height, 0);
 		Renderer.POS.addVertex(width,   height, 0);
 		Renderer.POS.addVertex(width,   0,      0);
-		
+
 		Renderer.POS.draw();
 		ColorF.WHITE.bind();
 		OpenGLM.enableTexture2D();

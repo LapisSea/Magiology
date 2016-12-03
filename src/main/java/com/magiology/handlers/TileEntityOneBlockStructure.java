@@ -1,20 +1,23 @@
 package com.magiology.handlers;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.magiology.forge.events.TickEvents;
 import com.magiology.forge.networking.UpdateTileNBTPacket;
 import com.magiology.util.interf.IBlockBreakListener;
-import com.magiology.util.m_extensions.*;
-import com.magiology.util.objs.MultiTypeContainers.MultiTypeContainerX;
+import com.magiology.util.m_extensions.BlockPosM;
+import com.magiology.util.m_extensions.TileEntityM;
 import com.magiology.util.objs.vec.Vec3MRead;
-import com.magiology.util.statics.*;
+import com.magiology.util.statics.CollectionConverter;
+import com.magiology.util.statics.UtilM;
 
-import jline.internal.Log;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
 public abstract class TileEntityOneBlockStructure<T extends TileEntityOneBlockStructure<T>> extends TileEntityM implements IBlockBreakListener{
@@ -23,7 +26,6 @@ public abstract class TileEntityOneBlockStructure<T extends TileEntityOneBlockSt
 	private Vec3MRead			size,brainOffset;
 	private BlockPosM			start,end;
 	private AxisAlignedBB		boundingBox;
-	private MultiTypeContainerX	brainObjects;
 	private boolean				isBrain,hasBrain,breakingMb;
 	private List<T>				multiblock;
 	private BlockPosM			loadPositions[],brainPos;
@@ -36,7 +38,8 @@ public abstract class TileEntityOneBlockStructure<T extends TileEntityOneBlockSt
 	}
 	protected void setMultiblock(List<T> multiblock){
 		this.multiblock=multiblock;
-		brainObjects=multiblock==null?null:createBrainObject(multiblock);
+		if(multiblock==null)clearBrain();
+		else initBrainObjects(multiblock);
 	}
 	
 	@Override
@@ -82,11 +85,10 @@ public abstract class TileEntityOneBlockStructure<T extends TileEntityOneBlockSt
 	}
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound){
-		super.writeToNBT(compound);
+		
 		NBTTagCompound multiblockNbt=new NBTTagCompound();
 		BlockPos[] blockPositions;
 		if(isBrain()&&(blockPositions=getMultiblock()!=null?CollectionConverter.convAr(getMultiblock(),BlockPos.class,t->t.getPos()):loadPositions)!=null){
-//			LogUtil.println(obj);
 			if(blockPositions!=null){
 				NBTTagCompound blocks=new NBTTagCompound();
 				
@@ -104,7 +106,7 @@ public abstract class TileEntityOneBlockStructure<T extends TileEntityOneBlockSt
 		}
 		
 		compound.setTag(BASE_NBT_NAME,multiblockNbt);
-		return compound;
+		return super.writeToNBT(compound);
 	}
 	@Override
 	public void onBroken(World world,BlockPos pos,IBlockState state){
@@ -180,7 +182,6 @@ public abstract class TileEntityOneBlockStructure<T extends TileEntityOneBlockSt
 	
 	protected void onMultiblockJoin(List<T> multiblock,T brain){}
 	protected void onMultiblockLeave(List<T> multiblock){}
-	protected MultiTypeContainerX createBrainObject(List<T> multiblock){return null;}
 	
 	public boolean isBrain(){
 		return isBrain;
@@ -201,17 +202,17 @@ public abstract class TileEntityOneBlockStructure<T extends TileEntityOneBlockSt
 		this.brain=brain;
 		boolean isNowBrain=this==brain;
 		
-		if(!isNowBrain)brainObjects=null;
+		if(!isNowBrain)clearBrain();
 		
 		isBrain=isNowBrain;
 		hasBrain=brain!=null;
 		setMultiblock(multiblock);
 		if(worldObj!=null&&!isRemote())UpdateTileNBTPacket.markForSync(this);
 	}
-	public MultiTypeContainerX getBrainObjects(){
-		if(isBrain())return brainObjects;
-		return hasBrain()?getBrain().getBrainObjects():null;
-	}
+	
+	protected abstract void clearBrain();
+	protected abstract void initBrainObjects(List<T> multiblock);
+	
 	public Vec3MRead getBrainOffset(){
 		return brainOffset;
 	}

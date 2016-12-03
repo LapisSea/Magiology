@@ -1,8 +1,7 @@
 package com.magiology.forge.events;
 
-import java.util.*;
-
-import org.lwjgl.opengl.Display;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.magiology.forge.networking.UpdateTileNBTPacket;
 import com.magiology.handlers.frame_buff.TemporaryFrameBufferHandler;
@@ -10,13 +9,16 @@ import com.magiology.handlers.particle.ParticleHandler;
 import com.magiology.mc_objects.particles.Particles;
 import com.magiology.util.objs.ColorF;
 import com.magiology.util.objs.vec.Vec3M;
-import com.magiology.util.statics.*;
+import com.magiology.util.statics.RandUtil;
+import com.magiology.util.statics.UtilC;
+import com.magiology.util.statics.UtilM;
 import com.magiology.util.statics.math.PartialTicksUtil;
 
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TickEvents{
 	
@@ -73,9 +75,9 @@ public class TickEvents{
 	}
 	private void tick(List<Runnable> queue){
 		if(queue.isEmpty())return;
-		
-		queue.forEach(Runnable::run);
+		List<Runnable> r=new ArrayList<>(queue);
 		queue.clear();
+		r.forEach(Runnable::run);
 	}
 	public static boolean isWorldRendering(){
 		return worldRendering;

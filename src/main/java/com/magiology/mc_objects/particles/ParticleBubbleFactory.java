@@ -1,18 +1,24 @@
 package com.magiology.mc_objects.particles;
 
-import com.magiology.client.renderers.FastNormalRenderer;
-import com.magiology.handlers.particle.*;
-import com.magiology.util.objs.ColorF;
-import com.magiology.util.objs.vec.Vec3M;
-import com.magiology.util.statics.*;
-import com.magiology.util.statics.OpenGLM.*;
-import com.magiology.util.statics.math.PartialTicksUtil;
-
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.renderer.*;
+import com.magiology.client.renderers.FastNormalRenderer;
+import com.magiology.handlers.particle.ParticleFactory;
+import com.magiology.handlers.particle.ParticleM;
+import com.magiology.util.objs.ColorF;
+import com.magiology.util.objs.vec.Vec3M;
+import com.magiology.util.statics.OpenGLM;
+import com.magiology.util.statics.OpenGLM.AlphaFunc;
+import com.magiology.util.statics.OpenGLM.BlendFunc;
+import com.magiology.util.statics.RandUtil;
+import com.magiology.util.statics.UtilC;
+import com.magiology.util.statics.math.PartialTicksUtil;
+
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.math.Vec3i;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ParticleBubbleFactory extends ParticleFactory{
 

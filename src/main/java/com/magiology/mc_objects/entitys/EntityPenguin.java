@@ -12,7 +12,8 @@ import com.magiology.util.objs.data_parameter_wappers.DataParamBlockPos;
 import com.magiology.util.objs.data_parameter_wappers.DataParamBoolean;
 import com.magiology.util.objs.data_parameter_wappers.DataParamEnum;
 import com.magiology.util.objs.data_parameter_wappers.DataParamFloat;
-import com.magiology.util.objs.vec.*;
+import com.magiology.util.objs.vec.Vec2FM;
+import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.UtilM;
 
 import net.minecraft.block.material.Material;
@@ -54,7 +55,7 @@ public class EntityPenguin extends EntityAgeableM{
 	public static enum Moods{
 		NEUTRAL(true, false, true, BehaviorPolicies.NOTHING), //when nothing special is happening
 		HAPPY(true, false, true, BehaviorPolicies.NOTHING), //when a player gives food or if job done
-		SAD(true, false, true, BehaviorPolicies.NOTHING), //if job failed to be executed or if an accident occurs 
+		SAD(true, false, true, BehaviorPolicies.NOTHING), //if job failed to be executed or if an accident occurs
 		SCARED(true, true, true, BehaviorPolicies.NOTHING), //when a penguin is hurt
 		SCARED2(false, true, true, BehaviorPolicies.ATTACK_ON_APPROACH), //when a mate is killed
 		IN_LOVE(false, false, true, BehaviorPolicies.NOTHING), //sexy time ;)
@@ -93,11 +94,11 @@ public class EntityPenguin extends EntityAgeableM{
 	@Override
 	protected void initEntityAI(){
 		
-		this.tasks.addTask(0, new EntityAISwimming(this));
-		this.tasks.addTask(1, new EntityAIPanic(this, 1.25D));
-		this.tasks.addTask(6, new EntityAIWander(this, 1.0D));
-		this.tasks.addTask(7, watcher=new EntityAIWatchClosestM(this, Entity.class, 6.0F));
-		this.tasks.addTask(8, new EntityAILookIdle(this));
+		tasks.addTask(0, new EntityAISwimming(this));
+		tasks.addTask(1, new EntityAIPanic(this, 1.25D));
+		tasks.addTask(6, new EntityAIWander(this, 1.0D));
+		tasks.addTask(7, watcher=new EntityAIWatchClosestM(this, Entity.class, 6.0F));
+		tasks.addTask(8, new EntityAILookIdle(this));
 	}
 	
 	public final Animator animator=isRemote()?new Animator():null;
@@ -201,7 +202,7 @@ public class EntityPenguin extends EntityAgeableM{
 	@Override
 	protected int decreaseAirSupply(int air){
 		int i=EnchantmentHelper.getRespirationModifier(this);
-		return i>0&&this.rand.nextInt((i+1)*4)>0?air:air-1;
+		return i>0&&rand.nextInt((i+1)*4)>0?air:air-1;
 	}
 	
 	@Override
@@ -222,21 +223,21 @@ public class EntityPenguin extends EntityAgeableM{
 	@Override
 	public boolean handleWaterMovement(){
 		if(this.getRidingEntity() instanceof EntityBoat){
-			this.inWater=false;
+			inWater=false;
 		}else{
-			if(this.worldObj.handleMaterialAcceleration(this.getEntityBoundingBox().expand(0.0D, -0.4000000059604645D, 0.0D).contract(0.001D), Material.WATER, this)){
+			if(worldObj.handleMaterialAcceleration(this.getEntityBoundingBox().expand(0.0D, -0.4000000059604645D, 0.0D).contract(0.001D), Material.WATER, this)){
 				
-				if(!this.inWater&&!this.firstUpdate){
+				if(!inWater&&!firstUpdate){
 					this.resetHeight();
 				}
-				this.fallDistance=0.0F;
-				this.inWater=true;
+				fallDistance=0.0F;
+				inWater=true;
 				setFire(0);
 			}else{
-				this.inWater=false;
+				inWater=false;
 			}
 		}
-		return this.inWater;
+		return inWater;
 	}
 	
 	@Override
@@ -294,19 +295,19 @@ public class EntityPenguin extends EntityAgeableM{
 	}
 	
 	public PathNavigate path(){
-		return this.navigator;
+		return navigator;
 	}
 	
 	public double getActualMotionX(){
-		return this.posX-this.prevPosX;
+		return posX-prevPosX;
 	}
 	
 	public double getActualMotionY(){
-		return this.posY-this.prevPosY;
+		return posY-prevPosY;
 	}
 	
 	public double getActualMotionZ(){
-		return this.posZ-this.prevPosZ;
+		return posZ-prevPosZ;
 	}
 	
 	public Vec3M getActualMotion(){

@@ -1,0 +1,59 @@
+{
+    "elements": [
+        {
+            "name": "Main",
+            "from": [ 7, 0.0, 7 ], 
+            "to": [ 9, 16.0, 9 ], 
+            "faces": {
+                "north": { "texture": "#pipe_con", "uv": [ 14.0, 0.0, 16.0, 16.0 ] },
+                "east": { "texture": "#pipe_con", "uv": [ 14.0, 0.0, 16.0, 16.0 ] },
+                "south": { "texture": "#pipe_con", "uv": [ 14.0, 0.0, 16.0, 16.0 ] },
+                "west": { "texture": "#pipe_con", "uv": [ 14.0, 0.0, 16.0, 16.0 ] }
+            }
+        },
+        {
+            "name": "1",
+            "from": [ 6, 0.0, 6 ], 
+            "to": [ 7, 16.0, 7 ], 
+            "faces": {
+                "north": { "texture": "#pipe_con", "uv": [ 13.0, 0.0, 14.0, 16.0 ] },
+                "east": { "texture": "#pipe_con", "uv": [ 12.0, 0.0, 13.0, 16.0 ] },
+                "south": { "texture": "#pipe_con", "uv": [ 11.0, 0.0, 12.0, 16.0 ] },
+                "west": { "texture": "#pipe_con", "uv": [ 10.0, 0.0, 11.0, 16.0 ] }
+            }
+        },
+        {
+            "name": "2",
+            "from": [ 6, 0.0, 9 ], 
+            "to": [ 7, 16.0, 10 ], 
+            "faces": {
+                "north": { "texture": "#pipe_con", "uv": [ 12.0, 0.0, 13.0, 16.0 ] },
+                "east": { "texture": "#pipe_con", "uv": [ 11.0, 0.0, 12.0, 16.0 ] },
+                "south": { "texture": "#pipe_con", "uv": [ 10.0, 0.0, 11.0, 16.0 ] },
+                "west": { "texture": "#pipe_con", "uv": [ 13.0, 0.0, 14.0, 16.0 ] }
+            }
+        },
+        {
+            "name": "3",
+            "from": [ 9, 0.0, 6 ], 
+            "to": [ 10, 16.0, 7 ], 
+            "faces": {
+                "north": { "texture": "#pipe_con", "uv": [ 10.0, 0.0, 11.0, 16.0 ] },
+                "east": { "texture": "#pipe_con", "uv": [ 13.0, 0.0, 14.0, 16.0 ] },
+                "south": { "texture": "#pipe_con", "uv": [ 12.0, 0.0, 13.0, 16.0 ] },
+                "west": { "texture": "#pipe_con", "uv": [ 11.0, 0.0, 12.0, 16.0 ] }
+            }
+        },
+        {
+            "name": "4",
+            "from": [ 9, 0.0, 9 ], 
+            "to": [ 10, 16.0, 10 ], 
+            "faces": {
+                "north": { "texture": "#pipe_con", "uv": [ 11.0, 0.0, 12.0, 16.0 ] },
+                "east": { "texture": "#pipe_con", "uv": [ 10.0, 0.0, 11.0, 16.0 ] },
+                "south": { "texture": "#pipe_con", "uv": [ 13.0, 0.0, 14.0, 16.0 ] },
+                "west": { "texture": "#pipe_con", "uv": [ 12.0, 0.0, 13.0, 16.0 ] }
+            }
+        }
+    ]
+}

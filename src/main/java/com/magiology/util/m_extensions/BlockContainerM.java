@@ -20,8 +20,8 @@ public abstract class BlockContainerM<T extends TileEntity> extends BlockM imple
 		super(material,properties);
 		isBlockContainer=true;
 		
-		if(tileFactory==null)tileFactory=()->null;
-		this.tileFactory=tileFactory;
+		if(tileFactory==null)this.tileFactory=()->null;
+		else this.tileFactory=tileFactory;
 	}
 	
 	@Override

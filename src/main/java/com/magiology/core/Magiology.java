@@ -60,7 +60,6 @@ public class Magiology implements ModContainer{
 	public Magiology(){
 		instance=this;
 		
-		
 //		final String script ="\n"
 //				+  "function main(){\n"
 //				+  "	var JavaHomeGetter = Java.type(\"com.magiology.handlers.scripting.bridge.JavaHomeGetter\");\n"

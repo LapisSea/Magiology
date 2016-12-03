@@ -17,7 +17,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -29,6 +31,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import com.magiology.SoundM;
 import com.magiology.core.MReference;
+import com.magiology.util.interf.Worldabale;
 import com.magiology.util.m_extensions.BlockPosM;
 import com.magiology.util.objs.ColorF;
 import com.magiology.util.objs.vec.Vec3M;
@@ -322,6 +325,10 @@ public class UtilM{
 		return object;
 	}
 	
+	public static World world(Worldabale object){
+		return object.getWorld();
+	}
+	
 	@Deprecated
 	public static World world(Object object){
 		if(object instanceof Entity) return ((Entity)object).worldObj;
@@ -353,6 +360,10 @@ public class UtilM{
 		return world(worldContainer).getTotalWorldTime();
 	}
 	
+	public static long worldTime(Worldabale worldContainer){
+		return world(worldContainer).getTotalWorldTime();
+	}
+	
 	@Deprecated
 	public static long worldTime(Object worldContainer){
 		return world(worldContainer).getTotalWorldTime();
@@ -375,6 +386,10 @@ public class UtilM{
 	}
 	
 	public static boolean isRemote(World object){
+		return world(object).isRemote;
+	}
+	
+	public static boolean isRemote(Worldabale object){
 		return world(object).isRemote;
 	}
 	
@@ -896,5 +911,14 @@ public class UtilM{
 			return;
 		}
 		list.add((T)o);
+	}
+
+	public static <E,T extends Collection<E>> T removeCollectionDuplicates(T collection){
+		Set<E> hs=new HashSet<>(collection);
+		
+		collection.clear();
+		collection.addAll(hs);
+		
+		return collection;
 	}
 }

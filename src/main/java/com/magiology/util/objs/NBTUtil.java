@@ -2,10 +2,13 @@ package com.magiology.util.objs;
 
 import java.util.UUID;
 
+import com.magiology.util.m_extensions.BlockPosM;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 
 public class NBTUtil{
 	public static NBTTagCompound createNBT(ItemStack a){
@@ -126,5 +129,21 @@ public class NBTUtil{
 			return true;
 		}
 		return false;
+	}
+	public static void setBPos(ItemStack stack, String key, BlockPos pos){
+		setBPos(createNBT(stack), key, pos);
+	}
+	public static BlockPosM getBPos(ItemStack stack, String key){
+		return getBPos(getNBT(stack), key);
+	}
+	
+	public static void setBPos(NBTTagCompound compound, String key, TileEntity tile){
+		setBPos(compound, key, tile.getPos());
+	}
+	public static void setBPos(NBTTagCompound compound, String key, BlockPos pos){
+		compound.setLong(key, pos.toLong());
+	}
+	public static BlockPosM getBPos(NBTTagCompound compound, String key){
+		return new BlockPosM(compound.getLong(key));
 	}
 }

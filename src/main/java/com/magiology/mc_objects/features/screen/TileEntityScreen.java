@@ -1,27 +1,40 @@
 package com.magiology.mc_objects.features.screen;
 
-import java.util.*;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.OptionalInt;
 import java.util.stream.IntStream;
 
 import com.magiology.handlers.TileEntityOneBlockStructure;
 import com.magiology.handlers.frame_buff.TemporaryFrame;
+import com.magiology.mc_objects.features.neuro.NeuroInterface;
+import com.magiology.mc_objects.features.neuro.NeuroPart;
+import com.magiology.mc_objects.features.neuro.TileEntityNeuroController;
+import com.magiology.util.interf.ISidedConnection;
 import com.magiology.util.m_extensions.BlockPosM;
-import com.magiology.util.objs.MultiTypeContainers.*;
-import com.magiology.util.objs.vec.*;
-import com.magiology.util.statics.*;
+import com.magiology.util.objs.vec.Vec2FM;
+import com.magiology.util.objs.vec.Vec2i;
+import com.magiology.util.objs.vec.Vec3M;
+import com.magiology.util.statics.CollectionConverter;
+import com.magiology.util.statics.Structure;
 import com.magiology.util.statics.Structure.Plane;
+import com.magiology.util.statics.UtilM;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.*;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3i;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileEntityScreen extends TileEntityOneBlockStructure<TileEntityScreen>{
+public class TileEntityScreen extends TileEntityOneBlockStructure<TileEntityScreen> implements NeuroInterface<TileEntityScreen>{
 	
 	private static TileEntityScreen highlightedTile;
+	private TileEntityNeuroController controller;
+	private List<Vec2i> positions;
+	private Vec2i size2d;
 	
 	public static void setHighlighted(TileEntityScreen tile, float hitX,float hitY,float hitZ){
 		TileEntityScreen brain=null;
@@ -51,7 +64,6 @@ public class TileEntityScreen extends TileEntityOneBlockStructure<TileEntityScre
 	public Vec2FM click=new Vec2FM(-1,-1),highlight=new Vec2FM(-1,-1);
 	public boolean highlighted;
 	
-	
 	public int getMbId(){
 		if(hasBrain()){
 			if(mbId==-1)mbId=getBrain().getMultiblock().indexOf(this);
@@ -60,13 +72,14 @@ public class TileEntityScreen extends TileEntityOneBlockStructure<TileEntityScre
 		
 		return mbId;
 	}
+	@Override
+	protected void readFromNbtWithWorld(NBTTagCompound compound){
+		readNeuroPartFromNbt(compound);
+	}
 	
 	@Override
-	public void readFromNBT(NBTTagCompound compound){
-		super.readFromNBT(compound);
-	}
-	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound){
+		writeNeuroPartToNbt(compound);
 		return super.writeToNBT(compound);
 	}
 	
@@ -78,7 +91,7 @@ public class TileEntityScreen extends TileEntityOneBlockStructure<TileEntityScre
 		parts.removeIf(t->t.hasBrain());
 		if(parts.isEmpty())return;
 		TileEntityScreen clicked=new BlockPosM(clickedPos).getTile(worldObj, TileEntityScreen.class);
-		Plane<TileEntityScreen> i=Structure.buildScreen(parts,clicked);
+		Plane<TileEntityScreen> i=Structure.buildPlane(parts,clicked);
 		
 		parts.removeIf(t->i.parts.stream().noneMatch(p->p.tile==t));
 	}
@@ -99,30 +112,21 @@ public class TileEntityScreen extends TileEntityOneBlockStructure<TileEntityScre
 	public boolean validateLoaded(TileEntity tile){
 		return true;
 	}
+	
 	@SuppressWarnings("incomplete-switch")
 	@Override
-	protected MultiTypeContainerX createBrainObject(List<TileEntityScreen> multiblock){
+	protected void initBrainObjects(List<TileEntityScreen> multiblock){
 		
-		MultiTypeContainer2<List<Vec2i>,Vec2i> data=new MultiTypeContainer2<List<Vec2i>,Vec2i>(){
-			
-			List<Vec2i> offsets;
-			@Override public List<Vec2i> get1(){return offsets;}
-			@Override public void set1(List<Vec2i> t1){offsets=t1;}
-			
-			Vec2i size;
-			@Override public Vec2i get2(){return size;}
-			@Override public void set2(Vec2i t2){size=t2;}
-		};
 		try{
 			Vec2i min=new Vec2i(Integer.MAX_VALUE,Integer.MAX_VALUE),max=new Vec2i(Integer.MIN_VALUE,Integer.MIN_VALUE);
 			
 			List<Vec3M> offsets=CollectionConverter.convLi(multiblock,Vec3M.class,t->new Vec3M(t.getPos().subtract(getPos())));
 			
-			boolean 
+			boolean
 				noneXOffset=offsets.stream().allMatch(b->b.getX()==0),
 				noneYOffset=offsets.stream().allMatch(b->b.getY()==0);/*,
 				noneZOffset=noneYOffset?offsets.stream().allMatch(b->b.getZ()==0):true;*/
-			data.set1(CollectionConverter.convLi(offsets,Vec2i.class,offset->{
+			positions=CollectionConverter.convLi(offsets,Vec2i.class,offset->{
 				
 				Vec2FM offset2D_float=new Vec2FM();
 				if(noneXOffset)offset.swizzleZY(offset2D_float);
@@ -141,9 +145,10 @@ public class TileEntityScreen extends TileEntityOneBlockStructure<TileEntityScre
 				}
 				
 				return offset2D;
-			}));
-			data.set2(max.sub(min).add(1));
-			IntStream minxs=data.get1().stream().mapToInt(off->off.x),minys=data.get1().stream().mapToInt(off->off.y);
+			});
+			size2d=max.sub(min).add(1);
+			
+			IntStream minxs=positions.stream().mapToInt(off->off.x),minys=positions.stream().mapToInt(off->off.y);
 			OptionalInt minxo=null,minyo=null;
 			switch(getRotation()){
 			case UP:{
@@ -173,20 +178,19 @@ public class TileEntityScreen extends TileEntityOneBlockStructure<TileEntityScre
 			}
 			
 			int minx=minxo.getAsInt(),miny=minyo.getAsInt();
-			for(Vec2i off:data.get1()){
+			for(Vec2i off:positions){
 				off.x-=minx;
 				off.y-=miny;
 			}
 			switch(getRotation()){
-			case EAST:for(Vec2i off:data.get1())off.x*=-1;break;
-			case NORTH:for(Vec2i off:data.get1())off.x*=-1;break;
-			case UP:for(Vec2i off:data.get1())off.y=1-data.get2().y-off.y;break;
+			case EAST:for(Vec2i off:positions)off.x*=-1;break;
+			case NORTH:for(Vec2i off:positions)off.x*=-1;break;
+			case UP:for(Vec2i off:positions)off.y=1-size2d.y-off.y;break;
 			}
 			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		return data;
 	}
 	@Override
 	protected void onMultiblockJoin(List<TileEntityScreen> multiblock,TileEntityScreen brain){
@@ -197,10 +201,6 @@ public class TileEntityScreen extends TileEntityOneBlockStructure<TileEntityScre
 		mbId=-1;
 	}
 	
-	@Override
-	public MultiTypeContainer2<List<Vec2i>,Vec2i> getBrainObjects(){
-		return (MultiTypeContainer2<List<Vec2i>,Vec2i>)super.getBrainObjects();
-	}
 
 	public void onClick(Vec2FM pos){
 		click=pos;
@@ -213,5 +213,76 @@ public class TileEntityScreen extends TileEntityOneBlockStructure<TileEntityScre
 	}
 	public void onExit(){
 		highlighted=false;
+	}
+	
+	@Override
+	public TileEntityNeuroController getController(){
+		return hasBrain()?isBrain()?controller:getBrain().getController():null;
+	}
+
+	@Override
+	public void setController(TileEntityNeuroController controller){
+		if(!hasBrain())return;
+		if(isBrain())this.controller=controller;
+		else getBrain().setController(controller);
+	}
+
+	@Override
+	public TileEntityScreen getInterfaceCore(){
+		return getBrain();
+	}
+	@Override
+	public List<NeuroPart> getConnected(){
+		if(!hasBrain())return new ArrayList<>();
+		if(!isBrain())return getBrain().getConnected();
+		
+		List<NeuroPart> list=new ArrayList<>();
+		getMultiblock().forEach(t->list.addAll(UtilM.getTileSides(t.getWorld(), new BlockPosM(t.getPos()), NeuroPart.class)));
+		
+		list.removeIf(p->{
+			BlockPos pos=((TileEntity)p).getPos();
+			EnumFacing face=getBrain().getRotation();
+			return getMultiblock().stream().anyMatch(m->
+				pos.equals(m.pos)||
+				pos.equals(m.pos.offset(face))
+			);
+		});
+//		for(NeuroPart p:list){
+//			worldObj.setBlockState(((TileEntity)p).getPos().up(), Blocks.STONE.getDefaultState());
+//		}
+		
+		return list;
+	}
+	@Override
+	public boolean canConnect(ISidedConnection o){
+		if(!(o instanceof TileEntity))return false;
+		List<NeuroPart> conected=getConnected();
+		
+		if(o instanceof NeuroInterface){
+			return ((NeuroInterface<NeuroInterface>)o).getWholeInterface().stream().anyMatch(i->conected.contains(i));
+		}
+		
+		return getConnected().contains(o);
+	}
+	@Override
+	protected void clearBrain(){
+		positions=null;
+		size2d=null;
+	}
+	public List<Vec2i> getPositions(){
+		if(!hasBrain())return null;
+		if(!isBrain())return getBrain().getPositions();
+		return positions;
+	}
+	public Vec2i getSize2d(){
+		if(!hasBrain())return null;
+		if(!isBrain())return getBrain().getSize2d();
+		return size2d;
+	}
+	@Override
+	public Collection<TileEntityScreen> getWholeInterface(){
+		if(!hasBrain())return new ArrayList<>();
+		if(!isBrain())return getBrain().getWholeInterface();
+		return getMultiblock();
 	}
 }

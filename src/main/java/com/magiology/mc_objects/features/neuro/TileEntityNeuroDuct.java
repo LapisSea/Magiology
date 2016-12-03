@@ -1,36 +1,30 @@
 package com.magiology.mc_objects.features.neuro;
 
-import com.magiology.forge.events.TickEvents;
 import com.magiology.forge.networking.UpdateTileNBTPacket;
-import com.magiology.util.m_extensions.BlockPosM;
+import com.magiology.util.m_extensions.TileEntityM;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
-public class TileEntityNeuroDuct extends TileEntityNeuroBase{
+public class TileEntityNeuroDuct extends TileEntityM implements NeuroPart{
 	
 	private TileEntityNeuroController controller;
-	protected static final String NBT_CONTROLLER_TAG="brain";
-	
 	
 	public TileEntityNeuroDuct(){
 		
 	}
 	
 	@Override
-	public void readFromNBT(NBTTagCompound compound){
-		super.readFromNBT(compound);
-		Runnable r=()->{
-			if(compound.hasKey(NBT_CONTROLLER_TAG)){
-				setController(BlockPosM.fromLong(compound.getLong(NBT_CONTROLLER_TAG)).getTile(worldObj, TileEntityNeuroController.class));
-			}
-		};
-		if(worldObj!=null)r.run();
-		else TickEvents.nextTick(r);
+	protected void readFromNbtWithWorld(NBTTagCompound compound){
+		readNeuroPartFromNbt(compound);
+		BlockNeuroDuct.get().updateBlockState(getState(), getWorld(), pos);
 	}
 	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound){
-		if(getController()!=null)compound.setLong(NBT_CONTROLLER_TAG, getController().getPos().toLong());
+		writeNeuroPartToNbt(compound);
 		return super.writeToNBT(compound);
 	}
 	
@@ -41,15 +35,27 @@ public class TileEntityNeuroDuct extends TileEntityNeuroBase{
 	
 	@Override
 	public void setController(TileEntityNeuroController controller){
-		if(this.controller!=controller)UpdateTileNBTPacket.markForSync(this);
-		this.controller=controller;
-	}
-
-
-	@Override
-	public void update(){
-		
+		if(this.controller!=controller){
+			this.controller=controller;
+			if(controller!=null)controller.requestConnectedRefresh();
+			UpdateTileNBTPacket.markForSync(this);
+		}
 	}
 	
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate){
+		return oldState.getBlock()!=newSate.getBlock();
+	}
+	
+	@Override
+	public void onConnect(){
+		setState(BlockNeuroBase.HAS_CONTROLLER.set(getState(), true));
+	}
+	
+	@Override
+	public void onDisconnect(){
+		IBlockState state=getState();
+		if(state.getBlock() instanceof BlockNeuroDuct)setState(BlockNeuroBase.HAS_CONTROLLER.set(state, false));
+	}
 	
 }

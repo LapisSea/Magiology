@@ -136,7 +136,7 @@ public abstract class ShaderProgram{
 	public int getUniformLocation(String uniformName){
 		return GL20.glGetUniformLocation(programID, uniformName);
 	}
-	public void bindAtribute(int attributeID,String name){
+	public void bindAttribute(int attributeID,String name){
 		GL20.glBindAttribLocation(programID, attributeID, name);
 	}
 

@@ -1,0 +1,113 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "textures": {
+            "particle": "magiology:blocks/neuro/pipe_center_off",
+            "pipe_center": "magiology:blocks/neuro/pipe_center_off",
+            "pipe_con": "magiology:blocks/neuro/pipe_con_off"
+        },
+        "model": "magiology:neuro/pipe_center"
+    },
+    "variants": {
+        "down": {
+            "true": {
+                "submodel": {
+                    "con0": {
+                        "model": "magiology:neuro/pipe_con"
+                    }
+                }
+            },
+            "false": {
+            }
+        },
+        "east": {
+            "true": {
+                "submodel": {
+                    "con1": {
+                        "model": "magiology:neuro/pipe_con",
+                        "x": 90,
+                        "y": -90
+                    }
+                }
+            },
+            "false": {
+            }
+        },
+        "north": {
+            "true": {
+                "submodel": {
+                    "con2": {
+                        "model": "magiology:neuro/pipe_con",
+                        "x": -90
+                    }
+                }
+            },
+            "false": {
+            }
+        },
+        "south": {
+            "true": {
+                "submodel": {
+                    "con3": {
+                        "model": "magiology:neuro/pipe_con",
+                        "x": 90
+                    }
+                }
+            },
+            "false": {
+            }
+        },
+        "up": {
+            "true": {
+                "submodel": {
+                    "con4": {
+                        "model": "magiology:neuro/pipe_con",
+                        "x": 180
+                    }
+                }
+            },
+            "false": {
+            }
+        },
+        "west": {
+            "true": {
+                "submodel": {
+                    "con5": {
+                        "model": "magiology:neuro/pipe_con",
+                        "x": 90,
+                        "y": 90
+                    }
+                }
+            },
+            "false": {
+            }
+        },
+        "has_controller": {
+            "true": {
+                "textures": {
+                    "pipe_center": "magiology:blocks/neuro/pipe_center_on",
+                    "pipe_con": "magiology:blocks/neuro/pipe_con_on"
+                }
+            },
+            "false": {
+            }
+        },
+        "straight": {
+            "0": {
+                "model": "magiology:neuro/pipe_straight"
+            },
+            "1": {
+                "model": "magiology:neuro/pipe_straight",
+                "x": 90
+            },
+            "2": {
+                "model": "magiology:neuro/pipe_straight",
+                "x": 90,
+                "y": 90
+            },
+            "3": {
+                
+            }
+        }
+    }
+}

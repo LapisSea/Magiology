@@ -1,7 +1,8 @@
 package com.magiology.mc_objects.particles;
 
+import org.lwjgl.opengl.GL11;
+
 import com.magiology.client.renderers.Renderer;
-import com.magiology.core.MReference;
 import com.magiology.handlers.particle.ParticleFactory;
 import com.magiology.handlers.particle.ParticleM;
 import com.magiology.util.m_extensions.ResourceLocationM;
@@ -13,8 +14,6 @@ import com.magiology.util.statics.RandUtil;
 import com.magiology.util.statics.UtilC;
 import com.magiology.util.statics.UtilM;
 import com.magiology.util.statics.math.PartialTicksUtil;
-
-import org.lwjgl.opengl.GL11;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3i;

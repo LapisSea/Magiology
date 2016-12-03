@@ -21,14 +21,14 @@ public class TileEntityShaker extends TileEntityMTickable implements IInventory{
 	@Override
 	public void readFromNBT(NBTTagCompound compound){
 		super.readFromNBT(compound);
-		stacks=UtilM.readStacksFromNBT(compound,"Inv");
+		stacks=UtilM.readStacksFromNBT(compound, "Inv");
 	}
 	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound){
-		super.writeToNBT(compound);
-		UtilM.writeStacksToNBT(stacks,compound,"Inv");
-		return compound;
+		
+		UtilM.writeStacksToNBT(stacks, compound, "Inv");
+		return super.writeToNBT(compound);
 	}
 	
 	@Override
@@ -59,13 +59,13 @@ public class TileEntityShaker extends TileEntityMTickable implements IInventory{
 	@Override
 	public ItemStack decrStackSize(int index, int count){
 		ItemStack itemstack=ItemStackHelper.getAndSplit(stacks, index, count);
-		if(itemstack!=null)this.markDirty();
+		if(itemstack!=null) this.markDirty();
 		return itemstack;
 	}
 	
 	@Override
 	public ItemStack removeStackFromSlot(int index){
-        return ItemStackHelper.getAndRemove(stacks, index);
+		return ItemStackHelper.getAndRemove(stacks, index);
 	}
 	
 	@Override
@@ -84,7 +84,7 @@ public class TileEntityShaker extends TileEntityMTickable implements IInventory{
 	
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer player){
-		return isValid()&&player.getDistanceSq(x()+0.5, y()+0.5, z()+0.5)<=64;
+		return isInWorld()&&player.getDistanceSq(x()+0.5, y()+0.5, z()+0.5)<=64;
 	}
 	
 	@Override
@@ -99,13 +99,17 @@ public class TileEntityShaker extends TileEntityMTickable implements IInventory{
 	}
 	
 	@Override
-	public int getField(int id){return 0;}
+	public int getField(int id){
+		return 0;
+	}
 	
 	@Override
 	public void setField(int id, int value){}
 	
 	@Override
-	public int getFieldCount(){return 0;}
+	public int getFieldCount(){
+		return 0;
+	}
 	
 	@Override
 	public void clear(){}

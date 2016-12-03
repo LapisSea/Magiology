@@ -41,7 +41,7 @@ public class ParticleHandler{
 		Minecraft mc=UtilC.getMC();
 		boolean shouldSpawn=mc.gameSettings.particleSetting!=2;
 //		if(shouldSpawn&&mc.gameSettings.particleSetting==1){
-//			
+//
 //		}
 
 		if(shouldSpawn&&factory.hasDistanceLimit()){
@@ -57,9 +57,9 @@ public class ParticleHandler{
 	public void updateParticles(){
 		if(UtilC.getMC().gameSettings.particleSetting==2)clearEffects();
 		else if(UtilC.getWorldTime()%20==0&&getCount()>Config.getMaxParticleCount()){
-			while(getCount()>Config.getMaxParticleCount()){
-				particleFactories.forEach(ParticleFactory::removeLast);
-			}
+//			while(getCount()>Config.getMaxParticleCount()){
+//				particleFactories.forEach(ParticleFactory::removeLast);
+//			}
 		}
 		particleFactories.forEach(ParticleFactory::update);
 	}

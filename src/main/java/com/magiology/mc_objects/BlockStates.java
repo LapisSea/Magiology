@@ -1,10 +1,14 @@
 package com.magiology.mc_objects;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.block.properties.*;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 
@@ -32,6 +36,13 @@ public class BlockStates{
 	}
 	public static PropertyIntegerM intProp(String name, int bitCount){
 		return new PropertyIntegerM(name,bitCount,false);
+	}
+	public static PropertyIntegerM saveableIntProp(String name, int min, int max){
+		if(max>15)throw new IllegalArgumentException("Can't store that much data! - max value = 15, tried to use "+max+" bits");
+		return new PropertyIntegerM(name,min,max,true);
+	}
+	public static PropertyIntegerM intProp(String name, int min, int max){
+		return new PropertyIntegerM(name,min,max,false);
 	}
 	
 	public static interface IPropertyM<T extends Comparable<T>> extends IProperty<T>{
@@ -126,7 +137,18 @@ public class BlockStates{
 		
 		private final boolean saveable;
 		public final int bitCount;
-		
+
+		private PropertyIntegerM(String name,int min,int max,boolean saveable){
+			super(name, min,max);
+			
+			//1 = 1, 2 = 3, 3 = 5, 4 = 15
+			if(max>5)bitCount=4;
+			else if(max>3)bitCount=3;
+			else if(max>1)bitCount=2;
+			else bitCount=1;
+			
+			this.saveable=saveable;
+		}
 		private PropertyIntegerM(String name,int bitCount,boolean saveable){
 			super(name, 0, (int)(Math.pow(2,bitCount)-1));
 			this.bitCount=bitCount;

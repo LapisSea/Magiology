@@ -1,0 +1,120 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "model": "magiology:neuro/pipe_center_off"
+    },
+    "variants": {
+        "down": {
+            "true": {
+                "submodel": {
+                    "con0": {
+                        "model": "button"
+                    }
+                }
+            },
+            "false": {
+            }
+        },
+        "east": {
+            "true": {
+                "submodel": {
+                    "con1": {
+                        "model": "button",
+                        "x": 90,
+                        "y": -90
+                    }
+                }
+            },
+            "false": {
+            }
+        },
+        "north": {
+            "true": {
+                "submodel": {
+                    "con2": {
+                        "model": "button",
+                        "x": -90
+                    }
+                }
+            },
+            "false": {
+            }
+        },
+        "south": {
+            "true": {
+                "submodel": {
+                    "con3": {
+                        "model": "button",
+                        "x": 90
+                    }
+                }
+            },
+            "false": {
+            }
+        },
+        "up": {
+            "true": {
+                "submodel": {
+                    "con4": {
+                        "model": "button",
+                        "x": 180
+                    }
+                }
+            },
+            "false": {
+            }
+        },
+        "west": {
+            "true": {
+                "submodel": {
+                    "con5": {
+                        "model": "button",
+                        "x": 90,
+                        "y": 90
+                    }
+                }
+            },
+            "false": {
+            }
+        },
+        "has_controller": {
+            "true": {
+                "textures": {
+                    "texture": "blocks/planks_oak"
+                }
+            },
+            "false": {
+            }
+        },
+        "straight": {
+            "0": {
+                "submodel": {
+                    "con6": {
+                        "model": "end_rod"
+                    }
+                }
+            },
+            "1": {
+                "submodel": {
+                    "con6": {
+                        "model": "end_rod",
+                        "x": 90
+                    }
+                }
+            },
+            "2": {
+                "submodel": {
+                    "con6": {
+                        "model": "end_rod",
+                        "x": 90,
+                        "y": 90
+                    }
+                }
+            },
+            "3": {
+            },
+            "4": {
+            }
+        }
+    }
+}

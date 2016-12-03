@@ -1,20 +1,19 @@
 package com.magiology.client.renderers;
 
+import org.lwjgl.opengl.GL11;
+
 import com.magiology.util.objs.ColorF;
 import com.magiology.util.objs.vec.IVec3M;
 import com.magiology.util.objs.vec.Vec2FM;
 import com.magiology.util.objs.vec.Vec2i;
-import com.magiology.util.objs.vec.IVec3M;
 import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.math.MathUtil;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
-import net.minecraft.client.renderer.vertex.*;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
 
 /**
  * @author LapisSea
@@ -57,7 +56,7 @@ public class Renderer{
 		}
 		
 		public void addVertex(IVec3M pos){
-			instance.addPos(pos.x(),pos.y(),pos.z());
+			instance.addPos(pos.x(),pos.y(),pos.z()).endVertex();
 		}
 		
 		public void begin(){
@@ -73,7 +72,7 @@ public class Renderer{
 		@Override
 		@Deprecated
 		public void beginQuads(){
-			begin();
+			throw new RuntimeException("You can't draw quads with a line renderer!");
 		}
 		
 		@Override

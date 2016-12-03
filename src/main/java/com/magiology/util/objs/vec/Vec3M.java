@@ -2,14 +2,22 @@ package com.magiology.util.objs.vec;
 
 import java.io.Serializable;
 
-import com.magiology.util.interf.Calculable;
-import com.magiology.util.statics.math.*;
+import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.ReadableVector3f;
+import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.WritableVector3f;
 
-import org.lwjgl.util.vector.*;
+import com.magiology.util.interf.Calculable;
+import com.magiology.util.statics.math.MathUtil;
+import com.magiology.util.statics.math.MatrixUtil;
 
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.*;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Vec3M extends Vec3MRead implements Serializable, WritableVector3f, Calculable<Vec3M>{
 	
@@ -47,6 +55,12 @@ public class Vec3M extends Vec3MRead implements Serializable, WritableVector3f, 
 
 	public Vec3M abs(){
 		return new Vec3M(Math.abs(x), Math.abs(y), Math.abs(z));
+	}
+	public Vec3M absSelf(){
+		x=Math.abs(x);
+		y=Math.abs(y);
+		z=Math.abs(z);
+		return this;
 	}
 	
 	public Vec3M add(BlockPos pos){
@@ -86,23 +100,23 @@ public class Vec3M extends Vec3MRead implements Serializable, WritableVector3f, 
 	}
 	
 	public Vec3M addSelf(float var){
-		this.x+=var;
-		this.y+=var;
-		this.z+=var;
+		x+=var;
+		y+=var;
+		z+=var;
 		return this;
 	}
 	
 	public Vec3M addSelf(Vec3i vec){
-		this.x+=vec.getX();
-		this.y+=vec.getY();
-		this.z+=vec.getZ();
+		x+=vec.getX();
+		y+=vec.getY();
+		z+=vec.getZ();
 		return this;
 	}
 	
 	public Vec3M addSelf(IVec3M vec){
-		this.x+=vec.x();
-		this.y+=vec.y();
-		this.z+=vec.z();
+		x+=vec.x();
+		y+=vec.y();
+		z+=vec.z();
 		return this;
 	}
 
@@ -119,17 +133,17 @@ public class Vec3M extends Vec3MRead implements Serializable, WritableVector3f, 
 	}
 
 	public Vec3M addSelfX(double var){
-		this.x+=var;
+		x+=var;
 		return this;
 	}
 	
 	public Vec3M addSelfY(double var){
-		this.y+=var;
+		y+=var;
 		return this;
 	}
 	
 	public Vec3M addSelfZ(double var){
-		this.z+=var;
+		z+=var;
 		return this;
 	}
 
@@ -146,17 +160,17 @@ public class Vec3M extends Vec3MRead implements Serializable, WritableVector3f, 
 	}
 
 	public Vec3M mulSelfX(double var){
-		this.x*=var;
+		x*=var;
 		return this;
 	}
 	
 	public Vec3M mulSelfY(double var){
-		this.y*=var;
+		y*=var;
 		return this;
 	}
 	
 	public Vec3M mulSelfZ(double var){
-		this.z*=var;
+		z*=var;
 		return this;
 	}
 	
@@ -173,17 +187,17 @@ public class Vec3M extends Vec3MRead implements Serializable, WritableVector3f, 
 	}
 
 	public Vec3M divSelfX(double var){
-		this.x/=var;
+		x/=var;
 		return this;
 	}
 	
 	public Vec3M divSelfY(double var){
-		this.y/=var;
+		y/=var;
 		return this;
 	}
 	
 	public Vec3M divSelfZ(double var){
-		this.z/=var;
+		z/=var;
 		return this;
 	}
 
@@ -200,17 +214,17 @@ public class Vec3M extends Vec3MRead implements Serializable, WritableVector3f, 
 	}
 
 	public Vec3M subSelfX(double var){
-		this.x-=var;
+		x-=var;
 		return this;
 	}
 	
 	public Vec3M subSelfY(double var){
-		this.y-=var;
+		y-=var;
 		return this;
 	}
 	
 	public Vec3M subSelfZ(double var){
-		this.z-=var;
+		z-=var;
 		return this;
 	}
 	
@@ -224,7 +238,7 @@ public class Vec3M extends Vec3MRead implements Serializable, WritableVector3f, 
 	}
 	
 	public Vec3M crossProduct(IVec3M vec){
-		return new Vec3M(this.y*vec.z()-this.z*vec.y(), this.z*vec.x()-this.x*vec.z(), this.x*vec.y()-this.y*vec.x());
+		return new Vec3M(y*vec.z()-z*vec.y(), z*vec.x()-x*vec.z(), x*vec.y()-y*vec.x());
 	}
 	
 	public double distanceTo(double x, double y, double z){
@@ -235,29 +249,29 @@ public class Vec3M extends Vec3MRead implements Serializable, WritableVector3f, 
 	}
 	
 	public float distanceTo(Vec3d vec){
-		double d0=vec.xCoord-this.x;
-		double d1=vec.yCoord-this.y;
-		double d2=vec.zCoord-this.z;
+		double d0=vec.xCoord-x;
+		double d1=vec.yCoord-y;
+		double d2=vec.zCoord-z;
 		return MathHelper.sqrt_double(d0*d0+d1*d1+d2*d2);
 	}
 	
 	public double distanceTo(Vec3i pos){
-		double d0=pos.getX()-this.x;
-		double d1=pos.getY()-this.y;
-		double d2=pos.getZ()-this.z;
+		double d0=pos.getX()-x;
+		double d1=pos.getY()-y;
+		double d2=pos.getZ()-z;
 		return MathHelper.sqrt_double(d0*d0+d1*d1+d2*d2);
 	}
 	
 	public double distanceTo(IVec3M vec){
-		double d0=vec.x()-this.x;
-		double d1=vec.y()-this.y;
-		double d2=vec.z()-this.z;
+		double d0=vec.x()-x;
+		double d1=vec.y()-y;
+		double d2=vec.z()-z;
 		return MathHelper.sqrt_double(d0*d0+d1*d1+d2*d2);
 	}
 	public double distanceTo(ReadableVector3f vec){
-		double d0=vec.getX()-this.x;
-		double d1=vec.getY()-this.y;
-		double d2=vec.getZ()-this.z;
+		double d0=vec.getX()-x;
+		double d1=vec.getY()-y;
+		double d2=vec.getZ()-z;
 		return MathHelper.sqrt_double(d0*d0+d1*d1+d2*d2);
 	}
 	
@@ -275,7 +289,7 @@ public class Vec3M extends Vec3MRead implements Serializable, WritableVector3f, 
 	}
 	
 	public double dotProduct(IVec3M vec){
-		return this.x*vec.x()+this.y*vec.x()+this.z*vec.x();
+		return x*vec.x()+y*vec.x()+z*vec.x();
 	}
 	
 	@Override
@@ -289,30 +303,30 @@ public class Vec3M extends Vec3MRead implements Serializable, WritableVector3f, 
 	public Vec3M getIntermediateWithXValue(IVec3M vec, double x){
 		double d1=vec.x()-this.x;
 		if(d1*d1<1.0000000116860974E-7D)return null;
-		double d2=vec.x()-this.y,d3=vec.x()-this.z,d4=(x-this.x)/d1;
-		return d4>=0.0D&&d4<=1.0D?new Vec3M(this.x+d1*d4, this.y+d2*d4, this.z+d3*d4):null;
+		double d2=vec.x()-y,d3=vec.x()-z,d4=(x-this.x)/d1;
+		return d4>=0.0D&&d4<=1.0D?new Vec3M(this.x+d1*d4, y+d2*d4, z+d3*d4):null;
 		
 	}
 	
 	public Vec3M getIntermediateWithYValue(IVec3M vec, double y){
 		double d2=vec.x()-this.y;
 		if(d2*d2<1.0000000116860974E-7D)return null;
-		double d1=vec.x()-this.x,d3=vec.x()-this.z,d4=(y-this.y)/d2;
-		return d4>=0.0D&&d4<=1.0D?new Vec3M(this.x+d1*d4, this.y+d2*d4, this.z+d3*d4):null;
+		double d1=vec.x()-x,d3=vec.x()-z,d4=(y-this.y)/d2;
+		return d4>=0.0D&&d4<=1.0D?new Vec3M(x+d1*d4, this.y+d2*d4, z+d3*d4):null;
 		
 	}
 	
 	public Vec3M getIntermediateWithZValue(Vec3M vec, double z){
 		double d3=vec.x-this.z;
 		if(d3*d3<1.0000000116860974E-7D)return null;
-		double d1=vec.x-this.x,d2=vec.x-this.y,d4=(z-this.z)/d3;
-		return d4>=0.0D&&d4<=1.0D?new Vec3M(this.x+d1*d4, this.y+d2*d4, this.z+d3*d4):null;
+		double d1=vec.x-x,d2=vec.x-y,d4=(z-this.z)/d3;
+		return d4>=0.0D&&d4<=1.0D?new Vec3M(x+d1*d4, y+d2*d4, this.z+d3*d4):null;
 		
 	}
 	
 	
 	public double lengthVector(){
-		return MathHelper.sqrt_double(this.x*this.x+this.y*this.y+this.z*this.z);
+		return MathHelper.sqrt_double(x*x+y*y+z*z);
 	}
 	
 	public double lightProduct(Vec3MRead vec){
@@ -370,12 +384,12 @@ public class Vec3M extends Vec3MRead implements Serializable, WritableVector3f, 
 	public void rotateAroundX(float par1){
 		float f1=MathHelper.cos(par1);
 		float f2=MathHelper.sin(par1);
-		double d0=this.x;
-		double d1=this.y*f1+this.z*f2;
-		double d2=this.z*f1-this.y*f2;
-		this.x=d0;
-		this.y=d1;
-		this.z=d2;
+		double d0=x;
+		double d1=y*f1+z*f2;
+		double d2=z*f1-y*f2;
+		x=d0;
+		y=d1;
+		z=d2;
 	}
 	
 	/**
@@ -384,12 +398,12 @@ public class Vec3M extends Vec3MRead implements Serializable, WritableVector3f, 
 	public void rotateAroundY(float par1){
 		float f1=MathHelper.cos(par1);
 		float f2=MathHelper.sin(par1);
-		double d0=this.x*f1+this.z*f2;
-		double d1=this.y;
-		double d2=this.z*f1-this.x*f2;
-		this.x=d0;
-		this.y=d1;
-		this.z=d2;
+		double d0=x*f1+z*f2;
+		double d1=y;
+		double d2=z*f1-x*f2;
+		x=d0;
+		y=d1;
+		z=d2;
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -399,29 +413,29 @@ public class Vec3M extends Vec3MRead implements Serializable, WritableVector3f, 
 	public void rotateAroundZ(float par1){
 		float f1=MathHelper.cos(par1);
 		float f2=MathHelper.sin(par1);
-		double d0=this.x*f1+this.y*f2;
-		double d1=this.y*f1-this.x*f2;
-		double d2=this.z;
-		this.x=d0;
-		this.y=d1;
-		this.z=d2;
+		double d0=x*f1+y*f2;
+		double d1=y*f1-x*f2;
+		double d2=z;
+		x=d0;
+		y=d1;
+		z=d2;
 	}
 	
 	public Vec3M rotatePitch(float pitch){
 		float f1=MathHelper.cos(pitch);
 		float f2=MathHelper.sin(pitch);
-		double d0=this.x;
-		double d1=this.y*f1+this.z*f2;
-		double d2=this.z*f1-this.y*f2;
+		double d0=x;
+		double d1=y*f1+z*f2;
+		double d2=z*f1-y*f2;
 		return new Vec3M(d0, d1, d2);
 	}
 	
 	public Vec3M rotateYaw(float yaw){
 		float f1=MathHelper.cos(yaw);
 		float f2=MathHelper.sin(yaw);
-		double d0=this.x*f1+this.z*f2;
-		double d1=this.y;
-		double d2=this.z*f1-this.x*f2;
+		double d0=x*f1+z*f2;
+		double d1=y;
+		double d2=z*f1-x*f2;
 		return new Vec3M(d0, d1, d2);
 	}
 	
@@ -437,6 +451,9 @@ public class Vec3M extends Vec3MRead implements Serializable, WritableVector3f, 
 
 	public void set(IVec3M vec){
 		set(vec.x(),vec.y(),vec.z());
+	}
+	public void set(Vec3i vec){
+		set(vec.getX(),vec.getY(),vec.getZ());
 	}
 	public void set(ReadableVector3f vec){
 		set(vec.getX(),vec.getY(),vec.getZ());
@@ -475,9 +492,9 @@ public class Vec3M extends Vec3MRead implements Serializable, WritableVector3f, 
 	}
 	
 	public double squareDistanceTo(IVec3M vec){
-		double d0=vec.x()-this.x;
-		double d1=vec.y()-this.y;
-		double d2=vec.z()-this.z;
+		double d0=vec.x()-x;
+		double d1=vec.y()-y;
+		double d2=vec.z()-z;
 		return d0*d0+d1*d1+d2*d2;
 	}
 	
@@ -503,9 +520,9 @@ public class Vec3M extends Vec3MRead implements Serializable, WritableVector3f, 
 	}
 	
 	public Vec3M subSelf(Vec3i vec){
-		this.x-=vec.getX();
-		this.y-=vec.getY();
-		this.z-=vec.getZ();
+		x-=vec.getX();
+		y-=vec.getY();
+		z-=vec.getZ();
 		return this;
 	}
 	
@@ -523,7 +540,7 @@ public class Vec3M extends Vec3MRead implements Serializable, WritableVector3f, 
 	}
 	
 	public Vec3M subtractReverse(IVec3M vec){
-		return new Vec3M(vec.x()-this.x, vec.y()-this.y, vec.z()-this.z);
+		return new Vec3M(vec.x()-x, vec.y()-y, vec.z()-z);
 	}
 	public Vec3M subtractReverseSelf(double x, double y, double z){
 		set(x-this.x, x-this.y, x-this.z);
@@ -531,17 +548,18 @@ public class Vec3M extends Vec3MRead implements Serializable, WritableVector3f, 
 	}
 	
 	public Vec3M subtractReverseSelf(IVec3M vec){
-		set(vec.x()-this.x, vec.y()-this.y, vec.z()-this.z);
+		set(vec.x()-x, vec.y()-y, vec.z()-z);
 		return this;
 	}
 	
+	@Override
 	public Vector3f toLWJGLVec(){
 		return new Vector3f(getX(), getY(), getZ());
 	}
 	
 	@Override
 	public String toString(){
-		return "M("+this.x+", "+this.y+", "+this.z+")";
+		return "M("+x+", "+y+", "+z+")";
 	}
 	
 	public Vec3M transform(Matrix4f matrix){
