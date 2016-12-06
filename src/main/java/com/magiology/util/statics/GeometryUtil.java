@@ -1,17 +1,29 @@
 package com.magiology.util.statics;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
+import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import com.magiology.util.objs.PairM;
-import com.magiology.util.objs.vec.*;
+import com.magiology.util.objs.vec.IVec3M;
+import com.magiology.util.objs.vec.Vec2FM;
+import com.magiology.util.objs.vec.Vec3M;
+import com.magiology.util.objs.vec.Vec3MFinal;
 import com.magiology.util.statics.math.MatrixUtil;
-
-import org.lwjgl.util.vector.*;
 
 import net.minecraft.client.model.PositionTextureVertex;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.*;
+import net.minecraft.util.EnumFacing.AxisDirection;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 
 public class GeometryUtil{
 
@@ -69,7 +81,7 @@ public class GeometryUtil{
 		
 		private Ray(Vec3M origin, Vec3M normal){
 			this.origin=origin;
-			this.dir=normal;
+			dir=normal;
 		}
 	}
 	public static class Triangle{
@@ -144,7 +156,7 @@ public class GeometryUtil{
 		Triangle difference=start.sub(end);
 		if(intersectRayTriangle(
 				Ray.byPos(
-					point, 
+					point,
 					point.add(endDistVec.normalize().mul(
 						Math.min(difference.pos1.length(),
 						Math.min(difference.pos2.length(),
@@ -155,7 +167,7 @@ public class GeometryUtil{
 		)return null;
 		
 		
-		float 
+		float
 			pointDistance=pointDistVec.length(),
 			endDistance=endDistVec.length(),
 			precentage=pointDistance/endDistance;
@@ -179,7 +191,7 @@ public class GeometryUtil{
 			diff.pos1=diff.pos1.mul(1/distance1);
 			diff.pos2=diff.pos2.mul(1/distance2);
 			diff.pos3=diff.pos3.mul(1/distance3);
-			Vec3M 
+			Vec3M
 				triNormal=diff.pos1.add(diff.pos2).add(diff.pos3).normalize().mul(maxDiff),
 				result=intersectRayTriangle(Ray.byPos(point, point.sub(triNormal)), stages[i]);
 			
@@ -215,7 +227,7 @@ public class GeometryUtil{
 	}
 	
 	public static PairM<Vec3d,Vec3d> getStartEndLook(Entity entity){
-		float 
+		float
 			f=entity.rotationPitch,
 			f1=entity.rotationYaw,
 			f2=MathHelper.cos(-f1*0.017453292F-(float)Math.PI),
@@ -223,15 +235,15 @@ public class GeometryUtil{
 			f4=-MathHelper.cos(-f*0.017453292F),
 			f5=MathHelper.sin(-f*0.017453292F),
 			f6=f3*f4,f7=f2*f4;
-		double 
+		double
 			d0=entity.posX,
 			d1=entity.posY+entity.getEyeHeight(),
 			d2=entity.posZ,
 			d3=5;
-		Vec3d 
+		Vec3d
 			start=new Vec3d(d0,d1,d2),
 			end=start.addVector(f6*d3,f5*d3,f7*d3);
-		return new PairM<Vec3d,Vec3d>(start,end);
+		return new PairM<>(start,end);
 	}
 	public static Vec3M intersectRayQuad(Ray ray, Quad quad){
 		return intersectRayTriangles(ray,quad.getTriangle1(),quad.getTriangle2()).obj1;
@@ -352,7 +364,7 @@ public class GeometryUtil{
 				closestId=i;
 			}
 		}
-		return new PairM<Vec3M, Integer>(results.get(closestId), closestId);
+		return new PairM<>(results.get(closestId), closestId);
 	}
 	
 	public static RayTraceResult rayTrace(Entity player){
@@ -430,5 +442,27 @@ public class GeometryUtil{
 	
 	public static IVec3M rotFromFacing(EnumFacing facing){
 		return facingRotations.get(facing.getIndex());
+	}
+	
+	public static AxisAlignedBB[] generatePipeSyleBoxes(double size){
+		AxisAlignedBB[] boxes=new AxisAlignedBB[7];
+		double size2=size/2,size2m5=0.5-size2,size2p5=0.5+size2;
+		boxes[6]=new AxisAlignedBB(size2m5,size2m5,size2m5,size2p5,size2p5,size2p5);
+
+		for(int id=0;id<6;id++){
+			
+			EnumFacing side=EnumFacing.getFront(id);
+
+			double min=side.getAxisDirection()==AxisDirection.POSITIVE?size2p5:0;
+			double max=side.getAxisDirection()==AxisDirection.POSITIVE?1:size2m5;
+			
+			switch(side.getAxis()){
+			case X:boxes[id]=new AxisAlignedBB(min,size2m5,size2m5,max,size2p5,size2p5);break;
+			case Y:boxes[id]=new AxisAlignedBB(size2m5,min,size2m5,size2p5,max,size2p5);break;
+			case Z:boxes[id]=new AxisAlignedBB(size2m5,size2m5,min,size2p5,size2p5,max);break;
+			}
+		}
+		
+		return boxes;
 	}
 }

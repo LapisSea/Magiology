@@ -1,6 +1,7 @@
 package com.magiology.util.objs.block_bounds;
 
 import com.magiology.client.renderers.Renderer;
+import com.magiology.util.interf.IntReturn;
 import com.magiology.util.statics.OpenGLM;
 
 import net.minecraft.block.state.IBlockState;
@@ -9,10 +10,11 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public abstract class StateDependantBlockBounds implements IBlockBounds{
+public class StateDependantBlockBounds implements IBlockBounds{
 	
 	private final class StateBounds{
 		
@@ -32,12 +34,12 @@ public abstract class StateDependantBlockBounds implements IBlockBounds{
 		@SideOnly(Side.CLIENT)
 		void createModel(){
 			drawModelInvalid=false;
-			
+			if(drawModel!=-1)OpenGLM.glDeleteLists(drawModel, 1);
 			drawModel=GLAllocation.generateDisplayLists(1);
 			GlStateManager.glNewList(drawModel, 4864);
 			
 			Renderer.LINES.begin();
-			generateBoxLines(box.expand(0.02, 0.02, 0.02)).forEach(Renderer.LINES::addVertex);
+			generateBoxLines(box.expandXyz(0.0020000000949949026D)).forEach(Renderer.LINES::addVertex);
 			Renderer.LINES.draw();
 			
 			GlStateManager.glEndList();
@@ -50,19 +52,20 @@ public abstract class StateDependantBlockBounds implements IBlockBounds{
 	}
 	
 	private final StateBounds[] boxes;
+	private final IntReturn<IBlockState> boxPicker;
 	
-	public StateDependantBlockBounds(AxisAlignedBB... boxes){
+	public StateDependantBlockBounds(IntReturn<IBlockState> boxPicker,AxisAlignedBB... boxes){
 		this.boxes=new StateBounds[boxes.length];
 		
 		for(int i=0;i<boxes.length;i++){
 			this.boxes[i]=new StateBounds(boxes[i]);
 		}
+		this.boxPicker=boxPicker;
 	}
 	
-	public abstract int chooseBox(IBlockState state);
 	
 	private StateBounds getBox(IBlockState state){
-		return boxes[chooseBox(state)];
+		return boxes[boxPicker.get(state)];
 	}
 	
 	@Override
@@ -77,7 +80,7 @@ public abstract class StateDependantBlockBounds implements IBlockBounds{
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void drawBoundsOutline(IBlockState state, IBlockAccess source, BlockPos pos){
+	public void drawBoundsOutline(IBlockState state, World world, BlockPos pos){
 		StateBounds box=getBox(state);
 		if(box.drawModelInvalid) box.createModel();
 		

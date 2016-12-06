@@ -34,7 +34,7 @@ public interface IBlockBounds{
 	}
 	
 	@SideOnly(Side.CLIENT)
-	void drawBoundsOutline(IBlockState state, IBlockAccess source, BlockPos pos);
+	void drawBoundsOutline(IBlockState state, World world, BlockPos pos);
 	
 	
 	//========================================UTILS========================================

@@ -133,4 +133,8 @@ public abstract class BlockM extends Block{
 	public void setBlockBounds(IBlockBounds boundingBox){
 		this.boundingBox=boundingBox;
 	}
+	
+	public IBlockBounds getBoundingBox(){
+		return boundingBox;
+	}
 }

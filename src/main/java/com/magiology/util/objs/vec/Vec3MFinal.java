@@ -2,7 +2,8 @@ package com.magiology.util.objs.vec;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 
 public class Vec3MFinal implements IVec3M<Vec3MFinal>{
 	
@@ -41,14 +42,17 @@ public class Vec3MFinal implements IVec3M<Vec3MFinal>{
 		return z;
 	}
 	
+	@Override
 	public float getX(){
 		return (float)x;
 	}
 	
+	@Override
 	public float getY(){
 		return (float)y;
 	}
 	
+	@Override
 	public float getZ(){
 		return (float)z;
 	}
@@ -216,5 +220,14 @@ public class Vec3MFinal implements IVec3M<Vec3MFinal>{
 		dest.y=getY();
 		dest.z=getZ();
 		return dest;
+	}
+	@Override
+	public int hashCode(){
+		long hash=1;
+		hash=(hash*63+Double.doubleToLongBits(x()));
+		hash=(hash*63+Double.doubleToLongBits(y()));
+		hash=(hash*63+Double.doubleToLongBits(z()));
+		
+		return (int)hash;
 	}
 }

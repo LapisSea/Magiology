@@ -4,7 +4,9 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 
 public class Vec3MRead implements IVec3M<Vec3MRead>{
 	
@@ -17,15 +19,15 @@ public class Vec3MRead implements IVec3M<Vec3MRead>{
 	}
 	
 	public Vec3MRead(Vec3i vec){
-		this.x=vec.getX();
-		this.y=vec.getY();
-		this.z=vec.getZ();
+		x=vec.getX();
+		y=vec.getY();
+		z=vec.getZ();
 	}
 	
 	public Vec3MRead(Vec3d vec){
-		this.x=vec.xCoord;
-		this.y=vec.yCoord;
-		this.z=vec.zCoord;
+		x=vec.xCoord;
+		y=vec.yCoord;
+		z=vec.zCoord;
 	}
 	
 	@Override
@@ -43,14 +45,17 @@ public class Vec3MRead implements IVec3M<Vec3MRead>{
 		return z;
 	}
 	
+	@Override
 	public float getX(){
 		return (float)x;
 	}
 	
+	@Override
 	public float getY(){
 		return (float)y;
 	}
 	
+	@Override
 	public float getZ(){
 		return (float)z;
 	}
@@ -78,7 +83,7 @@ public class Vec3MRead implements IVec3M<Vec3MRead>{
 	}
 	
 	public float lengthSquared(){
-		return (float)(this.x*this.x+this.y*this.y+this.z*this.z);
+		return (float)(x*x+y*y+z*z);
 	}
 	
 	public Vec3MRead negate(){
@@ -94,13 +99,13 @@ public class Vec3MRead implements IVec3M<Vec3MRead>{
 	}
 	
 	public Vec3M normalize(){// normalise
-		double d0=MathHelper.sqrt_double(this.x*this.x+this.y*this.y+this.z*this.z);
-		return d0<1.0E-4D?new Vec3M():new Vec3M(this.x/d0, this.y/d0, this.z/d0);
+		double d0=MathHelper.sqrt_double(x*x+y*y+z*z);
+		return d0<1.0E-4D?new Vec3M():new Vec3M(x/d0, y/d0, z/d0);
 	}
 	
 	@Override
 	public String toString(){
-		return "R("+this.x+", "+this.y+", "+this.z+")";
+		return "R("+x+", "+y+", "+z+")";
 	}
 	
 	@Override
@@ -246,5 +251,15 @@ public class Vec3MRead implements IVec3M<Vec3MRead>{
 		dest.y=getY();
 		dest.z=getZ();
 		return dest;
+	}
+	
+	@Override
+	public int hashCode(){
+		long hash=1;
+		hash=(hash*63+Double.doubleToLongBits(x()));
+		hash=(hash*63+Double.doubleToLongBits(y()));
+		hash=(hash*63+Double.doubleToLongBits(z()));
+		
+		return (int)hash;
 	}
 }

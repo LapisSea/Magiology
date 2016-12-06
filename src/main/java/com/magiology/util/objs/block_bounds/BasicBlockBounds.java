@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -52,7 +53,7 @@ public class BasicBlockBounds implements IBlockBounds{
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void drawBoundsOutline(IBlockState state, IBlockAccess source, BlockPos pos){
+	public void drawBoundsOutline(IBlockState state, World world, BlockPos pos){
 		if(drawModelInvalid)createModel();
 		
 		OpenGLM.callList(drawModel);
@@ -61,12 +62,12 @@ public class BasicBlockBounds implements IBlockBounds{
 	@SideOnly(Side.CLIENT)
 	private void createModel(){
 		drawModelInvalid=false;
-		
+		if(drawModel!=-1)OpenGLM.glDeleteLists(drawModel, 1);
 		drawModel=GLAllocation.generateDisplayLists(1);
 		GlStateManager.glNewList(drawModel, 4864);
 		
 		Renderer.LINES.begin();
-		generateBoxLines(box.expand(0.02, 0.02, 0.02)).forEach(Renderer.LINES::addVertex);
+		generateBoxLines(box.expandXyz(0.0020000000949949026D)).forEach(Renderer.LINES::addVertex);
 		Renderer.LINES.draw();
 		
 		GlStateManager.glEndList();

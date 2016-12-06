@@ -1,6 +1,7 @@
 package com.magiology.util.objs.vec;
 
 import java.io.Serializable;
+import java.util.function.DoubleUnaryOperator;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.ReadableVector3f;
@@ -449,20 +450,37 @@ public class Vec3M extends Vec3MRead implements Serializable, WritableVector3f, 
 		setY(y);
 	}
 
-	public void set(IVec3M vec){
+	public Vec3M set(IVec3M vec){
 		set(vec.x(),vec.y(),vec.z());
+		return this;
 	}
-	public void set(Vec3i vec){
+	public Vec3M set(Vec3i vec){
 		set(vec.getX(),vec.getY(),vec.getZ());
+		return this;
 	}
-	public void set(ReadableVector3f vec){
+	public Vec3M set(ReadableVector3f vec){
 		set(vec.getX(),vec.getY(),vec.getZ());
+		return this;
 	}
 	
 	@Override
 	public void set(float x, float y, float z){
 		set(x, y);
 		setZ(z);
+	}
+	
+	public Vec3M set(IVec3M vec, DoubleUnaryOperator operator){
+		return set(operator.applyAsDouble(vec.x()),operator.applyAsDouble(vec.y()),operator.applyAsDouble(vec.z()));
+	}
+	public Vec3M set(Vec3i vec, DoubleUnaryOperator operator){
+		return set(operator.applyAsDouble(vec.getX()),operator.applyAsDouble(vec.getY()),operator.applyAsDouble(vec.getZ()));
+	}
+	public Vec3M set(ReadableVector3f vec, DoubleUnaryOperator operator){
+		return set(operator.applyAsDouble(vec.getX()),operator.applyAsDouble(vec.getY()),operator.applyAsDouble(vec.getZ()));
+	}
+	
+	public Vec3M set(float x, float y, float z, DoubleUnaryOperator operator){
+		return set(operator.applyAsDouble(x),operator.applyAsDouble(y),operator.applyAsDouble(z));
 	}
 	
 	@Override
@@ -480,9 +498,10 @@ public class Vec3M extends Vec3MRead implements Serializable, WritableVector3f, 
 		this.z=z;
 	}
 	
-	public void set(double x, double y, double z){
+	public Vec3M set(double x, double y, double z){
 		set(x, y);
 		setZ(z);
+		return this;
 	}
 	
 	

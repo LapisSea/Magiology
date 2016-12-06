@@ -22,4 +22,11 @@ public class PairM<Obj1,Obj2>{
 	public String toString(){
 		return "DoubleObject["+UtilM.toString(obj1)+", "+UtilM.toString(obj2)+"}";
 	}
+	@Override
+	public int hashCode(){
+		int hash=1;
+		if(obj1!=null)hash=hash*31+obj1.hashCode();
+		if(obj2!=null)hash=hash*31+obj2.hashCode();
+		return hash;
+	}
 }
