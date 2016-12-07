@@ -24,7 +24,7 @@ import com.magiology.handlers.frame_buff.TemporaryFrame;
 import com.magiology.mc_objects.particles.ParticleBubbleFactory;
 import com.magiology.util.interf.Renderable;
 import com.magiology.util.m_extensions.ResourceLocationM;
-import com.magiology.util.objs.ColorF;
+import com.magiology.util.objs.color.ColorM;
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.LogUtil;
 import com.magiology.util.statics.OpenGLM;
@@ -83,7 +83,7 @@ public class ItemMatterJumperRenderer implements IItemRenderer{
 		MatterJumperShader shader=ShaderHandler.getShader(MatterJumperShader.class);
 		if(shader!=null)shader.activate(
 				RenderEvents.MAIN_FRAME_COPY,
-				new ColorF(UtilC.fluctuateLin(210, 0, 0.54, 0.56), UtilC.fluctuateLin(250, 0, 0.54, 0.56), UtilC.fluctuateLin(320, 0, 0.54, 0.56), 1),
+				new ColorM(UtilC.fluctuateLin(210, 0, 0.54, 0.56), UtilC.fluctuateLin(250, 0, 0.54, 0.56), UtilC.fluctuateLin(320, 0, 0.54, 0.56), 1),
 				UtilC.getWorldTime()*1D+PartialTicksUtil.partialTicks,
 				20,4);
 		src.bindFramebufferTexture();

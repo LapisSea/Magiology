@@ -3,10 +3,11 @@ package com.magiology.forge.networking;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.magiology.util.objs.ColorF;
-import com.magiology.util.objs.vec.*;
-
 import org.lwjgl.util.vector.Vector2f;
+
+import com.magiology.util.objs.color.ColorM;
+import com.magiology.util.objs.vec.Vec2FM;
+import com.magiology.util.objs.vec.Vec3M;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.PacketBuffer;
@@ -44,11 +45,11 @@ public class PacketBufferM extends PacketBuffer{
 		return this;
 	}
 
-	public ColorF readColor(){
-		return new ColorF(readFloat(),readFloat(),readFloat(),readFloat());
+	public ColorM readColor(){
+		return new ColorM(readFloat(),readFloat(),readFloat(),readFloat());
 	}
-	public PacketBufferM writeColor(ColorF color){
-		writeFloat(color.r).writeFloat(color.g).writeFloat(color.b).writeFloat(color.a);
+	public PacketBufferM writeColor(ColorM color){
+		writeFloat(color.r()).writeFloat(color.g()).writeFloat(color.b()).writeFloat(color.a());
 		return this;
 	}
 

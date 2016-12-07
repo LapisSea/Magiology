@@ -3,13 +3,16 @@ package com.magiology.handlers.frame_buff;
 import org.lwjgl.opengl.GL11;
 
 import com.magiology.util.interf.ObjectSimpleCallback;
-import com.magiology.util.objs.ColorF;
-import com.magiology.util.statics.*;
+import com.magiology.util.objs.color.ColorM;
+import com.magiology.util.statics.LogUtil;
+import com.magiology.util.statics.OpenGLM;
+import com.magiology.util.statics.UtilC;
 
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.shader.Framebuffer;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class TemporaryFrame{
@@ -44,8 +47,8 @@ public class TemporaryFrame{
 		return this;
 	}
 	
-	public TemporaryFrame setClearColor(ColorF color){
-		frameBuffer.setFramebufferColor(color.r, color.g, color.b, color.a);
+	public TemporaryFrame setClearColor(ColorM color){
+		frameBuffer.setFramebufferColor(color.r(), color.g(), color.b(), color.a());
 		return this;
 	}
 	

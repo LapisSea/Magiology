@@ -4,7 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.opengl.GL11;
 
-import com.magiology.util.objs.ColorF;
+import com.magiology.util.objs.color.ColorM;
 import com.magiology.util.objs.vec.IVec3M;
 import com.magiology.util.objs.vec.Vec3M;
 
@@ -255,8 +255,8 @@ public class OpenGLM extends GlStateManager{
 		scale(scale, scale, scale);
 	}
 	
-	public static void color(ColorF color){
-		color(color.r, color.g, color.b, color.a);
+	public static void color(ColorM color){
+		color(color.r(), color.g(), color.b(), color.a());
 	}
 	
 	public static void bindTexture(ResourceLocation texture){

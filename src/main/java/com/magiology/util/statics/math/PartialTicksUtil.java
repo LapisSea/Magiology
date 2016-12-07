@@ -1,15 +1,16 @@
 package com.magiology.util.statics.math;
 
 
-import com.magiology.handlers.particle.IParticle;
-import com.magiology.util.interf.Calculable;
-import com.magiology.util.objs.ColorF;
-import com.magiology.util.objs.vec.Vec3M;
-
 import org.lwjgl.util.vector.Vector2f;
 
+import com.magiology.handlers.particle.IParticle;
+import com.magiology.util.interf.Calculable;
+import com.magiology.util.objs.color.ColorM;
+import com.magiology.util.objs.vec.Vec3M;
+
 import net.minecraft.entity.Entity;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class PartialTicksUtil{
@@ -71,11 +72,11 @@ public class PartialTicksUtil{
 	public static double calculateZ(Entity entity){
 		return calculate(entity.prevPosZ, entity.posZ);
 	}
-	public static ColorF calculate(ColorF prevColor, ColorF color){
-		return new ColorF(calculate(prevColor.r, color.r),
-						  calculate(prevColor.g, color.g),
-						  calculate(prevColor.b, color.b),
-						  calculate(prevColor.a, color.a));
+	public static ColorM calculate(ColorM prevColor, ColorM color){
+		return new ColorM(calculate(prevColor.r(), color.r()),
+						  calculate(prevColor.g(), color.g()),
+						  calculate(prevColor.b(), color.b()),
+						  calculate(prevColor.a(), color.a()));
 	}
 	public static Vec3M calculate(IParticle particle){
 		return calculate(particle.getPrevPos(),particle.getPos());

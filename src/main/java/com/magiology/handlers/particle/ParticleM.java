@@ -3,6 +3,7 @@ package com.magiology.handlers.particle;
 import com.magiology.client.renderers.Renderer;
 import com.magiology.util.m_extensions.BlockPosM;
 import com.magiology.util.objs.*;
+import com.magiology.util.objs.color.ColorM;
 import com.magiology.util.objs.vec.*;
 import com.magiology.util.statics.math.PartialTicksUtil;
 
@@ -13,7 +14,7 @@ import net.minecraftforge.fml.relauncher.*;
 public abstract class ParticleM extends IParticle{
 	private boolean isDead=false,colided=false,noClip=false;
 	private Vec3M pos=new Vec3M(),prevPos=new Vec3M(),speed=new Vec3M(),gravity=new Vec3M();
-	private ColorF color=new ColorF();
+	private ColorM color=new ColorM();
 	private float size=0.6F,prevSize=0.6F;
 	private AxisAlignedBB box;
 	private int particleAge=0;
@@ -74,12 +75,12 @@ public abstract class ParticleM extends IParticle{
 	}
 
 	@Override
-	public ColorF getColor(){
+	public ColorM getColor(){
 		return color;
 	}
 
 	@Override
-	public void setColor(ColorF color){
+	public void setColor(ColorM color){
 		this.color=color;
 	}
 

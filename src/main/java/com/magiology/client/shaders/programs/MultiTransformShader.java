@@ -11,7 +11,7 @@ import com.magiology.client.rendering.ShaderMultiTransformModel;
 import com.magiology.client.shaders.ShaderProgram;
 import com.magiology.handlers.frame_buff.TemporaryFrame;
 import com.magiology.util.m_extensions.ResourceLocationM;
-import com.magiology.util.objs.ColorF;
+import com.magiology.util.objs.color.ColorM;
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.LogUtil;
 import com.magiology.util.statics.OpenGLM;

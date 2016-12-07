@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL20;
 
 import com.magiology.client.shaders.ShaderProgram;
 import com.magiology.handlers.frame_buff.TemporaryFrame;
-import com.magiology.util.objs.ColorF;
+import com.magiology.util.objs.color.ColorM;
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.LogUtil;
 import com.magiology.util.statics.UtilC;
@@ -20,7 +20,7 @@ public class MatterJumperShader extends ShaderProgram{
 	
 	protected int			screenSize,tim,prevFrameColor,wobleRadius,noiseRadius,texUnit0,backFrame;
 	protected float			time,wobleRad,noiseRad;
-	protected ColorF		color;
+	protected ColorM		color;
 	protected Framebuffer	fBuf;
 	
 	@Override
@@ -49,10 +49,10 @@ public class MatterJumperShader extends ShaderProgram{
 		upload(noiseRadius, noiseRad);
 	}
 
-	public void activate(TemporaryFrame fBuf, ColorF color, double time, float wobleRad, float noiseRad){
+	public void activate(TemporaryFrame fBuf, ColorM color, double time, float wobleRad, float noiseRad){
 		activate(fBuf.frameBuffer, color, time, wobleRad, noiseRad);
 	}
-	public void activate(Framebuffer fBuf, ColorF color, double time, float wobleRad, float noiseRad){
+	public void activate(Framebuffer fBuf, ColorM color, double time, float wobleRad, float noiseRad){
 		GL13.glActiveTexture(GL13.GL_TEXTURE1);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, fBuf.framebufferTexture);
 		this.fBuf=fBuf;

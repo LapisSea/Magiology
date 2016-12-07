@@ -8,6 +8,7 @@ import com.magiology.client.shaders.upload.UniformUploaderColor;
 import com.magiology.client.shaders.upload.UniformUploaderF1;
 import com.magiology.client.shaders.upload.UniformUploaderF2;
 import com.magiology.util.objs.*;
+import com.magiology.util.objs.color.ColorM;
 import com.magiology.util.objs.vec.*;
 
 import org.lwjgl.opengl.Display;
@@ -59,13 +60,13 @@ public class SoftEffectsShader extends PositionAwareEffect{
 		lineArrayPos=0;
 	}
 	
-	public void addCricle(Vec3M worldPos, float sizeP, float sizeN, float radius, ColorF mulColor){
+	public void addCricle(Vec3M worldPos, float sizeP, float sizeN, float radius, ColorM mulColor){
 		if(cricleArrayPos>=20)return;
 		CricleFX fx=new CricleFX(worldPos, sizeP, sizeN, radius, mulColor);
 		data.add(fx);
 		fx.setArrayId(cricleArrayPos++);
 	}
-	public void addLine(Vec3M worldPos1, Vec3M worldPos2, float radius, ColorF mulColor){
+	public void addLine(Vec3M worldPos1, Vec3M worldPos2, float radius, ColorM mulColor){
 		if(lineArrayPos>=20)return;
 		LineFX fx=new LineFX(worldPos1, worldPos2, radius, mulColor);
 		data.add(fx);
@@ -103,7 +104,7 @@ public class SoftEffectsShader extends PositionAwareEffect{
 	private static class CricleFX implements BaseFX{
 		
 		private Vec2FM screenPos;
-		private ColorF mulColor;
+		private ColorM mulColor;
 		private int id;
 		float 
 			distanceScale,
@@ -111,7 +112,7 @@ public class SoftEffectsShader extends PositionAwareEffect{
 			sizeN,
 			radius;
 		
-		public CricleFX(Vec3M worldPos, float sizeP, float sizeN, float radius, ColorF mulColor){
+		public CricleFX(Vec3M worldPos, float sizeP, float sizeN, float radius, ColorM mulColor){
 			PairM<Vec2FM, Float> o=convertWorldToScreenPos(worldPos);
 			screenPos=o.obj1;
 			screenPos.x*=Display.getWidth()/2F;
@@ -143,14 +144,14 @@ public class SoftEffectsShader extends PositionAwareEffect{
 	}
 	private static class LineFX implements BaseFX{
 		
-		ColorF mulColor;
+		ColorM mulColor;
 		Vec2FM 
 			start,
 			end;
 		float widthPos1,widthPos2;
 		private int id;
 		
-		public LineFX(Vec3M worldPos1, Vec3M worldPos2, float width, ColorF mulColor){
+		public LineFX(Vec3M worldPos1, Vec3M worldPos2, float width, ColorM mulColor){
 			this.mulColor=mulColor;
 			
 			PairM<Vec2FM, Float>

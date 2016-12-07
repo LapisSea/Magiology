@@ -3,7 +3,7 @@ package com.magiology.handlers.particle;
 import java.util.List;
 
 import com.magiology.util.interf.Worldabale;
-import com.magiology.util.objs.ColorF;
+import com.magiology.util.objs.color.ColorM;
 import com.magiology.util.objs.vec.Vec2i;
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.OpenGLM;
@@ -56,9 +56,9 @@ public abstract class IParticle implements Worldabale{
 	
 	public abstract void setSpeed(Vec3M speed);
 	
-	public abstract ColorF getColor();
+	public abstract ColorM getColor();
 	
-	public abstract void setColor(ColorF color);
+	public abstract void setColor(ColorM color);
 	
 	public abstract boolean isCollided();
 	

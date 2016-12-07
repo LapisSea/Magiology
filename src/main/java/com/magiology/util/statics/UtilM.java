@@ -33,7 +33,7 @@ import com.magiology.SoundM;
 import com.magiology.core.MReference;
 import com.magiology.util.interf.Worldabale;
 import com.magiology.util.m_extensions.BlockPosM;
-import com.magiology.util.objs.ColorF;
+import com.magiology.util.objs.color.ColorM;
 import com.magiology.util.objs.vec.Vec3M;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
@@ -149,9 +149,9 @@ public class UtilM{
 		return 0;
 	}
 	
-	public static ColorF codeToColorF(int code){
+	public static ColorM codeToColorF(int code){
 		float[] data=codeToRGBABPercentage(code);
-		return new ColorF(data[0], data[1], data[2], data[3]);
+		return new ColorM(data[0], data[1], data[2], data[3]);
 	}
 	
 	public static int[] codeToRGBABByte(int code){
@@ -629,11 +629,11 @@ public class UtilM{
 		}
 	}
 	
-	public static ColorF graduallyEqualize(ColorF variable, ColorF goal, float speed){
-		return new ColorF(graduallyEqualize(variable.r, goal.r, speed),
-				graduallyEqualize(variable.g, goal.g, speed),
-				graduallyEqualize(variable.b, goal.b, speed),
-				graduallyEqualize(variable.a, goal.a, speed));
+	public static ColorM graduallyEqualize(ColorM variable, ColorM goal, float speed){
+		return new ColorM(graduallyEqualize(variable.r(), goal.r(), speed),
+				graduallyEqualize(variable.g(), goal.g(), speed),
+				graduallyEqualize(variable.b(), goal.b(), speed),
+				graduallyEqualize(variable.a(), goal.a(), speed));
 	}
 	
 	public static float[] exponentiallyEqualize(float[] variable, float[] goal, float speed){

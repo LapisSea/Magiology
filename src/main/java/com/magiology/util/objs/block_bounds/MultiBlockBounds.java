@@ -13,6 +13,7 @@ import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.GeometryUtil;
 import com.magiology.util.statics.LogUtil;
 import com.magiology.util.statics.OpenGLM;
+import com.magiology.util.statics.UtilM;
 
 import joptsimple.internal.Objects;
 import net.minecraft.block.state.IBlockState;
@@ -44,18 +45,44 @@ public class MultiBlockBounds implements IBlockBounds{
 	
 	private static class StateData{
 		
+		private static final Vec3i
+			EAST_UP   =new Vec3i( 1, 1, 0),
+			WEST_UP   =new Vec3i(-1, 1, 0),
+			EAST_DOWN =new Vec3i( 1,-1, 0),
+			WEST_DOWN =new Vec3i(-1,-1, 0),
+			
+			UP_SOUTH  =new Vec3i( 0, 1, 1),
+			UP_NORTH  =new Vec3i( 0, 1,-1),
+			DOWN_SOUTH=new Vec3i( 0,-1, 1),
+			DOWN_NORTH=new Vec3i( 0,-1,-1),
+			
+			EAST_SOUTH=new Vec3i( 1, 0, 1),
+			EAST_NORTH=new Vec3i( 1, 0,-1),
+			WEST_SOUTH=new Vec3i(-1, 0, 1),
+			WEST_NORTH=new Vec3i(-1, 0,-1);
+		private static final double EXPAND=0.0020000000949949026D;
+		
 		@SideOnly(Side.CLIENT)
-		private int				drawModel	=-1;
-		private AxisAlignedBB	union;
+		private int					drawModel	=-1;
+		private final AxisAlignedBB	union;
+		private List<AxisAlignedBB> boxes;
 		
-		public StateData(AxisAlignedBB union){
-			this.union=union;
+		public StateData(List<AxisAlignedBB> boxes, boolean remote){
+			this.boxes=remote?boxes:null;
+			
+			if(boxes.isEmpty())union=new AxisAlignedBB(0, 0, 0, 0, 0, 0);
+			else{
+				AxisAlignedBB union=boxes.get(0);
+				for(int i=1;i<boxes.size();i++)union=union.union(boxes.get(i));
+				this.union=union;
+			}
 		}
-		
+
+		@SideOnly(Side.CLIENT)
 		private static class BoxLine{
+			
 			PairM<Vec3M, Vec3M> rawLine;
 			Vec3i vec;
-			private static final double EXPAND=0.0020000000949949026D;
 			public BoxLine(Vec3M v1, Vec3M v2, Vec3i vec){
 				rawLine=new PairM<>(v1, v2);
 				this.vec=vec;
@@ -78,25 +105,10 @@ public class MultiBlockBounds implements IBlockBounds{
 		 * @param boxes = bounding boxes that will be outlined
 		 */
 		@SideOnly(Side.CLIENT)
-		void createModel(List<AxisAlignedBB> boxes){
+		void createModel(){
 			
 			//init values
 			List<BoxLine> lines=new ArrayList<>();
-			final Vec3i
-				EAST_UP   =new Vec3i( 1, 1, 0),
-				WEST_UP   =new Vec3i(-1, 1, 0),
-				EAST_DOWN =new Vec3i( 1,-1, 0),
-				WEST_DOWN =new Vec3i(-1,-1, 0),
-				
-				UP_SOUTH  =new Vec3i( 0, 1, 1),
-				UP_NORTH  =new Vec3i( 0, 1,-1),
-				DOWN_SOUTH=new Vec3i( 0,-1, 1),
-				DOWN_NORTH=new Vec3i( 0,-1,-1),
-				
-				EAST_SOUTH=new Vec3i( 1, 0, 1),
-				EAST_NORTH=new Vec3i( 1, 0,-1),
-				WEST_SOUTH=new Vec3i(-1, 0, 1),
-				WEST_NORTH=new Vec3i(-1, 0,-1);
 			
 			//smart line placing from bounding boxes
 			boxes.forEach(box->{
@@ -141,6 +153,8 @@ public class MultiBlockBounds implements IBlockBounds{
 				if(west ==south)lines.add(new BoxLine(new Vec3M(box.minX,box.minY,box.maxZ),new Vec3M(box.minX,box.maxY,box.maxZ),WEST_SOUTH));
 				if(west ==north)lines.add(new BoxLine(new Vec3M(box.minX,box.minY,box.minZ),new Vec3M(box.minX,box.maxY,box.minZ),WEST_NORTH));
 			});
+			//boxes are not needed anymore.
+			boxes=null;
 			
 			//try merging and removing lines in a way that it does not change the look of the outline
 			List<BoxLine> optimizedOut=new ArrayList<>();
@@ -199,19 +213,19 @@ public class MultiBlockBounds implements IBlockBounds{
 			
 			//end list building mode
 			OpenGLM.glEndList();
-			
 		}
 		
 		@Override
+		@SideOnly(Side.CLIENT)
 		protected void finalize(){
 			if(drawModel!=-1) OpenGLM.glDeleteLists(drawModel, 1);
 		}
 	}
 	
-	private boolean						allDataDirty, constants[];
-	private final List<AxisAlignedBB>	boxes		=new ArrayList<>();
-	private final BoxActivator			activator;
-	private final List<StateData>		allStates	=new ArrayList<>();
+	private boolean					allDataDirty, constants[];
+	private List<AxisAlignedBB>		boxes		=new ArrayList<>();
+	private final BoxActivator		activator;
+	private final List<StateData>	allStates	=new ArrayList<>();
 	
 	public MultiBlockBounds(BoxActivator activator, int constants, AxisAlignedBB...boxes){
 		setBlockBounds(constants, boxes);
@@ -243,17 +257,17 @@ public class MultiBlockBounds implements IBlockBounds{
 	}
 	
 	private void markDirty(){
-		allDataDirty=true;
+		boxes=null;
 	}
 	
 	private int getStateId(IBlockState state, IBlockAccess source, BlockPos pos){
-		if(allDataDirty) compileData();
+		if(boxes==null)compileData(source instanceof World?((World)source).isRemote:UtilM.isRemote());
 		
 		activator.prepare(state, source, pos);
 		int id=0;
 		
 		for(int i=0;i<boxes.size();i++){
-			if(!constants[i]&&activator.isActive(i)) id|=1<<i;
+			if(!constants[i]&&activator.isActive(i))id|=1<<i;
 		}
 		
 		return id;
@@ -268,8 +282,7 @@ public class MultiBlockBounds implements IBlockBounds{
 		return result;
 	}
 	
-	private void compileData(){
-		allDataDirty=false;
+	private void compileData(boolean remote){
 		allStates.clear();
 		List<AxisAlignedBB> dynamics=new ArrayList<>(), alwaysOn=new ArrayList<>();
 		
@@ -281,21 +294,14 @@ public class MultiBlockBounds implements IBlockBounds{
 		LogUtil.println(size);
 		
 		for(int binaryCombination=0;binaryCombination<size;binaryCombination++){
-			AxisAlignedBB union=null;
+			List<AxisAlignedBB> boxes=new ArrayList<>();
 			
 			for(int j=0;j<dynamics.size();j++){
-				if(((binaryCombination>>j)&1)==1){
-					if(union==null) union=dynamics.get(j);
-					else union=union.union(dynamics.get(j));
-				}
+				if(((binaryCombination>>j)&1)==1)boxes.add(dynamics.get(j));
 			}
-			for(AxisAlignedBB box:alwaysOn){
-				if(union==null) union=box;
-				else union=union.union(box);
-			}
+			boxes.addAll(alwaysOn);
 			
-			if(union==null) union=new AxisAlignedBB(0, 0, 0, 0, 0, 0);
-			allStates.add(new StateData(union));
+			allStates.add(new StateData(boxes,remote));
 		}
 	}
 	
@@ -344,7 +350,7 @@ public class MultiBlockBounds implements IBlockBounds{
 	@SideOnly(Side.CLIENT)
 	public void drawBoundsOutline(IBlockState state, World world, BlockPos pos){
 		StateData data=allStates.get(getStateId(state, world, pos));
-		if(data.drawModel==-1) data.createModel(getActiveBoxes(state, world, pos));
+		if(data.boxes!=null)data.createModel();
 		
 		OpenGLM.callList(data.drawModel);
 	}
@@ -377,7 +383,6 @@ public class MultiBlockBounds implements IBlockBounds{
 				
 				@Override
 				public boolean isActive(int id){
-					if(id==6) return true;
 					return sides[id].get(state)||straight.get(state)==id/2;
 				}
 			}, constants, GeometryUtil.generatePipeSyleBoxes(size));

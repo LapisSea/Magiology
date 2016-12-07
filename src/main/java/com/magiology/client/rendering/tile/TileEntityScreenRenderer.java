@@ -5,7 +5,7 @@ import com.magiology.client.renderers.Renderer;
 import com.magiology.handlers.frame_buff.TemporaryFrame;
 import com.magiology.mc_objects.features.screen.TileEntityScreen;
 import com.magiology.util.m_extensions.TileEntitySpecialRendererM;
-import com.magiology.util.objs.ColorF;
+import com.magiology.util.objs.color.ColorM;
 import com.magiology.util.objs.vec.IVec3M;
 import com.magiology.util.objs.vec.Vec2FM;
 import com.magiology.util.objs.vec.Vec2i;
@@ -28,7 +28,7 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 //		if(RandUtil.RB(0.01))ParticleBubbleFactory.get().spawn(new Vec3M(tile.getPos()).add(3.5),new Vec3M(),1,20,0,ColorF.randomRGB());
 		try{
 			double minX=0,minY=0,maxX=1,maxY=1;
-			ColorF.WHITE.bind();
+			ColorM.WHITE.bind();
 			if(tile.hasBrain()){
 				boolean highl=false;
 				if(UtilC.getThePlayer().isSneaking())try{
@@ -62,7 +62,7 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 					
 				}catch(Exception e){
 					if(UtilC.getThePlayer().isSneaking())e.printStackTrace();
-					ColorF.BLUE.bind();
+					ColorM.BLUE.bind();
 					OpenGLM.disableTexture2D();
 				}
 			}else OpenGLM.disableTexture2D();
@@ -126,7 +126,7 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 			e.printStackTrace();
 		}
 		OpenGLM.enableTexture2D();
-		ColorF.WHITE.bind();
+		ColorM.WHITE.bind();
 	}
 	
 	protected static class CrummySmoothLightUtil{
@@ -228,7 +228,7 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 		TileEntityScreen brain=tile.getBrain();
 
 		OpenGLM.disableTexture2D();
-		ColorF.WHITE.bind();
+		ColorM.WHITE.bind();
 		Renderer.POS.beginQuads();
 		Renderer.POS.addVertex(1,       1,        0);
 		Renderer.POS.addVertex(1,       height-1, 0);
@@ -236,7 +236,7 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 		Renderer.POS.addVertex(width-1, 1,        0);
 		Renderer.POS.draw();
 
-		ColorF.ORANGE.bind();
+		ColorM.ORANGE.bind();
 		Renderer.LINES.begin();
 		Renderer.LINES.addVertex(1,1,0);
 		Renderer.LINES.addVertex(width-1,height-1,0);
@@ -250,7 +250,7 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 		OpenGLM.translate(pos.x,pos.y,0);
 
 
-		ColorF.RED.bind();
+		ColorM.RED.bind();
 		Renderer.POS.beginQuads();
 		Renderer.POS.addVertex( 1,  1, 0);
 		Renderer.POS.addVertex( 1, -1, 0);
@@ -266,7 +266,7 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 			Vec2FM pos1=brain.highlight;
 			OpenGLM.translate(pos1.x,pos1.y,0);
 
-			ColorF.BLUE.bind();
+			ColorM.BLUE.bind();
 			Renderer.POS.beginQuads();
 			Renderer.POS.addVertex( 1,  1, 0);
 			Renderer.POS.addVertex( 1, -1, 0);
@@ -279,7 +279,7 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 
 
 
-		ColorF.BLACK.bind();
+		ColorM.BLACK.bind();
 		Renderer.POS.beginQuads();
 
 		Renderer.POS.addVertex(0,     0, 0);
@@ -303,7 +303,7 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 		Renderer.POS.addVertex(width,   0,      0);
 
 		Renderer.POS.draw();
-		ColorF.WHITE.bind();
+		ColorM.WHITE.bind();
 		OpenGLM.enableTexture2D();
 	}
 	

@@ -1,11 +1,11 @@
 package com.magiology.client.shaders.programs;
 
 import com.magiology.client.shaders.ShaderProgram;
-import com.magiology.util.objs.ColorF;
+import com.magiology.util.objs.color.ColorM;
 
 public class SepiaShader extends ShaderProgram{
 	
-	public ColorF color=new ColorF();
+	public ColorM color=new ColorM();
 	
 	protected int mulColor;
 	
@@ -41,7 +41,7 @@ public class SepiaShader extends ShaderProgram{
 		upload(mulColor, color);
 	}
 	
-	public void activate(ColorF color){
+	public void activate(ColorM color){
 		this.color=color;
 		bind();
 		initUniforms();

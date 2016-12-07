@@ -1,7 +1,6 @@
 package com.magiology.client.shaders;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.file.Files;
 
@@ -12,7 +11,7 @@ import org.lwjgl.util.vector.Matrix4f;
 
 import com.google.common.base.Joiner;
 import com.magiology.core.Magiology;
-import com.magiology.util.objs.ColorF;
+import com.magiology.util.objs.color.ColorM;
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.FileUtil;
 import com.magiology.util.statics.LogUtil;
@@ -160,8 +159,8 @@ public abstract class ShaderProgram{
 	public void upload(int location, float f1, float f2, float f3, float f4){
 		GL20.glUniform4f(location, f1, f2, f3, f4);
 	}
-	public void upload(int location, ColorF color){
-		upload(location, color.r, color.g, color.b, color.a);
+	public void upload(int location, ColorM color){
+		upload(location, color.r(), color.g(), color.b(), color.a());
 	}
 	public void upload(int location, Vec3M vec){
 		upload(location, vec.getX(),vec.getY(),vec.getZ());

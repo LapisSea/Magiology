@@ -1,8 +1,8 @@
 package com.magiology.client.rendering;
 
 import com.magiology.client.renderers.Renderer;
-import com.magiology.util.objs.ColorF;
 import com.magiology.util.objs.animation.AnimationM;
+import com.magiology.util.objs.color.ColorM;
 import com.magiology.util.statics.LogUtil;
 import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.OpenGLM.BlendFunc;
@@ -41,7 +41,7 @@ public class RandomAnimation{
 		OpenGLM.translate((1-trans)*50, 50, 0);
 		OpenGLM.rotateZ(rot*10);
 		
-		ColorF.WHITE.bindWithA(MathUtil.snap(a/15-rot/2, 0, 1));
+		ColorM.WHITE.bindWithA(MathUtil.snap(a/15-rot/2, 0, 1));
 		Renderer.POS.beginQuads();
 		Renderer.POS.addVertex(-10, 10,0);
 		Renderer.POS.addVertex( 10, 10,0);
@@ -49,7 +49,7 @@ public class RandomAnimation{
 		Renderer.POS.addVertex(-10,-10,0);
 		Renderer.POS.draw();
 		
-		ColorF.WHITE.bindWithA(a);
+		ColorM.WHITE.bindWithA(a);
 		Renderer.LINES.begin();
 		Renderer.LINES.addVertex(-10-rot*5,-10+rot*2,0);
 		Renderer.LINES.addVertex(-10-rot*17, 10-rot*3,0);

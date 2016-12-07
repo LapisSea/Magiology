@@ -7,7 +7,7 @@ import com.magiology.forge.networking.UpdateTileNBTPacket;
 import com.magiology.handlers.frame_buff.TemporaryFrameBufferHandler;
 import com.magiology.handlers.particle.ParticleHandler;
 import com.magiology.mc_objects.particles.Particles;
-import com.magiology.util.objs.ColorF;
+import com.magiology.util.objs.color.ColorM;
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.RandUtil;
 import com.magiology.util.statics.UtilC;
@@ -46,7 +46,7 @@ public class TickEvents{
 					
 					Vec3M pos=new Vec3M(UtilC.getThePlayer().getPositionEyes(0));
 					
-					Particles.MISTY_ENERGY.spawn(pos.add(new Vec3M(RandUtil.CRF(10), RandUtil.CRF(10), RandUtil.CRF(10))), new Vec3M(), 0.1F, 0, new ColorF(0.7+RandUtil.RF(0.3),0.4+RandUtil.RF(0.4),0.2+RandUtil.RF(0.1),0.3+RandUtil.CRF(0.7)));
+					Particles.MISTY_ENERGY.spawn(pos.add(new Vec3M(RandUtil.CRF(10), RandUtil.CRF(10), RandUtil.CRF(10))), new Vec3M(), 0.1F, 0, new ColorM(0.7+RandUtil.RF(0.3),0.4+RandUtil.RF(0.4),0.2+RandUtil.RF(0.1),0.3+RandUtil.CRF(0.7)));
 					ParticleHandler.get().updateParticles();
 				}
 			}

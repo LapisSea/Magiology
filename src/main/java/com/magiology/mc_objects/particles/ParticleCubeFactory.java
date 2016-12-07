@@ -5,7 +5,8 @@ import org.lwjgl.opengl.GL11;
 import com.magiology.client.renderers.FastNormalRenderer;
 import com.magiology.handlers.particle.ParticleFactory;
 import com.magiology.handlers.particle.ParticleM;
-import com.magiology.util.objs.ColorF;
+import com.magiology.util.objs.color.ColorM;
+import com.magiology.util.objs.color.IColorM;
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.OpenGLM.AlphaFunc;
@@ -26,11 +27,11 @@ public class ParticleCubeFactory extends ParticleFactory{
 	public static ParticleCubeFactory get(){return instance;}
 	private ParticleCubeFactory(){}
 	
-	public void spawn(Vec3M pos, Vec3M speed, float size, float lifeTime, float gravity, ColorF color){
+	public void spawn(Vec3M pos, Vec3M speed, float size, float lifeTime, float gravity, IColorM color){
 		spawn(pos, speed, size, lifeTime, new Vec3M(0, gravity, 0), color);
 	}
 	
-	public void spawn(Vec3M pos, Vec3M speed, float size, float lifeTime, Vec3M gravity, ColorF color){
+	public void spawn(Vec3M pos, Vec3M speed, float size, float lifeTime, Vec3M gravity, IColorM color){
 		if(!UtilM.isRemote()||!shouldSpawn(pos))return;
 		addParticle(new ParticleCube(pos, speed, size, lifeTime, gravity, color));
 //		if(UtilC.getWorldTime()%20==0)compileDisplayList();
@@ -116,13 +117,13 @@ public class ParticleCubeFactory extends ParticleFactory{
 		protected Vec3M rotation=new Vec3M(RandUtil.RF(90),RandUtil.RF(90),RandUtil.RF(90)),prevRotation=new Vec3M(),rotationSpeed=new Vec3M(RandUtil.CRF(4),RandUtil.CRF(4),RandUtil.CRF(4));
 		
 		
-		protected ParticleCube(Vec3M pos, Vec3M speed, float size, float lifeTime, Vec3M gravity, ColorF color){
+		protected ParticleCube(Vec3M pos, Vec3M speed, float size, float lifeTime, Vec3M gravity, IColorM color){
 			super(pos, speed);
 			setSizeTo(0);
 			this.lifeTime=lifeTime;
 			setGravity(gravity);
-			setColor(color);
-			getColor().a=1;
+			setColor(ColorM.toColorM(color));
+			getColor().a(1);
 			originalSize=size;
 			originalAlpha=1;
 		}

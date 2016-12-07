@@ -17,7 +17,7 @@ import com.magiology.handlers.frame_buff.TemporaryFrame;
 import com.magiology.handlers.particle.ParticleHandler;
 import com.magiology.mc_objects.features.screen.TileEntityScreen;
 import com.magiology.util.m_extensions.BlockM;
-import com.magiology.util.objs.ColorF;
+import com.magiology.util.objs.color.ColorM;
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.UtilC;
@@ -294,7 +294,7 @@ public class RenderEvents{
 			blockM.getBoundingBox().drawBoundsOutline(state, world, pos);
 			
 			OpenGLM.enableTexture2D();
-			ColorF.WHITE.bind();
+			ColorM.WHITE.bind();
 			
 			OpenGLM.popMatrix();
 			e.setCanceled(true);

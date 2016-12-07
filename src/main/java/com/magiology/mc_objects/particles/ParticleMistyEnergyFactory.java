@@ -6,7 +6,7 @@ import com.magiology.client.renderers.Renderer;
 import com.magiology.handlers.particle.ParticleFactory;
 import com.magiology.handlers.particle.ParticleM;
 import com.magiology.util.m_extensions.ResourceLocationM;
-import com.magiology.util.objs.ColorF;
+import com.magiology.util.objs.color.ColorM;
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.OpenGLM.BlendFunc;
@@ -29,11 +29,11 @@ public class ParticleMistyEnergyFactory extends ParticleFactory{
 	public static final ResourceLocation texture=new ResourceLocationM("/textures/particle/explosion_stages.png");
 	public static int[] defultModel=new int[32];
 	
-	public void spawn(Vec3M pos, Vec3M speed, float size, float gravity, ColorF color){
+	public void spawn(Vec3M pos, Vec3M speed, float size, float gravity, ColorM color){
 		spawn(pos, speed, size, new Vec3M(0, gravity, 0), color);
 	}
 	
-	public void spawn(Vec3M pos, Vec3M speed, float size, Vec3M gravity, ColorF color){
+	public void spawn(Vec3M pos, Vec3M speed, float size, Vec3M gravity, ColorM color){
 		if(!UtilM.isRemote()||!shouldSpawn(pos))return;
 		addParticle(new ParticleMistyEnergy(pos, speed, size, gravity, color));
 //		if(UtilC.getThePlayer().isSneaking()&&UtilC.getWorldTime()%20==0){
@@ -102,7 +102,7 @@ public class ParticleMistyEnergyFactory extends ParticleFactory{
 		
 		private final int txtType=RandUtil.RB()?0:16;
 		
-		protected ParticleMistyEnergy(Vec3M pos, Vec3M speed, float size, Vec3M gravity, ColorF color){
+		protected ParticleMistyEnergy(Vec3M pos, Vec3M speed, float size, Vec3M gravity, ColorM color){
 			super(pos, speed);
 			setSizeTo(size);
 			setGravity(gravity);

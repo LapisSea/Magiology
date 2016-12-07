@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.magiology.client.renderers.Renderer;
 import com.magiology.cross_mod.jei.JeiUidsM;
-import com.magiology.util.objs.ColorF;
+import com.magiology.util.objs.color.ColorM;
 import com.magiology.util.statics.OpenGLM;
 
 import mezz.jei.api.IGuiHelper;
@@ -38,7 +38,7 @@ public class ShakerCategory extends BlankRecipeCategory<ShakingRecipe>{
 	@Override
 	public void drawAnimations(Minecraft minecraft){
 		OpenGLM.disableTexture2D();
-		ColorF.BLUE.bind();
+		ColorM.BLUE.bind();
 		Renderer.POS.beginQuads();
 		Renderer.POS.addVertex(0,20,0);
 		Renderer.POS.addVertex(20,20,0);

@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL11;
 import com.magiology.client.renderers.FastNormalRenderer;
 import com.magiology.handlers.particle.ParticleFactory;
 import com.magiology.handlers.particle.ParticleM;
-import com.magiology.util.objs.ColorF;
+import com.magiology.util.objs.color.ColorM;
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.OpenGLM.AlphaFunc;
@@ -28,11 +28,11 @@ public class ParticleBubbleFactory extends ParticleFactory{
 	
 	public static int defultModel=-1;
 	
-	public void spawn(Vec3M pos, Vec3M speed, float size, float lifeTime, float gravity, ColorF color){
+	public void spawn(Vec3M pos, Vec3M speed, float size, float lifeTime, float gravity, ColorM color){
 		spawn(pos, speed, size, lifeTime, new Vec3M(0, gravity, 0), color);
 	}
 	
-	public void spawn(Vec3M pos, Vec3M speed, float size, float lifeTime, Vec3M gravity, ColorF color){
+	public void spawn(Vec3M pos, Vec3M speed, float size, float lifeTime, Vec3M gravity, ColorM color){
 		if(!shouldSpawn(pos))return;
 		addParticle(new ParticleBubble(pos, speed, size, lifeTime, gravity, color));
 	}
@@ -121,14 +121,14 @@ public class ParticleBubbleFactory extends ParticleFactory{
 		protected Vec3M rotation=new Vec3M(),prevRotation=new Vec3M(),rotationSpeed=new Vec3M(RandUtil.CRF(4),RandUtil.CRF(4),RandUtil.CRF(4));
 		
 		
-		protected ParticleBubble(Vec3M pos, Vec3M speed, float size, float lifeTime, Vec3M gravity, ColorF color){
+		protected ParticleBubble(Vec3M pos, Vec3M speed, float size, float lifeTime, Vec3M gravity, ColorM color){
 			super(pos, speed);
 			setSizeTo(0);
 			this.lifeTime=lifeTime;
 			setGravity(gravity);
 			setColor(color);
 			originalSize=size;
-			originalAlpha=color.a;
+			originalAlpha=color.a();
 		}
 		
 		@Override
@@ -139,7 +139,7 @@ public class ParticleBubbleFactory extends ParticleFactory{
 			if(age3<lifeTime)mul=age3/lifeTime;
 			else if(age3-lifeTime*2>0){
 				float add=Math.min(1, (age-lifeTime)/lifeTime*-10F/3);
-				getColor().a=originalAlpha*add;
+				getColor().a(originalAlpha*add);
 				mul=2-add;
 				mul*=mul;
 			}
@@ -175,8 +175,8 @@ public class ParticleBubbleFactory extends ParticleFactory{
 			OpenGLM.scale(PartialTicksUtil.calculate(getPrevSize(), getSize()));
 			double angle=(getParticleAge()+PartialTicksUtil.partialTicks)/3,mul=0.15;
 			OpenGLM.scale(1+Math.sin(angle)*mul-mul,1+Math.sin(angle+1.5)*mul-mul,1+Math.sin(angle+3)*mul-mul);
-			ColorF color=getColor();
-			if(color.a<254/255F)OpenGLM.setUpOpaqueRendering(BlendFunc.NORMAL);
+			ColorM color=getColor();
+			if(color.a()<254/255F)OpenGLM.setUpOpaqueRendering(BlendFunc.NORMAL);
 			else OpenGLM.endOpaqueRendering();
 			OpenGLM.color(color);
 		}

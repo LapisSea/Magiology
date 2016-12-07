@@ -1,9 +1,9 @@
 package com.magiology.client.shaders.upload;
 
 import com.magiology.client.shaders.ShaderProgram;
-import com.magiology.util.objs.ColorF;
+import com.magiology.util.objs.color.ColorM;
 
-public class UniformUploaderColor<T extends ColorF> extends UniformUploaderBase<T>{
+public class UniformUploaderColor<T extends ColorM> extends UniformUploaderBase<T>{
 	
 	public UniformUploaderColor(ShaderProgram parent,String name){
 		super(parent,name);

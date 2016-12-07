@@ -6,7 +6,8 @@ import com.magiology.client.renderers.Renderer;
 import com.magiology.core.MReference;
 import com.magiology.handlers.particle.ParticleFactory;
 import com.magiology.handlers.particle.ParticleM;
-import com.magiology.util.objs.ColorF;
+import com.magiology.util.objs.color.ColorM;
+import com.magiology.util.objs.color.IColorM;
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.OpenGLM.BlendFunc;
@@ -28,11 +29,11 @@ public class ParticleMistBubbleFactory extends ParticleFactory{
 	public static int defultModel=-1;
 
 	
-	public void spawn(Vec3M pos, Vec3M speed, float size, float lifeTime, float gravity, ColorF color){
+	public void spawn(Vec3M pos, Vec3M speed, float size, float lifeTime, float gravity, ColorM color){
 		spawn(pos, speed, size, lifeTime, new Vec3M(0, gravity, 0), color);
 	}
 	
-	public void spawn(Vec3M pos, Vec3M speed, float size, float lifeTime, Vec3M gravity, ColorF color){
+	public void spawn(Vec3M pos, Vec3M speed, float size, float lifeTime, Vec3M gravity, ColorM color){
 		if(UtilM.isRemote()&&shouldSpawn(pos))addParticle(new ParticleMistBubble(pos, speed, size, lifeTime, gravity, color));
 	}
 	
@@ -83,14 +84,14 @@ public class ParticleMistBubbleFactory extends ParticleFactory{
 		protected float lifeTime,originalSize,originalAlpha;
 		
 		
-		protected ParticleMistBubble(Vec3M pos, Vec3M speed, float size, float lifeTime, Vec3M gravity, ColorF color){
+		protected ParticleMistBubble(Vec3M pos, Vec3M speed, float size, float lifeTime, Vec3M gravity, IColorM color){
 			super(pos, speed);
 			setSizeTo(0);
 			this.lifeTime=lifeTime;
 			setGravity(gravity);
-			setColor(color.copy());
+			setColor(ColorM.toColorM(color));
 			originalSize=size;
-			originalAlpha=color.a;
+			originalAlpha=color.a();
 		}
 		
 		@Override
@@ -99,7 +100,7 @@ public class ParticleMistBubbleFactory extends ParticleFactory{
 			moveParticle(getSpeed());
 			float mul=1-Math.abs((getParticleAge()*2-lifeTime)/lifeTime);
 			setSize(originalSize*(float)Math.sqrt(mul));
-			getColor().a=mul*2*originalAlpha;
+			getColor().a(mul*2*originalAlpha);
 			if(getParticleAge()>lifeTime)kill();
 		}
 		

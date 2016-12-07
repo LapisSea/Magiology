@@ -2,7 +2,7 @@ package com.magiology.client.renderers;
 
 import org.lwjgl.opengl.GL11;
 
-import com.magiology.util.objs.ColorF;
+import com.magiology.util.objs.color.ColorM;
 import com.magiology.util.objs.vec.IVec3M;
 import com.magiology.util.objs.vec.Vec2FM;
 import com.magiology.util.objs.vec.Vec2i;
@@ -83,20 +83,20 @@ public class Renderer{
 	
 	public static class ParticleRenderer extends RendererBase{
 		
-		public void addVertex(double xPos,double yPos,double zPos,double u,double v,ColorF color,int xLight,int yLight){
-			addVertex(xPos,yPos,zPos,u,v,color.r,color.g,color.b,color.a,xLight,yLight);
+		public void addVertex(double xPos,double yPos,double zPos,double u,double v,ColorM color,int xLight,int yLight){
+			addVertex(xPos,yPos,zPos,u,v,color.r(),color.g(),color.b(),color.a(),xLight,yLight);
 		}
 		
 		public void addVertex(double xPos,double yPos,double zPos,double u,double v,float red,float green,float blue,float alpha,int xLight,int yLight){
 			instance.addVertexData(xPos,yPos,zPos,u,v).addColor(red,green,blue,alpha).lightmap(xLight,yLight).endVertex();
 		}
 		
-		public void addVertex(IVec3M pos,double u,double v,ColorF color,int xLight,int yLight){
-			addVertex(pos.x(),pos.y(),pos.z(),u,v,color.r,color.g,color.b,color.a,xLight,yLight);
+		public void addVertex(IVec3M pos,double u,double v,ColorM color,int xLight,int yLight){
+			addVertex(pos.x(),pos.y(),pos.z(),u,v,color.r(),color.g(),color.b(),color.a(),xLight,yLight);
 		}
 		
-		public void addVertex(Vec3d pos,double u,double v,ColorF color,int xLight,int yLight){
-			addVertex(pos.xCoord,pos.yCoord,pos.zCoord,u,v,color.r,color.g,color.b,color.a,xLight,yLight);
+		public void addVertex(Vec3d pos,double u,double v,ColorM color,int xLight,int yLight){
+			addVertex(pos.xCoord,pos.yCoord,pos.zCoord,u,v,color.r(),color.g(),color.b(),color.a(),xLight,yLight);
 		}
 		
 		public void addVertex(IVec3M pos,double u,double v,float red,float green,float blue,float alpha,int xLight,int yLight){
@@ -111,16 +111,16 @@ public class Renderer{
 	
 	public static class PosColorRenderer extends RendererBase{
 		
-		public void addVertex(double xPos,double yPos,double zPos,ColorF color){
-			instance.addPos(xPos,yPos,zPos).addColor(color.r,color.g,color.b,color.a).endVertex();
+		public void addVertex(double xPos,double yPos,double zPos,ColorM color){
+			instance.addPos(xPos,yPos,zPos).addColor(color.r(),color.g(),color.b(),color.a()).endVertex();
 		}
 		
 		public void addVertex(double xPos,double yPos,double zPos,float r,float g,float b,float a){
 			instance.addPos(xPos,yPos,zPos).addColor(r,g,b,a).endVertex();
 		}
 		
-		public void addVertex(IVec3M pos,ColorF color){
-			instance.addPos(pos.x(),pos.y(),pos.z()).addColor(color.r,color.g,color.b,color.a).endVertex();
+		public void addVertex(IVec3M pos,ColorM color){
+			instance.addPos(pos.x(),pos.y(),pos.z()).addColor(color.r(),color.g(),color.b(),color.a()).endVertex();
 		}
 		
 		public void addVertex(IVec3M pos,float r,float g,float b,float a){
@@ -166,12 +166,12 @@ public class Renderer{
 	
 	public static class PosColorNormalRenderer extends RendererBase{
 		
-		public void addVertex(double xPos,double yPos,double zPos,ColorF color,float xNormal,float yNormal,float zNormal){
-			instance.addPos(xPos,yPos,zPos).addColor(color.r,color.g,color.b,color.a).addNormal(xNormal,yNormal,zNormal).endVertex();
+		public void addVertex(double xPos,double yPos,double zPos,ColorM color,float xNormal,float yNormal,float zNormal){
+			instance.addPos(xPos,yPos,zPos).addColor(color.r(),color.g(),color.b(),color.a()).addNormal(xNormal,yNormal,zNormal).endVertex();
 		}
 		
-		public void addVertex(double xPos,double yPos,double zPos,ColorF color,IVec3M normal){
-			instance.addPos(xPos,yPos,zPos).addColor(color.r,color.g,color.b,color.a).addNormal(normal.getX(),normal.getY(),normal.getZ()).endVertex();
+		public void addVertex(double xPos,double yPos,double zPos,ColorM color,IVec3M normal){
+			instance.addPos(xPos,yPos,zPos).addColor(color.r(),color.g(),color.b(),color.a()).addNormal(normal.getX(),normal.getY(),normal.getZ()).endVertex();
 		}
 		
 		public void addVertex(double xPos,double yPos,double zPos,float r,float g,float b,float a,float xNormal,float yNormal,float zNormal){
@@ -182,12 +182,12 @@ public class Renderer{
 			instance.addPos(xPos,yPos,zPos).addColor(r,g,b,a).addNormal(normal.getX(),normal.getY(),normal.getZ()).endVertex();
 		}
 		
-		public void addVertex(IVec3M pos,ColorF color,float xNormal,float yNormal,float zNormal){
-			instance.addPos(pos.x(),pos.y(),pos.z()).addColor(color.r,color.g,color.b,color.a).addNormal(xNormal,yNormal,zNormal).endVertex();
+		public void addVertex(IVec3M pos,ColorM color,float xNormal,float yNormal,float zNormal){
+			instance.addPos(pos.x(),pos.y(),pos.z()).addColor(color.r(),color.g(),color.b(),color.a()).addNormal(xNormal,yNormal,zNormal).endVertex();
 		}
 		
-		public void addVertex(IVec3M pos,ColorF color,IVec3M normal){
-			instance.addPos(pos.x(),pos.y(),pos.z()).addColor(color.r,color.g,color.b,color.a).addNormal(normal.getX(),normal.getY(),normal.getZ()).endVertex();
+		public void addVertex(IVec3M pos,ColorM color,IVec3M normal){
+			instance.addPos(pos.x(),pos.y(),pos.z()).addColor(color.r(),color.g(),color.b(),color.a()).addNormal(normal.getX(),normal.getY(),normal.getZ()).endVertex();
 		}
 		
 		public void addVertex(IVec3M pos,float r,float g,float b,float a,float xNormal,float yNormal,float zNormal){
@@ -205,12 +205,12 @@ public class Renderer{
 	}
 	public static class PosUVColorNormalRenderer extends RendererBase{
 		
-		public void addVertex(double xPos,double yPos,double zPos,double u,double v,ColorF color,float xNormal,float yNormal,float zNormal){
-			instance.addVertexData(xPos,yPos,zPos,u,v).addColor(color.r,color.g,color.b,color.a).addNormal(xNormal,yNormal,zNormal).endVertex();
+		public void addVertex(double xPos,double yPos,double zPos,double u,double v,ColorM color,float xNormal,float yNormal,float zNormal){
+			instance.addVertexData(xPos,yPos,zPos,u,v).addColor(color.r(),color.g(),color.b(),color.a()).addNormal(xNormal,yNormal,zNormal).endVertex();
 		}
 		
-		public void addVertex(double xPos,double yPos,double zPos,double u,double v,ColorF color,IVec3M normal){
-			instance.addVertexData(xPos,yPos,zPos,u,v).addColor(color.r,color.g,color.b,color.a).addNormal(normal.getX(),normal.getY(),normal.getZ()).endVertex();
+		public void addVertex(double xPos,double yPos,double zPos,double u,double v,ColorM color,IVec3M normal){
+			instance.addVertexData(xPos,yPos,zPos,u,v).addColor(color.r(),color.g(),color.b(),color.a()).addNormal(normal.getX(),normal.getY(),normal.getZ()).endVertex();
 		}
 		
 		public void addVertex(double xPos,double yPos,double zPos,double u,double v,float r,float g,float b,float a,float xNormal,float yNormal,float zNormal){
@@ -221,12 +221,12 @@ public class Renderer{
 			instance.addVertexData(xPos,yPos,zPos,u,v).addColor(r,g,b,a).addNormal(normal.getX(),normal.getY(),normal.getZ()).endVertex();
 		}
 		
-		public void addVertex(IVec3M pos,double u,double v,ColorF color,float xNormal,float yNormal,float zNormal){
-			instance.addVertexData(pos.x(),pos.y(),pos.z(),u,v).addColor(color.r,color.g,color.b,color.a).addNormal(xNormal,yNormal,zNormal).endVertex();
+		public void addVertex(IVec3M pos,double u,double v,ColorM color,float xNormal,float yNormal,float zNormal){
+			instance.addVertexData(pos.x(),pos.y(),pos.z(),u,v).addColor(color.r(),color.g(),color.b(),color.a()).addNormal(xNormal,yNormal,zNormal).endVertex();
 		}
 		
-		public void addVertex(IVec3M pos,double u,double v,ColorF color,IVec3M normal){
-			instance.addVertexData(pos.x(),pos.y(),pos.z(),u,v).addColor(color.r,color.g,color.b,color.a).addNormal(normal.getX(),normal.getY(),normal.getZ()).endVertex();
+		public void addVertex(IVec3M pos,double u,double v,ColorM color,IVec3M normal){
+			instance.addVertexData(pos.x(),pos.y(),pos.z(),u,v).addColor(color.r(),color.g(),color.b(),color.a()).addNormal(normal.getX(),normal.getY(),normal.getZ()).endVertex();
 		}
 		
 		public void addVertex(IVec3M pos,double u,double v,float r,float g,float b,float a,float xNormal,float yNormal,float zNormal){
@@ -245,16 +245,16 @@ public class Renderer{
 	
 	public static class PosUVColorRenderer extends RendererBase{
 		
-		public void addVertex(double xPos,double yPos,double zPos,double u,double v,ColorF color){
-			instance.addVertexData(xPos,yPos,zPos,u,v).addColor(color.r,color.g,color.b,color.a).endVertex();
+		public void addVertex(double xPos,double yPos,double zPos,double u,double v,ColorM color){
+			instance.addVertexData(xPos,yPos,zPos,u,v).addColor(color.r(),color.g(),color.b(),color.a()).endVertex();
 		}
 		
 		public void addVertex(double xPos,double yPos,double zPos,double u,double v,float r,float g,float b,float a){
 			instance.addVertexData(xPos,yPos,zPos,u,v).addColor(r,g,b,a).endVertex();
 		}
 		
-		public void addVertex(IVec3M pos,double u,double v,ColorF color){
-			instance.addVertexData(pos.x(),pos.y(),pos.z(),u,v).addColor(color.r,color.g,color.b,color.a).endVertex();
+		public void addVertex(IVec3M pos,double u,double v,ColorM color){
+			instance.addVertexData(pos.x(),pos.y(),pos.z(),u,v).addColor(color.r(),color.g(),color.b(),color.a()).endVertex();
 		}
 		
 		public void addVertex(IVec3M pos,double u,double v,float r,float g,float b,float a){
@@ -315,11 +315,11 @@ public class Renderer{
 		public void addVertex(IVec3M pos, float r, float g, float b, float a, double u,double v, int lightX, int lightY){
 			instance.addPos(pos.x(), pos.y(), pos.z()).addColor(r, g, b, a).addUV(u, v).lightmap(lightX, lightY).endVertex();
 		}
-		public void addVertex(double xPos,double yPos,double zPos, ColorF color, double u,double v, int lightX, int lightY){
-			instance.addPos(xPos, yPos, zPos).addColor(color.r, color.g, color.b, color.a).addUV(u, v).lightmap(lightX, lightY).endVertex();
+		public void addVertex(double xPos,double yPos,double zPos, ColorM color, double u,double v, int lightX, int lightY){
+			instance.addPos(xPos, yPos, zPos).addColor(color.r(), color.g(), color.b(), color.a()).addUV(u, v).lightmap(lightX, lightY).endVertex();
 		}
-		public void addVertex(IVec3M pos, ColorF color, double u,double v, int lightX, int lightY){
-			instance.addPos(pos.x(), pos.y(), pos.z()).addColor(color.r, color.g, color.b, color.a).addUV(u, v).lightmap(lightX, lightY).endVertex();
+		public void addVertex(IVec3M pos, ColorM color, double u,double v, int lightX, int lightY){
+			instance.addPos(pos.x(), pos.y(), pos.z()).addColor(color.r(), color.g(), color.b(), color.a()).addUV(u, v).lightmap(lightX, lightY).endVertex();
 		}
 		public void addVertex(double xPos,double yPos,double zPos, float r, float g, float b, float a, Vec2FM uv, int lightX, int lightY){
 			instance.addPos(xPos, yPos, zPos).addColor(r, g, b, a).addUV(uv.x, uv.y).lightmap(lightX, lightY).endVertex();
@@ -327,11 +327,11 @@ public class Renderer{
 		public void addVertex(IVec3M pos, float r, float g, float b, float a, Vec2FM uv, int lightX, int lightY){
 			instance.addPos(pos.x(), pos.y(), pos.z()).addColor(r, g, b, a).addUV(uv.x, uv.y).lightmap(lightX, lightY).endVertex();
 		}
-		public void addVertex(double xPos,double yPos,double zPos, ColorF color, Vec2FM uv, int lightX, int lightY){
-			instance.addPos(xPos, yPos, zPos).addColor(color.r, color.g, color.b, color.a).addUV(uv.x, uv.y).lightmap(lightX, lightY).endVertex();
+		public void addVertex(double xPos,double yPos,double zPos, ColorM color, Vec2FM uv, int lightX, int lightY){
+			instance.addPos(xPos, yPos, zPos).addColor(color.r(), color.g(), color.b(), color.a()).addUV(uv.x, uv.y).lightmap(lightX, lightY).endVertex();
 		}
-		public void addVertex(IVec3M pos, ColorF color, Vec2FM uv, int lightX, int lightY){
-			instance.addPos(pos.x(), pos.y(), pos.z()).addColor(color.r, color.g, color.b, color.a).addUV(uv.x, uv.y).lightmap(lightX, lightY).endVertex();
+		public void addVertex(IVec3M pos, ColorM color, Vec2FM uv, int lightX, int lightY){
+			instance.addPos(pos.x(), pos.y(), pos.z()).addColor(color.r(), color.g(), color.b(), color.a()).addUV(uv.x, uv.y).lightmap(lightX, lightY).endVertex();
 		}
 		
 		public void addVertex(double xPos,double yPos,double zPos, float r, float g, float b, float a, double u,double v, Vec2i light){
@@ -340,11 +340,11 @@ public class Renderer{
 		public void addVertex(IVec3M pos, float r, float g, float b, float a, double u,double v, Vec2i light){
 			instance.addPos(pos.x(), pos.y(), pos.z()).addColor(r, g, b, a).addUV(u, v).lightmap(light.x, light.y).endVertex();
 		}
-		public void addVertex(double xPos,double yPos,double zPos, ColorF color, double u,double v, Vec2i light){
-			instance.addPos(xPos, yPos, zPos).addColor(color.r, color.g, color.b, color.a).addUV(u, v).lightmap(light.x, light.y).endVertex();
+		public void addVertex(double xPos,double yPos,double zPos, ColorM color, double u,double v, Vec2i light){
+			instance.addPos(xPos, yPos, zPos).addColor(color.r(), color.g(), color.b(), color.a()).addUV(u, v).lightmap(light.x, light.y).endVertex();
 		}
-		public void addVertex(IVec3M pos, ColorF color, double u,double v, Vec2i light){
-			instance.addPos(pos.x(), pos.y(), pos.z()).addColor(color.r, color.g, color.b, color.a).addUV(u, v).lightmap(light.x, light.y).endVertex();
+		public void addVertex(IVec3M pos, ColorM color, double u,double v, Vec2i light){
+			instance.addPos(pos.x(), pos.y(), pos.z()).addColor(color.r(), color.g(), color.b(), color.a()).addUV(u, v).lightmap(light.x, light.y).endVertex();
 		}
 		public void addVertex(double xPos,double yPos,double zPos, float r, float g, float b, float a, Vec2FM uv, Vec2i light){
 			instance.addPos(xPos, yPos, zPos).addColor(r, g, b, a).addUV(uv.x, uv.y).lightmap(light.x, light.y).endVertex();
@@ -352,11 +352,11 @@ public class Renderer{
 		public void addVertex(IVec3M pos, float r, float g, float b, float a, Vec2FM uv, Vec2i light){
 			instance.addPos(pos.x(), pos.y(), pos.z()).addColor(r, g, b, a).addUV(uv.x, uv.y).lightmap(light.x, light.y).endVertex();
 		}
-		public void addVertex(double xPos,double yPos,double zPos, ColorF color, Vec2FM uv, Vec2i light){
-			instance.addPos(xPos, yPos, zPos).addColor(color.r, color.g, color.b, color.a).addUV(uv.x, uv.y).lightmap(light.x, light.y).endVertex();
+		public void addVertex(double xPos,double yPos,double zPos, ColorM color, Vec2FM uv, Vec2i light){
+			instance.addPos(xPos, yPos, zPos).addColor(color.r(), color.g(), color.b(), color.a()).addUV(uv.x, uv.y).lightmap(light.x, light.y).endVertex();
 		}
-		public void addVertex(IVec3M pos, ColorF color, Vec2FM uv, Vec2i light){
-			instance.addPos(pos.x(), pos.y(), pos.z()).addColor(color.r, color.g, color.b, color.a).addUV(uv.x, uv.y).lightmap(light.x, light.y).endVertex();
+		public void addVertex(IVec3M pos, ColorM color, Vec2FM uv, Vec2i light){
+			instance.addPos(pos.x(), pos.y(), pos.z()).addColor(color.r(), color.g(), color.b(), color.a()).addUV(uv.x, uv.y).lightmap(light.x, light.y).endVertex();
 		}
 		
 		
