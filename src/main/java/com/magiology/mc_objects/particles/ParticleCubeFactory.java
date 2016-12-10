@@ -23,9 +23,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ParticleCubeFactory extends ParticleFactory{
 	
 	public static int defultModel=-1;
-	private final static ParticleCubeFactory instance=new ParticleCubeFactory();
-	public static ParticleCubeFactory get(){return instance;}
-	private ParticleCubeFactory(){}
 	
 	public void spawn(Vec3M pos, Vec3M speed, float size, float lifeTime, float gravity, IColorM color){
 		spawn(pos, speed, size, lifeTime, new Vec3M(0, gravity, 0), color);
@@ -181,7 +178,7 @@ public class ParticleCubeFactory extends ParticleFactory{
 		}
 		@Override
 		public ParticleFactory getFactorfy(){
-			return instance;
+			return null;
 		}
 	}
 	

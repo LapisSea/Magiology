@@ -1,60 +1,60 @@
 package com.magiology.util.objs.block_bounds;
 
-import com.magiology.client.renderers.Renderer;
+import com.magiology.client.rendering.highlight.BlockHighlightRenderer;
+import com.magiology.client.rendering.highlight.types.BasicBlockHighlightRenderer;
 import com.magiology.util.interf.IntReturn;
 import com.magiology.util.statics.OpenGLM;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class StateDependantBlockBounds implements IBlockBounds{
 	
-	private final class StateBounds{
+	public final class StateBounds{
 		
 		@SideOnly(Side.CLIENT)
-		private int			drawModel		=-1;
-		boolean				drawModelInvalid=true;
-		final AxisAlignedBB	box;
-		final boolean		fullCube;
+		private int drawModel=-1;
+		
+		@SideOnly(Side.CLIENT)
+		public int getDrawModel(){
+			return drawModel;
+		}
+		
+		@SideOnly(Side.CLIENT)
+		public void setDrawModel(int drawModel){
+			if(this.drawModel==drawModel) return;
+			if(drawModel!=-1)OpenGLM.glDeleteLists(this.drawModel, 1);
+			this.drawModel=drawModel;
+		}
+		
+		public final AxisAlignedBB	box;
+		final boolean				fullCube;
 		
 		public StateBounds(AxisAlignedBB box){
 			this.box=box;
 			fullCube=box.minX==0&&box.maxX==1&&
-					 box.minY==0&&box.maxY==1&&
-					 box.minZ==0&&box.maxZ==1;
-		}
-		
-		@SideOnly(Side.CLIENT)
-		void createModel(){
-			drawModelInvalid=false;
-			if(drawModel!=-1)OpenGLM.glDeleteLists(drawModel, 1);
-			drawModel=GLAllocation.generateDisplayLists(1);
-			GlStateManager.glNewList(drawModel, 4864);
-			
-			Renderer.LINES.begin();
-			generateBoxLines(box.expandXyz(0.0020000000949949026D)).forEach(Renderer.LINES::addVertex);
-			Renderer.LINES.draw();
-			
-			GlStateManager.glEndList();
+					box.minY==0&&box.maxY==1&&
+					box.minZ==0&&box.maxZ==1;
 		}
 		
 		@Override
 		protected void finalize(){
 			if(drawModel!=-1)OpenGLM.glDeleteLists(drawModel, 1);
 		}
+		
 	}
 	
-	private final StateBounds[] boxes;
-	private final IntReturn<IBlockState> boxPicker;
+	@SideOnly(Side.CLIENT)
+	public BlockHighlightRenderer renderer=new BasicBlockHighlightRenderer(this);
 	
-	public StateDependantBlockBounds(IntReturn<IBlockState> boxPicker,AxisAlignedBB... boxes){
+	public final StateBounds[]				boxes;
+	private final IntReturn<IBlockState>	boxPicker;
+	
+	public StateDependantBlockBounds(IntReturn<IBlockState> boxPicker, AxisAlignedBB...boxes){
 		this.boxes=new StateBounds[boxes.length];
 		
 		for(int i=0;i<boxes.length;i++){
@@ -63,8 +63,7 @@ public class StateDependantBlockBounds implements IBlockBounds{
 		this.boxPicker=boxPicker;
 	}
 	
-	
-	private StateBounds getBox(IBlockState state){
+	public StateBounds getBox(IBlockState state){
 		return boxes[boxPicker.get(state)];
 	}
 	
@@ -79,12 +78,13 @@ public class StateDependantBlockBounds implements IBlockBounds{
 	}
 	
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void drawBoundsOutline(IBlockState state, World world, BlockPos pos){
-		StateBounds box=getBox(state);
-		if(box.drawModelInvalid) box.createModel();
-		
-		OpenGLM.callList(box.drawModel);
+	public BlockHighlightRenderer getHighlightRenderer(){
+		return renderer;
+	}
+	
+	@Override
+	public void setHighlightRenderer(BlockHighlightRenderer renderer){
+		this.renderer=renderer;
 	}
 	
 }

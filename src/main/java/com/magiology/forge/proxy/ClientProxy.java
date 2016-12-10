@@ -1,15 +1,13 @@
 package com.magiology.forge.proxy;
 
 import com.magiology.client.entity.EntityPenguinRenderer;
-import com.magiology.client.rendering.item.MagiologyTEISR;
 import com.magiology.client.rendering.item.SIRRegistry;
-import com.magiology.client.shaders.ShaderHandler;
 import com.magiology.core.MReference;
-import com.magiology.core.Magiology;
+import com.magiology.core.registry.init.BlocksM;
+import com.magiology.core.registry.init.ParticlesM;
+import com.magiology.core.registry.init.ShadersM;
 import com.magiology.forge.events.RenderEvents;
-import com.magiology.mc_objects.BlockRegistry;
 import com.magiology.mc_objects.entitys.EntityPenguin;
-import com.magiology.mc_objects.particles.Particles;
 import com.magiology.util.objs.EnhancedRobot;
 import com.magiology.util.objs.animation.AnimationBank;
 import com.magiology.util.statics.OpenGLM;
@@ -45,7 +43,7 @@ public class ClientProxy extends CommonProxy{
 			robotH=new EnhancedRobot();
 		}catch(Exception e){}
 		ROBOT=robotH;
-		ShaderHandler.get().load();
+		ShadersM.load();
 		
 		RenderingRegistry.registerEntityRenderingHandler(EntityPenguin.class, (manager)->new EntityPenguinRenderer(manager));
 	}
@@ -53,10 +51,9 @@ public class ClientProxy extends CommonProxy{
 	@Override
 	public void init(){
 		MinecraftForge.EVENT_BUS.register(new RenderEvents());
-//		registerTileRedners();
 		registerTileRendering();
 		
-		Particles.get().register();
+		ParticlesM.get().register();
 	}
 	
 	@Override
@@ -72,7 +69,7 @@ public class ClientProxy extends CommonProxy{
 	private void registerTileRendering(){
 		ItemModelMesher mesher=OpenGLM.getRI().getItemModelMesher();
 		
-		for(ITileEntityProvider i:BlockRegistry.get().getByExtension(ITileEntityProvider.class)){
+		for(ITileEntityProvider i:BlocksM.get().getByExtension(ITileEntityProvider.class)){
 			Block block=(Block)i;
 			EnumBlockRenderType type=EnumBlockRenderType.INVISIBLE;
 			try{
@@ -91,10 +88,6 @@ public class ClientProxy extends CommonProxy{
 			}
 		}
 	}
-	
-//	private void registerTileRedners(){
-//		bindTileWithRenderer(TileEntityDimensionStabiliser.class, new DummyTileEntityRenderer());
-//	}
 	
 }
 

@@ -2,10 +2,10 @@ package com.magiology.util.m_extensions;
 
 import java.util.List;
 
-import com.magiology.mc_objects.BlockStates.BlockStateParser;
-import com.magiology.mc_objects.BlockStates.IPropertyM;
 import com.magiology.util.interf.ObjectReturn;
 import com.magiology.util.objs.PairM;
+import com.magiology.util.objs.BlockStates.BlockStateParser;
+import com.magiology.util.objs.BlockStates.IPropertyM;
 import com.magiology.util.objs.block_bounds.BasicBlockBounds;
 import com.magiology.util.objs.block_bounds.IBlockBounds;
 
@@ -15,7 +15,10 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -70,7 +73,7 @@ public abstract class BlockM extends Block{
 			};
 	//===========================================================================================\\
 	
-	private IBlockBounds					boundingBox	=FULL_CUBE_BOUNDS;
+	private IBlockBounds					blockBounds	=FULL_CUBE_BOUNDS;
 	protected PairM<AxisAlignedBB, Boolean>	boxes[];
 	private final BlockStateParser			parser;
 	private final StateSaver				saver;
@@ -103,22 +106,22 @@ public abstract class BlockM extends Block{
 	
 	@Override
 	public RayTraceResult collisionRayTrace(IBlockState blockState, World worldIn, BlockPos pos, Vec3d start, Vec3d end){
-		return boundingBox.collisionRayTrace(blockState, worldIn, pos, start, end);
+		return blockBounds.collisionRayTrace(blockState, worldIn, pos, start, end);
 	}
 	
 	@Override
 	public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entity){
-		boundingBox.addCollisionBoxToList(state, world, pos, entityBox, collidingBoxes, entity);
+		blockBounds.addCollisionBoxToList(state, world, pos, entityBox, collidingBoxes, entity);
 	}
 	
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-		return boundingBox.getBoundingBox(state, source, pos);
+		return blockBounds.getBoundingBox(state, source, pos);
 	}
 	
 	@Override
 	public boolean isFullCube(IBlockState state){
-		return boundingBox.isFullCube(state);
+		return blockBounds.isFullCube(state);
 	}
 	
 	@Override
@@ -130,11 +133,12 @@ public abstract class BlockM extends Block{
 		return Item.getItemFromBlock(this);
 	}
 	
-	public void setBlockBounds(IBlockBounds boundingBox){
-		this.boundingBox=boundingBox;
+	public void setBlockBounds(IBlockBounds blockBounds){
+		this.blockBounds=blockBounds;
 	}
 	
-	public IBlockBounds getBoundingBox(){
-		return boundingBox;
+	public IBlockBounds getBlockBounds(){
+		return blockBounds;
 	}
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ){}
 }

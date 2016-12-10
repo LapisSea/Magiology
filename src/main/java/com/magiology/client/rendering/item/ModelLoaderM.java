@@ -1,7 +1,5 @@
 package com.magiology.client.rendering.item;
 
-import com.magiology.util.statics.LogUtil;
-
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;

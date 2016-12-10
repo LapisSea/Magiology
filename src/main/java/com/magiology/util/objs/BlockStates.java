@@ -1,4 +1,4 @@
-package com.magiology.mc_objects;
+package com.magiology.util.objs;
 
 import java.util.Collection;
 import java.util.List;

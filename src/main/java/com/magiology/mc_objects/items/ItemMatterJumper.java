@@ -6,12 +6,9 @@ import com.magiology.client.rendering.item.renderers.ItemMatterJumperRenderer;
 import com.magiology.util.interf.Renderable;
 import com.magiology.util.interf.SpecialRender;
 import com.magiology.util.objs.NBTUtil;
-import com.magiology.util.statics.LogUtil;
-import com.magiology.util.statics.UtilM;
 import com.magiology.util.statics.math.MathUtil;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

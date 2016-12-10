@@ -79,8 +79,12 @@ public abstract class TileEntityM extends TileEntity implements Worldabale{
 	public NBTTagCompound writeToNBT(NBTTagCompound compound){
 		return super.writeToNBT(compound);
 	}
-	
+
 	public boolean isNbtLoaded(){
 		return nbtLoaded;
+	}
+	@Deprecated
+	public void markNbtAsLoaded(){
+		nbtLoaded=true;
 	}
 }

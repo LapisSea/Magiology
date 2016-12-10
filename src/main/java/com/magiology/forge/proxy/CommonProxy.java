@@ -1,23 +1,22 @@
 package com.magiology.forge.proxy;
 
-import static com.magiology.core.MReference.*;
-
 import java.awt.Color;
 
-import com.magiology.DevOnly;
 import com.magiology.core.Magiology;
-import com.magiology.core.class_manager.ClassList;
+import com.magiology.core.registry.init.BlocksM;
+import com.magiology.core.registry.init.ItemsM;
+import com.magiology.core.registry.init.PacketRegistry;
+import com.magiology.core.registry.init.TileEntityRegistry;
 import com.magiology.cross_mod.ModChecker;
-import com.magiology.forge.events.*;
-import com.magiology.forge.networking.*;
+import com.magiology.forge.events.EntityEvents;
+import com.magiology.forge.events.TickEvents;
+import com.magiology.forge.events.WorldEvents;
 import com.magiology.io.IOManager;
-import com.magiology.mc_objects.*;
 import com.magiology.mc_objects.entitys.EntityPenguin;
-import com.magiology.util.m_extensions.TileEntityM;
 import com.magiology.util.statics.UtilM;
 
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.registry.*;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 
 public class CommonProxy{
 	
@@ -39,12 +38,10 @@ public class CommonProxy{
 	
 	public void preInit(){
 		
-		Magiology.getMagiology().NETWORK_CHANNEL=new SimpleNetworkWrapperM(CHANNEL_NAME);
-		Packets.register();
-		BlockRegistry.get().register();
-		ItemRegistry.get().register();
-		ClassList.getImplementations(TileEntityM.class).forEach((clazz)->GameRegistry.registerTileEntity(clazz, "te_"+UtilM.classNameToMcName(clazz.getSimpleName())));
-		
+		BlocksM.get().register();
+		ItemsM.get().register();
+		PacketRegistry.get().register();
+		TileEntityRegistry.get().register();
 	}
 	
 	public void init(){

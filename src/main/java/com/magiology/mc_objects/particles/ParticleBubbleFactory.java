@@ -22,10 +22,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ParticleBubbleFactory extends ParticleFactory{
 
-	private final static ParticleBubbleFactory instance=new ParticleBubbleFactory();
-	public static ParticleBubbleFactory get(){return instance;}
-	private ParticleBubbleFactory(){}
-	
 	public static int defultModel=-1;
 	
 	public void spawn(Vec3M pos, Vec3M speed, float size, float lifeTime, float gravity, ColorM color){
@@ -193,7 +189,7 @@ public class ParticleBubbleFactory extends ParticleFactory{
 		
 		@Override
 		public ParticleFactory getFactorfy(){
-			return instance;
+			return null;
 		}
 	}
 }

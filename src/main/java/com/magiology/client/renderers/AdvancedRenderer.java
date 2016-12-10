@@ -1,18 +1,23 @@
 package com.magiology.client.renderers;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import com.magiology.client.renderers.Renderer.RendererBase;
 import com.magiology.util.objs.vec.Vec3M;
-import com.magiology.util.statics.*;
+import com.magiology.util.statics.GeometryUtil;
+import com.magiology.util.statics.LogUtil;
+import com.magiology.util.statics.UtilM;
 import com.magiology.util.statics.math.MatrixUtil;
-
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.*;
 
 import net.minecraft.client.model.PositionTextureVertex;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * 

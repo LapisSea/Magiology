@@ -18,6 +18,11 @@ public class LockabaleArrayList<E>extends ArrayList<E>{
 		locked=true;
 	}
 	
+	
+	public boolean isLocked(){
+		return locked;
+	}
+	
 	@Override
 	public boolean addAll(Collection<? extends E> c){
 		lockList();

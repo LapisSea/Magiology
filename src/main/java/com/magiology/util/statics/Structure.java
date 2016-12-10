@@ -9,11 +9,9 @@ import java.util.Queue;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import com.magiology.mc_objects.features.screen.TileEntityScreen;
 import com.magiology.util.m_extensions.TileEntityM;
 import com.magiology.util.objs.vec.Vec3M;
 
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
 public class Structure{

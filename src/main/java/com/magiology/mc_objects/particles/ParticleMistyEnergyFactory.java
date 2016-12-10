@@ -22,9 +22,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ParticleMistyEnergyFactory extends ParticleFactory{
 
-	private final static ParticleMistyEnergyFactory instance=new ParticleMistyEnergyFactory();
-	public static ParticleMistyEnergyFactory get(){return instance;}
-	private ParticleMistyEnergyFactory(){}
 	
 	public static final ResourceLocation texture=new ResourceLocationM("/textures/particle/explosion_stages.png");
 	public static int[] defultModel=new int[32];
@@ -139,7 +136,7 @@ public class ParticleMistyEnergyFactory extends ParticleFactory{
 		
 		@Override
 		public ParticleFactory getFactorfy(){
-			return instance;
+			return ParticleMistyEnergyFactory.this;
 		}
 	}
 }

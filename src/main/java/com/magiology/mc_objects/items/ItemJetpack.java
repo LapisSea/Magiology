@@ -3,14 +3,14 @@ package com.magiology.mc_objects.items;
 import java.util.ArrayList;
 
 import com.magiology.mc_objects.entitys.EntityPenguin;
+import com.magiology.util.m_extensions.ItemM;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class ItemJetpack extends Item{
+public class ItemJetpack extends ItemM{
 	
 	
 	private static final ItemJetpack instance=new ItemJetpack();

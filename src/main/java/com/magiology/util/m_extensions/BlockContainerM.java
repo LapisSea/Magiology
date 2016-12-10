@@ -1,7 +1,7 @@
 package com.magiology.util.m_extensions;
 
-import com.magiology.mc_objects.BlockStates.IPropertyM;
 import com.magiology.util.interf.ObjectReturn;
+import com.magiology.util.objs.BlockStates.IPropertyM;
 
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;

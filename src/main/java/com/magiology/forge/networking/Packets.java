@@ -6,13 +6,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.relauncher.Side;
 
 public class Packets{
-	
-	public static void register(){
-		Magiology.NETWORK_CHANNEL.registerPacket(UpdateTileNBTPacket.class,Side.CLIENT);
-	}
 	
 	public static void sendTo(IMessage packet, EntityPlayerMP player){
 		Magiology.NETWORK_CHANNEL.sendTo(packet, player);
@@ -29,12 +24,13 @@ public class Packets{
 	public static void sendToAllAround(IMessage packet, TargetPoint point){
 		Magiology.NETWORK_CHANNEL.sendToAllAround(packet, point);
 	}
-
-	public static void sendToDimension(IMessage packet, int dimensionId){
-		Magiology.NETWORK_CHANNEL.sendToDimension(packet, dimensionId);
-	}
+	
 	public static void sendToDimension(IMessage packet, World world){
 		sendToDimension(packet, world.provider.getDimension());
+	}
+	
+	public static void sendToDimension(IMessage packet, int dimensionId){
+		Magiology.NETWORK_CHANNEL.sendToDimension(packet, dimensionId);
 	}
 	
 	public static void sendToServer(IMessage packet){

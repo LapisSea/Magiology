@@ -1,10 +1,12 @@
 package com.magiology.mc_objects.features.neuro;
 
+import com.magiology.client.rendering.highlight.extras.MultiBlockBoxHighlight;
 import com.magiology.forge.events.TickEvents;
-import com.magiology.mc_objects.BlockStates.IPropertyM;
-import com.magiology.mc_objects.BlockStates.PropertyBoolM;
 import com.magiology.util.interf.ISidedConnection;
+import com.magiology.util.m_extensions.TileEntityM;
 import com.magiology.util.objs.BlockSides;
+import com.magiology.util.objs.BlockStates.IPropertyM;
+import com.magiology.util.objs.BlockStates.PropertyBoolM;
 import com.magiology.util.objs.block_bounds.MultiBlockBounds.PipeStyleBlockBounds;
 import com.magiology.util.statics.UtilM;
 
@@ -12,10 +14,12 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class BlockNeuroDuct extends BlockNeuroBase<TileEntityNeuroDuct>{
@@ -31,88 +35,75 @@ public class BlockNeuroDuct extends BlockNeuroBase<TileEntityNeuroDuct>{
 		super(Material.IRON, ()->new TileEntityNeuroDuct(), UtilM.mixedToArray(IPropertyM.class, HAS_CONTROLLER, STRAIGHT, CONNECTIONS));
 		instance=this;
 		
-//		AxisAlignedBB[] boxes=new AxisAlignedBB[64];
-//
-//		Vec3M min=new Vec3M(), max=new Vec3M();
-//
-//		for(int id=0;id<64;id++){
-//			min.set(6/16F, 6/16F, 6/16F);
-//			max.set(10/16F, 10/16F, 10/16F);
-//
-//			for(int i=0;i<6;i++){
-//				if(((id>>i)&1)==1){
-//					EnumFacing side=EnumFacing.getFront(i);
-//					(side.getAxisDirection()==AxisDirection.POSITIVE?max:min).addSelf(new Vec3M(side.getDirectionVec()).mul(6/16F));
-//				}
-//			}
-//
-//			boxes[id]=new AxisAlignedBB(min.x(), min.y(), min.z(), max.x(), max.y(), max.z());
-//		}
-//		setBlockBounds(new StateDependantBlockBounds(state->{
-//
-//			switch(STRAIGHT.get(state)){
-//			case 0:return 0b000011;
-//			case 1:return 0b001100;
-//			case 2:return 0b110000;
-//			}
-//
-//			int boxId=0;
-//			if(CONNECTIONS[0].get(state))boxId|=0b000000_1;
-//			if(CONNECTIONS[1].get(state))boxId|=0b00000_10;
-//			if(CONNECTIONS[2].get(state))boxId|=0b0000_100;
-//			if(CONNECTIONS[3].get(state))boxId|=0b000_1000;
-//			if(CONNECTIONS[4].get(state))boxId|=0b00_10000;
-//			if(CONNECTIONS[5].get(state))boxId|=0b0_100000;
-//
-//			return boxId;
-//		},boxes));
+		PipeStyleBlockBounds bounds=new PipeStyleBlockBounds(CONNECTIONS,STRAIGHT, 0b1000000, p*4, this::onBoxHighlight);
+		if(UtilM.isRemote()){
+			bounds.getHighlightRenderer().addListener(new MultiBlockBoxHighlight());
+		}
 		
-		setBlockBounds(new PipeStyleBlockBounds(CONNECTIONS,STRAIGHT, 0b1000000,p*4));
+		setBlockBounds(bounds);
+		
+		IBlockState state=STRAIGHT.set(HAS_CONTROLLER.set(getDefaultState(), false), 3);
+		for(PropertyBoolM con:CONNECTIONS)state=con.set(state, false);
+		setDefaultState(state);
 	}
 	
+	protected void onBoxHighlight(RayTraceResult hit, World world){
+		
+	}
 	
 	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn){
 		super.neighborChanged(state, world, pos, blockIn);
-		updateBlockState(state, world, pos);
+		updateBlockStateAndSet(state, world, pos);
 	}
 	
 	@Override
 	public void onBlockAdded(World world, BlockPos pos, IBlockState state){
 		super.onBlockAdded(world, pos, state);
-		updateBlockState(state, world, pos);
+		updateBlockStateAndSet(state, world, pos);
 	}
 	
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		IBlockState state=super.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer);
-		for(PropertyBoolM bol:CONNECTIONS){
-			state=bol.set(state, false);
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ){
+		TileEntity tile=world.getTileEntity(pos.offset(side,-1));
+		if(tile instanceof NeuroPart){
+			NeuroPart part=(NeuroPart)tile;
+			if(part.hasController()){
+				getTile(world, pos).setController(part.getController());
+				neighborChanged(state, world, pos, state.getBlock());
+			}
 		}
-		state=HAS_CONTROLLER.set(state, false);
-		state=STRAIGHT.set(state, 3);
-		
-		return state;
 	}
 	
-//	(IBlockState state, World world, BlockPos pos){
-//		IBlockState newState=calcBlockState(state, world, pos);
-//
-//		if(newState==null){
-//			if(!world.isRemote)TickEvents.nextTick(false, ()->updateBlockState(state, world, pos));
-//		}
-//		else if(newState!=state)world.setBlockState(pos, newState, 2);
-//	}
+	@Override
+	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor){
+		if(world instanceof World)updateBlockStateAndSet(world.getBlockState(pos), (World)world, pos);
+	}
 	
-	public void updateBlockState(IBlockState state, World world, BlockPos pos){
-		TileEntityNeuroDuct tile=getTile(world, pos);
+	@Override
+	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, ItemStack stack){
+		updateBlockState(world, pos, null);
+		IBlockState s=applyData(world, pos, super.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, stack), 3, null, CONNECTION_HANDLER, false);
+		return s;
+	}
+	
+	public void updateBlockStateAndSet(IBlockState state, World world, BlockPos pos){
 		
+		updateBlockState(world, pos, ()->{
+			TileEntityNeuroDuct tile=getTile(world, pos);
+			if(tile==null)return;
+			IBlockState newState=applyData(world, pos, state, 3, null, CONNECTION_HANDLER, tile.getControllerSecure()!=null);
+			if(state!=newState)world.setBlockState(pos, newState);
+		});
+	}
+	public void updateBlockState(World world, BlockPos pos,Runnable onEnd){
+		TileEntityNeuroDuct tile=getTile(world, pos);
 		for(int i=0;i<6;i++){
 			EnumFacing side=EnumFacing.getFront(i);
-			BlockPos pos1=tile.getPos().offset(side);
+			BlockPos pos1=pos.offset(side);
 			TileEntity tile1=world.getTileEntity(pos1);
-			if(!world.isBlockLoaded(pos1)){
-				TickEvents.nextTick(()->updateBlockState(state, world, pos));
+			if(!world.isBlockLoaded(pos1)||(tile1 instanceof TileEntityM&&!((TileEntityM)tile1).isNbtLoaded())){
+				TickEvents.nextTick(()->updateBlockState(world, pos,onEnd));
 				return;
 			}
 			boolean flag=tile1 instanceof NeuroPart;
@@ -138,18 +129,10 @@ public class BlockNeuroDuct extends BlockNeuroBase<TileEntityNeuroDuct>{
 			
 			CONNECTION_HANDLER.setSide(i, flag);
 		}
-		boolean hasCtrl=tile.getControllerSecure()!=null;
-		
-		setData(world, pos, state, 3, null, CONNECTION_HANDLER, hasCtrl);
+		if(onEnd!=null)onEnd.run();
 	}
 	
-	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos){
-		// TODO Auto-generated method stub
-		return super.getCollisionBoundingBox(blockState, worldIn, pos);
-	}
-	
-	public static void setData(World world, BlockPos pos, IBlockState target, int straight, boolean[] sides, BlockSides s, boolean hasCtrl){
+	public static IBlockState applyData(World world, BlockPos pos, IBlockState target, int straight, boolean[] sides, BlockSides s, boolean hasCtrl){
 		if(s!=null)straight=s.getStraight();
 		
 		IBlockState newData=target;
@@ -171,7 +154,7 @@ public class BlockNeuroDuct extends BlockNeuroBase<TileEntityNeuroDuct>{
 		if(HAS_CONTROLLER.get(newData)!=hasCtrl){
 			newData=HAS_CONTROLLER.set(newData, hasCtrl);
 		}
-		if(newData!=target)world.setBlockState(pos, newData);
+		return newData;
 	}
 	
 	@Override

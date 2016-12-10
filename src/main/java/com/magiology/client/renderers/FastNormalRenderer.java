@@ -1,13 +1,13 @@
 package com.magiology.client.renderers;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.lwjgl.opengl.GL11;
 
 import com.magiology.client.renderers.Renderer.RendererBase;
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.GeometryUtil;
-import com.magiology.util.statics.LogUtil;
-
-import org.lwjgl.opengl.GL11;
 
 /**
  * muuuuuuch faster remake of {@link AdvancedRenderer}

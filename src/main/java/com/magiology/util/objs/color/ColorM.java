@@ -78,6 +78,22 @@ public class ColorM extends ColorMRead implements Calculable<ColorM>{
 		a(a()+var);
 		return this;
 	}
+	public ColorM addR(float r){
+		r(r()+r);
+		return this;
+	}
+	public ColorM addG(float r){
+		g(g()+g);
+		return this;
+	}
+	public ColorM addB(float b){
+		b(b()+b);
+		return this;
+	}
+	public ColorM addA(float b){
+		a(a()+a);
+		return this;
+	}
 	
 	@Override
 	public ColorM add(ColorM var){
@@ -94,6 +110,22 @@ public class ColorM extends ColorMRead implements Calculable<ColorM>{
 		g(g()/var);
 		b(b()/var);
 		a(a()/var);
+		return this;
+	}
+	public ColorM divR(float r){
+		r(r()/r);
+		return this;
+	}
+	public ColorM divG(float r){
+		g(g()/g);
+		return this;
+	}
+	public ColorM divB(float b){
+		b(b()/b);
+		return this;
+	}
+	public ColorM divA(float b){
+		a(a()/a);
 		return this;
 	}
 	
@@ -114,6 +146,22 @@ public class ColorM extends ColorMRead implements Calculable<ColorM>{
 		a(a()*var);
 		return this;
 	}
+	public ColorM mulR(float r){
+		r(r()*r);
+		return this;
+	}
+	public ColorM mulG(float r){
+		g(g()*g);
+		return this;
+	}
+	public ColorM mulB(float b){
+		b(b()*b);
+		return this;
+	}
+	public ColorM mulA(float b){
+		a(a()*a);
+		return this;
+	}
 	
 	@Override
 	public ColorM mul(ColorM var){
@@ -130,6 +178,22 @@ public class ColorM extends ColorMRead implements Calculable<ColorM>{
 		g(g()-var);
 		b(b()-var);
 		a(a()-var);
+		return this;
+	}
+	public ColorM subR(float r){
+		r(r()-r);
+		return this;
+	}
+	public ColorM subG(float r){
+		g(g()-g);
+		return this;
+	}
+	public ColorM subB(float b){
+		b(b()-b);
+		return this;
+	}
+	public ColorM subA(float b){
+		a(a()-a);
 		return this;
 	}
 	

@@ -3,15 +3,20 @@ package com.magiology.util.objs.physics.real;
 import java.util.List;
 
 import com.magiology.util.m_extensions.BlockPosM;
-import com.magiology.util.objs.*;
+import com.magiology.util.objs.AngularVec3;
+import com.magiology.util.objs.PairM;
 import com.magiology.util.objs.physics.real.entitymodel.Colideable;
 import com.magiology.util.objs.vec.Vec3M;
-import com.magiology.util.statics.*;
-import com.magiology.util.statics.math.*;
+import com.magiology.util.statics.PhysicsUtil;
+import com.magiology.util.statics.UtilM;
+import com.magiology.util.statics.math.MathUtil;
+import com.magiology.util.statics.math.MatrixUtil;
 
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public abstract class AbstractRealPhysicsVec3F{

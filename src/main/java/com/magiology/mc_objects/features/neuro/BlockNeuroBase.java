@@ -1,12 +1,12 @@
 package com.magiology.mc_objects.features.neuro;
 
-import com.magiology.mc_objects.BlockStates;
-import com.magiology.mc_objects.BlockStates.IPropertyM;
-import com.magiology.mc_objects.BlockStates.PropertyBoolM;
-import com.magiology.mc_objects.BlockStates.PropertyIntegerM;
 import com.magiology.util.interf.ObjectReturn;
 import com.magiology.util.m_extensions.BlockContainerM;
 import com.magiology.util.m_extensions.TileEntityM;
+import com.magiology.util.objs.BlockStates;
+import com.magiology.util.objs.BlockStates.IPropertyM;
+import com.magiology.util.objs.BlockStates.PropertyBoolM;
+import com.magiology.util.objs.BlockStates.PropertyIntegerM;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

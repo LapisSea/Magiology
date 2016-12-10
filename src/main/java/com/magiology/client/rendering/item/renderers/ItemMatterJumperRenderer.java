@@ -1,47 +1,24 @@
 package com.magiology.client.rendering.item.renderers;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL30.*;
-
-import java.nio.FloatBuffer;
-
-import javax.swing.text.Position;
-
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL30;
-import org.lwjgl.util.vector.Matrix4f;
 
 import com.magiology.client.renderers.FastNormalRenderer;
 import com.magiology.client.rendering.item.SIRRegistry.IItemRenderer;
-import com.magiology.client.shaders.ShaderHandler;
 import com.magiology.client.shaders.effects.PositionAwareEffect;
 import com.magiology.client.shaders.programs.MatterJumperShader;
+import com.magiology.core.registry.init.ShadersM;
 import com.magiology.forge.events.RenderEvents;
 import com.magiology.forge.events.TickEvents;
-import com.magiology.handlers.frame_buff.TemporaryFrame;
-import com.magiology.mc_objects.particles.ParticleBubbleFactory;
-import com.magiology.util.interf.Renderable;
 import com.magiology.util.m_extensions.ResourceLocationM;
 import com.magiology.util.objs.color.ColorM;
-import com.magiology.util.objs.vec.Vec3M;
-import com.magiology.util.statics.LogUtil;
 import com.magiology.util.statics.OpenGLM;
-import com.magiology.util.statics.RandUtil;
 import com.magiology.util.statics.UtilC;
-import com.magiology.util.statics.UtilM;
 import com.magiology.util.statics.math.PartialTicksUtil;
 
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
-import net.minecraft.client.renderer.culling.ClippingHelperImpl;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.shader.Framebuffer;
-import net.minecraft.client.shader.ShaderDefault;
 import net.minecraft.item.ItemStack;
 
 public class ItemMatterJumperRenderer implements IItemRenderer{
@@ -80,7 +57,7 @@ public class ItemMatterJumperRenderer implements IItemRenderer{
 		Framebuffer src=UtilC.getMC().getFramebuffer();
 		src.bindFramebufferTexture();
 		
-		MatterJumperShader shader=ShaderHandler.getShader(MatterJumperShader.class);
+		MatterJumperShader shader=ShadersM.MATTER_JUMPER;
 		if(shader!=null)shader.activate(
 				RenderEvents.MAIN_FRAME_COPY,
 				new ColorM(UtilC.fluctuateLin(210, 0, 0.54, 0.56), UtilC.fluctuateLin(250, 0, 0.54, 0.56), UtilC.fluctuateLin(320, 0, 0.54, 0.56), 1),

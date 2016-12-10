@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.magiology.util.statics.LogUtil;
 import com.magiology.util.statics.UtilM;
 
 public abstract class DatabaseStorageCollection<T> implements IDatabaseStorage<T>{

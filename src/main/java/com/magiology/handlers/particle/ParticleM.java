@@ -2,13 +2,17 @@ package com.magiology.handlers.particle;
 
 import com.magiology.client.renderers.Renderer;
 import com.magiology.util.m_extensions.BlockPosM;
-import com.magiology.util.objs.*;
+import com.magiology.util.objs.QuadUV;
 import com.magiology.util.objs.color.ColorM;
-import com.magiology.util.objs.vec.*;
+import com.magiology.util.objs.vec.Vec2i;
+import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.math.PartialTicksUtil;
 
-import net.minecraft.util.math.*;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3i;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public abstract class ParticleM extends IParticle{

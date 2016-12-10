@@ -1,6 +1,7 @@
 package com.magiology.cross_mod;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.magiology.cross_mod.jei.MagiologyPlugin_JEI;
 

@@ -29,7 +29,7 @@ public abstract class ShaderProgram{
 	protected abstract void initUniformLocations();
 	public abstract void initUniforms();
 	
-	protected void compile(){
+	public void compile(){
 		deleteShader();
 		CharSequence vertex=getVertexShaderSrc(),fragment=getFragmentShaderSrc();
 		fragmentEnabled=fragment!=null&&fragment.length()>0;

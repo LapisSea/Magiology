@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -65,7 +66,6 @@ public class UtilM{
 	public class U extends UtilM{}
 	
 	public static final float	p		=1F/16F;
-	private static long			startTime;
 	public static final String	LINE_REG="(\n|"+System.lineSeparator()+")";
 	
 	public static String floatBufferToString(FloatBuffer buff){
@@ -219,11 +219,23 @@ public class UtilM{
 		return null;
 	}
 	
+	private static final Stack<Long> timeStack=new Stack<>();
+	
+	public static void timerSafety(){
+		if(!timeStack.isEmpty())timeStack.clear();
+		
+	}
+	
 	public static long endTime(){
-		return System.currentTimeMillis()-startTime;
+		
+		return System.currentTimeMillis()-timeStack.pop();
+	}
+	public static void startTime(){
+		timeStack.push(System.currentTimeMillis());
 	}
 	
 	public static void exit(int Int){
+		LogUtil.println(MReference.NAME,"exiting! o/");
 		FMLCommonHandler.instance().exitJava(Int, false);
 	}
 	
@@ -682,9 +694,6 @@ public class UtilM{
 		return entity;
 	}
 	
-	public static void startTime(){
-		startTime=System.currentTimeMillis();
-	}
 	
 	public static String[] stringNewlineSplit(String toSplit){
 		return toSplit.split("\\r\\n|\\n\\r|\\r|\\n");
@@ -920,5 +929,9 @@ public class UtilM{
 		collection.addAll(hs);
 		
 		return collection;
+	}
+
+	public static <T> T[] newArray(Class<T> type,int size){
+		return (T[])Array.newInstance(type, size);
 	}
 }

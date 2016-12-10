@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.magiology.util.m_extensions.ItemM;
 import com.magiology.util.objs.NBTUtil;
 import com.magiology.util.statics.UtilM;
 import com.mojang.authlib.GameProfile;
@@ -12,7 +13,6 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
@@ -22,7 +22,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public abstract class ItemOwnable extends Item{
+public abstract class ItemOwnable extends ItemM{
 	
 	private static final String OWNER="owner", LEGIT="128-database";
 	public final boolean showPlayer;
@@ -122,7 +122,7 @@ public abstract class ItemOwnable extends Item{
 	}
 	/**
 	 * Sets first player that comes in contact with stack.
-	 * Overrides origional owner if origional user is using cracked client and new owner is premium to ensure no loss of property in case of upgrading to premium. 
+	 * Overrides origional owner if origional user is using cracked client and new owner is premium to ensure no loss of property in case of upgrading to premium.
 	 */
 	private static void applyOwner(ItemStack stack, EntityPlayer player){
 		if(UtilM.isRemote(player))return;

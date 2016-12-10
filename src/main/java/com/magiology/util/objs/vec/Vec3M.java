@@ -15,6 +15,7 @@ import com.magiology.util.statics.math.MatrixUtil;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.relauncher.Side;
@@ -42,6 +43,10 @@ public class Vec3M extends Vec3MRead implements Serializable, WritableVector3f, 
 		super(vec);
 	}
 	
+	public Vec3M(RayTraceResult h){
+		super(h);
+	}
+
 	public void setX(double x){
 		this.x=x;
 	}

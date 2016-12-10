@@ -1,12 +1,10 @@
 package com.magiology.util.objs.block_bounds;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.magiology.util.objs.vec.IVec3M;
-import com.magiology.util.objs.vec.Vec3M;
+import com.magiology.client.rendering.highlight.BlockHighlightRenderer;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -32,10 +30,11 @@ public interface IBlockBounds{
 	default void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entity){
 		addCollisionBox(pos, entityBox, collidingBoxes, state.getCollisionBoundingBox(world, pos));
 	}
-	
+
 	@SideOnly(Side.CLIENT)
-	void drawBoundsOutline(IBlockState state, World world, BlockPos pos);
-	
+	BlockHighlightRenderer getHighlightRenderer();
+	@SideOnly(Side.CLIENT)
+	void setHighlightRenderer(BlockHighlightRenderer renderer);
 	
 	//========================================UTILS========================================
 	default RayTraceResult rayTrace(BlockPos pos, Vec3d start, Vec3d end, AxisAlignedBB box){
@@ -55,50 +54,4 @@ public interface IBlockBounds{
 		}
 	}
 	
-	@SideOnly(Side.CLIENT)
-	default List<IVec3M> generateBoxLines(AxisAlignedBB box){
-		List<IVec3M> positions=new ArrayList<>();
-		
-		
-		positions.add(new Vec3M(box.minX,box.minY,box.minZ));
-		positions.add(new Vec3M(box.maxX,box.minY,box.minZ));
-		
-		positions.add(new Vec3M(box.minX,box.minY,box.maxZ));
-		positions.add(new Vec3M(box.maxX,box.minY,box.maxZ));
-		
-		positions.add(new Vec3M(box.minX,box.maxY,box.minZ));
-		positions.add(new Vec3M(box.maxX,box.maxY,box.minZ));
-		
-		positions.add(new Vec3M(box.minX,box.maxY,box.maxZ));
-		positions.add(new Vec3M(box.maxX,box.maxY,box.maxZ));
-		
-		
-		positions.add(new Vec3M(box.minX,box.minY,box.minZ));
-		positions.add(new Vec3M(box.minX,box.maxY,box.minZ));
-		
-		positions.add(new Vec3M(box.maxX,box.minY,box.minZ));
-		positions.add(new Vec3M(box.maxX,box.maxY,box.minZ));
-		
-		positions.add(new Vec3M(box.minX,box.minY,box.maxZ));
-		positions.add(new Vec3M(box.minX,box.maxY,box.maxZ));
-		
-		positions.add(new Vec3M(box.maxX,box.minY,box.maxZ));
-		positions.add(new Vec3M(box.maxX,box.maxY,box.maxZ));
-		
-		
-		positions.add(new Vec3M(box.minX,box.minY,box.minZ));
-		positions.add(new Vec3M(box.minX,box.minY,box.maxZ));
-		
-		positions.add(new Vec3M(box.maxX,box.minY,box.minZ));
-		positions.add(new Vec3M(box.maxX,box.minY,box.maxZ));
-		
-		positions.add(new Vec3M(box.minX,box.maxY,box.minZ));
-		positions.add(new Vec3M(box.minX,box.maxY,box.maxZ));
-		
-		positions.add(new Vec3M(box.maxX,box.maxY,box.minZ));
-		positions.add(new Vec3M(box.maxX,box.maxY,box.maxZ));
-		
-		
-		return positions;
-	}
 }

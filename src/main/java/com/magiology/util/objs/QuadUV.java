@@ -1,8 +1,8 @@
 package com.magiology.util.objs;
 
-import com.magiology.util.objs.vec.Vec2FM;
-
 import org.lwjgl.util.vector.Vector2f;
+
+import com.magiology.util.objs.vec.Vec2FM;
 
 public class QuadUV{
 	private static QuadUV all=new QuadUV(1,1,1,0,0,0,0,1);

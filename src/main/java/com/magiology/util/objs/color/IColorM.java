@@ -31,6 +31,20 @@ public interface IColorM{
 	float b();
 	float a();
 	
+	default int rInt(){
+		return (int)(r()*255);
+	}
+	default int gInt(){
+		return (int)(g()*255);
+	}
+	default int bInt(){
+		return (int)(b()*255);
+	}
+	default int aInt(){
+		return (int)(a()*255);
+	}
+	
+	
 	default <T extends ColorM> T blackNWhite(T target){
 		
 		

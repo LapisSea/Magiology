@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
-import com.magiology.DevOnly.DevOnlyBlockCutter;
-import com.magiology.core.class_manager.ClassList;
+import com.magiology.core.registry.AssistantBot;
 import com.magiology.forge.networking.SimpleNetworkWrapperM;
 import com.magiology.forge.proxy.CommonProxy;
 import com.magiology.io.IOManager;
@@ -32,32 +32,40 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.versioning.ArtifactVersion;
 import net.minecraftforge.fml.common.versioning.DefaultArtifactVersion;
 import net.minecraftforge.fml.common.versioning.VersionRange;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import scala.actors.threadpool.Arrays;
 
 @Mod(modid=MODID, version=VERSION, name=NAME, acceptedMinecraftVersions=ACCEPTED_MC_VERSION)
 public class Magiology implements ModContainer{
+
+	@SideOnly(Side.CLIENT)
+	private static final boolean CLIENT_ONLY_REMOVED_TESTER=true;
 	
-	private static final boolean IS_DEV;
+	public static final boolean IS_DEV,CLIENT_ONLY_REMOVED;
 	static{
-		getClassLoader().addClassLoaderExclusion("jdk.nashorn");
 		
 		CompatibilityChecker.checkJava8();
+		
+		getClassLoader().addClassLoaderExclusion("jdk.nashorn");
+		
+		CLIENT_ONLY_REMOVED=Lists.newArrayList(Magiology.class.getDeclaredMethods()).stream().anyMatch(method->method.getName().equals("CLIENT_ONLY_REMOVED_TESTER"));
 		IS_DEV=SOURCE_FILE==null;
 		if(IS_DEV)LogUtil.printWrapped(NAME+" is running in development environment! Work Lapis! Work! NO! CLOSE THAT YOUTUBE VIDEO!");
-		else getClassLoader().registerTransformer(DevOnlyBlockCutter.class.getName());
 	}
 	
 	/***//** variables *//***/
 	@SidedProxy(modId=MODID, clientSide=CLIENT_PROXY_LOCATION, serverSide=SERVER_PROXY_LOCATION)
-	public static CommonProxy			sideProxy;
-	public static CommonProxy			commonProxy	=new CommonProxy();
-	public static SimpleNetworkWrapperM	NETWORK_CHANNEL;
+	public static CommonProxy					sideProxy;
+	public static CommonProxy					commonProxy		=new CommonProxy();
+	public static final SimpleNetworkWrapperM	NETWORK_CHANNEL	=new SimpleNetworkWrapperM(CHANNEL_NAME);
 	@Instance(value=MODID)
-	private static Magiology			instance;
-	private static String				marker		=NAME+"_"+MC_VERSION+"-"+VERSION;
-	public static IOManager				extraFiles	=new IOManager();
+	private static Magiology					instance;
+	private static String						marker			=NAME+"_"+MC_VERSION+"-"+VERSION;
+	public static IOManager						extraFiles		=new IOManager();
 
 	public Magiology(){
+		AssistantBot.run();
 		instance=this;
 		
 //		final String script ="\n"
@@ -87,7 +95,6 @@ public class Magiology implements ModContainer{
 //		LogUtil.println("-----------------------------------------------------------------\n \n \n");
 //		UtilM.exit(404);
 		
-		ClassList.getImplementations();
 	}
 	
 	/***//** forge events *//***/
@@ -118,13 +125,12 @@ public class Magiology implements ModContainer{
 	}
 	
 	@EventHandler
-	public void postInitStarter(FMLPostInitializationEvent event){
+	public void postInit(FMLPostInitializationEvent event){
 		
 		LogUtil.printWrapped(marker+" -> Post initialization started!");
 		commonProxy.postInit();
 		sideProxy.postInit();
 		LogUtil.printWrapped(marker+" -> Post initialization compleate!");
-		
 		marker=null;
 	}
 	
@@ -135,11 +141,8 @@ public class Magiology implements ModContainer{
 		return instance;
 	}
 	
-	public static boolean isDev(){
-		return IS_DEV;
-	}
-	
 	public static LaunchClassLoader getClassLoader(){
+		
 		return (LaunchClassLoader)Magiology.class.getClassLoader();
 	}
 	

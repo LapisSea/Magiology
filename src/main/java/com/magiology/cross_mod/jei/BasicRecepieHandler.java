@@ -4,7 +4,8 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import mezz.jei.api.recipe.*;
+import mezz.jei.api.recipe.IRecipeHandler;
+import mezz.jei.api.recipe.IRecipeWrapper;
 
 public abstract class BasicRecepieHandler<T extends IRecipeWrapper> implements IRecipeHandler<T>{
 	@Nonnull

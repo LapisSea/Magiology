@@ -5,7 +5,7 @@ public abstract class RegistrableDatabaseStorageArray<T> extends DatabaseStorage
 	
 	private boolean registered=false;
 	
-	public RegistrableDatabaseStorageArray(Class<?extends T> base){
+	public RegistrableDatabaseStorageArray(Class<T> base){
 		super(base);
 	}
 

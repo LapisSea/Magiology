@@ -1,6 +1,7 @@
 package com.magiology.util.objs.physics.real;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.math.MathUtil;

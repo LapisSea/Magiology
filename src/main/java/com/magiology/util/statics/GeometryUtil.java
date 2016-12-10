@@ -20,8 +20,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.AxisDirection;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 
@@ -465,4 +467,54 @@ public class GeometryUtil{
 		
 		return boxes;
 	}
+	
+	
+	private static final class Hit{
+		
+		private RayTraceResult	h;
+		private double			d;
+		
+		private Hit(RayTraceResult h, double d, int id){
+			this(h,d);
+			h.subHit=id;
+		}
+		private Hit(RayTraceResult h, double d){
+			this.h=h;
+			this.d=d;
+		}
+		
+	}
+	
+	private static final class HitList extends ArrayList<Hit>{
+		
+		private Vec3d start;
+		
+		public boolean add(RayTraceResult hit, int id){
+			return hit.typeOfHit==Type.BLOCK&&add(new Hit(hit, hit.hitVec.distanceTo(start),id));
+		}
+	}
+	
+	private static final HitList HITS=new HitList();
+	private static final Hit NULL_HIT=new Hit(null, Double.MAX_VALUE);
+	
+	public static RayTraceResult rayTrace(List<AxisAlignedBB> boxes, Vec3d start, Vec3d end, BlockPos pos){
+		HITS.clear();
+		HITS.start=start;
+		
+		for(int i=0;i<boxes.size();i++){
+			Vec3d vec3d=start.subtract(pos.getX(), pos.getY(), pos.getZ());
+			Vec3d vec3d1=end.subtract(pos.getX(), pos.getY(), pos.getZ());
+			RayTraceResult hit=boxes.get(i).calculateIntercept(vec3d, vec3d1);
+			if(hit!=null){
+				RayTraceResult hitLocal=new RayTraceResult(hit.hitVec.addVector(pos.getX(), pos.getY(), pos.getZ()), hit.sideHit, pos);
+				hitLocal.hitInfo=hit.hitInfo;
+				hitLocal.subHit=hit.subHit;
+				HITS.add(hitLocal,i);
+			}
+		}
+		
+		return HITS.stream().min((h1, h2)->h1.d<h2.d?-1:h1.d==h2.d?0:1).orElse(NULL_HIT).h;
+		
+	}
+	
 }

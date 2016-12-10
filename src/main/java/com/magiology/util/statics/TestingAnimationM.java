@@ -5,10 +5,8 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 
-import com.magiology.DevOnly;
 import com.magiology.util.objs.animation.AnimationM;
 
-@DevOnly
 public class TestingAnimationM{
 	
 	private static AnimationM instance;

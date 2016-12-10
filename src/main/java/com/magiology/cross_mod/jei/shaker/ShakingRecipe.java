@@ -1,6 +1,7 @@
 package com.magiology.cross_mod.jei.shaker;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeWrapper;

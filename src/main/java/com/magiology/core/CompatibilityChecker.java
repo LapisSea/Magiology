@@ -2,14 +2,21 @@ package com.magiology.core;
 
 import static com.magiology.core.MReference.*;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
-import com.magiology.util.statics.*;
-
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import org.lwjgl.opengl.Display;
+
+import com.magiology.util.statics.LogUtil;
+import com.magiology.util.statics.UtilM;
 
 import net.minecraftforge.fml.common.Loader;
 

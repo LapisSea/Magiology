@@ -84,7 +84,7 @@ public class TileEntityScreen extends TileEntityOneBlockStructure<TileEntityScre
 	}
 	
 	public EnumFacing getRotation(){
-		return BlockScreen.getRotation(getState());
+		return BlockScreen.getRot(getState());
 	}
 	@Override
 	public void filterBlocks(List<TileEntityScreen> parts,Vec3i clickedPos){

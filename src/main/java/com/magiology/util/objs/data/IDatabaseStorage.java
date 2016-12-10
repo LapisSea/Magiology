@@ -1,9 +1,6 @@
 package com.magiology.util.objs.data;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import com.magiology.util.statics.UtilM;
 
 public interface IDatabaseStorage<T>{
 

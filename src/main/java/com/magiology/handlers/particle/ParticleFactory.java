@@ -49,7 +49,9 @@ public abstract class ParticleFactory{
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public abstract float getSpawnDistanceInBlocks();
+	public float getSpawnDistanceInBlocks(){
+		return defultSpawnDistance;
+	}
 	
 	@SideOnly(Side.CLIENT)
 	public abstract boolean hasDistanceLimit();

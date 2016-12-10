@@ -3,23 +3,18 @@ package com.magiology.client.rendering.item;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.magiology.core.class_manager.ClassList;
-import com.magiology.mc_objects.ItemRegistry;
+import com.magiology.core.registry.init.ItemsM;
 import com.magiology.util.interf.Renderable;
 import com.magiology.util.interf.SpecialRender;
-import com.magiology.util.objs.data.DatabaseStorageArray;
 import com.magiology.util.statics.LogUtil;
 import com.magiology.util.statics.UtilC;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
-import net.minecraftforge.event.entity.minecart.MinecartCollisionEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -34,6 +29,7 @@ public class SIRRegistry{
 	
 	public interface IItemRenderer extends Renderable<ItemStack>{//di**s out for IItemRenderer
 		
+		@Override
 		void render(ItemStack stack);
 	}
 	
@@ -53,7 +49,7 @@ public class SIRRegistry{
 		private ModelResourceLocation fallback;
 		
 		public DummyMesh(ResourceLocation loc){
-			this.fallback=new ModelResourceLocation(loc, "inventory");
+			fallback=new ModelResourceLocation(loc, "inventory");
 		}
 		
 		@Override
@@ -69,8 +65,8 @@ public class SIRRegistry{
 			
 			UtilC.getRI().getItemModelMesher().register(item, new DummyMesh(loc));
 		}catch(Exception e){
-			for(int i=0;i<ItemRegistry.get().getDatabase().length;i++){
-				LogUtil.println(ItemRegistry.get().getDatabase()[i].getRegistryName());
+			for(int i=0;i<ItemsM.get().getDatabase().length;i++){
+				LogUtil.println(ItemsM.get().getDatabase()[i].getRegistryName());
 			}
 			throw e;
 		}
@@ -79,7 +75,7 @@ public class SIRRegistry{
 	public static <T extends Item&SpecialRender> void register(){
 		MagiologyTEISR.wrapp();
 		ModelLoaderRegistry.registerLoader(new ModelLoaderM());
-		for(SpecialRender item:ItemRegistry.get().getByExtension(SpecialRender.class)){
+		for(SpecialRender item:ItemsM.get().getByExtension(SpecialRender.class)){
 			T itemRender=(T)item;
 			if(itemRender.getRenderer()instanceof IItemRenderer){
 				registerItem(itemRender);

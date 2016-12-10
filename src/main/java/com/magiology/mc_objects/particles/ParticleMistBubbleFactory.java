@@ -21,25 +21,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ParticleMistBubbleFactory extends ParticleFactory{
 	
-	private final static ParticleMistBubbleFactory instance=new ParticleMistBubbleFactory();
-	public static ParticleMistBubbleFactory get(){return instance;}
-	private ParticleMistBubbleFactory(){}
 	
 	public static final ResourceLocation MIST=new ResourceLocation(MReference.MODID,"/textures/particle/smooth_buble1.png");
 	public static int defultModel=-1;
 
 	
-	public void spawn(Vec3M pos, Vec3M speed, float size, float lifeTime, float gravity, ColorM color){
+	public void spawn(Vec3M pos, Vec3M speed, float size, float lifeTime, float gravity, IColorM color){
 		spawn(pos, speed, size, lifeTime, new Vec3M(0, gravity, 0), color);
 	}
 	
-	public void spawn(Vec3M pos, Vec3M speed, float size, float lifeTime, Vec3M gravity, ColorM color){
+	public void spawn(Vec3M pos, Vec3M speed, float size, float lifeTime, Vec3M gravity, IColorM color){
 		if(UtilM.isRemote()&&shouldSpawn(pos))addParticle(new ParticleMistBubble(pos, speed, size, lifeTime, gravity, color));
-	}
-	
-	@Override
-	public float getSpawnDistanceInBlocks(){
-		return defultSpawnDistance;
 	}
 	
 	@Override
@@ -126,7 +118,7 @@ public class ParticleMistBubbleFactory extends ParticleFactory{
 		
 		@Override
 		public ParticleFactory getFactorfy(){
-			return instance;
+			return null;
 		}
 	}
 }

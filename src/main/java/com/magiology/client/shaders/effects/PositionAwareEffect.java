@@ -2,16 +2,20 @@ package com.magiology.client.shaders.effects;
 
 import java.lang.reflect.Method;
 
-import com.magiology.util.interf.ObjectReturn;
-import com.magiology.util.objs.PairM;
-import com.magiology.util.objs.vec.*;
-import com.magiology.util.statics.*;
-import com.magiology.util.statics.math.*;
-
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
-import net.minecraft.client.renderer.*;
+import com.magiology.util.interf.ObjectReturn;
+import com.magiology.util.objs.PairM;
+import com.magiology.util.objs.vec.Vec2FM;
+import com.magiology.util.objs.vec.Vec3M;
+import com.magiology.util.statics.UtilC;
+import com.magiology.util.statics.UtilM;
+import com.magiology.util.statics.math.MatrixUtil;
+import com.magiology.util.statics.math.PartialTicksUtil;
+
+import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.culling.ClippingHelperImpl;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 

@@ -1,11 +1,9 @@
 package com.magiology.forge.networking;
 
-import com.magiology.forge.proxy.ClientProxy;
 import com.magiology.util.statics.UtilC;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -14,7 +12,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public abstract class PacketM<T extends IMessage> implements IMessage,IMessageHandler<T,IMessage>{
+public abstract class PacketM implements IMessage,IMessageHandler<PacketM,IMessage>{
 	
 	public abstract void toBytes(PacketBufferM buf);
 	
@@ -33,7 +31,7 @@ public abstract class PacketM<T extends IMessage> implements IMessage,IMessageHa
 	}
 	
 	@Override
-	public final IMessage onMessage(T message, MessageContext ctx){
+	public final IMessage onMessage(PacketM message, MessageContext ctx){
 		IThreadListener listener;
 		EntityPlayer player;
 		boolean isRemote=ctx.side==Side.CLIENT;
@@ -46,7 +44,8 @@ public abstract class PacketM<T extends IMessage> implements IMessage,IMessageHa
 			player=ctx.getServerHandler().playerEntity;
 		}
 		
-		listener.addScheduledTask(()->((PacketM)message).onMessage(player.worldObj, player, isRemote));
+		listener.addScheduledTask(()->message.onMessage(player.worldObj, player, isRemote));
 		return null;
 	}
+	
 }

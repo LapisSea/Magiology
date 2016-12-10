@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipFile;
@@ -17,7 +15,6 @@ import org.apache.commons.io.FileUtils;
 
 import com.magiology.core.MReference;
 import com.magiology.core.Magiology;
-import com.magiology.util.statics.LogUtil;
 import com.magiology.util.statics.UtilM;
 
 public class IOManager{
@@ -80,7 +77,7 @@ public class IOManager{
 		
 		ZipFile zipFile=null;
 		try{
-			zipFile=new ZipFile(new String(Magiology.isDev()?"mods/DummyJar.zip":MReference.SOURCE_FILE));
+			zipFile=new ZipFile(new String(Magiology.IS_DEV?"mods/DummyJar.zip":MReference.SOURCE_FILE));
 			ZipFile zipFile2=zipFile;
 			files.forEach((fileBase)->{
 				File finalFile=new File(getRoot()+fileBase.getPath());

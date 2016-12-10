@@ -19,7 +19,7 @@ public class TileEntityNeuroDuct extends TileEntityM implements NeuroPart{
 	@Override
 	protected void readFromNbtWithWorld(NBTTagCompound compound){
 		readNeuroPartFromNbt(compound);
-		BlockNeuroDuct.get().updateBlockState(getState(), getWorld(), pos);
+		BlockNeuroDuct.get().updateBlockStateAndSet(getState(), getWorld(), getPos());
 	}
 	
 	@Override

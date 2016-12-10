@@ -3,7 +3,8 @@ package com.magiology.cross_mod.jei.shaker;
 import com.magiology.cross_mod.jei.JeiUidsM;
 import com.magiology.util.statics.LogUtil;
 
-import mezz.jei.api.recipe.*;
+import mezz.jei.api.recipe.IRecipeHandler;
+import mezz.jei.api.recipe.IRecipeWrapper;
 import mezz.jei.util.ErrorUtil;
 
 public class ShakingRecipeHandler implements IRecipeHandler<ShakingRecipe>{

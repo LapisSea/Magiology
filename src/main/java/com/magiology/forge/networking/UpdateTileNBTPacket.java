@@ -16,13 +16,17 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class UpdateTileNBTPacket extends NBTPacket{
 	
+	public static final Side SIDE=Side.CLIENT;
+	
 	private static Set<TileEntityM> dirty=new HashSet<>();
 	
+	
 	public static void upload(){
-		if(dirty.isEmpty()) return;
+		if(dirty.isEmpty())return;
 		
 		Map<EntityPlayer, List<TileEntityM>> toSend=new HashMap<>();
 		dirty.forEach((tile)->{
@@ -58,4 +62,5 @@ public class UpdateTileNBTPacket extends NBTPacket{
 		}
 		return null;
 	}
+
 }

@@ -1,25 +1,23 @@
 package com.magiology.util.objs.block_bounds;
 
-import com.magiology.client.renderers.Renderer;
-import com.magiology.util.statics.OpenGLM;
+import com.magiology.client.rendering.highlight.BlockHighlightRenderer;
+import com.magiology.client.rendering.highlight.types.BasicBlockHighlightRenderer;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BasicBlockBounds implements IBlockBounds{
 	
-	private boolean fullCube,drawModelInvalid;
+	private boolean fullCube;
 	private AxisAlignedBB box;
 	
 	@SideOnly(Side.CLIENT)
-	private int drawModel=-1;
+	private BlockHighlightRenderer renderer=new BasicBlockHighlightRenderer(this);
+	
 	
 	public BasicBlockBounds(){
 		this(0, 0, 0, 1, 1, 1);
@@ -33,7 +31,7 @@ public class BasicBlockBounds implements IBlockBounds{
 	}
 	
 	public void setBlockBounds(AxisAlignedBB box){
-		drawModelInvalid=true;
+		renderer.markDirty();
 		this.box=box;
 		fullCube=
 				box.minX==0&&box.maxX==1&&
@@ -53,29 +51,14 @@ public class BasicBlockBounds implements IBlockBounds{
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void drawBoundsOutline(IBlockState state, World world, BlockPos pos){
-		if(drawModelInvalid)createModel();
-		
-		OpenGLM.callList(drawModel);
+	public BlockHighlightRenderer getHighlightRenderer(){
+		return renderer;
 	}
-	
-	@SideOnly(Side.CLIENT)
-	private void createModel(){
-		drawModelInvalid=false;
-		if(drawModel!=-1)OpenGLM.glDeleteLists(drawModel, 1);
-		drawModel=GLAllocation.generateDisplayLists(1);
-		GlStateManager.glNewList(drawModel, 4864);
-		
-		Renderer.LINES.begin();
-		generateBoxLines(box.expandXyz(0.0020000000949949026D)).forEach(Renderer.LINES::addVertex);
-		Renderer.LINES.draw();
-		
-		GlStateManager.glEndList();
-	}
-	
+
 	@Override
-	protected void finalize(){
-		if(drawModel!=-1)OpenGLM.glDeleteLists(drawModel, 1);
+	@SideOnly(Side.CLIENT)
+	public void setHighlightRenderer(BlockHighlightRenderer renderer){
+		this.renderer=renderer;
 	}
 	
 }

@@ -3,15 +3,12 @@ package com.magiology.client.rendering;
 import com.magiology.client.renderers.Renderer;
 import com.magiology.util.objs.animation.AnimationM;
 import com.magiology.util.objs.color.ColorM;
-import com.magiology.util.statics.LogUtil;
 import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.OpenGLM.BlendFunc;
-import com.magiology.util.statics.math.MathUtil;
-import com.magiology.util.statics.math.PartialTicksUtil;
 import com.magiology.util.statics.TestingAnimationM;
 import com.magiology.util.statics.UtilC;
-
-import jline.internal.Log;
+import com.magiology.util.statics.math.MathUtil;
+import com.magiology.util.statics.math.PartialTicksUtil;
 
 public class RandomAnimation{
 	

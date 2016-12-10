@@ -3,15 +3,16 @@ package com.magiology.client.shaders.effects;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-import com.magiology.client.shaders.programs.InvisibleEffect;
+import org.lwjgl.opengl.Display;
+
+import com.magiology.client.shaders.programs.InvisibleShader;
 import com.magiology.client.shaders.upload.UniformUploaderColor;
 import com.magiology.client.shaders.upload.UniformUploaderF1;
 import com.magiology.client.shaders.upload.UniformUploaderF2;
-import com.magiology.util.objs.*;
+import com.magiology.util.objs.PairM;
 import com.magiology.util.objs.color.ColorM;
-import com.magiology.util.objs.vec.*;
-
-import org.lwjgl.opengl.Display;
+import com.magiology.util.objs.vec.Vec2FM;
+import com.magiology.util.objs.vec.Vec3M;
 
 public class SoftEffectsShader extends PositionAwareEffect{
 	
@@ -76,21 +77,21 @@ public class SoftEffectsShader extends PositionAwareEffect{
 	@Override
 	public void initUniformLocations(){
 		for(int i=0;i<20;i++){
-			cricle_sizeP[i]=new UniformUploaderF1(InvisibleEffect.instance,"cricles["+i+"].sizeP");
-			cricle_sizeN[i]=new UniformUploaderF1(InvisibleEffect.instance,"cricles["+i+"].sizeN");
-			cricle_radius[i]=new UniformUploaderF1(InvisibleEffect.instance,"cricles["+i+"].radius");
-			cricle_mulColor[i]=new UniformUploaderColor(InvisibleEffect.instance,"cricles["+i+"].mulColor");
-			cricle_screenPos[i]=new UniformUploaderF2(InvisibleEffect.instance,"cricles["+i+"].screenPos");
+			cricle_sizeP[i]=new UniformUploaderF1(InvisibleShader.instance,"cricles["+i+"].sizeP");
+			cricle_sizeN[i]=new UniformUploaderF1(InvisibleShader.instance,"cricles["+i+"].sizeN");
+			cricle_radius[i]=new UniformUploaderF1(InvisibleShader.instance,"cricles["+i+"].radius");
+			cricle_mulColor[i]=new UniformUploaderColor(InvisibleShader.instance,"cricles["+i+"].mulColor");
+			cricle_screenPos[i]=new UniformUploaderF2(InvisibleShader.instance,"cricles["+i+"].screenPos");
 
-			line_widthPos1[i]=new UniformUploaderF1(InvisibleEffect.instance,"lines["+i+"].widthPos1");
-			line_widthPos2[i]=new UniformUploaderF1(InvisibleEffect.instance,"lines["+i+"].widthPos2");
-			line_totalLength[i]=new UniformUploaderF1(InvisibleEffect.instance,"lines["+i+"].totalLength");
-			line_middle[i]=new UniformUploaderF2(InvisibleEffect.instance,"lines["+i+"].middle");
-			line_end[i]=new UniformUploaderF2(InvisibleEffect.instance,"lines["+i+"].end");
-			line_mulColor[i]=new UniformUploaderColor(InvisibleEffect.instance,"lines["+i+"].mulColor");
+			line_widthPos1[i]=new UniformUploaderF1(InvisibleShader.instance,"lines["+i+"].widthPos1");
+			line_widthPos2[i]=new UniformUploaderF1(InvisibleShader.instance,"lines["+i+"].widthPos2");
+			line_totalLength[i]=new UniformUploaderF1(InvisibleShader.instance,"lines["+i+"].totalLength");
+			line_middle[i]=new UniformUploaderF2(InvisibleShader.instance,"lines["+i+"].middle");
+			line_end[i]=new UniformUploaderF2(InvisibleShader.instance,"lines["+i+"].end");
+			line_mulColor[i]=new UniformUploaderColor(InvisibleShader.instance,"lines["+i+"].mulColor");
 		}
-		cricleArraySize=new UniformUploaderF1(InvisibleEffect.instance, "cricle_arraySize");
-		lineArraySize=new UniformUploaderF1(InvisibleEffect.instance, "line_arraySize");
+		cricleArraySize=new UniformUploaderF1(InvisibleShader.instance, "cricle_arraySize");
+		lineArraySize=new UniformUploaderF1(InvisibleShader.instance, "line_arraySize");
 	}
 	
 	private static interface BaseFX{
@@ -119,9 +120,9 @@ public class SoftEffectsShader extends PositionAwareEffect{
 			screenPos.y*=Display.getHeight()/2F;
 			distanceScale=1/o.obj2;
 			
-			this.sizeP=sizeP*distanceScale*InvisibleEffect.screenSizeF;
-			this.sizeN=sizeN*distanceScale*InvisibleEffect.screenSizeF;
-			this.radius=radius*distanceScale*InvisibleEffect.screenSizeF;
+			this.sizeP=sizeP*distanceScale*InvisibleShader.screenSizeF;
+			this.sizeN=sizeN*distanceScale*InvisibleShader.screenSizeF;
+			this.radius=radius*distanceScale*InvisibleShader.screenSizeF;
 			this.mulColor=mulColor;
 		}
 		@Override
@@ -156,11 +157,11 @@ public class SoftEffectsShader extends PositionAwareEffect{
 			
 			PairM<Vec2FM, Float>
 			o=convertWorldToScreenPos(worldPos1);
-			this.widthPos1=width/o.obj2*InvisibleEffect.screenSizeF;
+			this.widthPos1=width/o.obj2*InvisibleShader.screenSizeF;
 			start=o.obj1;
 			
 			o=convertWorldToScreenPos(worldPos2);
-			this.widthPos2=width/o.obj2*InvisibleEffect.screenSizeF;
+			this.widthPos2=width/o.obj2*InvisibleShader.screenSizeF;
 			end=o.obj1;
 			
 		}

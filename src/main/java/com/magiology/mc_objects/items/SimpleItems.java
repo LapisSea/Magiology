@@ -1,10 +1,10 @@
 package com.magiology.mc_objects.items;
 
-import net.minecraft.item.Item;
+import com.magiology.util.m_extensions.ItemM;
 
 public class SimpleItems{
 	
-	public static class ItemMistyPowder extends Item{
+	public static class ItemMistyPowder extends ItemM{
 		private static ItemMistyPowder instance;
 		public ItemMistyPowder(){
 			instance=this;

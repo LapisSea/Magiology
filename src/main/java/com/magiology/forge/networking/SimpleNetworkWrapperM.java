@@ -1,6 +1,8 @@
 package com.magiology.forge.networking;
 
-import net.minecraftforge.fml.common.network.simpleimpl.*;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
@@ -19,7 +21,7 @@ public class SimpleNetworkWrapperM extends SimpleNetworkWrapper{
 		
 	}
 	
-	public <T extends IMessage & IMessageHandler<T,IMessage>> void registerPacket(Class<T> clazz, Side receiverSide){
+	public <T extends IMessage&IMessageHandler<T, IMessage>> void registerPacket(Class<T> clazz, Side receiverSide){
 		registerMessage(clazz, clazz, registrationId, receiverSide);
 		registrationId++;
 	}

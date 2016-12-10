@@ -5,6 +5,7 @@ import java.nio.FloatBuffer;
 import org.lwjgl.util.vector.Vector3f;
 
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 
@@ -68,6 +69,10 @@ public class Vec3MRead implements IVec3M<Vec3MRead>{
 		this(vec.x(), vec.y(), vec.z());
 	}
 	
+	public Vec3MRead(RayTraceResult h){
+		this(h.hitVec);
+	}
+
 	public Vec3MRead load(FloatBuffer buf){
 		x=buf.get();
 		y=buf.get();

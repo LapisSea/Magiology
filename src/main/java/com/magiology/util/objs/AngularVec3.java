@@ -1,9 +1,9 @@
 package com.magiology.util.objs;
 
+import org.lwjgl.util.vector.Vector2f;
+
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.math.MathUtil;
-
-import org.lwjgl.util.vector.Vector2f;
 
 /**
  * Created by LapisSea on 29.1.2016..

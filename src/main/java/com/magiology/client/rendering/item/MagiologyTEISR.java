@@ -2,8 +2,6 @@ package com.magiology.client.rendering.item;
 
 import org.lwjgl.opengl.GL11;
 
-import com.magiology.util.statics.LogUtil;
-
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemStack;
 

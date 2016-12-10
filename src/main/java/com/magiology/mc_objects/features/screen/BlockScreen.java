@@ -1,12 +1,12 @@
 package com.magiology.mc_objects.features.screen;
 
-import com.magiology.mc_objects.BlockStates;
-import com.magiology.mc_objects.BlockStates.PropertyBoolM;
-import com.magiology.mc_objects.BlockStates.PropertyDirectionM;
 import com.magiology.mc_objects.items.ItemMatterJumper;
 import com.magiology.mc_objects.items.ItemMatterJumper.MatterJumperMode;
 import com.magiology.util.m_extensions.BlockContainerM;
 import com.magiology.util.m_extensions.BlockPosM;
+import com.magiology.util.objs.BlockStates;
+import com.magiology.util.objs.BlockStates.PropertyBoolM;
+import com.magiology.util.objs.BlockStates.PropertyDirectionM;
 import com.magiology.util.objs.block_bounds.StateDependantBlockBounds;
 import com.magiology.util.objs.vec.Vec2FM;
 import com.magiology.util.statics.UtilM;
@@ -19,6 +19,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -44,8 +46,20 @@ public class BlockScreen extends BlockContainerM<TileEntityScreen>{
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		return ROT.set(getDefaultState(), facing);
 	}
+
+	@Override
+	public IBlockState withRotation(IBlockState state, Rotation rot){
+		if(ACTIVE.get(state))return state;
+		return ROT.set(state, rot.rotate(getRot(state)));
+	}
 	
-	public static EnumFacing getRotation(IBlockState state){
+	@Override
+	public IBlockState withMirror(IBlockState state, Mirror mirror){
+		if(ACTIVE.get(state))return state;
+		return ROT.set(state, mirror.mirror(getRot(state)));
+	}
+	
+	public static EnumFacing getRot(IBlockState state){
 		return ROT.get(state);
 	}
 	

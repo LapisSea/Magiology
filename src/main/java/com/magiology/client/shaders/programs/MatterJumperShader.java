@@ -1,20 +1,13 @@
 package com.magiology.client.shaders.programs;
 
-import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL20;
 
 import com.magiology.client.shaders.ShaderProgram;
 import com.magiology.handlers.frame_buff.TemporaryFrame;
 import com.magiology.util.objs.color.ColorM;
-import com.magiology.util.objs.vec.Vec3M;
-import com.magiology.util.statics.LogUtil;
-import com.magiology.util.statics.UtilC;
-import com.magiology.util.statics.math.PartialTicksUtil;
 
 import net.minecraft.client.shader.Framebuffer;
-import net.minecraft.world.World;
 
 public class MatterJumperShader extends ShaderProgram{
 	

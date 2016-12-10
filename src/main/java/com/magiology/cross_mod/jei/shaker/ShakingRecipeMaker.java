@@ -1,6 +1,7 @@
 package com.magiology.cross_mod.jei.shaker;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.magiology.mc_objects.recepies.ShakerRecepies;
 import com.magiology.mc_objects.recepies.ShakerRecepies.Recepie;
