@@ -6,10 +6,8 @@
 !/gradle/
 !/LICENSE.md
 !/README.md
-!/COPYING.lesser
 !build.gradle
 !TODO.docx
-!downloads.json
 !/run/mods/1.10.2/magiology/
 !spooky.scary.skeletons
 !.editorconfig
