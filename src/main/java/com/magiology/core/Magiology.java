@@ -48,14 +48,13 @@ public class Magiology extends GenericModContainerImpl{
 	@SidedProxy(modId=MODID, clientSide=CLIENT_PROXY_LOCATION, serverSide=SERVER_PROXY_LOCATION)
 	public static CommonProxy	SIDE_PROXY;
 	@Metadata(MODID)
-	private static ModMetadata META_DATA;
+	private static ModMetadata	META_DATA;
 	
-	public static CommonProxy	COMMON_PROXY=new CommonProxy();
+	public static CommonProxy					COMMON_PROXY	=new CommonProxy();
 	public static final SimpleNetworkWrapperM	NETWORK_CHANNEL	=new SimpleNetworkWrapperM(CHANNEL_NAME);
 	private static String						MARKER			=NAME+"_"+MC_VERSION+"-"+VERSION;
 	public static final IOManager				EXTRA_FILES		=new IOManager();
-	private static final ConfigM				CONFIG=new ConfigM();
-	
+	private static final ConfigM				CONFIG			=new ConfigM();
 	
 	@InstanceFactory
 	private static Magiology newMagiologyInstance(){
@@ -64,12 +63,15 @@ public class Magiology extends GenericModContainerImpl{
 	
 	public Magiology(){
 		super(ACCEPTED_MC_VERSION, null, "com.magiology");
-		AssistantBotLaucher.run();
+		
 		INSTANCE=this;
+		AssistantBotLaucher.run();
 		Development.startupTest();
+		Runtime.getRuntime().addShutdownHook(new Thread(()->{
+			COMMON_PROXY.onExit();
+			SIDE_PROXY.onExit();
+		}));
 	}
-	
-	
 	
 	/////////////////////////FORGE_EVENTS\\\\\\\\\\\\\\\\\\\\\\\\\
 	@EventHandler
@@ -78,10 +80,6 @@ public class Magiology extends GenericModContainerImpl{
 		
 		COMMON_PROXY.loadModFiles();
 		SIDE_PROXY.loadModFiles();
-		Runtime.getRuntime().addShutdownHook(new Thread(()->{
-			COMMON_PROXY.onExit();
-			SIDE_PROXY.onExit();
-		}));
 		
 		LogUtil.printWrapped(MARKER+" -> Pre initialization started!");
 		COMMON_PROXY.preInit();
@@ -115,22 +113,23 @@ public class Magiology extends GenericModContainerImpl{
 	}
 	
 	public static LaunchClassLoader getClassLoader(){
-		
 		return (LaunchClassLoader)Magiology.class.getClassLoader();
 	}
+	
 	@Override
-	public Object getMod(){
+	public Magiology getMod(){
 		return INSTANCE;
 	}
 	
 	@Override
 	public String toString(){
-		return MODID+" -v="+VERSION;
+		return MODID+'_'+MC_VERSION+'-'+VERSION;
 	}
 	
 	public static Configuration getConfig(){
 		return CONFIG;
 	}
+	
 	@Override
 	public ModMetadata getMetadata(){
 		LogUtil.println(META_DATA);
