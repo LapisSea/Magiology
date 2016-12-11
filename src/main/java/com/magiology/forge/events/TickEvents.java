@@ -14,30 +14,33 @@ import com.magiology.util.statics.UtilC;
 import com.magiology.util.statics.UtilM;
 import com.magiology.util.statics.math.PartialTicksUtil;
 
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+@EventBusSubscriber
 public class TickEvents{
 	
 	
-	public static TickEvents instance=new TickEvents();
+	public TickEvents(){throw new UnsupportedOperationException();}
+	
 	static boolean worldRendering;
 	
-	private final List<Runnable> serverTickQueue=new ArrayList<>(),clientTickQueue=new ArrayList<>();
+	private static final List<Runnable> serverTickQueue=new ArrayList<>(),clientTickQueue=new ArrayList<>();
 
 	public static void nextTick(Runnable hook){
 		nextTick(UtilM.isRemote(),hook);
 	}
 	public static void nextTick(boolean isRemote,Runnable hook){
-		(isRemote?instance.clientTickQueue:instance.serverTickQueue).add(hook);
+		(isRemote?clientTickQueue:serverTickQueue).add(hook);
 	}
 	
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
-	public void onClientTick(TickEvent.ClientTickEvent event){
+	public static void onClientTick(TickEvent.ClientTickEvent event){
 		if(event.phase!=Phase.START){
 			if(UtilC.isWorldOpen()){
 				if(UtilC.getWorldTime()%50==0)TemporaryFrameBufferHandler.instance.bufferGC();
@@ -56,7 +59,7 @@ public class TickEvents{
 	
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
-	public void onRenderTick(TickEvent.RenderTickEvent event){
+	public static void onRenderTick(TickEvent.RenderTickEvent event){
 		if(event.phase==Phase.START)worldRendering=true;
 		PartialTicksUtil.partialTicks=event.renderTickTime;
 		TemporaryFrameBufferHandler.instance.renderFrames();
@@ -64,17 +67,17 @@ public class TickEvents{
 	}
 	@SideOnly(Side.SERVER)
 	@SubscribeEvent
-	public void onServerTick(TickEvent.ServerTickEvent event){
+	public static void onServerTick(TickEvent.ServerTickEvent event){
 		UtilM.timerSafety();
 	}
 	
 	@SubscribeEvent
-	public void onWorldTick(TickEvent.WorldTickEvent event){
+	public static void onWorldTick(TickEvent.WorldTickEvent event){
 		if(event.phase==Phase.START)return;
 		tick(serverTickQueue);
 		UpdateTileNBTPacket.upload();
 	}
-	private void tick(List<Runnable> queue){
+	private static void tick(List<Runnable> queue){
 		if(queue.isEmpty())return;
 		List<Runnable> r=new ArrayList<>(queue);
 		queue.clear();

@@ -8,14 +8,10 @@ import com.magiology.core.registry.init.ItemsM;
 import com.magiology.core.registry.init.PacketRegistry;
 import com.magiology.core.registry.init.TileEntityRegistry;
 import com.magiology.cross_mod.ModChecker;
-import com.magiology.forge.events.EntityEvents;
-import com.magiology.forge.events.TickEvents;
-import com.magiology.forge.events.WorldEvents;
 import com.magiology.io.IOManager;
 import com.magiology.mc_objects.entitys.EntityPenguin;
 import com.magiology.util.statics.UtilM;
 
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 
 public class CommonProxy{
@@ -23,7 +19,7 @@ public class CommonProxy{
 	private int entityID=0;
 	
 	public void loadModFiles(){
-		IOManager manager=Magiology.extraFiles;
+		IOManager manager=Magiology.EXTRA_FILES;
 		
 		manager.addFile("READ_ME.txt");
 		
@@ -46,9 +42,6 @@ public class CommonProxy{
 	
 	public void init(){
 		registerModEntityWithEgg(EntityPenguin.class,new Color(20, 20, 30),new Color(230, 230, 230));
-		MinecraftForge.EVENT_BUS.register(TickEvents.instance);
-		MinecraftForge.EVENT_BUS.register(EntityEvents.instance);
-		MinecraftForge.EVENT_BUS.register(WorldEvents.instance);
 	}
 	
 	public void postInit(){
@@ -57,7 +50,6 @@ public class CommonProxy{
 	}
 	
 	public void onExit(){
-		
 	}
 	
 	private void registerModEntityWithEgg(Class parEntityClass,Color col1,Color col2){

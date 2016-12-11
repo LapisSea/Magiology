@@ -4,6 +4,7 @@ import com.magiology.client.renderers.Renderer;
 import com.magiology.client.rendering.highlight.BlockHighlightRenderer;
 import com.magiology.util.objs.block_bounds.StateDependantBlockBounds;
 import com.magiology.util.objs.block_bounds.StateDependantBlockBounds.StateBounds;
+import com.magiology.util.statics.LogUtil;
 import com.magiology.util.statics.OpenGLM;
 
 import net.minecraft.block.state.IBlockState;
@@ -33,6 +34,7 @@ public class StateDependantBlockHighlightRenderer extends BlockHighlightRenderer
 	
 	private int createModel(StateBounds box){
 		int drawModel=GLAllocation.generateDisplayLists(1);
+		LogUtil.println(drawModel);
 		GlStateManager.glNewList(drawModel, 4864);
 		
 		Renderer.LINES.begin();

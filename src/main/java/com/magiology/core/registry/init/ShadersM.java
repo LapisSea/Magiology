@@ -7,6 +7,7 @@ import com.magiology.client.shaders.programs.MatterJumperShader;
 import com.magiology.client.shaders.programs.MultiTransformShader;
 import com.magiology.client.shaders.programs.SepiaShader;
 //<GEN:	IMPORTS END>
+import com.magiology.core.ConfigM;
 import com.magiology.core.registry.imp.AutoReferencedRegistry;
 import com.magiology.util.statics.UtilM;
 
@@ -28,8 +29,8 @@ public class ShadersM extends AutoReferencedRegistry<ShaderProgram>{
 	}
 	
 	@Override
-	public void registerObj(ShaderProgram factory){
-		
+	public void registerObj(ShaderProgram shader){
+		shader.compile();
 	}
 	
 	@Override
@@ -48,7 +49,8 @@ public class ShadersM extends AutoReferencedRegistry<ShaderProgram>{
 		return UtilM.standardizeName(className);
 	}
 	
-	public static void load(){
+	public static void reload(){
+		if(!ConfigM.shadersEnabled())return;
 		for(ShaderProgram shader:get().getDatabase())shader.compile();
 	}
 }

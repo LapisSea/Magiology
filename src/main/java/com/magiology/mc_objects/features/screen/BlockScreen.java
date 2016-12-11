@@ -96,6 +96,7 @@ public class BlockScreen extends BlockContainerM<TileEntityScreen>{
 			}
 			
 		}else if(tile.hasBrain()){
+			if(side!=tile.getRotation())return false;
 			TileEntityScreen brain=tile.getBrain();
 			brain.onClick(calcScreenPos(tile, hitX, hitY, hitZ));
 			
@@ -112,13 +113,29 @@ public class BlockScreen extends BlockContainerM<TileEntityScreen>{
 		Vec2FM offset=new Vec2FM(brain.getPositions().get(tile.getMbId())).mulSelf(pixels, -pixels);
 		switch(brain.getRotation()){
 		case NORTH:{
-			offset.y+=(1-hitY)*pixels;
 			offset.x+=(1-hitX)*pixels;
-		}
-		break;
-	
-		default:
-		break;
+			offset.y+=(1-hitY)*pixels;
+		}break;
+		case UP:{
+			offset.x+=(0+hitX)*pixels;
+			offset.y+=(0+hitZ)*pixels;
+		}break;
+		case EAST:{
+			offset.x+=(1-hitZ)*pixels;
+			offset.y+=(1-hitY)*pixels;
+		}break;
+		case SOUTH:{
+			offset.x+=(0+hitX)*pixels;
+			offset.y+=(1-hitY)*pixels;
+		}break;
+		case WEST:{
+			offset.x+=(0+hitZ)*pixels;
+			offset.y+=(1-hitY)*pixels;
+		}break;
+		case DOWN:{
+			offset.x+=(0+hitX)*pixels;
+			offset.y+=(1-hitZ)*pixels;
+		}break;
 		}
 		
 		return offset;

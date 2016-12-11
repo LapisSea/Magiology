@@ -2,296 +2,138 @@ package com.magiology.core;
 
 import static com.magiology.core.MReference.*;
 
-import java.io.File;
-import java.net.URL;
-import java.security.cert.Certificate;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.google.common.collect.Lists;
-import com.google.common.eventbus.EventBus;
-import com.magiology.core.registry.AssistantBot;
+import com.magiology.Development;
+import com.magiology.core.registry.AssistantBotLaucher;
 import com.magiology.forge.networking.SimpleNetworkWrapperM;
 import com.magiology.forge.proxy.CommonProxy;
 import com.magiology.io.IOManager;
 import com.magiology.util.statics.LogUtil;
 
 import net.minecraft.launchwrapper.LaunchClassLoader;
-import net.minecraftforge.fml.common.LoadController;
-import net.minecraftforge.fml.common.MetadataCollection;
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.common.Mod.InstanceFactory;
+import net.minecraftforge.fml.common.Mod.Metadata;
 import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.versioning.ArtifactVersion;
-import net.minecraftforge.fml.common.versioning.DefaultArtifactVersion;
-import net.minecraftforge.fml.common.versioning.VersionRange;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import scala.actors.threadpool.Arrays;
 
 @Mod(modid=MODID, version=VERSION, name=NAME, acceptedMinecraftVersions=ACCEPTED_MC_VERSION)
-public class Magiology implements ModContainer{
-
+public class Magiology extends GenericModContainerImpl{
+	
+	/////////////////////////PRE_PRE_INIT\\\\\\\\\\\\\\\\\\\\\\\\\
 	@SideOnly(Side.CLIENT)
 	private static final boolean CLIENT_ONLY_REMOVED_TESTER=true;
 	
-	public static final boolean IS_DEV,CLIENT_ONLY_REMOVED;
+	public static final boolean IS_DEV, CLIENT_ONLY_REMOVED;
 	static{
-		
 		CompatibilityChecker.checkJava8();
-		
 		getClassLoader().addClassLoaderExclusion("jdk.nashorn");
 		
 		CLIENT_ONLY_REMOVED=Lists.newArrayList(Magiology.class.getDeclaredMethods()).stream().anyMatch(method->method.getName().equals("CLIENT_ONLY_REMOVED_TESTER"));
 		IS_DEV=SOURCE_FILE==null;
-		if(IS_DEV)LogUtil.printWrapped(NAME+" is running in development environment! Work Lapis! Work! NO! CLOSE THAT YOUTUBE VIDEO!");
+		if(IS_DEV) LogUtil.printWrapped(NAME+" is running in development environment! Work Lapis! Work! NO! CLOSE THAT YOUTUBE VIDEO!");
 	}
 	
-	/***//** variables *//***/
-	@SidedProxy(modId=MODID, clientSide=CLIENT_PROXY_LOCATION, serverSide=SERVER_PROXY_LOCATION)
-	public static CommonProxy					sideProxy;
-	public static CommonProxy					commonProxy		=new CommonProxy();
-	public static final SimpleNetworkWrapperM	NETWORK_CHANNEL	=new SimpleNetworkWrapperM(CHANNEL_NAME);
+	/////////////////////////VARIABLES\\\\\\\\\\\\\\\\\\\\\\\\\
 	@Instance(value=MODID)
-	private static Magiology					instance;
-	private static String						marker			=NAME+"_"+MC_VERSION+"-"+VERSION;
-	public static IOManager						extraFiles		=new IOManager();
-
-	public Magiology(){
-		AssistantBot.run();
-		instance=this;
-		
-//		final String script ="\n"
-//				+  "function main(){\n"
-//				+  "	var JavaHomeGetter = Java.type(\"com.magiology.handlers.scripting.bridge.JavaHomeGetter\");\n"
-//				+  "	print([JavaHomeGetter.get(),2+1.2]);\n"
-//				+  "}\n"
-//				+  "function render(){\n"
-//				+  "	print(\"rendered\");\n"
-//				+  "}\n"
-//				+  "function update(){\n"
-//				+  "	print(\"updated\");\n"
-//				+  "}\n";
-//		LogUtil.println("\n \n \n-----------------------------------------------------------------");
-//		try{
-//			RenderNUpdateScript sc=new RenderNUpdateScript(script);
-//			sc.callMain();
-//			sc.update();
-//			sc.render();
-//			for(ScriptWrapper j:sc.getLogs()){
-//				for(ScriptLogLine i:j.getLog().getAllLog())LogUtil.println(i.type,i.isError,i.msg);
-//				LogUtil.println("-----------------");
-//			}
-//		}catch(Exception e){
-//			e.printStackTrace();
-//		}
-//		LogUtil.println("-----------------------------------------------------------------\n \n \n");
-//		UtilM.exit(404);
-		
+	private static Magiology	INSTANCE;
+	@SidedProxy(modId=MODID, clientSide=CLIENT_PROXY_LOCATION, serverSide=SERVER_PROXY_LOCATION)
+	public static CommonProxy	SIDE_PROXY;
+	@Metadata(MODID)
+	private static ModMetadata META_DATA;
+	
+	public static CommonProxy	COMMON_PROXY=new CommonProxy();
+	public static final SimpleNetworkWrapperM	NETWORK_CHANNEL	=new SimpleNetworkWrapperM(CHANNEL_NAME);
+	private static String						MARKER			=NAME+"_"+MC_VERSION+"-"+VERSION;
+	public static final IOManager				EXTRA_FILES		=new IOManager();
+	private static final ConfigM				CONFIG=new ConfigM();
+	
+	
+	@InstanceFactory
+	private static Magiology newMagiologyInstance(){
+		return new Magiology();
 	}
 	
-	/***//** forge events *//***/
+	public Magiology(){
+		super(ACCEPTED_MC_VERSION, null, "com.magiology");
+		AssistantBotLaucher.run();
+		INSTANCE=this;
+		Development.startupTest();
+	}
+	
+	
+	
+	/////////////////////////FORGE_EVENTS\\\\\\\\\\\\\\\\\\\\\\\\\
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event){
+		MReference.overrideMetadata(META_DATA);
 		
-		commonProxy.loadModFiles();
-		sideProxy.loadModFiles();
+		COMMON_PROXY.loadModFiles();
+		SIDE_PROXY.loadModFiles();
 		Runtime.getRuntime().addShutdownHook(new Thread(()->{
-			commonProxy.onExit();
-			sideProxy.onExit();
+			COMMON_PROXY.onExit();
+			SIDE_PROXY.onExit();
 		}));
 		
-		LogUtil.printWrapped(marker+" -> Pre initialization started!");
-		commonProxy.preInit();
-		sideProxy.preInit();
-		LogUtil.printWrapped(marker+" -> Pre initialization compleate!");
+		LogUtil.printWrapped(MARKER+" -> Pre initialization started!");
+		COMMON_PROXY.preInit();
+		SIDE_PROXY.preInit();
+		LogUtil.printWrapped(MARKER+" -> Pre initialization compleate!");
 	}
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event){
 		
-		LogUtil.printWrapped(marker+" -> Initialization started!");
-		commonProxy.init();
-		sideProxy.init();
-		LogUtil.printWrapped(marker+" -> Initialization compleate!");
+		LogUtil.printWrapped(MARKER+" -> Initialization started!");
+		COMMON_PROXY.init();
+		SIDE_PROXY.init();
+		LogUtil.printWrapped(MARKER+" -> Initialization compleate!");
 		
 	}
 	
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event){
 		
-		LogUtil.printWrapped(marker+" -> Post initialization started!");
-		commonProxy.postInit();
-		sideProxy.postInit();
-		LogUtil.printWrapped(marker+" -> Post initialization compleate!");
-		marker=null;
+		LogUtil.printWrapped(MARKER+" -> Post initialization started!");
+		COMMON_PROXY.postInit();
+		SIDE_PROXY.postInit();
+		LogUtil.printWrapped(MARKER+" -> Post initialization compleate!");
+		MARKER=null;
 	}
 	
-	/***/
-	/** getters */
-	/***/
+	/////////////////////////GETTERS\\\\\\\\\\\\\\\\\\\\\\\\\
 	public static Magiology getMagiology(){
-		return instance;
+		return INSTANCE;
 	}
 	
 	public static LaunchClassLoader getClassLoader(){
 		
 		return (LaunchClassLoader)Magiology.class.getClassLoader();
 	}
-	
-	/***/
-	/** interfaces */
-	/***/
-	@Override
-	public VersionRange acceptableMinecraftVersionRange(){
-		try{
-			return VersionRange.createFromVersionSpec(MC_VERSION);
-		}catch(Exception e){}
-		return null;
-	}
-	
-	@Override
-	public void bindMetadata(MetadataCollection mc){}
-	
-	@Override
-	public Disableable canBeDisabled(){
-		return Disableable.NEVER;
-	}
-	
-	@Override
-	public Map<String, String> getCustomModProperties(){
-		return null;
-	}
-	
-	@Override
-	public Class<?> getCustomResourcePackClass(){
-		return null;
-	}
-	
-	@Override
-	public List<ArtifactVersion> getDependants(){
-		return null;
-	}
-	
-	@Override
-	public List<ArtifactVersion> getDependencies(){
-		return null;
-	}
-	
-	@Override
-	public String getDisplayVersion(){
-		return VERSION;
-	}
-	
-	@Override
-	public String getGuiClassName(){
-		return null;
-	}
-	
-	@Override
-	public ModMetadata getMetadata(){
-		return getModMetadata();
-	}
-	
 	@Override
 	public Object getMod(){
-		return this;
+		return INSTANCE;
 	}
 	
 	@Override
-	public String getModId(){
-		return MODID;
+	public String toString(){
+		return MODID+" -v="+VERSION;
 	}
 	
-	@Override
-	public String getName(){
-		return NAME;
+	public static Configuration getConfig(){
+		return CONFIG;
 	}
-	
 	@Override
-	public List<String> getOwnedPackages(){
-		return Arrays.asList(new String[]{BASE_PATH.substring(0, BASE_PATH.length()-1)});
-	}
-	
-	@Override
-	public ArtifactVersion getProcessedVersion(){
-		return new DefaultArtifactVersion(VERSION);
-	}
-	
-	@Override
-	public Set<ArtifactVersion> getRequirements(){
-		return null;
-	}
-	
-	@Override
-	public Map<String, String> getSharedModDescriptor(){
-		return null;
-	}
-	
-	@Override
-	public Certificate getSigningCertificate(){
-		return null;
-	}
-	
-	@Override
-	public String getSortingRules(){
-		return null;
-	}
-	
-	@Override
-	public File getSource(){
-		return null;
-	}
-	
-	@Override
-	public URL getUpdateUrl(){
-		return null;
-	}
-	
-	@Override
-	public String getVersion(){
-		return VERSION;
-	}
-	
-	@Override
-	public boolean isImmutable(){
-		return true;
-	}
-	
-	@Override
-	public boolean registerBus(EventBus bus, LoadController controller){
-		bus.register(getClass());
-		return true;
-	}
-	
-	@Override
-	public void setEnabledState(boolean enabled){
-		String keemstar="Alex is a stupid niger";
-		keemstar.equals("Gnome");
-	}
-	
-	@Override
-	public boolean shouldLoadInEnvironment(){
-		return true;
-	}
-	
-	@Override
-	public boolean matches(Object mod){
-		return mod==this;
-	}
-	
-	@Override
-	public void setClassVersion(int classVersion){}
-	
-	@Override
-	public int getClassVersion(){
-		return -1;
+	public ModMetadata getMetadata(){
+		LogUtil.println(META_DATA);
+		return META_DATA;
 	}
 }

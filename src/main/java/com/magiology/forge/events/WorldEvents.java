@@ -6,11 +6,14 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+
+@EventBusSubscriber
 public class WorldEvents{
-	
-	public static final WorldEvents instance=new WorldEvents();
+
+	public WorldEvents(){throw new UnsupportedOperationException();}
 	
 	@SubscribeEvent
 	public void blockBreakEvent(BreakEvent e){

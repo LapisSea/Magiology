@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.vector.Matrix4f;
 
 import com.google.common.base.Joiner;
+import com.magiology.core.ConfigM;
 import com.magiology.core.Magiology;
 import com.magiology.util.objs.color.ColorM;
 import com.magiology.util.objs.vec.Vec3M;
@@ -30,6 +31,7 @@ public abstract class ShaderProgram{
 	public abstract void initUniforms();
 	
 	public void compile(){
+		if(!ConfigM.shadersEnabled())return;
 		deleteShader();
 		CharSequence vertex=getVertexShaderSrc(),fragment=getFragmentShaderSrc();
 		fragmentEnabled=fragment!=null&&fragment.length()>0;
@@ -101,7 +103,7 @@ public abstract class ShaderProgram{
 			
 			boolean comressTo1Line=moduleName.endsWith("=1line");
 			if(comressTo1Line)moduleName=moduleName.substring(0, moduleName.length()-"=1line".length());
-			File file=new File(Magiology.extraFiles.getRoot()+"shaders/modules/"+moduleName+".sm");
+			File file=new File(Magiology.EXTRA_FILES.getRoot()+"shaders/modules/"+moduleName+".sm");
 			String moduleSrc;
 			try{
 				moduleSrc=new String(Files.readAllBytes(file.toPath()));
@@ -206,6 +208,6 @@ public abstract class ShaderProgram{
 	}
 	
 	protected CharSequence getShaderFile(String path){
-		return FileUtil.getFileTxt(new File(Magiology.extraFiles.getRoot()+"shaders/"+path));
+		return FileUtil.getFileTxt(new File(Magiology.EXTRA_FILES.getRoot()+"shaders/"+path));
 	}
 }

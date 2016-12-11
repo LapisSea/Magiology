@@ -16,13 +16,12 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.magiology.core.MReference;
-import com.magiology.core.Magiology;
 import com.magiology.util.objs.PairM;
 import com.magiology.util.statics.LogUtil;
 import com.magiology.util.statics.UtilM;
 
 /*{
-  "last update": 1481368337402
+  "last update": 1481452128695
 }*/
 
 /**
@@ -35,6 +34,10 @@ import com.magiology.util.statics.UtilM;
  * @author LapisSea
  */
 public class AssistantBot{
+	
+	static{
+		LogUtil.println(AssistantBot.class.getSimpleName(),"class loaded!");
+	}
 	
 	public interface AutomatableCode{
 		
@@ -55,13 +58,7 @@ public class AssistantBot{
 	private static String THIS_CLASS_SRC;
 	private static int START, END;
 	
-	public static void run(){
-		if(!Magiology.IS_DEV){
-			LogUtil.println("Development mode state: OFF\nSkipping assistant bot. (this is good if you are not a developer)");
-			return;
-		}
-		
-		LogUtil.println("Development mode state: ON\nActivating assistant bot...");
+	static void run(){
 		UtilM.startTime();
 		detectAndUpdate();
 		end();

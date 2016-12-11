@@ -9,7 +9,7 @@ import com.magiology.io.IOManager.IODirectory;
 
 public abstract class Script{
 	
-	protected final IODirectory		dir			=Magiology.extraFiles.getDirectoryManager("scripts");
+	protected final IODirectory		dir			=Magiology.EXTRA_FILES.getDirectoryManager("scripts");
 	protected static final String	NULL_PATH	="no_path_script";
 	protected List<ScriptWrapper>	logs		=new ArrayList<>();
 	protected boolean				compiled;

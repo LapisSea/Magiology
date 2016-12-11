@@ -6,7 +6,6 @@ import com.magiology.core.MReference;
 import com.magiology.core.registry.init.BlocksM;
 import com.magiology.core.registry.init.ParticlesM;
 import com.magiology.core.registry.init.ShadersM;
-import com.magiology.forge.events.RenderEvents;
 import com.magiology.mc_objects.entitys.EntityPenguin;
 import com.magiology.util.objs.EnhancedRobot;
 import com.magiology.util.objs.animation.AnimationBank;
@@ -19,7 +18,6 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumBlockRenderType;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -43,14 +41,13 @@ public class ClientProxy extends CommonProxy{
 			robotH=new EnhancedRobot();
 		}catch(Exception e){}
 		ROBOT=robotH;
-		ShadersM.load();
+		ShadersM.reload();
 		
-		RenderingRegistry.registerEntityRenderingHandler(EntityPenguin.class, (manager)->new EntityPenguinRenderer(manager));
+		RenderingRegistry.registerEntityRenderingHandler(EntityPenguin.class, manager->new EntityPenguinRenderer(manager));
 	}
 	
 	@Override
 	public void init(){
-		MinecraftForge.EVENT_BUS.register(new RenderEvents());
 		registerTileRendering();
 		
 		ParticlesM.get().register();

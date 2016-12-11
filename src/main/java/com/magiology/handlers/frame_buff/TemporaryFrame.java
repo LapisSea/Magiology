@@ -17,12 +17,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class TemporaryFrame{
 	
-	public Framebuffer	frameBuffer	=new Framebuffer(1, 1, false);
-	boolean				dirty		=true,gcPossible=false;
-	long				lastTimeUsed=System.currentTimeMillis();
-	
-	private int										width,height;
-	private boolean									useDepth,willBeRendered=false;
+	public Framebuffer								frameBuffer	=new Framebuffer(1, 1, false);
+	boolean											dirty		=true, gcPossible=false;
+	long											lastTimeUsed=System.currentTimeMillis();
+	private int										width, height;
+	private boolean									useDepth, willBeRendered=false;
 	private ObjectSimpleCallback<TemporaryFrame>	rednerHook	=f->{};
 	
 	public TemporaryFrame(int width, int height, boolean useDepth){
@@ -85,18 +84,17 @@ public class TemporaryFrame{
 	
 	public void render(){
 		TemporaryFrameBufferHandler.instance.resurrectList(this);
-		OpenGLM.pushMatrix();
 		if(dirty){
 			dirty=false;
 			frameBuffer.deleteFramebuffer();
 			frameBuffer.useDepth=useDepth;
-			frameBuffer.setFramebufferColor(0, 0, 0, 0);
 			frameBuffer.createBindFramebuffer(width, height);
 			onBufferInit();
 			LogUtil.println("Created InWorldFrame id="+frameBuffer.framebufferObject);
-			requestRender();
-			
+			forceRender();
+			return;
 		}
+		OpenGLM.pushMatrix();
 		frameBuffer.framebufferClear();
 		frameBuffer.bindFramebuffer(true);
 		GlStateManager.matrixMode(5889);
@@ -110,6 +108,7 @@ public class TemporaryFrame{
 		willBeRendered=false;
 		lastTimeUsed=System.currentTimeMillis();
 	}
+	
 	public void forceRender(){
 		GL11.glPushAttrib(GL11.GL_MATRIX_MODE);
 		GL11.glPushAttrib(GL11.GL_VIEWPORT);

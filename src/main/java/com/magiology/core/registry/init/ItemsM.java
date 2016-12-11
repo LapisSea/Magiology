@@ -1,40 +1,49 @@
-package com.magiology.mc_objects;
+package com.magiology.core.registry.init;
 
-import com.magiology.core.class_manager.ClassList;
+import com.magiology.core.registry.imp.AutoReferencedRegistry;
+//<GEN:	IMPORTS START>
+import com.magiology.mc_objects.items.ItemJetpack;
+import com.magiology.mc_objects.items.ItemMatterJumper;
+import com.magiology.mc_objects.items.SimpleItems.ItemMistyPowder;
+//<GEN:	IMPORTS END>
+import com.magiology.util.m_extensions.ItemM;
 import com.magiology.util.m_extensions.ResourceLocationM;
-import com.magiology.util.objs.data.RegistrableDatabaseStorageArray;
-import com.magiology.util.statics.CollectionConverter;
-import com.magiology.util.statics.LogUtil;
 import com.magiology.util.statics.UtilM;
 
-import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class ItemRegistry extends RegistrableDatabaseStorageArray<Item>{
+public class ItemsM extends AutoReferencedRegistry<ItemM>{
 
-	private static final ItemRegistry instance=new ItemRegistry();
-	
-	public static ItemRegistry get(){
+	private static final ItemsM instance=new ItemsM();
+	public static ItemsM get(){
 		return instance;
 	}
 	
-	private ItemRegistry(){
-		super(Item.class);
+	//<GEN:	REFERENCE START>
+	public static ItemJetpack      JETPACK;
+	public static ItemMatterJumper MATTER_JUMPER;
+	public static ItemMistyPowder  MISTY_POWDER;
+	//<GEN:	REFERENCE END>
+	
+	
+	private ItemsM(){
+		super(ItemM.class);
 	}
-
+	
 	@Override
-	public void registerObj(Item obj){
+	public void registerObj(ItemM obj){
 		String name=UtilM.classNameToMcName(obj.getClass());
 		obj.setRegistryName(new ResourceLocationM(name));
 		obj.setUnlocalizedName(name);
 		GameRegistry.register(obj);
 	}
 	
-
-	private final Item[] items=CollectionConverter.convAr(ClassList.getImplementations(Item.class), Item.class, (i)->i.newInstance());
 	@Override
-	public Item[] getDatabase(){
-		return items;
+	protected void init(){
+		//<GEN:	INIT START>
+		add(JETPACK      =new ItemJetpack());
+		add(MATTER_JUMPER=new ItemMatterJumper());
+		add(MISTY_POWDER =new ItemMistyPowder());
+		//<GEN:	INIT END>
 	}
-	
 }

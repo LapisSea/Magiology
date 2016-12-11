@@ -59,7 +59,7 @@ public class AnimationBank{
 	
 	public static void load(){
 		animations.clear();
-		File root=new File(Magiology.extraFiles.getRoot()+"animations");
+		File root=new File(Magiology.EXTRA_FILES.getRoot()+"animations");
 		List<File> files=new ArrayList<File>();
 		load0(root, files);
 		files.stream().filter((f)->f.getPath().endsWith(".la")).forEach(f->{

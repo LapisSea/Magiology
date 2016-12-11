@@ -3,7 +3,7 @@ package com.magiology.handlers.particle;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.magiology.core.Config;
+import com.magiology.core.ConfigM;
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.UtilC;
@@ -56,7 +56,7 @@ public class ParticleHandler{
 
 	public void updateParticles(){
 		if(UtilC.getMC().gameSettings.particleSetting==2)clearEffects();
-		else if(UtilC.getWorldTime()%20==0&&getCount()>Config.getMaxParticleCount()){
+		else if(UtilC.getWorldTime()%20==0&&getCount()>ConfigM.getMaxParticleCount()){
 //			while(getCount()>Config.getMaxParticleCount()){
 //				particleFactories.forEach(ParticleFactory::removeLast);
 //			}

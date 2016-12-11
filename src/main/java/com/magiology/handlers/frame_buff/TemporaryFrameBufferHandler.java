@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
+import com.magiology.util.statics.LogUtil;
 import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.UtilC;
 
@@ -35,16 +36,16 @@ public class TemporaryFrameBufferHandler{
 			if(f.lastTimeUsed+14000<time){
 				unused.add(f);
 				f.dirty=true;
-				//LogUtil.println("Deleted InWorldFrame id=",f.frameBuffer.framebufferObject,f);
+				LogUtil.println("Deleted InWorldFrame id=",f.frameBuffer.framebufferObject);
 				f.frameBuffer.deleteFramebuffer();
 			}
 		});
 		int siz=allBuffers.size();
 		allBuffers.removeAll(unused);
-//		if(allBuffers.size()!=siz){
-//			LogUtil.println("Old InWorldFrame list size:",siz);
-//			LogUtil.println("New InWorldFrame list size:",allBuffers.size());
-//		}
+		if(allBuffers.size()!=siz){
+			LogUtil.println("Old InWorldFrame list size:",siz);
+			LogUtil.println("New InWorldFrame list size:",allBuffers.size());
+		}
 	}
 	
 	void requestRender(TemporaryFrame frame){
