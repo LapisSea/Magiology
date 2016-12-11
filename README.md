@@ -5,7 +5,7 @@ While you are not playing with magical tech you can explore secret structures ma
 ___
 
 #### To my fellow modders looking for tips:
-* Need a premade ModContainer? Search for ```GenericModContainerImpl```! (extend your ```@Mod``` class with it)
+* Need a premade ModContainer? You can use my [```GenericModContainerImpl```](../1.10/src/main/java/com/magiology/core/GenericModContainerImpl.java)! (extend your ```@Mod``` class with it)
 * Prefer to use ```@EventBusSubscriber``` with ```static``` event functions over ```MinecraftForge.EVENT_BUS.register(...)``` manual registering. Note: add ```@EventBusSubscriber``` to ```class``` that contains ```@SubscribeEvent```
 * Not sure how your ```@Mod``` class should look like? For more or less fully functional class (in terms of what forge features it uses)  you can take a look at the [Magiology](../1.10/src/main/java/com/magiology/core/Magiology.java) class. Note: Why should you trust me? Well I have inspected the behind the scenes of forge mod initialization so I consider that I know what I am doing. :)
 * Forge documentation sources that I know of:
