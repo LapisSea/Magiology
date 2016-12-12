@@ -2,6 +2,7 @@
 * This is a mod for Minecraft.
 * It is orientated around bending reality to your will with acient spirits and with help of technology.
 * While you are not playing with magical tech you can explore secret structures made by a smart species penguins. (Why penguins? Well it's obvius. Penguins created the world! Oooor I am to lazy to make an indepth decription of a mod that is being developed and can change at any moment.)
+* You can look at what I am up to [over here](https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FLapisSea%2FMagiology%2F1.10%2FTODO.docx)
 
 ___
 
