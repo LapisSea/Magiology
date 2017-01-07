@@ -72,6 +72,7 @@ public class BlockStates{
 		}
 		@Override
 		public IBlockState set(IBlockState src, EnumFacing value){
+			if(get(src)==value)return src;
 			return src.withProperty(this,value);
 		}
 		
@@ -110,6 +111,7 @@ public class BlockStates{
 		}
 		@Override
 		public IBlockState set(IBlockState src, Boolean value){
+			if(get(src).booleanValue()==value.booleanValue())return src;
 			return src.withProperty(this,value);
 		}
 		
@@ -161,6 +163,7 @@ public class BlockStates{
 		}
 		@Override
 		public IBlockState set(IBlockState src,Integer value){
+			if(get(src).intValue()==value.intValue())return src;
 			return src.withProperty(this,value);
 		}
 		

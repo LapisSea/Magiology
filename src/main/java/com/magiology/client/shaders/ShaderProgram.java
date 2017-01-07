@@ -1,6 +1,7 @@
 package com.magiology.client.shaders;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.nio.FloatBuffer;
 import java.nio.file.Files;
 
@@ -16,6 +17,9 @@ import com.magiology.util.objs.color.ColorM;
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.FileUtil;
 import com.magiology.util.statics.LogUtil;
+
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.shader.ShaderManager;
 
 public abstract class ShaderProgram{
 	
@@ -39,7 +43,7 @@ public abstract class ShaderProgram{
 		
 		if(vertexEnabled){
 			try{
-				vertexShaderID=loadShader(injectModules(vertex.toString()), GL20.GL_VERTEX_SHADER);
+				vertexShaderID=loadShader(injectModules(vertex.toString()), OpenGlHelper.GL_VERTEX_SHADER);
 			}catch(Exception e){
 				e.printStackTrace();
 				vertexEnabled=false;
@@ -48,7 +52,7 @@ public abstract class ShaderProgram{
 		}
 		if(fragmentEnabled){
 			try{
-				fragmentShaderID=loadShader(injectModules(fragment.toString()), GL20.GL_FRAGMENT_SHADER);
+				fragmentShaderID=loadShader(injectModules(fragment.toString()), OpenGlHelper.GL_FRAGMENT_SHADER);
 			}catch(Exception e){
 				fragmentEnabled=false;
 				LogUtil.println("Failed to compile fragment shader!");
@@ -57,11 +61,11 @@ public abstract class ShaderProgram{
 		vertexEnabled=vertexEnabled&&vertexShaderID!=-1;
 		fragmentEnabled=fragmentEnabled&&fragmentShaderID!=-1;
 		
-		programID=GL20.glCreateProgram();
-		if(vertexEnabled)GL20.glAttachShader(programID, vertexShaderID);
-		if(fragmentEnabled)GL20.glAttachShader(programID, fragmentShaderID);
+		programID=OpenGlHelper.glCreateProgram();
+		if(vertexEnabled)OpenGlHelper.glAttachShader(programID, vertexShaderID);
+		if(fragmentEnabled)OpenGlHelper.glAttachShader(programID, fragmentShaderID);
 		bindAtributes();
-		GL20.glLinkProgram(programID);
+		OpenGlHelper.glLinkProgram(programID);
 		GL20.glValidateProgram(programID);
 		initUniformLocations();
 	}
@@ -135,14 +139,14 @@ public abstract class ShaderProgram{
 		return shaderID;
 	}
 	public int getUniformLocation(String uniformName){
-		return GL20.glGetUniformLocation(programID, uniformName);
+		return OpenGlHelper.glGetUniformLocation(programID, uniformName);
 	}
 	public void bindAttribute(int attributeID,String name){
 		GL20.glBindAttribLocation(programID, attributeID, name);
 	}
 
 	public void upload(int location, int value){
-		GL20.glUniform1i(location, value);
+		OpenGlHelper.glUniform1i(location, value);
 	}
 	public void upload(int location, float value){
 		GL20.glUniform1f(location, value);
@@ -171,7 +175,7 @@ public abstract class ShaderProgram{
 	public void upload(int location, Matrix4f value){
 		value.store(matrixBuffer);
 		matrixBuffer.flip();
-		GL20.glUniformMatrix4(location, false, matrixBuffer);
+		OpenGlHelper.glUniformMatrix4(location, false, matrixBuffer);
 	}
 
 	public void bind(){
@@ -180,11 +184,11 @@ public abstract class ShaderProgram{
 			bindUnbindSafety=0;
 			throw new StackOverflowError("Shader not deactivated at some point");
 		}
-		GL20.glUseProgram(programID);
+		OpenGlHelper.glUseProgram(programID);
 		bindUnbindSafety++;
 	}
 	public void deactivate(){
-		GL20.glUseProgram(0);
+		OpenGlHelper.glUseProgram(0);
 		bindUnbindSafety--;
 	}
 	@Override
@@ -195,15 +199,15 @@ public abstract class ShaderProgram{
 		if(programID==-1)return;
 		if(vertexEnabled){
 			GL20.glDetachShader(programID, vertexShaderID);
-			GL20.glDeleteShader(vertexShaderID);
+			OpenGlHelper.glDeleteShader(vertexShaderID);
 			vertexShaderID=-1;
 		}
 		if(fragmentEnabled){
 			GL20.glDetachShader(programID, fragmentShaderID);
-			GL20.glDeleteShader(fragmentShaderID);
+			OpenGlHelper.glDeleteShader(fragmentShaderID);
 			fragmentShaderID=-1;
 		}
-		GL20.glDeleteProgram(programID);
+		OpenGlHelper.glDeleteProgram(programID);
 		programID=-1;
 	}
 	

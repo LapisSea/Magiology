@@ -11,8 +11,10 @@ import com.magiology.util.objs.vec.Vec2i;
 import com.magiology.util.statics.math.PartialTicksUtil;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderItem;
@@ -25,18 +27,18 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class UtilC{
 	
-	public static final FloatBuffer BUF = BufferUtils.createFloatBuffer(16);
+	public static final FloatBuffer BUF=BufferUtils.createFloatBuffer(16);
 	
 	public static Minecraft getMC(){
 		return Minecraft.getMinecraft();
 	}
 	
-	public static EntityPlayer getThePlayer(){
-		return getMC().thePlayer;
+	public static EntityPlayerSP getThePlayer(){
+		return getMC().player;
 	}
 	
-	public static World getTheWorld(){
-		return getMC().theWorld;
+	public static WorldClient getTheWorld(){
+		return getMC().world;
 	}
 	
 	public static long getWorldTime(){
@@ -67,10 +69,10 @@ public class UtilC{
 	public static float fluctuateLin_0_1(double speed, double offset){
 		return fluctuateLin(speed, offset, 0, 1);
 	}
+	
 	public static float fluctuateLin_N1_1(double speed, double offset){
 		return fluctuateLin(speed, offset, -1, 1);
 	}
-	
 	
 	public static void exitSoft(){
 		getMC().shutdown();
@@ -147,14 +149,15 @@ public class UtilC{
 	public static RenderItem getRI(){
 		return getMC().getRenderItem();
 	}
-
+	
 	public static void loadModelViewToBuffer(){
 		BUF.clear();
 		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, BUF);
 	}
+	
 	public static Matrix4f getModelView(){
 		loadModelViewToBuffer();
-		Matrix4f mat = new Matrix4f();
+		Matrix4f mat=new Matrix4f();
 		mat.load(BUF);
 		return mat;
 	}

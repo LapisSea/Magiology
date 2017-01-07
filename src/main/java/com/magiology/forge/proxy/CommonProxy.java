@@ -10,6 +10,7 @@ import com.magiology.core.registry.init.TileEntityRegistry;
 import com.magiology.cross_mod.ModChecker;
 import com.magiology.io.IOManager;
 import com.magiology.mc_objects.entitys.EntityPenguin;
+import com.magiology.util.m_extensions.ResourceLocationM;
 import com.magiology.util.statics.UtilM;
 
 import net.minecraftforge.fml.common.registry.EntityRegistry;
@@ -56,6 +57,6 @@ public class CommonProxy{
 		registerModEntityWithEgg(parEntityClass, col1.hashCode(), col2.hashCode());
 	}
 	private void registerModEntityWithEgg(Class parEntityClass,int col1,int col2){
-		EntityRegistry.registerModEntity(parEntityClass, UtilM.classNameToMcName(parEntityClass.getSimpleName()), ++entityID, Magiology.getMagiology(), 80, 1, true,col1,col2);
+		EntityRegistry.registerModEntity(new ResourceLocationM(UtilM.classNameToMcName(parEntityClass)),parEntityClass, UtilM.classNameToMcName(parEntityClass.getSimpleName()), ++entityID, Magiology.getMagiology(), 80, 1, true,col1,col2);
 	}
 }

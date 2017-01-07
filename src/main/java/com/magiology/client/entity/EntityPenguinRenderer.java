@@ -273,20 +273,20 @@ public class EntityPenguinRenderer extends RenderLiving<EntityPenguin>{
 			OpenGLM.translate(6/16F, 6/16F, -11.5F/16F);
 			Item item=stack.getItem();
 			if(item instanceof ItemBlock){
-				if(UtilC.getMC().getBlockRendererDispatcher().isEntityBlockAnimated(Block.getBlockFromItem(item))){
-					OpenGLM.translate(0.0F, 0.0625F, -0.25F);
-					OpenGLM.rotate(30.0F, 1.0F, 0.0F, 0.0F);
-					OpenGLM.rotate(-5.0F, 0.0F, 1.0F, 0.0F);
-					float f4=0.375F;
-					OpenGLM.scale(0.375F, -0.375F, 0.375F);
-				}else{
-					OpenGLM.rotateY(-50);
-					OpenGLM.rotateZ(95);
-					OpenGLM.rotateX(-15);
-					OpenGLM.translate(5/16F,-0/16F,5/16F);
-					OpenGLM.scale(1.5F);
-					
-				}
+//				if(UtilC.getMC().getBlockRendererDispatcher().isEntityBlockAnimated(Block.getBlockFromItem(item))){
+//					OpenGLM.translate(0.0F, 0.0625F, -0.25F);
+//					OpenGLM.rotate(30.0F, 1.0F, 0.0F, 0.0F);
+//					OpenGLM.rotate(-5.0F, 0.0F, 1.0F, 0.0F);
+//					float f4=0.375F;
+//					OpenGLM.scale(0.375F, -0.375F, 0.375F);
+//				}else{
+//					OpenGLM.rotateY(-50);
+//					OpenGLM.rotateZ(95);
+//					OpenGLM.rotateX(-15);
+//					OpenGLM.translate(5/16F,-0/16F,5/16F);
+//					OpenGLM.scale(1.5F);
+//					
+//				}
 			}else if(item.isFull3D()||item.getItemUseAction(stack)==EnumAction.BOW){
 				OpenGLM.rotateZ(-10);
 				OpenGLM.rotateX(130);

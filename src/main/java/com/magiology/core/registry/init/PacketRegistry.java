@@ -25,10 +25,11 @@ public class PacketRegistry extends AutoRegistry<PacketM>{
 	@Override
 	public void registerObj(Class<PacketM> packet){
 		try{
-			//searching for "public static final Side SIDE"
+			//searching for "public static final Side RECEIVER_SIDE"
 			
-			Field sideF=packet.getDeclaredField("SIDE");
+			Field sideF=packet.getDeclaredField("RECEIVER_SIDE");
 			int mod=sideF.getModifiers();
+			
 			if(!Modifier.isPublic(mod))throw new IllegalStateException("SIDE has to be public!");
 			if(!Modifier.isStatic(mod))throw new IllegalStateException("SIDE has to be static!");
 			if(!Modifier.isFinal(mod))throw new IllegalStateException("SIDE has to be final!");

@@ -1,0 +1,84 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "textures": {
+            "particle": "magiology:blocks/screen",
+            "pipe_center": "magiology:blocks/screen",
+            "pipe_con": "magiology:blocks/screen"
+        },
+        "model": "magiology:screen/main"
+    },
+    "variants": {
+        "facing": {
+            "down": {
+            },
+            "up":{
+                "x": 180
+            },
+            "north":{
+                "x": -90
+            },
+            "south":{
+                "x": 90
+            },
+            "west":{
+                "x": 90,
+                "y": 90
+            },
+            "east":{
+                "x": 90,
+                "y": -90
+            }
+        },
+        "top":{
+            "true":{
+                "submodel":{
+                    "top":{
+                        "model": "magiology:screen/top"
+                    }
+                }
+            },
+            "false": {
+            }
+        },
+        "bottom":{
+            "true": {
+                "submodel":{
+                    "bottom":{
+                        "model": "magiology:screen/bottom"
+                    }
+                }
+            },
+            "false": {
+            }
+        },
+        "left":{
+            "true": {
+                "submodel":{
+                    "left":{
+                        "model": "magiology:screen/left"
+                    }
+                }
+            },
+            "false": {
+            }
+        },
+        "right":{
+            "true": {
+                "submodel":{
+                    "right":{
+                        "model": "magiology:screen/right"
+                    }
+                }
+            },
+            "false": {
+            }
+        },
+        "active": {
+            "true": {
+            },
+            "false": {
+            }
+        }
+    }
+}

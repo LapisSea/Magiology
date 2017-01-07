@@ -132,7 +132,10 @@ public class Magiology extends GenericModContainerImpl{
 	
 	@Override
 	public ModMetadata getMetadata(){
-		LogUtil.println(META_DATA);
 		return META_DATA;
+	}
+	@Override
+	public Class<?> getCustomResourcePackClass(){
+		return super.getCustomResourcePackClass();
 	}
 }

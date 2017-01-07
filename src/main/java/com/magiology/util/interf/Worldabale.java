@@ -6,14 +6,18 @@ import net.minecraft.world.World;
 
 /**
  * 
+ * Yep... I could not make up a better name... What? You need actual description? Naaaaah this is me!
+ * 
  * @author LapisSea
  * 
- * @description Yep... I could not make up a better name... What? You need actual description? Naaaaah this is me!
- *
  */
 public interface Worldabale{
 	
 	World getWorld();
+	
+	default boolean hasWorld(){
+		return getWorld()!=null;
+	}
 	
 	default boolean isRemote(){
 		return UtilM.isRemote(this);

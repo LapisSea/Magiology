@@ -57,4 +57,23 @@ public class ColorMRead implements IColorM{
 	public String toString(){
 		return "(r="+r()+", g="+g()+", b="+b()+", a="+a()+")";
 	}
+	@Override
+	public int hashCode(){
+		return  ((((int)(a*255+0.5))&0xFF)<<24)|
+				((((int)(r*255+0.5))&0xFF)<<16)|
+				((((int)(g*255+0.5))&0xFF)<<8 )|
+				((((int)(b*255+0.5))&0xFF)<<0 );
+	}
+
+	@Override
+	public boolean equals(Object obj){
+		return obj instanceof IColorM&&equals((IColorM)obj);
+	}
+	
+	public boolean equals(IColorM obj){
+		return (obj.r()==r()||obj.rInt()==rInt())&&
+				(obj.g()==g()||obj.gInt()==gInt())&&
+				(obj.b()==b()||obj.bInt()==bInt())&&
+				(obj.a()==a()||obj.aInt()==aInt());
+	}
 }

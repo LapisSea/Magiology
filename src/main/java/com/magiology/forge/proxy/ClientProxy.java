@@ -7,16 +7,15 @@ import com.magiology.core.registry.init.BlocksM;
 import com.magiology.core.registry.init.ParticlesM;
 import com.magiology.core.registry.init.ShadersM;
 import com.magiology.mc_objects.entitys.EntityPenguin;
+import com.magiology.util.m_extensions.BlockContainerM;
+import com.magiology.util.m_extensions.BlockContainerM.MixedRender;
 import com.magiology.util.objs.EnhancedRobot;
 import com.magiology.util.objs.animation.AnimationBank;
+import com.magiology.util.statics.LogUtil;
 import com.magiology.util.statics.OpenGLM;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.item.Item;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -64,26 +63,35 @@ public class ClientProxy extends CommonProxy{
 	}
 	
 	private void registerTileRendering(){
-		ItemModelMesher mesher=OpenGLM.getRI().getItemModelMesher();
 		
-		for(ITileEntityProvider i:BlocksM.get().getByExtension(ITileEntityProvider.class)){
-			Block block=(Block)i;
-			EnumBlockRenderType type=EnumBlockRenderType.INVISIBLE;
+		for(BlockContainerM block:BlocksM.get().getByExtension(BlockContainerM.class)){
+			
+			EnumBlockRenderType type;
 			try{
 				type=block.getRenderType(block.getDefaultState());
-			}catch(Exception e){}
+			}catch(Exception e){
+				type=EnumBlockRenderType.INVISIBLE;
+			}
+			boolean mixed=block instanceof MixedRender;
 			if(type!=EnumBlockRenderType.INVISIBLE){
-				if(type==EnumBlockRenderType.ENTITYBLOCK_ANIMATED){
-					
-					try{
-						Class tileClass=i.createNewTileEntity(null, 0).getClass();
-						Class rederer=Class.forName("com.magiology.client.rendering.tile."+tileClass.getSimpleName()+"Renderer");
-						ClientRegistry.bindTileEntitySpecialRenderer(tileClass,(TileEntitySpecialRenderer)rederer.newInstance());
-					}catch(Exception e){}
-				}
-				else mesher.register(Item.getItemFromBlock(block), 0, new ModelResourceLocation(MReference.MODID+":"+block.getUnlocalizedName().substring(5), "inventory"));
+				if(mixed)((MixedRender)block).registerModel(block);
+				else if(type==EnumBlockRenderType.ENTITYBLOCK_ANIMATED)autoTESR(block);
+				else autoJsonModel(block);
 			}
 		}
+	}
+
+	public static void autoTESR(BlockContainerM block){
+		try{
+			Class tileClass=block.createNewTileEntity(null, 0).getClass();
+			Class rederer=Class.forName("com.magiology.client.rendering.tile."+tileClass.getSimpleName()+"Renderer");
+			ClientRegistry.bindTileEntitySpecialRenderer(tileClass,(TileEntitySpecialRenderer)rederer.newInstance());
+		}catch(Exception e){
+			LogUtil.printlnEr("Could not auto bind TileEntitySpecialRenderer for", block);
+		}
+	}
+	public static void autoJsonModel(BlockContainerM block){
+		OpenGLM.getRI().getItemModelMesher().register(block.toItem(), 0, new ModelResourceLocation(MReference.MODID+":"+block.getUnlocalizedName().substring(5), "inventory"));
 	}
 	
 }

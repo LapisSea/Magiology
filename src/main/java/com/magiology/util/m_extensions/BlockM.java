@@ -3,9 +3,9 @@ package com.magiology.util.m_extensions;
 import java.util.List;
 
 import com.magiology.util.interf.ObjectReturn;
-import com.magiology.util.objs.PairM;
 import com.magiology.util.objs.BlockStates.BlockStateParser;
 import com.magiology.util.objs.BlockStates.IPropertyM;
+import com.magiology.util.objs.PairM;
 import com.magiology.util.objs.block_bounds.BasicBlockBounds;
 import com.magiology.util.objs.block_bounds.IBlockBounds;
 
@@ -21,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
@@ -108,9 +109,8 @@ public abstract class BlockM extends Block{
 	public RayTraceResult collisionRayTrace(IBlockState blockState, World worldIn, BlockPos pos, Vec3d start, Vec3d end){
 		return blockBounds.collisionRayTrace(blockState, worldIn, pos, start, end);
 	}
-	
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entity){
+	public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entity, boolean flag){
 		blockBounds.addCollisionBoxToList(state, world, pos, entityBox, collidingBoxes, entity);
 	}
 	

@@ -42,12 +42,16 @@ public class TileEntityNeuroController extends TileEntityMTickable implements Ne
 		NBTTagCompound partsTags=compound.getCompoundTag(NBT_PARTS_TAG);
 		List<NeuroPart> newParts=new ArrayList<>();
 		for(int i=0;i<partsTags.getSize();i++){
-			NeuroPart p=NBTUtil.getBPos(partsTags, ""+i).getTile(worldObj, NeuroPart.class);
+			NeuroPart p=NBTUtil.getBPos(partsTags, ""+i).getTile(world, NeuroPart.class);
 			if(p!=null) newParts.add(p);
 		}
 		
 		applyNewParts(newParts);
 //		refreshConnected();
+	}
+	@Override
+	protected boolean nbtUsingWorld(NBTTagCompound compound){
+		return true;
 	}
 	
 	@Override

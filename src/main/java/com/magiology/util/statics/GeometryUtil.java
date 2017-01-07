@@ -374,7 +374,7 @@ public class GeometryUtil{
 	}
 	public static RayTraceResult rayTrace(Entity entity,boolean useLiquids){
 		PairM<Vec3d,Vec3d> look=getStartEndLook(entity);
-		return entity.worldObj.rayTraceBlocks(look.obj1,look.obj2,useLiquids,!useLiquids,false);
+		return entity.world.rayTraceBlocks(look.obj1,look.obj2,useLiquids,!useLiquids,false);
 	}
 	
 	public static List<Vec2FM> cricleSectorSize(double startDeg, double size, double degreeSpacing){

@@ -41,7 +41,7 @@ public class ShakerRecepies{
 			this.input=Arrays.asList(input);
 			this.output=Arrays.asList(output);
 			this.input.forEach(s->{
-				if(s.stackSize==0)s.stackSize=1;
+				if(s.isEmpty())s.setCount(1);
 			});
 		}
 	}

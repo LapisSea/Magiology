@@ -1,7 +1,7 @@
 package com.magiology.util.objs.block_bounds;
 
 import com.magiology.client.rendering.highlight.BlockHighlightRenderer;
-import com.magiology.client.rendering.highlight.types.BasicBlockHighlightRenderer;
+import com.magiology.client.rendering.highlight.types.StateDependantBlockHighlightRenderer;
 import com.magiology.util.interf.IntReturn;
 import com.magiology.util.statics.OpenGLM;
 
@@ -49,7 +49,7 @@ public class StateDependantBlockBounds implements IBlockBounds{
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public BlockHighlightRenderer renderer=new BasicBlockHighlightRenderer(this);
+	public StateDependantBlockHighlightRenderer renderer=new StateDependantBlockHighlightRenderer(this);
 	
 	public final StateBounds[]				boxes;
 	private final IntReturn<IBlockState>	boxPicker;
@@ -78,13 +78,13 @@ public class StateDependantBlockBounds implements IBlockBounds{
 	}
 	
 	@Override
-	public BlockHighlightRenderer getHighlightRenderer(){
+	public StateDependantBlockHighlightRenderer getHighlightRenderer(){
 		return renderer;
 	}
 	
 	@Override
 	public void setHighlightRenderer(BlockHighlightRenderer renderer){
-		this.renderer=renderer;
+		this.renderer=(StateDependantBlockHighlightRenderer)renderer;
 	}
 	
 }

@@ -10,7 +10,6 @@ import com.magiology.mc_objects.features.screen.TileEntityScreen;
 import com.magiology.util.m_extensions.BlockM;
 import com.magiology.util.objs.color.ColorM;
 import com.magiology.util.objs.vec.Vec3M;
-import com.magiology.util.statics.LogUtil;
 import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.UtilC;
 import com.magiology.util.statics.math.PartialTicksUtil;
@@ -90,7 +89,6 @@ public class RenderEvents{
 		PositionAwareEffect.updateViewTransformation();
 		ParticleHandler.get().renderParticles();
 		ShadersM.INVISIBLE.render();
-		LogUtil.println("agfaf");
 	}
 	
 	@SubscribeEvent(priority=EventPriority.LOWEST)
@@ -112,10 +110,10 @@ public class RenderEvents{
 	@SubscribeEvent(priority=EventPriority.HIGHEST)
 	public static void drawBlockHighlight(DrawBlockHighlightEvent e){
 		RayTraceResult hit=e.getTarget();
-		if(hit.typeOfHit==Type.MISS) return;
+		if(hit.typeOfHit!=Type.BLOCK) return;
 		
 		EntityPlayer player=e.getPlayer();
-		World world=player.worldObj;
+		World world=player.world;
 		BlockPos pos=hit.getBlockPos();
 		IBlockState state=world.getBlockState(pos);
 		Block block=state.getBlock();

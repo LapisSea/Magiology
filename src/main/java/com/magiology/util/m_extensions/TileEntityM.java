@@ -1,6 +1,7 @@
 package com.magiology.util.m_extensions;
 
 import com.magiology.forge.events.TickEvents;
+import com.magiology.util.interf.Locateable.LocateableBlockM;
 import com.magiology.util.interf.Worldabale;
 
 import net.minecraft.block.state.IBlockState;
@@ -8,12 +9,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
-public abstract class TileEntityM extends TileEntity implements Worldabale{
+public abstract class TileEntityM extends TileEntity implements Worldabale,LocateableBlockM{
 	
 	public static final float p=1F/16F;
 	
 	private boolean		nbtLoaded	=false;
+	private Runnable worldSetHook;
 	
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket(){
@@ -27,7 +30,7 @@ public abstract class TileEntityM extends TileEntity implements Worldabale{
 	}
 	
 	public long getTime(){
-		return worldObj.getTotalWorldTime();
+		return world.getTotalWorldTime();
 	}
 	
 	@Override
@@ -36,7 +39,7 @@ public abstract class TileEntityM extends TileEntity implements Worldabale{
 	}
 	
 	public void sync(){
-		if(worldObj==null||worldObj.isRemote) return;
+		if(world==null||client())return;
 		markDirty();
 	}
 	
@@ -54,7 +57,7 @@ public abstract class TileEntityM extends TileEntity implements Worldabale{
 	
 	
 	public boolean isInWorld(){
-		return worldObj!=null&&worldObj.getTileEntity(getPos())==this;
+		return hasWorld()&&world.getTileEntity(getPos())==this;
 	}
 
 	public IBlockState getState(){
@@ -65,26 +68,48 @@ public abstract class TileEntityM extends TileEntity implements Worldabale{
 	}
 	
 	@Override
+	public void setWorld(World worldIn){
+		super.setWorld(worldIn);
+		if(worldSetHook!=null){
+			TickEvents.nextTick(worldIn.isRemote, worldSetHook);
+			worldSetHook=null;
+		}
+	}
+	
+	@Override
 	public void readFromNBT(NBTTagCompound compound){
 		nbtLoaded=true;
 		super.readFromNBT(compound);
 		
-		if(getWorld()!=null) readFromNbtWithWorld(compound);
-		else TickEvents.nextTick(()->readFromNbtWithWorld(compound));
-	}
-	
-	protected void readFromNbtWithWorld(NBTTagCompound compound){}
-	
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound compound){
-		return super.writeToNBT(compound);
+		if(nbtUsingWorld(compound)){
+			if(hasWorld())readFromNbtWithWorld(compound);
+			else{
+				nbtLoaded=false;
+				worldSetHook=()->{
+					nbtLoaded=true;
+					readFromNbtWithWorld(compound);
+				};
+			}
+		}
 	}
 
+	protected void readFromNbtWithWorld(NBTTagCompound compound){}
+	protected boolean nbtUsingWorld(NBTTagCompound compound){
+		return false;
+	}
+	
 	public boolean isNbtLoaded(){
 		return nbtLoaded;
 	}
 	@Deprecated
 	public void markNbtAsLoaded(){
 		nbtLoaded=true;
+	}
+	
+	@Override
+	public BlockPosM getPos(){
+		BlockPosM p=BlockPosM.conv(pos);
+		pos=p;
+		return p;
 	}
 }

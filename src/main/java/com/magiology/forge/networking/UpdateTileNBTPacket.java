@@ -20,7 +20,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class UpdateTileNBTPacket extends NBTPacket{
 	
-	public static final Side SIDE=Side.CLIENT;
+	public static final Side RECEIVER_SIDE=Side.CLIENT;
 	
 	private static Set<TileEntityM> dirty=new HashSet<>();
 	
@@ -41,7 +41,10 @@ public class UpdateTileNBTPacket extends NBTPacket{
 	}
 	
 	public static void markForSync(TileEntityM tile){
-		if(!tile.isRemote())dirty.add(tile);
+		if(tile.client())return;
+		dirty.add(tile);
+		tile.markDirty();
+		
 	}
 	
 	public UpdateTileNBTPacket(){}
@@ -55,7 +58,7 @@ public class UpdateTileNBTPacket extends NBTPacket{
 	public IMessage onMessage(World world, EntityPlayer player, boolean isRemote){
 		
 		BlockPosM pos=new BlockPosM(nbt.getInteger("x"), nbt.getInteger("y"), nbt.getInteger("z"));
-		if(!world.isBlockLoaded(pos)) return null;
+		if(!world.isBlockLoaded(pos))return null;
 		TileEntity tile=world.getTileEntity(pos);
 		if(tile instanceof TileEntityM){
 			tile.readFromNBT(nbt);

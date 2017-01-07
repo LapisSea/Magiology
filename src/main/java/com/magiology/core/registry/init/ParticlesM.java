@@ -6,6 +6,7 @@ import com.magiology.handlers.particle.ParticleHandler;
 //<GEN:	IMPORTS START>
 import com.magiology.mc_objects.particles.ParticleBubbleFactory;
 import com.magiology.mc_objects.particles.ParticleCubeFactory;
+import com.magiology.mc_objects.particles.ParticleMessageFactory;
 import com.magiology.mc_objects.particles.ParticleMistBubbleFactory;
 import com.magiology.mc_objects.particles.ParticleMistyEnergyFactory;
 //<GEN:	IMPORTS END>
@@ -19,6 +20,7 @@ public class ParticlesM extends AutoReferencedRegistry<ParticleFactory>{
 	//<GEN:	REFERENCE START>
 	public static ParticleBubbleFactory      BUBBLE;
 	public static ParticleCubeFactory        CUBE;
+	public static ParticleMessageFactory     MESSAGE;
 	public static ParticleMistBubbleFactory  MIST_BUBBLE;
 	public static ParticleMistyEnergyFactory MISTY_ENERGY;
 	//<GEN:	REFERENCE END>
@@ -38,6 +40,7 @@ public class ParticlesM extends AutoReferencedRegistry<ParticleFactory>{
 		//<GEN:	INIT START>
 		add(BUBBLE      =new ParticleBubbleFactory());
 		add(CUBE        =new ParticleCubeFactory());
+		add(MESSAGE     =new ParticleMessageFactory());
 		add(MIST_BUBBLE =new ParticleMistBubbleFactory());
 		add(MISTY_ENERGY=new ParticleMistyEnergyFactory());
 		//<GEN:	INIT END>

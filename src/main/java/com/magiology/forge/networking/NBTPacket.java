@@ -18,7 +18,7 @@ public abstract class NBTPacket extends PacketM{
 	@Override
 	public void fromBytes(PacketBufferM buf){
 		try{
-			nbt=buf.readNBTTagCompoundFromBuffer();
+			nbt=buf.readCompoundTag();
 		}catch(IOException e){
 			e.printStackTrace();
 			UtilM.exit(420);
@@ -27,7 +27,7 @@ public abstract class NBTPacket extends PacketM{
 
 	@Override
 	public void toBytes(PacketBufferM buf){
-		buf.writeNBTTagCompoundToBuffer(nbt);
+		buf.writeCompoundTag(nbt);
 	}
 	
 }

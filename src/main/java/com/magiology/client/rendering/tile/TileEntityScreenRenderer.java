@@ -4,21 +4,18 @@ import com.magiology.client.renderers.FastNormalRenderer;
 import com.magiology.client.renderers.Renderer;
 import com.magiology.handlers.frame_buff.TemporaryFrame;
 import com.magiology.mc_objects.features.screen.TileEntityScreen;
+import com.magiology.mc_objects.features.screen.TileEntityScreen.ScreenMultiblockHandler;
 import com.magiology.util.m_extensions.TileEntitySpecialRendererM;
 import com.magiology.util.objs.color.ColorM;
-import com.magiology.util.objs.vec.IVec3M;
 import com.magiology.util.objs.vec.Vec2FM;
 import com.magiology.util.objs.vec.Vec2i;
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.GeometryUtil;
 import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.UtilC;
-import com.magiology.util.statics.math.MathUtil;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEntityScreen>{
 	
@@ -26,10 +23,20 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 	@Override
 	public void renderTileEntityAt(TileEntityScreen tile, Vec3M renderPos, float partialTicks){
 //		if(RandUtil.RB(0.01))ParticleBubbleFactory.get().spawn(new Vec3M(tile.getPos()).add(3.5),new Vec3M(),1,20,0,ColorF.randomRGB());
+		
 		try{
 			double minX=0,minY=0,maxX=1,maxY=1;
 			ColorM.WHITE.bind();
-			if(tile.hasBrain()){
+			
+			boolean renderScreen=tile.hasBrain();
+			if(renderScreen){
+				ScreenMultiblockHandler mb=tile.getBrain().getHandler();
+				renderScreen=mb!=null;
+			}
+			
+//			if(UtilM.peridOf(tile, 45))ParticlesM.MESSAGE.spawn(new Vec3M(tile.getPos()).add(0.5).addZ(1).addX(-1), new Vec3M(0,0,0.01), 3/16F, 40, ColorM.WHITE, tile.getBrain().toString());
+			
+			if(renderScreen){
 				boolean highl=false;
 				if(UtilC.getThePlayer().isSneaking())try{
 					highl=UtilC.getMC().objectMouseOver.getBlockPos().equals(tile.getPos());
@@ -39,7 +46,7 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 					TileEntityScreen brain=tile.getBrain();
 					TemporaryFrame screen=brain.screenTexture;
 					
-					Vec2i size=tile.getSize2d();
+					Vec2i size=brain.getSize2d();
 					if(screen==null){
 						screen=brain.screenTexture=new TemporaryFrame(size.x*64,size.y*64,false);
 						screen.setRednerHook(f->renderScreen(brain,f.getWidth(),f.getHeight()));
@@ -92,30 +99,12 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 			try{
 				FastNormalRenderer buf=new FastNormalRenderer();
 				buf.begin(true, FastNormalRenderer.POS_UV).usingQuadConversion();
-				buf.add(0, 1, 11/16F, minX,maxY);
-				buf.add(0, 0, 11/16F,  minX,minY);
-				buf.add(1, 0, 11/16F,  maxX,minY);
-				buf.add(1, 1, 11/16F,  maxX,maxY);
+				buf.add(0, 1, 11.01F/16F, minX,maxY);
+				buf.add(0, 0, 11.01F/16F,  minX,minY);
+				buf.add(1, 0, 11.01F/16F,  maxX,minY);
+				buf.add(1, 1, 11.01F/16F,  maxX,maxY);
 				buf.draw();
 				
-//				VertexBuffer buf=Tessellator.getInstance().getBuffer();
-//				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-////		        BLOCK.addElement(POSITION_3F);
-////		        BLOCK.addElement(COLOR_4UB);
-////		        BLOCK.addElement(TEX_2F);
-////		        BLOCK.addElement(TEX_2S);
-//
-//		        int i = getWorld().getCombinedLight(tile.getPos(), 0);
-//		        int j = i >> 16 & 65535;
-//		        int k = i & 65535;
-//				int l=getWorld().getLight(tile.getPos(), true);
-//
-//				buf.pos(0D, 1D, 11/16D).color(255, 255, 255, 255).tex(minX,maxY).lightmap(j,k).endVertex();
-//				buf.pos(0D, 0D, 11/16D).color(255, 255, 255, 255).tex(minX,minY).lightmap(j,k).endVertex();
-//				buf.pos(1D, 0D, 11/16D).color(255, 255, 255, 255).tex(maxX,minY).lightmap(j,k).endVertex();
-//				buf.pos(1D, 1D, 11/16D).color(255, 255, 255, 255).tex(maxX,maxY).lightmap(j,k).endVertex();
-//
-//				Tessellator.getInstance().draw();
 			}catch(Exception e){
 				if(UtilC.getThePlayer().isSneaking())e.printStackTrace();
 			}
@@ -126,102 +115,31 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 			e.printStackTrace();
 		}
 		OpenGLM.enableTexture2D();
+
+//		OpenGLM.pushMatrix();
+//		OpenGLM.translate(new Vec3M(tile.getPos()).mul(-1).add(renderPos));
+//
+//			OpenGLM.disableTexture2D();
+//			OpenGLM.disableDepth();
+//			OpenGLM.setUpOpaqueRendering(BlendFunc.NORMAL);
+//			List<Link> ll=tile.getMbCategory();
+//			for(Link i:ll){
+//				GL11.glLineWidth(ll.size()*2);
+//				IColorM c=ColorM.BLUE;
+//				if(i.getStatus()==LinkStatus.LOADED)c=ColorM.GREEN;
+//				if(i.getStatus()==LinkStatus.UNLOADED)c=ColorM.RED;
+//				c.bindWithA(0.2F);
+//				Renderer.LINES.begin();
+//				Renderer.LINES.addVertex(new Vec3M(tile.getPos()));
+//				Renderer.LINES.addVertex(new Vec3M(i.getPoint()));
+//				Renderer.LINES.draw();
+//			}
+//			OpenGLM.enableTexture2D();
+//			OpenGLM.enableDepth();
+//		
+//		OpenGLM.popMatrix();
 		ColorM.WHITE.bind();
 	}
-	
-	protected static class CrummySmoothLightUtil{
-		World world;
-		private Vec2i[][] data=new Vec2i[2][4];
-		
-		private static final Vec3M offPos=new Vec3M();
-		//                      y xz s data
-		private static final int[][][][] sides={
-			{//    x     y     z
-				{{0,1},{1,0},{0,3}},
-				{{0,0},{1,1},{0,2}},
-				{{0,3},{1,2},{0,1}},
-				{{0,2},{1,3},{0,0}},
-			},
-			{
-				{{1,1},{0,0},{1,3}},
-				{{1,0},{0,1},{1,2}},
-				{{1,3},{0,2},{1,1}},
-				{{1,2},{0,3},{1,0}},
-			}
-		};
-		
-		public Vec2i get(IVec3M inBlock){
-			int x,y=inBlock.y()<0.5?0:1,z,plane;
-			
-			boolean north=inBlock.z()<0.5;
-			
-			if(inBlock.x()<0.5){
-//				WEST
-				plane=north?0:3;
-				x=0;
-			}else{
-//				EAST
-				plane=north?1:2;
-				x=1;
-			}
-			z=north?0:1;
-			offPos.set(x,y,z);
-			offPos.sub(inBlock);
-			
-			Vec2i start=data[y][plane],end;
-			
-			double value=offPos.x();
-			int xyz=0;
-			
-			if(value<offPos.y()){
-				value=offPos.y();
-				xyz=1;
-			}
-			if(value<offPos.z()){
-				value=offPos.z();
-				xyz=2;
-			}
-			
-			
-			int[] endPoint=sides[y][plane][xyz];
-			
-			end=data[endPoint[0]][endPoint[1]];
-			
-			value=1-value;
-			if(value>255F/256)return end;
-			if(value<1F/256)return start;
-			
-			float xDif=end.x-start.x;
-			float yDif=end.y-start.y;
-			
-			return new Vec2i((int)(start.x+xDif*value), (int)(start.y+yDif*value));
-		}
-		
-		public void update(BlockPos pos,World world){
-			this.world=world;
-			BlockPos up=pos.up(),down=pos.down(),west=pos.west(),east=pos.east(),south=pos.south(),north=pos.north();
-
-			data[0][0]=calc(pos,down,north,west);
-			data[0][1]=calc(pos,down,north,east);
-			data[0][2]=calc(pos,down,south,east);
-			data[0][3]=calc(pos,down,south,west);
-
-			data[1][0]=calc(pos,up,north,west);
-			data[1][1]=calc(pos,up,north,east);
-			data[1][2]=calc(pos,up,south,east);
-			data[1][3]=calc(pos,up,south,west);
-		}
-		
-		private Vec2i calc(BlockPos p1, BlockPos p2, BlockPos p3, BlockPos p4){
-			int i=MathUtil.max(
-					world.getCombinedLight(p1, 0),
-					world.getCombinedLight(p2, 0),
-					world.getCombinedLight(p3, 0),
-					world.getCombinedLight(p4, 0));
-			return new Vec2i(i>>16&65535, i&65535);
-		}
-	}
-	
 	
 	private void renderScreen(TileEntityScreen tile, int width, int height){
 		

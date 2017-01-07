@@ -66,9 +66,6 @@ public class ColorM extends ColorMRead implements Calculable<ColorM>{
 		return new ColorM(c=='r'?modifier:r, c=='g'?modifier:g, c=='b'?modifier:b, c=='a'?modifier:a);
 	}
 	
-	public int toCode(){
-		return new Color(r, g, b, a).hashCode();
-	}
 	
 	@Override
 	public ColorM add(float var){
@@ -78,18 +75,22 @@ public class ColorM extends ColorMRead implements Calculable<ColorM>{
 		a(a()+var);
 		return this;
 	}
+	
 	public ColorM addR(float r){
 		r(r()+r);
 		return this;
 	}
+	
 	public ColorM addG(float r){
 		g(g()+g);
 		return this;
 	}
+	
 	public ColorM addB(float b){
 		b(b()+b);
 		return this;
 	}
+	
 	public ColorM addA(float b){
 		a(a()+a);
 		return this;
@@ -112,18 +113,22 @@ public class ColorM extends ColorMRead implements Calculable<ColorM>{
 		a(a()/var);
 		return this;
 	}
+	
 	public ColorM divR(float r){
 		r(r()/r);
 		return this;
 	}
+	
 	public ColorM divG(float r){
 		g(g()/g);
 		return this;
 	}
+	
 	public ColorM divB(float b){
 		b(b()/b);
 		return this;
 	}
+	
 	public ColorM divA(float b){
 		a(a()/a);
 		return this;
@@ -146,18 +151,22 @@ public class ColorM extends ColorMRead implements Calculable<ColorM>{
 		a(a()*var);
 		return this;
 	}
+	
 	public ColorM mulR(float r){
 		r(r()*r);
 		return this;
 	}
+	
 	public ColorM mulG(float r){
 		g(g()*g);
 		return this;
 	}
+	
 	public ColorM mulB(float b){
 		b(b()*b);
 		return this;
 	}
+	
 	public ColorM mulA(float b){
 		a(a()*a);
 		return this;
@@ -180,18 +189,22 @@ public class ColorM extends ColorMRead implements Calculable<ColorM>{
 		a(a()-var);
 		return this;
 	}
+	
 	public ColorM subR(float r){
 		r(r()-r);
 		return this;
 	}
+	
 	public ColorM subG(float r){
 		g(g()-g);
 		return this;
 	}
+	
 	public ColorM subB(float b){
 		b(b()-b);
 		return this;
 	}
+	
 	public ColorM subA(float b){
 		a(a()-a);
 		return this;
@@ -211,26 +224,7 @@ public class ColorM extends ColorMRead implements Calculable<ColorM>{
 		return new ColorM(r(), g(), b(), a);
 	}
 	
-	@Override
-	public boolean equals(Object obj){
-		return obj instanceof IColorM&&equals((IColorM)obj);
-	}
 	
-	public boolean equals(IColorM obj){
-		return (obj.r()==r()||Math.abs(obj.r()-r())<minDiff)&&
-				(obj.g()==g()||Math.abs(obj.g()-g())<minDiff)&&
-				(obj.b()==b()||Math.abs(obj.b()-b())<minDiff)&&
-				(obj.a()==a()||Math.abs(obj.a()-a())<minDiff);
-	}
-	
-	@Override
-	public int hashCode(){
-		return (((int)(a()*255)&0xFF)<<24)|
-				(((int)(r()*255)&0xFF)<<16)|
-				(((int)(g()*255)&0xFF)<<8)|
-				(((int)(b()*255)&0xFF)<<0);
-	}
-
 	public static ColorM toColorM(IColorM color){
 		return color instanceof ColorM?(ColorM)color:new ColorM(color);
 	}

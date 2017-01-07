@@ -17,6 +17,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
@@ -50,10 +51,9 @@ public class BlockNeuroDuct extends BlockNeuroBase<TileEntityNeuroDuct>{
 	protected void onBoxHighlight(RayTraceResult hit, World world){
 		
 	}
-	
 	@Override
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn){
-		super.neighborChanged(state, world, pos, blockIn);
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos fromPos){
+		super.neighborChanged(state, world, pos, block, fromPos);
 		updateBlockStateAndSet(state, world, pos);
 	}
 	
@@ -70,7 +70,7 @@ public class BlockNeuroDuct extends BlockNeuroBase<TileEntityNeuroDuct>{
 			NeuroPart part=(NeuroPart)tile;
 			if(part.hasController()){
 				getTile(world, pos).setController(part.getController());
-				neighborChanged(state, world, pos, state.getBlock());
+				neighborChanged(state, world, pos, state.getBlock(), pos);
 			}
 		}
 	}
@@ -79,11 +79,10 @@ public class BlockNeuroDuct extends BlockNeuroBase<TileEntityNeuroDuct>{
 	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor){
 		if(world instanceof World)updateBlockStateAndSet(world.getBlockState(pos), (World)world, pos);
 	}
-	
 	@Override
-	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, ItemStack stack){
+	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand){
 		updateBlockState(world, pos, null);
-		IBlockState s=applyData(world, pos, super.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, stack), 3, null, CONNECTION_HANDLER, false);
+		IBlockState s=applyData(world, pos, super.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, hand), 3, null, CONNECTION_HANDLER, false);
 		return s;
 	}
 	

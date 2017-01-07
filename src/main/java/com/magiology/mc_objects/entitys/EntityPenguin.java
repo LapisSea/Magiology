@@ -4,7 +4,6 @@ import javax.annotation.Nullable;
 import javax.vecmath.Vector2d;
 
 import com.magiology.mc_objects.entitys.ai.EntityAIWatchClosestM;
-import com.magiology.mc_objects.entitys.ai.PathNavigateSmart;
 import com.magiology.mc_objects.items.ItemJetpack;
 import com.magiology.util.m_extensions.BlockPosM;
 import com.magiology.util.m_extensions.EntityAgeableM;
@@ -160,7 +159,7 @@ public class EntityPenguin extends EntityAgeableM{
 		
 		
 		if(server()){
-			EntityPlayer pl=worldObj.getClosestPlayer(posX, posY, posZ, 20, false);
+			EntityPlayer pl=world.getClosestPlayer(posX, posY, posZ, 20, false);
 			if(pl!=null){
 				setItemStackToSlot(EntityEquipmentSlot.MAINHAND, pl.getHeldItemMainhand());
 			}
@@ -175,7 +174,7 @@ public class EntityPenguin extends EntityAgeableM{
 			//}
 			double speed;
 			boolean stateLyingDown=false;
-			IBlockState steppingState=worldObj.getBlockState(pos.add(0, -1, 0));
+			IBlockState steppingState=world.getBlockState(pos.add(0, -1, 0));
 			if(isInWater()){
 				speed=baseSpeed*2.5;
 				stateLyingDown=true;
@@ -205,10 +204,6 @@ public class EntityPenguin extends EntityAgeableM{
 		return i>0&&rand.nextInt((i+1)*4)>0?air:air-1;
 	}
 	
-	@Override
-	protected PathNavigate getNewNavigator(World worldIn){
-		return new PathNavigateSmart(this, worldIn);
-	}
 	
 	@Override
 	public boolean canBreatheUnderwater(){
@@ -225,7 +220,7 @@ public class EntityPenguin extends EntityAgeableM{
 		if(this.getRidingEntity() instanceof EntityBoat){
 			inWater=false;
 		}else{
-			if(worldObj.handleMaterialAcceleration(this.getEntityBoundingBox().expand(0.0D, -0.4000000059604645D, 0.0D).contract(0.001D), Material.WATER, this)){
+			if(world.handleMaterialAcceleration(this.getEntityBoundingBox().expand(0.0D, -0.4000000059604645D, 0.0D).contract(0.001D), Material.WATER, this)){
 				
 				if(!inWater&&!firstUpdate){
 					this.resetHeight();
@@ -316,7 +311,8 @@ public class EntityPenguin extends EntityAgeableM{
 	
 	@Override
 	public EntityAgeable createChild(EntityAgeable ageable){
-		EntityPenguin child=new EntityPenguin(worldObj);
+		EntityPenguin child=new EntityPenguin(world);
+		child.setGrowingAge(-24000*5);//TODO: 5 mc days config this shit
 		return child;
 	}
 	

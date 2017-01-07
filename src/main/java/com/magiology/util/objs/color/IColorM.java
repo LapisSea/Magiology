@@ -32,16 +32,16 @@ public interface IColorM{
 	float a();
 	
 	default int rInt(){
-		return (int)(r()*255);
+		return (int)(r()*255+0.5F);
 	}
 	default int gInt(){
-		return (int)(g()*255);
+		return (int)(g()*255+0.5F);
 	}
 	default int bInt(){
-		return (int)(b()*255);
+		return (int)(b()*255+0.5F);
 	}
 	default int aInt(){
-		return (int)(a()*255);
+		return (int)(a()*255+0.5F);
 	}
 	
 	

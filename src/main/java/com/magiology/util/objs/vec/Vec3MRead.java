@@ -104,7 +104,7 @@ public class Vec3MRead implements IVec3M<Vec3MRead>{
 	}
 	
 	public Vec3M normalize(){// normalise
-		double d0=MathHelper.sqrt_double(x*x+y*y+z*z);
+		double d0=Math.sqrt(x*x+y*y+z*z);
 		return d0<1.0E-4D?new Vec3M():new Vec3M(x/d0, y/d0, z/d0);
 	}
 	

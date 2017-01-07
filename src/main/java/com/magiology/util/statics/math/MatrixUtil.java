@@ -8,6 +8,7 @@ import com.magiology.util.objs.vec.IVec3M;
 import com.magiology.util.objs.vec.Vec3M;
 
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 
 public final class MatrixUtil{
 	
@@ -39,6 +40,10 @@ public final class MatrixUtil{
 	}
 	public static MatrixUtil createMatrix(IVec3M translation){
 		matrix=new Matrix4f().translate(translation.toLWJGLVec());
+		return instance;
+	}
+	public static MatrixUtil createMatrix(Vec3i translation){
+		matrix=new Matrix4f().translate(new Vector3f(translation.getX(),translation.getY(),translation.getZ()));
 		return instance;
 	}
 	
@@ -105,6 +110,14 @@ public final class MatrixUtil{
 		Matrix4f.rotate((float)Math.toRadians(rotationZ), new Vector3f(0, 0, 1), result, result);
 		Matrix4f.rotate((float)Math.toRadians(rotationY), new Vector3f(0, 1, 0), result, result);
 		Matrix4f.rotate((float)Math.toRadians(rotationX), new Vector3f(1, 0, 0), result, result);
+		matrix=result;
+		return instance;
+	}
+	public static MatrixUtil createMatrixXYZ(IVec3M rotation){
+		Matrix4f result=new Matrix4f();
+		Matrix4f.rotate((float)Math.toRadians(rotation.x()), new Vector3f(1, 0, 0), result, result);
+		Matrix4f.rotate((float)Math.toRadians(rotation.y()), new Vector3f(0, 1, 0), result, result);
+		Matrix4f.rotate((float)Math.toRadians(rotation.z()), new Vector3f(0, 0, 1), result, result);
 		matrix=result;
 		return instance;
 	}

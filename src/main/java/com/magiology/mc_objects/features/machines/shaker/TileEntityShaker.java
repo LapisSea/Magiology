@@ -1,5 +1,8 @@
 package com.magiology.mc_objects.features.machines.shaker;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.magiology.util.m_extensions.TileEntityMTickable;
 import com.magiology.util.statics.UtilM;
 
@@ -11,7 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class TileEntityShaker extends TileEntityMTickable implements IInventory{
 	
-	private ItemStack[] stacks=new ItemStack[1];
+	private final List<ItemStack> stacks=new ArrayList<>();
 	
 	@Override
 	public void onLoad(){
@@ -21,13 +24,13 @@ public class TileEntityShaker extends TileEntityMTickable implements IInventory{
 	@Override
 	public void readFromNBT(NBTTagCompound compound){
 		super.readFromNBT(compound);
-		stacks=UtilM.readStacksFromNBT(compound, "Inv");
+//		stacks=UtilM.readStacksFromNBT(compound, "Inv");
 	}
 	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound){
 		
-		UtilM.writeStacksToNBT(stacks, compound, "Inv");
+//		UtilM.writeStacksToNBT(stacks, compound, "Inv");
 		return super.writeToNBT(compound);
 	}
 	
@@ -48,12 +51,12 @@ public class TileEntityShaker extends TileEntityMTickable implements IInventory{
 	
 	@Override
 	public int getSizeInventory(){
-		return stacks.length;
+		return stacks.size();
 	}
 	
 	@Override
 	public ItemStack getStackInSlot(int index){
-		return stacks[index];
+		return stacks.get(index);
 	}
 	
 	@Override
@@ -70,9 +73,9 @@ public class TileEntityShaker extends TileEntityMTickable implements IInventory{
 	
 	@Override
 	public void setInventorySlotContents(int index, ItemStack stack){
-		stacks[index]=stack;
-		if(stack!=null&&stack.stackSize>this.getInventoryStackLimit()){
-			stack.stackSize=this.getInventoryStackLimit();
+//		stacks[index]=stack;
+		if(stack!=null&&stack.getCount()>this.getInventoryStackLimit()){
+//			stack.stackSize=this.getInventoryStackLimit();
 		}
 		this.markDirty();
 	}
@@ -81,9 +84,8 @@ public class TileEntityShaker extends TileEntityMTickable implements IInventory{
 	public int getInventoryStackLimit(){
 		return 64;
 	}
-	
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player){
+	public boolean isUsableByPlayer(EntityPlayer player){
 		return isInWorld()&&player.getDistanceSq(x()+0.5, y()+0.5, z()+0.5)<=64;
 	}
 	
@@ -113,4 +115,9 @@ public class TileEntityShaker extends TileEntityMTickable implements IInventory{
 	
 	@Override
 	public void clear(){}
+
+	@Override
+	public boolean isEmpty(){
+		return false;
+	}
 }

@@ -16,14 +16,16 @@ public class WorldEvents{
 	public WorldEvents(){throw new UnsupportedOperationException();}
 	
 	@SubscribeEvent
-	public void blockBreakEvent(BreakEvent e){
+	public static void blockBreakEvent(BreakEvent e){
 		IBlockState state=e.getState();
 		Block block=state.getBlock();
-		if(block instanceof IBlockBreakListener)((IBlockBreakListener)block).onBroken(e.getWorld(), e.getPos(), state);
+		IBlockBreakListener listener=null;
+		if(block instanceof IBlockBreakListener)listener=(IBlockBreakListener)block;
 		else{
 			TileEntity tile=e.getWorld().getTileEntity(e.getPos());
-			if(tile instanceof IBlockBreakListener)((IBlockBreakListener)tile).onBroken(e.getWorld(), e.getPos(), state);
+			if(tile instanceof IBlockBreakListener)listener=(IBlockBreakListener)tile;
 		}
+		if(listener!=null)listener.onBroken(e.getWorld(), e.getPos(), state);
 		
 	}
 	

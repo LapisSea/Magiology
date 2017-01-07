@@ -2,6 +2,8 @@ package com.magiology.util.m_extensions;
 
 import java.util.function.Consumer;
 
+import com.magiology.util.interf.Locateable.LocateableBlockM;
+import com.magiology.util.interf.Worldabale;
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.UtilM;
 
@@ -18,11 +20,11 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockPosM extends BlockPos{
+public class BlockPosM extends BlockPos implements LocateableBlockM{
 	
 	public static final BlockPosM ORIGIN=new BlockPosM();
 	
-	private static final int	NUM_X_BITS	=1+MathHelper.calculateLogBaseTwo(MathHelper.roundUpToPowerOfTwo(30000000));
+	private static final int	NUM_X_BITS	=1+MathHelper.log2(MathHelper.smallestEncompassingPowerOfTwo(30000000));
 	private static final int	NUM_Z_BITS	=NUM_X_BITS;
 	private static final int	NUM_Y_BITS	=64-NUM_X_BITS-NUM_Z_BITS;
 	private static final int	Y_SHIFT		=0+NUM_Z_BITS;
@@ -77,14 +79,6 @@ public class BlockPosM extends BlockPos{
 		this((int)(serialized<<64-X_SHIFT-NUM_X_BITS>>64-NUM_X_BITS), (int)(serialized<<64-Y_SHIFT-NUM_Y_BITS>>64-NUM_Y_BITS), (int)(serialized<<64-NUM_Z_BITS>>64-NUM_Z_BITS));
 	}
 	
-	public BlockPos conv(){
-		return new BlockPos(getX(), getY(), getZ());
-	}
-	
-	public IBlockState getBlockState(IBlockAccess world){
-		return world.getBlockState(this);
-	}
-	
 	public Block getBlock(IBlockAccess world){
 		return UtilM.getBlock(world, this);
 	}
@@ -131,8 +125,26 @@ public class BlockPosM extends BlockPos{
 		}
 	}
 	
+	public TileEntity getTile(Worldabale worldContainer){
+		return getTile(worldContainer.getWorld());
+	}
+	
 	public TileEntity getTile(IBlockAccess world){
 		return world.getTileEntity(this);
+	}
+	
+	public <T> T getTile(Worldabale worldContainer, Class<T> type, Consumer<T> onFound){
+		return getTile(worldContainer.getWorld(), type, onFound);
+	}
+	
+	public <T> T getTile(Worldabale worldContainer, Class<T> type){
+		return getTile(worldContainer.getWorld(), type);
+	}
+	
+	public <T> T getTile(IBlockAccess world, Class<T> type, Consumer<T> onFound){
+		T tile=getTile(world, type);
+		if(tile!=null) onFound.accept(tile);
+		return tile;
 	}
 	
 	public <T> T getTile(IBlockAccess world, Class<T> type){
@@ -250,16 +262,42 @@ public class BlockPosM extends BlockPos{
 	public static BlockPosM fromLong(long serialized){
 		return new BlockPosM(serialized);
 	}
-
+	
+	public static BlockPosM conv(BlockPos pos){
+		if(pos instanceof BlockPosM) return (BlockPosM)pos;
+		return new BlockPosM(pos);
+	}
+	
+	public static BlockPosM conv(BlockPosM pos){
+		return pos;
+	}
+	
 	public static boolean isPosNextTo(BlockPos p1, BlockPos p2){
 		int x=p1.getX()-p2.getX();
 		int y=p1.getY()-p2.getY();
 		int z=p1.getZ()-p2.getZ();
-
-		if(x*x==1)return y==0&&z==0;
-		if(y*y==1)return x==0&&z==0;
-		if(z*z==1)return x==0&&y==0;
+		
+		if(x*x==1) return y==0&&z==0;
+		if(y*y==1) return x==0&&z==0;
+		if(z*z==1) return x==0&&y==0;
 		
 		return false;
+	}
+	
+	public boolean isLoaded(Worldabale world){
+		return isLoaded(world.getWorld());
+	}
+	
+	public boolean isLoaded(World world){
+		return world.isBlockLoaded(this);
+	}
+	
+	public boolean equals(int x, int y, int z){
+		return getX()==x&&getY()==y&&getZ()==z;
+	}
+	
+	@Override
+	public BlockPosM getPos(){
+		return this;
 	}
 }

@@ -21,7 +21,7 @@ import com.magiology.util.statics.LogUtil;
 import com.magiology.util.statics.UtilM;
 
 /*{
-  "last update": 1481452128695
+  "last update": 1483797254192
 }*/
 
 /**
@@ -57,6 +57,7 @@ public class AssistantBot{
 	private static Map<String, Object> BOT_DATA;
 	private static String THIS_CLASS_SRC;
 	private static int START, END;
+	private static boolean DIRTY=false;
 	
 	static void run(){
 		UtilM.startTime();
@@ -84,11 +85,13 @@ public class AssistantBot{
 			
 			LogUtil.println("Writing bot data...");
 			writeData();
-			
-			end();
-			UtilM.exit(0);
+			if(DIRTY){
+				LogUtil.println("Source file/s were changed. MC will need to restart!");
+				end();
+				UtilM.exit(0);
+			}
 		}
-		LogUtil.println("No change detected!");
+		LogUtil.println("No changes were made. Continuing launching...");
 	}
 	
 	private static void build(){
@@ -132,7 +135,10 @@ public class AssistantBot{
 							newSrc.substring(endPos, newSrc.length());
 				}
 				
-				if(newSrc!=src)Files.write(classPath, newSrc.getBytes());
+				if(!newSrc.equals(src)){
+					Files.write(classPath, newSrc.getBytes());
+					DIRTY=true;
+				}
 				
 			}catch(Exception e){
 				throw new RuntimeException(e);
@@ -178,7 +184,6 @@ public class AssistantBot{
 				THIS_CLASS_SRC.substring(0, START)+
 				new GsonBuilder().setPrettyPrinting().create().toJson(BOT_DATA)+
 				THIS_CLASS_SRC.substring(END, THIS_CLASS_SRC.length());
-		if(newClassSrc.equals(THIS_CLASS_SRC))return;
 		try{
 			Files.write(thisClass.toPath(), newClassSrc.getBytes());
 		}catch(IOException e){

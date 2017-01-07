@@ -14,10 +14,11 @@ import net.minecraft.world.World;
 public class BlockNeuroController extends BlockNeuroBase<TileEntityNeuroController>{
 	
 	public BlockNeuroController(){
-		super(Material.IRON,()->new TileEntityNeuroController(),CONNECTIONS);
+		super(Material.IRON, ()->new TileEntityNeuroController(), CONNECTIONS);
 	}
+	
 	@Override
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn){
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos fromPos){
 		TileEntityNeuroController tile=getTile(world, pos);
 		for(int i=0;i<6;i++){
 			BlockPos pos1=tile.getPos().offset(EnumFacing.getFront(i));
@@ -26,8 +27,9 @@ public class BlockNeuroController extends BlockNeuroBase<TileEntityNeuroControll
 		}
 		world.setBlockState(pos, state);
 		
-		super.neighborChanged(state, world, pos, blockIn);
+		super.neighborChanged(state, world, pos, block, fromPos);
 	}
+	
 	@Override
 	public void onBlockClicked(World worldIn, BlockPos pos, EntityPlayer playerIn){
 		LogUtil.println(playerIn);

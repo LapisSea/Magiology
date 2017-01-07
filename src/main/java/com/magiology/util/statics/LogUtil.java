@@ -153,6 +153,7 @@ public class LogUtil{
 	}
 	
 	private static void log(Level logLevel, String object){
+		//MagiLog.append(object+"\n");
 		String[] lines=object.split(UtilM.LINE_REG);
 		for(String line:lines){
 			FMLLog.log(MReference.NAME, logLevel, line);

@@ -32,6 +32,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import com.magiology.SoundM;
 import com.magiology.core.MReference;
+import com.magiology.util.interf.Locateable;
 import com.magiology.util.interf.Worldabale;
 import com.magiology.util.m_extensions.BlockPosM;
 import com.magiology.util.objs.color.ColorM;
@@ -39,6 +40,7 @@ import com.magiology.util.objs.vec.Vec3M;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -222,7 +224,7 @@ public class UtilM{
 	private static final Stack<Long> timeStack=new Stack<>();
 	
 	public static void timerSafety(){
-		if(!timeStack.isEmpty())timeStack.clear();
+		if(!timeStack.isEmpty()) timeStack.clear();
 		
 	}
 	
@@ -230,12 +232,13 @@ public class UtilM{
 		
 		return System.currentTimeMillis()-timeStack.pop();
 	}
+	
 	public static void startTime(){
 		timeStack.push(System.currentTimeMillis());
 	}
 	
 	public static void exit(int Int){
-		LogUtil.println(MReference.NAME,"exiting! o/");
+		LogUtil.println(MReference.NAME, "exiting! o/");
 		FMLCommonHandler.instance().exitJava(Int, false);
 	}
 	
@@ -243,11 +246,15 @@ public class UtilM{
 		return false;
 	}
 	
+	public static Block getBlock(Worldabale worldContainer, BlockPos pos){
+		return worldContainer.getWorld().getBlockState(pos).getBlock();
+	}
+	
 	public static Block getBlock(IBlockAccess world, BlockPos pos){
 		return world.getBlockState(pos).getBlock();
 	}
 	
-	public static Block getBlock(World world, int x, int y, int z){
+	public static Block getBlock(IBlockAccess world, int x, int y, int z){
 		return getBlock(world, new BlockPos(x, y, z));
 	}
 	
@@ -318,7 +325,7 @@ public class UtilM{
 	}
 	
 	public static World world(Entity object){
-		return object.worldObj;
+		return object.world;
 	}
 	
 	public static World world(TileEntity object){
@@ -326,7 +333,7 @@ public class UtilM{
 	}
 	
 	public static World world(EntityEvent object){
-		return object.getEntity().worldObj;
+		return object.getEntity().world;
 	}
 	
 	public static World world(BlockEvent object){
@@ -343,10 +350,10 @@ public class UtilM{
 	
 	@Deprecated
 	public static World world(Object object){
-		if(object instanceof Entity) return ((Entity)object).worldObj;
+		if(object instanceof Entity) return ((Entity)object).world;
 		if(object instanceof World) return (World)object;
 		if(object instanceof TileEntity) return ((TileEntity)object).getWorld();
-		if(object instanceof EntityEvent) return ((EntityEvent)object).getEntity().worldObj;
+		if(object instanceof EntityEvent) return ((EntityEvent)object).getEntity().world;
 		if(object instanceof BlockEvent) return ((BlockEvent)object).getWorld();
 		
 		return null;
@@ -513,14 +520,6 @@ public class UtilM{
 		return true;
 	}
 	
-	public static boolean isInvEmpty(IInventory inv){
-		return isInvEmpty(inventoryToList(inv));
-	}
-	
-	public static boolean isInvEmpty(List<ItemStack> inv){
-		return inv.stream().allMatch(stack->stack==null||stack.stackSize==0);
-	}
-	
 	/**
 	 * Returns if stack contains a specific item
 	 * Note: no danger of null pointer exception!
@@ -553,7 +552,7 @@ public class UtilM{
 	}
 	
 	public static boolean isTileInWorld(TileEntity tile){
-		if(!tile.hasWorldObj()) return false;
+		if(!tile.hasWorld()) return false;
 		return tile.getWorld().getTileEntity(tile.getPos())==tile;
 	}
 	
@@ -593,7 +592,7 @@ public class UtilM{
 	}
 	
 	public static void playSoundAtEntity(SoundM sound, Entity entity, float volume, float pitch){
-		playSoundAtEntity(sound, entity.worldObj, getEntityPos(entity), volume, pitch);
+		playSoundAtEntity(sound, entity.world, getEntityPos(entity), volume, pitch);
 	}
 	
 	public static void playSoundAtEntity(SoundM sound, World world, Vec3M pos, float volume, float pitch){
@@ -689,11 +688,10 @@ public class UtilM{
 	
 	public static Entity spawnEntity(Entity entity){
 		if(isRemote(entity)) return null;
-		entity.worldObj.spawnEntityInWorld(entity);
+		entity.world.spawnEntity(entity);
 		entity.forceSpawn=true;
 		return entity;
 	}
-	
 	
 	public static String[] stringNewlineSplit(String toSplit){
 		return toSplit.split("\\r\\n|\\n\\r|\\r|\\n");
@@ -830,9 +828,13 @@ public class UtilM{
 		ItemStack[] stacks=new ItemStack[nbtStacks.tagCount()];
 		for(int i=0;i<stacks.length;i++){
 			NBTTagCompound stackNbt=nbtStacks.getCompoundTagAt(i);
-			stacks[stackNbt.getInteger("Slot")]=ItemStack.loadItemStackFromNBT(stackNbt);
+			stacks[stackNbt.getInteger("Slot")]=new ItemStack(stackNbt);
 		}
 		return stacks;
+	}
+	
+	public static <T extends Worldabale&Locateable<? extends BlockPos>> List<TileEntity> getTileSides(T worldPointer){
+		return getTileSides(worldPointer.getWorld(), worldPointer.getPos());
 	}
 	
 	public static List<TileEntity> getTileSides(World worldObj, BlockPos pos){
@@ -846,6 +848,10 @@ public class UtilM{
 		return list;
 	}
 	
+	public static <T extends Worldabale&Locateable<? extends BlockPos>> Map<EnumFacing, TileEntity> getTileSidesDir(T worldPointer){
+		return getTileSidesDir(worldPointer.getWorld(), worldPointer.getPos());
+	}
+	
 	public static Map<EnumFacing, TileEntity> getTileSidesDir(World worldObj, BlockPos pos){
 		Map<EnumFacing, TileEntity> map=new HashMap<>();
 		
@@ -857,15 +863,23 @@ public class UtilM{
 		return map;
 	}
 	
+	public static <J extends Worldabale&Locateable<? extends BlockPosM>, T> List<T> getTileSides(J worldPointer, Class<T> type){
+		return getTileSides(worldPointer.getWorld(), worldPointer.getPos(), type);
+	}
+	
 	public static <T> List<T> getTileSides(World worldObj, BlockPosM pos, Class<T> type){
 		List<T> list=new ArrayList<>();
 		
 		for(EnumFacing side:EnumFacing.values()){
 			T tile=pos.offset(side).getTile(worldObj, type);
-			if(tile!=null)list.add(tile);
+			if(tile!=null) list.add(tile);
 		}
 		
 		return list;
+	}
+	
+	public static <J extends Worldabale&Locateable<? extends BlockPosM>, T extends TileEntity> Map<EnumFacing, T> getTileSidesDir(J worldPointer, Class<T> type){
+		return getTileSidesDir(worldPointer.getWorld(), worldPointer.getPos(), type);
 	}
 	
 	public static <T extends TileEntity> Map<EnumFacing, T> getTileSidesDir(World worldObj, BlockPosM pos, Class<T> type){
@@ -921,17 +935,94 @@ public class UtilM{
 		}
 		list.add((T)o);
 	}
-
-	public static <E,T extends Collection<E>> T removeCollectionDuplicates(T collection){
+	
+	public static <E, T extends Collection<E>> T removeCollectionDuplicates(T collection){
 		Set<E> hs=new HashSet<>(collection);
 		
-		collection.clear();
-		collection.addAll(hs);
+		if(hs.size()!=collection.size()){
+			collection.clear();
+			collection.addAll(hs);
+		}
 		
 		return collection;
 	}
-
-	public static <T> T[] newArray(Class<T> type,int size){
+	
+	public static <T> T[] newArray(Class<T> type, int size){
 		return (T[])Array.newInstance(type, size);
+	}
+	
+	private static enum COLOR_WORDS{
+		WHITE(new int[]{255, 255, 255, 255}), LIGHT_GRAY(new int[]{192, 192, 192, 255}), GRAY(new int[]{128, 128, 128, 255}), DARK_GRAY(new int[]{64, 64, 64, 255}), BLACK(new int[]{0, 0, 0, 255}), RED(new int[]{255, 0, 0, 255}), PINK(new int[]{255, 175, 175, 255}), ORANGE(new int[]{255, 200, 0, 255}), YELLOW(
+				new int[]{255, 255, 0, 255}), GREEN(new int[]{0, 255, 0, 255}), MAGENTA(new int[]{255, 0, 255, 255}), CYAN(new int[]{0, 255, 255, 255}), BLUE(new int[]{0, 0, 255, 255});
+		
+		private final int[] data;
+		
+		private COLOR_WORDS(int[] data){
+			this.data=data;
+		}
+		
+	}
+	
+	private static int[] parseColor(String s){
+		if(s==null||s.length()<4) return COLOR_WORDS.WHITE.data;
+		
+		if(s.charAt(0)=='#'){
+			
+			s=s.substring(1);
+			
+			switch(s.length()){
+			case 3:
+				return new int[]{//RGB
+						Integer.parseInt(s.charAt(0)+""+s.charAt(0), 16),
+						Integer.parseInt(s.charAt(1)+""+s.charAt(1), 16),
+						Integer.parseInt(s.charAt(2)+""+s.charAt(2), 16),
+						255
+				};
+			case 4:
+				return new int[]{//RGBA
+						Integer.parseInt(s.charAt(0)+""+s.charAt(0), 16),
+						Integer.parseInt(s.charAt(1)+""+s.charAt(1), 16),
+						Integer.parseInt(s.charAt(2)+""+s.charAt(2), 16),
+						Integer.parseInt(s.charAt(3)+""+s.charAt(3), 16),
+				};
+			case 6:
+				return new int[]{//RRGGBB
+						Integer.parseInt(s.substring(0, 1), 16),
+						Integer.parseInt(s.substring(2, 3), 16),
+						Integer.parseInt(s.substring(4, 5), 16),
+						255
+				};
+			case 8:
+				return new int[]{//RRGGBBAA
+						Integer.parseInt(s.substring(0, 1), 16),
+						Integer.parseInt(s.substring(2, 3), 16),
+						Integer.parseInt(s.substring(4, 5), 16),
+						Integer.parseInt(s.substring(6, 7), 16)
+				};
+			}
+			return COLOR_WORDS.WHITE.data;
+		}else{
+			try{
+				return COLOR_WORDS.valueOf(s.toUpperCase()).data;
+			}catch(Exception e){
+				return COLOR_WORDS.WHITE.data;
+			}
+		}
+	}
+	
+	public static TileEntity getTile(World world, Locateable<? extends BlockPos> pos){
+		return world.getTileEntity(pos.getPos());
+	}
+	
+	public static <T extends Worldabale&Locateable<? extends BlockPos>> TileEntity getTile(T worldPointer){
+		return worldPointer.getWorld().getTileEntity(worldPointer.getPos());
+	}
+	
+	public static <T extends Worldabale&Locateable<? extends BlockPos>> IBlockState getState(T worldPointer){
+		return worldPointer.getWorld().getBlockState(worldPointer.getPos());
+	}
+	
+	public static <T extends Worldabale&Locateable<? extends BlockPos>> Block getBlock(T worldPointer){
+		return getState(worldPointer).getBlock();
 	}
 }

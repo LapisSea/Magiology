@@ -3,6 +3,7 @@ package com.magiology.client.renderers;
 import org.lwjgl.opengl.GL11;
 
 import com.magiology.util.objs.color.ColorM;
+import com.magiology.util.objs.color.IColorM;
 import com.magiology.util.objs.vec.IVec3M;
 import com.magiology.util.objs.vec.Vec2FM;
 import com.magiology.util.objs.vec.Vec2i;
@@ -111,7 +112,7 @@ public class Renderer{
 	
 	public static class PosColorRenderer extends RendererBase{
 		
-		public void addVertex(double xPos,double yPos,double zPos,ColorM color){
+		public void addVertex(double xPos,double yPos,double zPos,IColorM color){
 			instance.addPos(xPos,yPos,zPos).addColor(color.r(),color.g(),color.b(),color.a()).endVertex();
 		}
 		
@@ -119,7 +120,7 @@ public class Renderer{
 			instance.addPos(xPos,yPos,zPos).addColor(r,g,b,a).endVertex();
 		}
 		
-		public void addVertex(IVec3M pos,ColorM color){
+		public void addVertex(IVec3M pos,IColorM color){
 			instance.addPos(pos.x(),pos.y(),pos.z()).addColor(color.r(),color.g(),color.b(),color.a()).endVertex();
 		}
 		

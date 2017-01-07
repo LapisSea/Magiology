@@ -118,7 +118,7 @@ public class ParticleMistBubbleFactory extends ParticleFactory{
 		
 		@Override
 		public ParticleFactory getFactorfy(){
-			return null;
+			return ParticleMistBubbleFactory.this;
 		}
 	}
 }

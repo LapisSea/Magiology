@@ -30,9 +30,8 @@ public abstract class BlockNeuroBase<T extends TileEntityM&NeuroPart> extends Bl
 	protected BlockNeuroBase(Material material, ObjectReturn<T> tileFactory, IPropertyM[] properties){
 		super(material, tileFactory, properties);
 	}
-	
 	@Override
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn){
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos fromPos){
 		TileEntity tile=world.getTileEntity(pos);
 		if(tile instanceof NeuroPart){
 			NeuroPart part=(NeuroPart)tile;

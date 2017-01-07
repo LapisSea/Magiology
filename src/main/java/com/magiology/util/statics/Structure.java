@@ -76,7 +76,7 @@ public class Structure{
 		Consumer<? super Plane<T>> fix=rawPlane->{
 			
 			int xSize, ySize,
-				minX=Integer.MAX_VALUE, minY=Integer.MAX_VALUE, minZ=Integer.MAX_VALUE, 
+				minX=Integer.MAX_VALUE, minY=Integer.MAX_VALUE, minZ=Integer.MAX_VALUE,
 				maxX=Integer.MIN_VALUE, maxY=Integer.MIN_VALUE, maxZ=Integer.MIN_VALUE;
 			boolean isVerticalX, isHorisontal;
 			{//braces here to dump values
@@ -160,7 +160,7 @@ public class Structure{
 							else{
 								minY1--;//expand rectangle
 								for(int x1=minX1; x1<maxX1+1; x1++){
-									if(grid[x1][minY1]==null){//hole found! Reverting expansion and discontinuing it. 
+									if(grid[x1][minY1]==null){//hole found! Reverting expansion and discontinuing it.
 										minY1++;
 										yHasNoHole=false;
 										break;
@@ -194,7 +194,7 @@ public class Structure{
 							}
 						}
 					}
-					//did the plane expand? Than add it to said plane collection. 
+					//did the plane expand? Than add it to said plane collection.
 					if(newPlaneBlocks.size()>1){
 						Plane<T> pl=new Plane(CollectionConverter.convLi(newPlaneBlocks,PlanePart.class,t->new PlanePart(t,0,0)), isVerticalX, isHorisontal, xSize, ySize,minX,minY,minZ);
 						toAdd.add(pl);
@@ -221,7 +221,7 @@ public class Structure{
 					}
 				}
 			}
-			//anything generated from broken plane? Than remove it. 
+			//anything generated from broken plane? Than remove it.
 			if(!toAdd.isEmpty())toRemove.add(rawPlane);
 		};
 		
@@ -254,9 +254,7 @@ public class Structure{
 		
 		if(allPlanes.size()==1)return allPlanes.get(0);//only 1 plane? than no need to choose a plane
 		else{
-			int maxSize=allPlanes.stream().max((p1, p2)->{
-				return Integer.compare(p1.parts.size(), p2.parts.size());
-			}).get().parts.size();
+			int maxSize=allPlanes.stream().mapToInt(p->p.parts.size()).max().orElse(allPlanes.get(0).parts.size());
 			//get all planes with biggest size
 			List<Plane> biggestPlanes=allPlanes.stream().filter(plane->plane.parts.size()==maxSize).collect(Collectors.toList());
 			if(biggestPlanes.size()==1)return biggestPlanes.get(0);//only 1 plane with maxSize?

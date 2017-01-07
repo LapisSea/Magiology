@@ -1,5 +1,6 @@
 package com.magiology.util.m_extensions;
 
+import com.magiology.forge.proxy.ClientProxy;
 import com.magiology.util.interf.ObjectReturn;
 import com.magiology.util.objs.BlockStates.IPropertyM;
 
@@ -12,6 +13,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public abstract class BlockContainerM<T extends TileEntity> extends BlockM implements ITileEntityProvider{
+	
+	public static interface MixedRender<T extends BlockContainerM>{
+		default void registerModel(T block){
+			ClientProxy.autoJsonModel(block);
+			ClientProxy.autoTESR(block);
+		}
+	}
 	
 	public static final float p=1F/16F;
 	private final ObjectReturn<T> tileFactory;

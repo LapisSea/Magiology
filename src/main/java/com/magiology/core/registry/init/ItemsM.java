@@ -10,6 +10,10 @@ import com.magiology.util.m_extensions.ItemM;
 import com.magiology.util.m_extensions.ResourceLocationM;
 import com.magiology.util.statics.UtilM;
 
+import net.minecraftforge.fml.common.FMLContainer;
+import net.minecraftforge.fml.common.InjectedModContainer;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ItemsM extends AutoReferencedRegistry<ItemM>{
@@ -33,7 +37,7 @@ public class ItemsM extends AutoReferencedRegistry<ItemM>{
 	@Override
 	public void registerObj(ItemM obj){
 		String name=UtilM.classNameToMcName(obj.getClass());
-		obj.setRegistryName(new ResourceLocationM(name));
+		obj.setRegistryName(name);
 		obj.setUnlocalizedName(name);
 		GameRegistry.register(obj);
 	}

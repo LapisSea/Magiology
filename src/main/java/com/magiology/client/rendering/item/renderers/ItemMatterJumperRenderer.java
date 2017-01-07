@@ -58,11 +58,18 @@ public class ItemMatterJumperRenderer implements IItemRenderer{
 		src.bindFramebufferTexture();
 		
 		MatterJumperShader shader=ShadersM.MATTER_JUMPER;
-		if(shader!=null)shader.activate(
+		if(shader!=null){
+			float noiseRad=4;
+//			noiseRad=UtilC.fluctuateLinSmooth(200, 0, 0, 1);
+//			noiseRad*=noiseRad;
+//			noiseRad=2+noiseRad*6+RandUtil.CRF(0.2);
+			
+			shader.activate(
 				RenderEvents.MAIN_FRAME_COPY,
-				new ColorM(UtilC.fluctuateLin(210, 0, 0.54, 0.56), UtilC.fluctuateLin(250, 0, 0.54, 0.56), UtilC.fluctuateLin(320, 0, 0.54, 0.56), 1),
+				new ColorM(UtilC.fluctuateLinSmooth(210, 0, 0.54, 0.56), UtilC.fluctuateLinSmooth(250, 0, 0.54, 0.56), UtilC.fluctuateLinSmooth(320, 0, 0.54, 0.56), 1),
 				UtilC.getWorldTime()*1D+PartialTicksUtil.partialTicks,
-				20,4);
+				10,noiseRad);
+		}
 		src.bindFramebufferTexture();
 		
 		

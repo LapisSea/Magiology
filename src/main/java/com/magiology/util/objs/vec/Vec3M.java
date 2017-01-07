@@ -251,34 +251,34 @@ public class Vec3M extends Vec3MRead implements Serializable, WritableVector3f, 
 		double d0=x-this.x;
 		double d1=y-this.y;
 		double d2=z-this.z;
-		return MathHelper.sqrt_double(d0*d0+d1*d1+d2*d2);
+		return MathHelper.sqrt(d0*d0+d1*d1+d2*d2);
 	}
 	
 	public float distanceTo(Vec3d vec){
 		double d0=vec.xCoord-x;
 		double d1=vec.yCoord-y;
 		double d2=vec.zCoord-z;
-		return MathHelper.sqrt_double(d0*d0+d1*d1+d2*d2);
+		return MathHelper.sqrt(d0*d0+d1*d1+d2*d2);
 	}
 	
 	public double distanceTo(Vec3i pos){
 		double d0=pos.getX()-x;
 		double d1=pos.getY()-y;
 		double d2=pos.getZ()-z;
-		return MathHelper.sqrt_double(d0*d0+d1*d1+d2*d2);
+		return MathHelper.sqrt(d0*d0+d1*d1+d2*d2);
 	}
 	
 	public double distanceTo(IVec3M vec){
 		double d0=vec.x()-x;
 		double d1=vec.y()-y;
 		double d2=vec.z()-z;
-		return MathHelper.sqrt_double(d0*d0+d1*d1+d2*d2);
+		return MathHelper.sqrt(d0*d0+d1*d1+d2*d2);
 	}
 	public double distanceTo(ReadableVector3f vec){
 		double d0=vec.getX()-x;
 		double d1=vec.getY()-y;
 		double d2=vec.getZ()-z;
-		return MathHelper.sqrt_double(d0*d0+d1*d1+d2*d2);
+		return MathHelper.sqrt(d0*d0+d1*d1+d2*d2);
 	}
 	
 	@Override
@@ -332,7 +332,7 @@ public class Vec3M extends Vec3MRead implements Serializable, WritableVector3f, 
 	
 	
 	public double lengthVector(){
-		return MathHelper.sqrt_double(x*x+y*y+z*z);
+		return MathHelper.sqrt(x*x+y*y+z*z);
 	}
 	
 	public double lightProduct(Vec3MRead vec){
