@@ -9,9 +9,6 @@ import com.magiology.util.statics.UtilM;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 //<GEN:	IMPORTS START>
-import com.magiology.mc_objects.items.ItemJetpack;
-import com.magiology.mc_objects.items.ItemMatterJumper;
-import com.magiology.mc_objects.items.SimpleItems.ItemMistyPowder;
 //<GEN:	IMPORTS END>
 
 public class ItemsM extends AutoReferencedRegistry<ItemM>{

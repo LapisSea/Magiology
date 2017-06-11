@@ -5,6 +5,7 @@ import com.magiology.core.registry.init.ParticlesM;
 import com.magiology.forge.events.TickEvents;
 import com.magiology.forge.networking.PacketBufferM;
 import com.magiology.forge.networking.UpdateTileNBTPacket;
+import com.magiology.util.interf.IBlockBreakListener;
 import com.magiology.util.interf.Locateable.LocateableBlockM;
 import com.magiology.util.m_extensions.BlockPosM;
 import com.magiology.util.m_extensions.MutableBlockPosM;
@@ -24,7 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public abstract class TileEntityMultiblock<T extends TileEntityMultiblock<T,PartType>, PartType extends LocateableBlockM> extends TileEntityM{
+import org.lwjgl.util.vector.Matrix4f;
+
+public abstract class TileEntityMultiblock<T extends TileEntityMultiblock<T,PartType>, PartType extends LocateableBlockM> extends TileEntityM implements IBlockBreakListener{
 	
 	protected static MutableBlockPosM STATIC_BPOS=new MutableBlockPosM();
 	
@@ -51,16 +54,6 @@ public abstract class TileEntityMultiblock<T extends TileEntityMultiblock<T,Part
 		}else if(multiblockData.hasKey("br")){
 			STATIC_BPOS.setPos(multiblockData.getLong("br")).getTile(this, TileEntityMultiblock.class, b->setBrain((T)b));
 		}
-	}
-	
-	@Override
-	protected boolean nbtUsingWorld(NBTTagCompound compound){
-		return true;
-	}
-	
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate){
-		return oldState.getBlock()!=newSate.getBlock();
 	}
 	
 	@Override
@@ -91,6 +84,16 @@ public abstract class TileEntityMultiblock<T extends TileEntityMultiblock<T,Part
 		return compound;
 	}
 	
+	@Override
+	protected boolean nbtUsingWorld(NBTTagCompound compound){
+		return true;
+	}
+	
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate){
+		return oldState.getBlock()!=newSate.getBlock();
+	}
+	
 	public void buildMultiblock(){
 		if(isBrain()||hasBrain()) return;
 		mbHandler=createMultiblockHandler();
@@ -107,6 +110,15 @@ public abstract class TileEntityMultiblock<T extends TileEntityMultiblock<T,Part
 		mbHandler.tryToForm();
 	}
 	
+	@Override
+	public void onBroken(World world, BlockPos pos, IBlockState state){
+		if(hasBrain()){
+			if(isBrain())getHandler().onBreak();
+			else getBrain().getHandler().onBreak();
+		}
+	}
+	
+	
 	public MultiblockHandler<T,PartType> getHandler(){
 		return mbHandler;
 	}
@@ -117,9 +129,7 @@ public abstract class TileEntityMultiblock<T extends TileEntityMultiblock<T,Part
 		this.brain=brain;
 		if(server()&&!waitingForBrain){
 			waitingForBrain=true;
-			TickEvents.waitRunUntil(this, ()->!brain.isNbtLoaded(), ()->{
-				
-			});
+			TickEvents.waitRunUntil(this, ()->!brain.isNbtLoaded(), ()->brain.getHandler().addBlockPos(getPos()));
 		}
 	}
 	

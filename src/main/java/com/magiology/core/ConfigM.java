@@ -10,19 +10,33 @@ import static com.magiology.core.MReference.MODID;
 
 public class ConfigM extends Configuration{
 	
-	private static float   PARTICLE_MULTIPLIER=1;
-	private static boolean SHADERS_ENABLED    =true;
-	private static int     PARTICLE_COUNT     =2500;
+	private static boolean	SHADERS_ENABLED		=true,DEBUG_WIN=false;
+	private static int		PARTICLE_COUNT		=2500;
+	private static float	PARTICLE_MULTIPLIER	=1;
 	
-	public static float getMaxParticleCount(){return PARTICLE_COUNT;}
+	public static float getMaxParticleCount(){
+		return PARTICLE_COUNT;
+	}
 	
-	public static float getParticleMultiplier(){return PARTICLE_MULTIPLIER;}
+	public static float getParticleMultiplier(){
+		return PARTICLE_MULTIPLIER;
+	}
 	
-	public static boolean shadersEnabled(){return SHADERS_ENABLED;}
+	public static boolean shadersEnabled(){
+		return SHADERS_ENABLED;
+	}
 	
-	public static void setParticleAmount(float particleAmount){PARTICLE_MULTIPLIER=particleAmount;}
+	public static boolean debugWin(){
+		return DEBUG_WIN;
+	}
 	
-	public static void setShadersEnabled(boolean shadersEnabled){ConfigM.SHADERS_ENABLED=shadersEnabled;}
+	public static void setParticleAmount(float particleAmount){
+		PARTICLE_MULTIPLIER=particleAmount;
+	}
+	
+	public static void setShadersEnabled(boolean shadersEnabled){
+		ConfigM.SHADERS_ENABLED=shadersEnabled;
+	}
 	
 	public ConfigM(){
 		super(new File(Loader.instance().getConfigDir(), MODID+".cfg"));
@@ -32,13 +46,10 @@ public class ConfigM extends Configuration{
 	@Override
 	public void load(){
 		super.load();
-		Property prop;
 		
-		prop=get(Configuration.CATEGORY_CLIENT, "particleMultiplier", PARTICLE_MULTIPLIER);
-		PARTICLE_MULTIPLIER=(float)prop.getDouble();
-		prop=get(Configuration.CATEGORY_CLIENT, "shadersEnabled", SHADERS_ENABLED);
-		SHADERS_ENABLED=prop.getBoolean();
-		
+		PARTICLE_MULTIPLIER=(float)get(Configuration.CATEGORY_CLIENT, "particleMultiplier", PARTICLE_MULTIPLIER).getDouble();
+		SHADERS_ENABLED=get(Configuration.CATEGORY_CLIENT, "shadersEnabled", SHADERS_ENABLED).getBoolean();
+		DEBUG_WIN=get(Configuration.CATEGORY_GENERAL, "debugWin", DEBUG_WIN).getBoolean();
 		if(hasChanged()) save();
 	}
 }

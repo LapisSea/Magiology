@@ -2,6 +2,8 @@ package com.magiology.forge.networking;
 
 import com.magiology.util.m_extensions.BlockPosM;
 import com.magiology.util.m_extensions.TileEntityM;
+import com.magiology.util.statics.LogUtil;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,6 +22,7 @@ public class UpdateTileNBTPacket extends NBTPacket{
 	
 	public static void upload(){
 		if(dirty.isEmpty()) return;
+		
 		
 		Map<EntityPlayer,List<TileEntityM>> toSend=new HashMap<>();
 		dirty.forEach((tile)->{

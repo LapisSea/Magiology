@@ -7,11 +7,6 @@ import com.magiology.mc_objects.particles.*;
 import com.magiology.util.statics.UtilM;
 
 //<GEN:	IMPORTS START>
-import com.magiology.mc_objects.particles.ParticleBubbleFactory;
-import com.magiology.mc_objects.particles.ParticleCubeFactory;
-import com.magiology.mc_objects.particles.ParticleMessageFactory;
-import com.magiology.mc_objects.particles.ParticleMistBubbleFactory;
-import com.magiology.mc_objects.particles.ParticleMistyEnergyFactory;
 //<GEN:	IMPORTS END>
 
 public class ParticlesM extends AutoReferencedRegistry<ParticleFactory>{

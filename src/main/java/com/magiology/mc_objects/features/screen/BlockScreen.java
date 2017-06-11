@@ -142,6 +142,7 @@ public class BlockScreen extends BlockContainerM<TileEntityScreen> implements Mi
 			}
 			return false;
 		}
+		LogUtil.println(tile.getBrain());
 		if(tile.hasBrain()){
 			try{
 				if(side!=tile.getRotation()) return false;

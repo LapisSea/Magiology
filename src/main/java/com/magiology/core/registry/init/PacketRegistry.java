@@ -10,7 +10,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 //<GEN:	IMPORTS START>
-import com.magiology.forge.networking.UpdateTileNBTPacket;
 //<GEN:	IMPORTS END>
 
 public class PacketRegistry extends AutoRegistry<PacketM>{

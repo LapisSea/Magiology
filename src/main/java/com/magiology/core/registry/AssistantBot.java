@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 /*{
-  "last update": 1484430226358
+  "last update": 1485974032322
 }*/
 
 /**
@@ -49,13 +49,13 @@ public class AssistantBot{
 	
 	private static final List<String> fails=Lists.newArrayList(MReference.SERVER_PROXY_LOCATION, MReference.CLIENT_PROXY_LOCATION);
 	
-	private static final String ROOT     ="../src/main/java/";
-	private static final File   thisClass=getFileFromClass(AssistantBot.class);
+	private static final String	ROOT		="../src/main/java/";
+	private static final File	thisClass	=getFileFromClass(AssistantBot.class);
 	
-	private static Map<String,Object> BOT_DATA;
-	private static String             THIS_CLASS_SRC;
-	private static int                START, END;
-	private static boolean DIRTY=false;
+	private static Map<String,Object>	BOT_DATA;
+	private static String				THIS_CLASS_SRC;
+	private static int					START,END;
+	private static boolean				DIRTY	=false;
 	
 	static void run(){
 		UtilM.startTime();
@@ -104,8 +104,7 @@ public class AssistantBot{
 				if(!fails.contains(classPath)) throw new RuntimeException(e);
 			}
 		});
-		allClasses.stream().filter(
-			clas->clas.getName().startsWith("com.magiology.core.registry.init.")&&UtilM.instanceOf(clas, AutomatableCode.class)).forEach(clas->{
+		allClasses.stream().filter(clas->clas.getName().startsWith("com.magiology.core.registry.init.")&&UtilM.instanceOf(clas, AutomatableCode.class)).forEach(clas->{
 			try{
 				Path classPath=getFileFromClass(clas).toPath();
 				
@@ -118,9 +117,9 @@ public class AssistantBot{
 				
 				String newSrc=src;
 				
-				for(int i=0; i<markers.length; i++){
+				for(int i=0;i<markers.length;i++){
 					PairM<String,String> marker=markers[i];
-					int startPos=src.indexOf(marker.obj1), endPos=src.indexOf(marker.obj2);
+					int startPos=src.indexOf(marker.obj1),endPos=src.indexOf(marker.obj2);
 					if(startPos==-1) throw new IllegalStateException("Can't find "+marker.obj1+" in "+clas.getName());
 					if(endPos==-1) throw new IllegalStateException("Can't find "+marker.obj2+" in "+clas.getName());
 					startPos+=marker.obj1.length();
@@ -144,7 +143,7 @@ public class AssistantBot{
 	
 	private static void exploreAndLoadClass(List<Class> classes, Class<?> clazs){
 		classes.add(clazs);
-		for(Class c : clazs.getDeclaredClasses()){
+		for(Class c:clazs.getDeclaredClasses()){
 			exploreAndLoadClass(classes, c);
 		}
 	}
@@ -160,7 +159,7 @@ public class AssistantBot{
 		boolean started=false;
 		char lastChar=' ';
 		
-		for(int i=0; i<THIS_CLASS_SRC.length(); i++){
+		for(int i=0;i<THIS_CLASS_SRC.length();i++){
 			char ch=THIS_CLASS_SRC.charAt(i);
 			if(lastChar=='*'&&ch=='/'){
 				END=i-1;
@@ -179,7 +178,7 @@ public class AssistantBot{
 	
 	private static void writeData(){
 		String newClassSrc=THIS_CLASS_SRC.substring(0, START)+new GsonBuilder().setPrettyPrinting().create().toJson(BOT_DATA)+
-							   THIS_CLASS_SRC.substring(END, THIS_CLASS_SRC.length());
+				THIS_CLASS_SRC.substring(END, THIS_CLASS_SRC.length());
 		try{
 			Files.write(thisClass.toPath(), newClassSrc.getBytes());
 		}catch(IOException e){
@@ -195,7 +194,7 @@ public class AssistantBot{
 		}
 	}
 	
-	private static final Predicate<File> IS_FOLDER=file->file.isDirectory(), IS_JAVA_FILE=file->{
+	private static final Predicate<File> IS_FOLDER=file->file.isDirectory(),IS_JAVA_FILE=file->{
 		if(file.isDirectory()) return false;
 		String path1=file.toString();
 		return path1.endsWith(".java")&&!path1.endsWith("package-info.java");

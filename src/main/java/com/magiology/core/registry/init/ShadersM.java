@@ -10,10 +10,6 @@ import com.magiology.core.registry.imp.AutoReferencedRegistry;
 import com.magiology.util.statics.UtilM;
 
 //<GEN:	IMPORTS START>
-import com.magiology.client.shaders.programs.InvisibleShader;
-import com.magiology.client.shaders.programs.MatterJumperShader;
-import com.magiology.client.shaders.programs.MultiTransformShader;
-import com.magiology.client.shaders.programs.SepiaShader;
 //<GEN:	IMPORTS END>
 
 public class ShadersM extends AutoReferencedRegistry<ShaderProgram>{

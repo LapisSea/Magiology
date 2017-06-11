@@ -19,6 +19,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import scala.reflect.internal.Scopes.LookupAmbiguous;
 
 import static com.magiology.core.MReference.*;
 
@@ -30,6 +31,8 @@ public class Magiology extends GenericModContainerImpl{
 	public static final boolean IS_DEV, CLIENT_ONLY_REMOVED;
 	
 	static{
+		LogUtil.printStackTrace();
+		System.exit(0);
 		CompatibilityChecker.checkJava8();
 		getClassLoader().addClassLoaderExclusion("jdk.nashorn");
 		boolean clientOnlyRemoved=false;

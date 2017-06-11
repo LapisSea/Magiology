@@ -14,11 +14,6 @@ import net.minecraft.item.ItemBlock;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 //<GEN:	IMPORTS START>
-import com.magiology.mc_objects.features.dimension_stabiliser.BlockDimensionStabiliser;
-import com.magiology.mc_objects.features.machines.shaker.BlockShaker;
-import com.magiology.mc_objects.features.neuro.BlockNeuroController;
-import com.magiology.mc_objects.features.neuro.BlockNeuroDuct;
-import com.magiology.mc_objects.features.screen.BlockScreen;
 //<GEN:	IMPORTS END>
 
 public class BlocksM extends AutoReferencedRegistry<BlockM>{
