@@ -1,7 +1,5 @@
 package com.magiology.mc_objects.particles;
 
-import org.lwjgl.opengl.GL11;
-
 import com.magiology.client.renderers.Renderer;
 import com.magiology.handlers.particle.ParticleFactory;
 import com.magiology.handlers.particle.ParticleM;
@@ -11,31 +9,29 @@ import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.OpenGLM.BlendFunc;
 import com.magiology.util.statics.RandUtil;
-import com.magiology.util.statics.UtilC;
 import com.magiology.util.statics.UtilM;
 import com.magiology.util.statics.math.PartialTicksUtil;
-
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 public class ParticleMistyEnergyFactory extends ParticleFactory{
-
 	
-	public static final ResourceLocation texture=new ResourceLocationM("/textures/particle/explosion_stages.png");
-	public static int[] defultModel=new int[32];
+	public static final ResourceLocation texture    =new ResourceLocationM("/textures/particles/explosion_stages.png");
+	public static       int[]            defultModel=new int[32];
 	
 	public void spawn(Vec3M pos, Vec3M speed, float size, float gravity, ColorM color){
 		spawn(pos, speed, size, new Vec3M(0, gravity, 0), color);
 	}
 	
 	public void spawn(Vec3M pos, Vec3M speed, float size, Vec3M gravity, ColorM color){
-		if(!UtilM.isRemote()||!shouldSpawn(pos))return;
+		if(!UtilM.isRemote()||!shouldSpawn(pos)) return;
 		addParticle(new ParticleMistyEnergy(pos, speed, size, gravity, color));
-//		if(UtilC.getThePlayer().isSneaking()&&UtilC.getWorldTime()%20==0){
-//			compileDisplayList();
-//		}
+		//		if(UtilC.getThePlayer().isSneaking()&&UtilC.getWorldTime()%20==0){
+		//			compileDisplayList();
+		//		}
 	}
 	
 	@Override
@@ -56,7 +52,7 @@ public class ParticleMistyEnergyFactory extends ParticleFactory{
 	@Override
 	public void setUpOpenGl(){
 		OpenGLM.setUpOpaqueRendering(BlendFunc.ADD);
-		UtilC.getMC().getTextureManager().bindTexture(texture);
+		OpenGLM.bindTexture(texture);
 	}
 	
 	@Override
@@ -67,25 +63,25 @@ public class ParticleMistyEnergyFactory extends ParticleFactory{
 	@Override
 	public void compileDisplayList(){
 		if(defultModel[0]!=-1){
-			for(int element:defultModel)
+			for(int element : defultModel)
 				GL11.glDeleteLists(element, 1);
 		}
-		for(int part=0;part<2;part++){
-			for(int x=0;x<4;x++){
-				float maxX=(x+1)*0.125F,minX=x*0.125F;
+		for(int part=0; part<2; part++){
+			for(int x=0; x<4; x++){
+				float maxX=(x+1)*0.125F, minX=x*0.125F;
 				if(part==1){
 					maxX+=0.5;
 					minX+=0.5;
 				}
-				for(int y=0;y<4;y++){
-					float maxY=(y+1)*0.25F,minY=y*0.25F;
+				for(int y=0; y<4; y++){
+					float maxY=(y+1)*0.25F, minY=y*0.25F;
 					
 					startList();
 					Renderer.POS_UV.beginQuads();
-					Renderer.POS_UV.addVertex(0, -0.5, -0.5, maxX,maxY);
-					Renderer.POS_UV.addVertex(0,  0.5, -0.5, maxX,minY);
-					Renderer.POS_UV.addVertex(0,  0.5,  0.5, minX,minY);
-					Renderer.POS_UV.addVertex(0, -0.5,  0.5, minX,maxY);
+					Renderer.POS_UV.addVertex(0, -0.5, -0.5, maxX, maxY);
+					Renderer.POS_UV.addVertex(0, 0.5, -0.5, maxX, minY);
+					Renderer.POS_UV.addVertex(0, 0.5, 0.5, minX, minY);
+					Renderer.POS_UV.addVertex(0, -0.5, 0.5, minX, maxY);
 					Renderer.POS_UV.draw();
 					defultModel[part*16+x*4+y]=endList();
 				}
@@ -119,20 +115,23 @@ public class ParticleMistyEnergyFactory extends ParticleFactory{
 		public void onCollided(Vec3i direction){
 			super.onCollided(direction);
 		}
-	
+		
 		@Override
 		public void setUpOpenGl(){
 			transformSimpleParticleColored();
 		}
-	
+		
 		@Override
 		public int getModelId(){
 			float agePrecent=(getParticleAge()+PartialTicksUtil.partialTicks)/20;
 			return defultModel[(int)Math.floor(agePrecent*15)+txtType];
 		}
 		
-		@Override public int[] getModelIds(){return null;}
-		@Override public void renderModel(float xRotation, float zRotation, float yzRotation, float xyRotation, float xzRotation){}
+		@Override
+		public int[] getModelIds(){return null;}
+		
+		@Override
+		public void renderModel(float xRotation, float zRotation, float yzRotation, float xyRotation, float xzRotation){}
 		
 		@Override
 		public ParticleFactory getFactorfy(){

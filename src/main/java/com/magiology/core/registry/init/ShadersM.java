@@ -1,19 +1,25 @@
 package com.magiology.core.registry.init;
 
 import com.magiology.client.shaders.ShaderProgram;
+import com.magiology.client.shaders.programs.InvisibleShader;
+import com.magiology.client.shaders.programs.MatterJumperShader;
+import com.magiology.client.shaders.programs.MultiTransformShader;
+import com.magiology.client.shaders.programs.SepiaShader;
+import com.magiology.core.ConfigM;
+import com.magiology.core.registry.imp.AutoReferencedRegistry;
+import com.magiology.util.statics.UtilM;
+
 //<GEN:	IMPORTS START>
 import com.magiology.client.shaders.programs.InvisibleShader;
 import com.magiology.client.shaders.programs.MatterJumperShader;
 import com.magiology.client.shaders.programs.MultiTransformShader;
 import com.magiology.client.shaders.programs.SepiaShader;
 //<GEN:	IMPORTS END>
-import com.magiology.core.ConfigM;
-import com.magiology.core.registry.imp.AutoReferencedRegistry;
-import com.magiology.util.statics.UtilM;
 
 public class ShadersM extends AutoReferencedRegistry<ShaderProgram>{
 	
 	private static final ShadersM instance=new ShadersM();
+	
 	public static ShadersM get(){return instance;}
 	
 	//<GEN:	REFERENCE START>
@@ -22,7 +28,6 @@ public class ShadersM extends AutoReferencedRegistry<ShaderProgram>{
 	public static MultiTransformShader MULTI_TRANSFORM;
 	public static SepiaShader          SEPIA;
 	//<GEN:	REFERENCE END>
-	
 	
 	private ShadersM(){
 		super(ShaderProgram.class);
@@ -45,12 +50,12 @@ public class ShadersM extends AutoReferencedRegistry<ShaderProgram>{
 	
 	@Override
 	protected String classNameToCutName(String className){
-		if(className.endsWith("Shader"))className=className.substring(0,className.length()-"Shader".length());
+		if(className.endsWith("Shader")) className=className.substring(0, className.length()-"Shader".length());
 		return UtilM.standardizeName(className);
 	}
 	
 	public static void reload(){
-		if(!ConfigM.shadersEnabled())return;
-		for(ShaderProgram shader:get().getDatabase())shader.compile();
+		if(!ConfigM.shadersEnabled()) return;
+		for(ShaderProgram shader : get().getDatabase()) shader.compile();
 	}
 }

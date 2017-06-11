@@ -1,21 +1,18 @@
 package com.magiology.util.objs.animation;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import com.magiology.util.interf.Calculable;
 import com.magiology.util.interf.ObjectReturn;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 public class LinearAnimation<T extends Calculable<T>>{
 	
 	private Point<T>[] points;
 	
 	static class Point<T extends Calculable<T>>{
-		public T value;
+		
+		public T     value;
 		public float pos;
 		
 		public Point(T point, float pos){
@@ -30,10 +27,10 @@ public class LinearAnimation<T extends Calculable<T>>{
 	}
 	
 	public LinearAnimation(Collection<T> data){
-		this(((ObjectReturn<Map<Float, T>>)()->{
-			Map<Float, T> map=new HashMap<>();
+		this(((ObjectReturn<Map<Float,T>>)()->{
+			Map<Float,T> map=new HashMap<>();
 			int i=0;
-			for(T t:data){
+			for(T t : data){
 				float j=i/(data.size()-1F);
 				i++;
 				map.put(j, t);
@@ -42,13 +39,12 @@ public class LinearAnimation<T extends Calculable<T>>{
 		}).process());
 	}
 	
-	public LinearAnimation(Map<Float, T> data){
-		if(data.isEmpty())
-			throw new IllegalStateException("Linear animation can't be empty!");
+	public LinearAnimation(Map<Float,T> data){
+		if(data.isEmpty()) throw new IllegalStateException("Linear animation can't be empty!");
 		
 		List<Point> dataSorted=new ArrayList<Point>();
 		
-		for(Entry<Float, T> pos:data.entrySet()){
+		for(Entry<Float,T> pos : data.entrySet()){
 			boolean added=false;
 			
 			for(int i=0; i<dataSorted.size(); i++){
@@ -58,7 +54,7 @@ public class LinearAnimation<T extends Calculable<T>>{
 					added=true;
 				}
 			}
-			if(!added)dataSorted.add(new Point(pos.getValue(), pos.getKey()));
+			if(!added) dataSorted.add(new Point(pos.getValue(), pos.getKey()));
 		}
 		points=dataSorted.toArray(new Point[dataSorted.size()]);
 	}
@@ -77,12 +73,12 @@ public class LinearAnimation<T extends Calculable<T>>{
 			}
 		}
 		
-		if(start==null)return points[0].value;
+		if(start==null) return points[0].value;
 		
 		float startPos=start.pos, endPos=end.pos;
 		
-		if(pos<startPos)return start.value;
-		if(pos>endPos)return end.value;
+		if(pos<startPos) return start.value;
+		if(pos>endPos) return end.value;
 		
 		float precentageDifference=endPos-startPos, precentageStart=pos-startPos, precentage=precentageStart/precentageDifference;
 		T startValue=start.value;

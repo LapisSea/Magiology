@@ -1,27 +1,30 @@
 package com.magiology.util.objs;
 
+import joptsimple.internal.Objects;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
-import joptsimple.internal.Objects;
-
-public class ArrayList_ModifyHook<E>extends ArrayList<E>{
+public class ArrayList_ModifyHook<E> extends ArrayList<E>{
 	
 	private Runnable hook;
-
+	
 	public ArrayList_ModifyHook(){
 		super();
 		this.hook=()->{};
 	}
+	
 	public ArrayList_ModifyHook(Runnable hook){
 		super();
 		Objects.ensureNotNull(this.hook=hook);
 	}
+	
 	public ArrayList_ModifyHook(Collection<? extends E> c){
 		super(c);
 		this.hook=()->{};
 	}
-	public ArrayList_ModifyHook(Collection<? extends E> c,Runnable hook){
+	
+	public ArrayList_ModifyHook(Collection<? extends E> c, Runnable hook){
 		super(c);
 		Objects.ensureNotNull(this.hook=hook);
 	}
@@ -102,6 +105,7 @@ public class ArrayList_ModifyHook<E>extends ArrayList<E>{
 		}
 		return false;
 	}
+	
 	@Override
 	public E set(int index, E element){
 		E e=super.set(index, element);

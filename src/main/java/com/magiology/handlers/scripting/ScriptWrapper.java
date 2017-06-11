@@ -1,18 +1,17 @@
 package com.magiology.handlers.scripting;
 
+import com.magiology.util.objs.LogBuffer;
+import com.magiology.util.statics.UtilM;
+import jdk.nashorn.api.scripting.AbstractJSObject;
+
 import java.util.Iterator;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import com.magiology.util.objs.LogBuffer;
-import com.magiology.util.statics.UtilM;
-
-import jdk.nashorn.api.scripting.AbstractJSObject;
-
 public class ScriptWrapper{
 	
-	private ScriptLog	log	=new ScriptLog();
-	private LogBuffer	out	=new LogBuffer(s->log.log(false, s)), err=new LogBuffer(s->log.log(true, s));
+	private ScriptLog log=new ScriptLog();
+	private LogBuffer out=new LogBuffer(s->log.log(false, s)), err=new LogBuffer(s->log.log(true, s));
 	
 	public LogBuffer getOut(){
 		return out;
@@ -22,7 +21,7 @@ public class ScriptWrapper{
 		return err;
 	}
 	
-	public void wrapp(BiConsumer<String, Object> put){
+	public void wrapp(BiConsumer<String,Object> put){
 		put.accept("load", (Consumer<String>)this::load);
 		put.accept("print", (Consumer<?>)this::print);
 	}
@@ -33,11 +32,11 @@ public class ScriptWrapper{
 		out=err=null;
 		log.lock();
 	}
-
+	
 	public void print(Object data){
 		String print;
 		
-		if(data instanceof AbstractJSObject)print=jsToString((AbstractJSObject)data);
+		if(data instanceof AbstractJSObject) print=jsToString((AbstractJSObject)data);
 		else print=UtilM.toString(data);
 		
 		log.log(false, print);
@@ -47,16 +46,15 @@ public class ScriptWrapper{
 		StringBuilder s=new StringBuilder();
 		Iterator<Object> iter=obj.values().iterator();
 		
-		if(iter.hasNext())while(true){
+		if(iter.hasNext()) while(true){
 			Object o=iter.next();
 			
 			if(o instanceof AbstractJSObject){
 				AbstractJSObject jso=(AbstractJSObject)o;
 				s.append('[').append(jsToString(jso)).append(']');
-			}
-			else s.append(UtilM.toString(o));
+			}else s.append(UtilM.toString(o));
 			
-			if(iter.hasNext())s.append(", ");
+			if(iter.hasNext()) s.append(", ");
 			else break;
 		}
 		return s.toString();

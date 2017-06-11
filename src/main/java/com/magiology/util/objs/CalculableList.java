@@ -1,10 +1,10 @@
 package com.magiology.util.objs;
 
-import java.util.ArrayList;
-
 import com.magiology.util.interf.Calculable;
 
-public class CalculableList<T extends Calculable<T>>extends ArrayList<T> implements Calculable<CalculableList<T>>{
+import java.util.ArrayList;
+
+public class CalculableList<T extends Calculable<T>> extends ArrayList<T> implements Calculable<CalculableList<T>>{
 	
 	public CalculableList(T[] data){
 		for(int i=0; i<data.length; i++){

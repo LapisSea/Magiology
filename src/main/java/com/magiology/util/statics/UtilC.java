@@ -1,15 +1,7 @@
 package com.magiology.util.statics;
 
-import java.nio.FloatBuffer;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Matrix4f;
-
 import com.magiology.util.objs.vec.Vec2i;
 import com.magiology.util.statics.math.PartialTicksUtil;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
@@ -19,10 +11,14 @@ import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.ArrayUtils;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Matrix4f;
+
+import java.nio.FloatBuffer;
 
 @SideOnly(Side.CLIENT)
 public class UtilC{
@@ -58,7 +54,7 @@ public class UtilC{
 	}
 	
 	public static float fluctuateLinSmooth(double speed, double offset, double min, double max){
-		float fluctuate=fluctuateLin(speed, offset, min, max),prevFluctuate=fluctuateLin(speed, offset-1, min, max);
+		float fluctuate=fluctuateLin(speed, offset, min, max), prevFluctuate=fluctuateLin(speed, offset-1, min, max);
 		return PartialTicksUtil.calculate(prevFluctuate, fluctuate);
 	}
 	
@@ -96,26 +92,25 @@ public class UtilC{
 		int columns=(int)Math.floor(strings.length/(float)lines)+1;
 		String[][] formattedStrings=new String[columns][lines];
 		
-		int[] longestInColumn=new int[columns],columnOffsets=new int[columns];
-		for(int i=0;i<columns;i++){
-			for(int j=0;j<lines;j++){
+		int[] longestInColumn=new int[columns], columnOffsets=new int[columns];
+		for(int i=0; i<columns; i++){
+			for(int j=0; j<lines; j++){
 				int id=i*(columns+1)+j;
 				if(id<strings.length) formattedStrings[i][j]=strings[id];
 			}
 		}
-		for(int i=0;i<formattedStrings.length;i++)
-			while(ArrayUtils.contains(formattedStrings[i], null))
-				formattedStrings[i]=ArrayUtils.removeElement(formattedStrings[i], null);
-		for(int i=0;i<columns;i++)
-			for(int j=0;j<formattedStrings[i].length;j++)
+		for(int i=0; i<formattedStrings.length; i++)
+			while(ArrayUtils.contains(formattedStrings[i], null)) formattedStrings[i]=ArrayUtils.removeElement(formattedStrings[i], null);
+		for(int i=0; i<columns; i++)
+			for(int j=0; j<formattedStrings[i].length; j++)
 				longestInColumn[i]=Math.max(longestInColumn[i], fr.getStringWidth(formattedStrings[i][j]));
-		for(int i=0;i<columns;i++){
+		for(int i=0; i<columns; i++){
 			columnOffsets[i]=marginX;
-			for(int j=0;j<i;j++)
+			for(int j=0; j<i; j++)
 				columnOffsets[i]+=longestInColumn[j]+marginX;
 		}
 		
-		for(int i=0;i<strings.length;i++)
+		for(int i=0; i<strings.length; i++)
 			result[i]=new Vec2i(columnOffsets[i/lines%columns], i%lines*(fr.FONT_HEIGHT+marginY)+marginY);
 		return result;
 	}

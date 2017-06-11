@@ -4,7 +4,6 @@ import com.magiology.client.rendering.highlight.BlockHighlightRenderer;
 import com.magiology.client.rendering.highlight.types.StateDependantBlockHighlightRenderer;
 import com.magiology.util.interf.IntReturn;
 import com.magiology.util.statics.OpenGLM;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -27,23 +26,21 @@ public class StateDependantBlockBounds implements IBlockBounds{
 		@SideOnly(Side.CLIENT)
 		public void setDrawModel(int drawModel){
 			if(this.drawModel==drawModel) return;
-			if(drawModel!=-1)OpenGLM.glDeleteLists(this.drawModel, 1);
+			if(drawModel!=-1) OpenGLM.glDeleteLists(this.drawModel, 1);
 			this.drawModel=drawModel;
 		}
 		
-		public final AxisAlignedBB	box;
-		final boolean				fullCube;
+		public final AxisAlignedBB box;
+		final        boolean       fullCube;
 		
 		public StateBounds(AxisAlignedBB box){
 			this.box=box;
-			fullCube=box.minX==0&&box.maxX==1&&
-					box.minY==0&&box.maxY==1&&
-					box.minZ==0&&box.maxZ==1;
+			fullCube=box.minX==0&&box.maxX==1&&box.minY==0&&box.maxY==1&&box.minZ==0&&box.maxZ==1;
 		}
 		
 		@Override
 		protected void finalize(){
-			if(drawModel!=-1)OpenGLM.glDeleteLists(drawModel, 1);
+			if(drawModel!=-1) OpenGLM.glDeleteLists(drawModel, 1);
 		}
 		
 	}
@@ -51,13 +48,13 @@ public class StateDependantBlockBounds implements IBlockBounds{
 	@SideOnly(Side.CLIENT)
 	public StateDependantBlockHighlightRenderer renderer=new StateDependantBlockHighlightRenderer(this);
 	
-	public final StateBounds[]				boxes;
-	private final IntReturn<IBlockState>	boxPicker;
+	public final  StateBounds[]          boxes;
+	private final IntReturn<IBlockState> boxPicker;
 	
-	public StateDependantBlockBounds(IntReturn<IBlockState> boxPicker, AxisAlignedBB...boxes){
+	public StateDependantBlockBounds(IntReturn<IBlockState> boxPicker, AxisAlignedBB... boxes){
 		this.boxes=new StateBounds[boxes.length];
 		
-		for(int i=0;i<boxes.length;i++){
+		for(int i=0; i<boxes.length; i++){
 			this.boxes[i]=new StateBounds(boxes[i]);
 		}
 		this.boxPicker=boxPicker;

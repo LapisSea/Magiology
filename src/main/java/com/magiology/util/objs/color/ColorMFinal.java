@@ -1,17 +1,16 @@
 package com.magiology.util.objs.color;
 
-import java.awt.Color;
-
 import com.magiology.util.statics.math.MathUtil;
-
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.awt.*;
+
 public final class ColorMFinal implements IColorM{
 	
-	private final float	r, g, b, a;
-	private final int	rInt, gInt, bInt, aInt, hash;
+	private final float r, g, b, a;
+	private final int rInt, gInt, bInt, aInt, hash;
 	
 	public ColorMFinal(){
 		this(1, 1, 1);
@@ -35,10 +34,7 @@ public final class ColorMFinal implements IColorM{
 		bInt=(int)(b*255+0.5F);
 		aInt=(int)(a*255+0.5F);
 		
-		hash=((aInt&0xFF)<<24)|
-				((rInt&0xFF)<<16)|
-				((gInt&0xFF)<<8)|
-				((bInt&0xFF)<<0);
+		hash=((aInt&0xFF)<<24)|((rInt&0xFF)<<16)|((gInt&0xFF)<<8)|((bInt&0xFF)<<0);
 	}
 	
 	@Override
@@ -107,9 +103,6 @@ public final class ColorMFinal implements IColorM{
 	}
 	
 	public boolean equals(IColorM obj){
-		return (obj.r()==r()||obj.rInt()==rInt())&&
-				(obj.g()==g()||obj.gInt()==gInt())&&
-				(obj.b()==b()||obj.bInt()==bInt())&&
-				(obj.a()==a()||obj.aInt()==aInt());
+		return (obj.r()==r()||obj.rInt()==rInt())&&(obj.g()==g()||obj.gInt()==gInt())&&(obj.b()==b()||obj.bInt()==bInt())&&(obj.a()==a()||obj.aInt()==aInt());
 	}
 }

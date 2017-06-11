@@ -1,11 +1,10 @@
 package com.magiology.util.statics;
 
-import java.io.File;
-import java.io.IOException;
-
+import com.magiology.util.objs.animation.AnimationM;
 import org.apache.commons.io.FileUtils;
 
-import com.magiology.util.objs.animation.AnimationM;
+import java.io.File;
+import java.io.IOException;
 
 public class TestingAnimationM{
 	
@@ -13,15 +12,15 @@ public class TestingAnimationM{
 	private static long lastRead=0;
 	
 	public static AnimationM get(){
-		if(souldRefresh())read();
+		if(souldRefresh()) read();
 		return instance;
 	}
 	
 	private static boolean souldRefresh(){
-		if(instance==null)return true;
+		if(instance==null) return true;
 		long tim=UtilC.getWorldTime();
 		boolean isTime=tim-lastRead>20;
-		if(isTime)lastRead=tim;
+		if(isTime) lastRead=tim;
 		return isTime;
 	}
 	
@@ -32,6 +31,5 @@ public class TestingAnimationM{
 			e.printStackTrace();
 		}
 	}
-	
 	
 }

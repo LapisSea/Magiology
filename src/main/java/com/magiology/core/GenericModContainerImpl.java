@@ -1,33 +1,24 @@
 package com.magiology.core;
 
-import java.io.File;
-import java.net.URL;
-import java.security.cert.Certificate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.lang.model.SourceVersion;
-
+import com.google.common.base.Strings;
 import com.google.common.eventbus.EventBus;
-
 import net.minecraftforge.fml.client.IModGuiFactory;
-import net.minecraftforge.fml.common.FMLLog;
-import net.minecraftforge.fml.common.LoadController;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.MetadataCollection;
-import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.versioning.ArtifactVersion;
 import net.minecraftforge.fml.common.versioning.DefaultArtifactVersion;
 import net.minecraftforge.fml.common.versioning.VersionParser;
 import net.minecraftforge.fml.common.versioning.VersionRange;
 
+import javax.lang.model.SourceVersion;
+import java.io.File;
+import java.net.URL;
+import java.security.cert.Certificate;
+import java.util.*;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
 /**
- * 
+ *
  * This is a generic {@link ModContainer} that can be used by any mod for pretty much anything.
  * <p>
  * You may:<br>
@@ -38,17 +29,19 @@ import net.minecraftforge.fml.common.versioning.VersionRange;
  */
 public abstract class GenericModContainerImpl implements ModContainer{
 	
-	private ArtifactVersion	processedVersion;
-	private int				classVersion;
+	private ArtifactVersion processedVersion;
+	private int             classVersion;
 	
-	protected final List<ArtifactVersion>	dependants			=new ArrayList<>();
-	protected final List<ArtifactVersion>	dependencies		=new ArrayList<>();
-	protected final Set<ArtifactVersion>	requirements		=new HashSet<>();
-	protected final Map<String, String>		customModProperties	=new HashMap<>();
+	protected final List<ArtifactVersion> dependants         =new ArrayList<>();
+	protected final List<ArtifactVersion> dependencies       =new ArrayList<>();
+	protected final Set<ArtifactVersion>  requirements       =new HashSet<>();
+	protected final Map<String,String>    customModProperties=new HashMap<>();
 	
-	private final VersionRange	acceptedMcVersion;
-	private final String		modGuiClassName;
-	private final List<String>	ownedPackages;
+	private final VersionRange acceptedMcVersion;
+	private final String       modGuiClassName;
+	private final List<String> ownedPackages;
+	
+	private static final Pattern PACKAGE_SEPARATOR=Pattern.compile(".");
 	
 	public GenericModContainerImpl(String acceptedMcVersion, Class<IModGuiFactory> modGuiOptional){
 		this(acceptedMcVersion, modGuiOptional, "");
@@ -58,7 +51,7 @@ public abstract class GenericModContainerImpl implements ModContainer{
 		this(acceptedMcVersion, null, new String[0]);
 	}
 	
-	public GenericModContainerImpl(Class<IModGuiFactory> modGuiOptional, String...ownedPackages){
+	public GenericModContainerImpl(Class<IModGuiFactory> modGuiOptional, String... ownedPackages){
 		this(null, modGuiOptional, ownedPackages);
 	}
 	
@@ -70,18 +63,18 @@ public abstract class GenericModContainerImpl implements ModContainer{
 		this(null, null, new String[0]);
 	}
 	
-	public GenericModContainerImpl(String acceptedMcVersion, Class<IModGuiFactory> modGui, String...ownedPackages){
+	public GenericModContainerImpl(String acceptedMcVersion, Class<IModGuiFactory> modGui, String... ownedPackages){
 		this.acceptedMcVersion=acceptedMcVersion==null?Loader.instance().getMinecraftModContainer().getStaticVersionRange():VersionParser.parseRange(acceptedMcVersion);
 		modGuiClassName=modGui==null?null:modGui.getName();
-		this.ownedPackages=Arrays.asList(ownedPackages);
-		this.ownedPackages.removeIf(pack->{
-			if(pack==null) return true;
-			if(pack.isEmpty()) return true;
-			
-			boolean valid=SourceVersion.isIdentifier(pack)&&Arrays.asList(pack.split(".")).stream().noneMatch(SourceVersion::isKeyword);
-			if(!valid) FMLLog.severe("Package \""+pack+" by "+this+" is not valid! It will be ignored.");
-			return valid;
-		});
+		
+		this.ownedPackages=Arrays.stream(ownedPackages).filter(this::filter).collect(Collectors.toList());
+	}
+	
+	private boolean filter(String pack){
+		if(!Strings.isNullOrEmpty(pack)&&SourceVersion.isIdentifier(pack)&&Arrays.stream(PACKAGE_SEPARATOR.split(pack)).noneMatch(SourceVersion::isKeyword)) return true;
+		FMLLog.severe("Package \""+pack+" by "+this+" is not valid! It will be ignored.");
+		return false;
+		
 	}
 	
 	@Override
@@ -167,7 +160,7 @@ public abstract class GenericModContainerImpl implements ModContainer{
 	}
 	
 	@Override
-	public Map<String, String> getCustomModProperties(){
+	public Map<String,String> getCustomModProperties(){
 		return customModProperties;
 	}
 	
@@ -177,7 +170,7 @@ public abstract class GenericModContainerImpl implements ModContainer{
 	}
 	
 	@Override
-	public Map<String, String> getSharedModDescriptor(){
+	public Map<String,String> getSharedModDescriptor(){
 		return null;
 	}
 	

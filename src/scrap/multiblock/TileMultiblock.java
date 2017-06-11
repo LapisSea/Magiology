@@ -1,22 +1,17 @@
 package com.magiology.mc_objects.tile.multiblock;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-
 import com.magiology.forge.networking.UpdateTileNBTPacket;
 import com.magiology.util.interf.IBlockBreakListener;
 import com.magiology.util.m_extensions.BlockPosM;
 import com.magiology.util.m_extensions.TileEntityMTickable;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public abstract class TileMultiblock<T extends TileMultiblock<T, MultiblockDataType>, MultiblockDataType extends MultiblockData<T>>extends TileEntityMTickable implements IBlockBreakListener{
+import java.util.*;
+
+public abstract class TileMultiblock<T extends TileMultiblock<T,MultiblockDataType>, MultiblockDataType extends MultiblockData<T>> extends TileEntityMTickable implements IBlockBreakListener{
 	
 	public static enum MultiblockState{
 		/**
@@ -45,12 +40,12 @@ public abstract class TileMultiblock<T extends TileMultiblock<T, MultiblockDataT
 	
 	public static final String BRAIN_CATEGORY="br", MULTIBLOCK_CATEGORY="mb", POSITIONS_MARKER="pos", NAME_MARKER="name";
 	
-	private T				brain	=null;
-	private MultiblockState	state	=MultiblockState.UNKNOW;
+	private T               brain=null;
+	private MultiblockState state=MultiblockState.UNKNOW;
 	
-	private final Map<String, LinkCategory>	categories	=new HashMap();
-	private boolean							linksDirty;
-	private MultiblockDataType				multiblock	=null;
+	private final Map<String,LinkCategory> categories=new HashMap();
+	private boolean linksDirty;
+	private MultiblockDataType multiblock=null;
 	
 	//"links":{"name1":{144141721,562547247,2457,245725472457,24745},"name2":...}
 	@Override
@@ -58,7 +53,7 @@ public abstract class TileMultiblock<T extends TileMultiblock<T, MultiblockDataT
 		super.readFromNBT(compound);
 		NBTTagCompound links=compound.getCompoundTag("links");
 		categories.clear();
-		links.getKeySet().forEach(k->categories.put(k, new LinkCategory(this, k, links.getCompoundTag(k))));
+		links.getKeySet().forEach(k -> categories.put(k, new LinkCategory(this, k, links.getCompoundTag(k))));
 	}
 	
 	@Override
@@ -75,7 +70,7 @@ public abstract class TileMultiblock<T extends TileMultiblock<T, MultiblockDataT
 	public NBTTagCompound writeToNBT(NBTTagCompound compound){
 		updateLinks();
 		NBTTagCompound links=new NBTTagCompound();
-		categories.forEach((name, cat)->cat.writeTo(links));
+		categories.forEach((name, cat) -> cat.writeTo(links));
 		compound.setTag("links", links);
 		super.writeToNBT(compound);
 		
@@ -95,12 +90,12 @@ public abstract class TileMultiblock<T extends TileMultiblock<T, MultiblockDataT
 	@Override
 	public void onBroken(World world, BlockPos pos, IBlockState state){
 		HashSet<BlockPosM> notify=new HashSet<>();
-		categories.values().forEach(cat->cat.forEach(l->notify.add(l.getSrcPos())));
-		notify.forEach(p->p.getTile(world, TileMultiblock.class, mb->mb.posWentBad(p)));
+		categories.values().forEach(cat -> cat.forEach(l -> notify.add(l.getSrcPos())));
+		notify.forEach(p -> p.getTile(world, TileMultiblock.class, mb -> mb.posWentBad(p)));
 	}
 	
 	public void posWentBad(BlockPos pos){
-		categories.values().forEach(cat->cat.posWentBad(pos));
+		categories.values().forEach(cat -> cat.posWentBad(pos));
 	}
 	
 	public LinkCategory getCategory(String name){
@@ -113,11 +108,11 @@ public abstract class TileMultiblock<T extends TileMultiblock<T, MultiblockDataT
 		
 		List<Link> toRemove=new ArrayList<>();
 		
-		categories.values().forEach(cat->{
+		categories.values().forEach(cat -> {
 			
 			boolean change=false, allLoad=true;
 			
-			for(Link link:cat){
+			for(Link link : cat){
 				if(!link.getStatus().loaded) allLoad=false;
 				
 				boolean lastLoad=link.getPrevStatus().loaded;

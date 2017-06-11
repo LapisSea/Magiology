@@ -1,12 +1,6 @@
 package com.magiology.util.objs;
 
-import java.util.UUID;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.LongConsumer;
-
 import com.magiology.util.m_extensions.BlockPosM;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,6 +8,10 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagLong;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+
+import java.util.UUID;
+import java.util.function.BiConsumer;
+import java.util.function.LongConsumer;
 
 public class NBTUtil{
 	
@@ -70,7 +68,7 @@ public class NBTUtil{
 		int NumberOfSlots=stacks.length;
 		NBTTagList list=NBTTC.getTagList(baseName+"Slots", 10);
 		stacks=new ItemStack[NumberOfSlots];
-		for(int i=0;i<list.tagCount();i++){
+		for(int i=0; i<list.tagCount(); i++){
 			NBTTagCompound item=list.getCompoundTagAt(i);
 			byte b=item.getByte(baseName);
 			if(b>=0&&b<stacks.length){
@@ -86,7 +84,7 @@ public class NBTUtil{
 	
 	public static void saveItemsToNBT(NBTTagCompound NBTTC, String baseName, ItemStack[] stacks){
 		NBTTagList list=new NBTTagList();
-		for(int i=0;i<stacks.length;i++){
+		for(int i=0; i<stacks.length; i++){
 			if(stacks[i]!=null){
 				NBTTagCompound item=new NBTTagCompound();
 				item.setByte(baseName, (byte)i);
@@ -130,7 +128,7 @@ public class NBTUtil{
 	}
 	
 	public static void setUUID(ItemStack stack, String key, UUID keyValue){
-		NBTTagCompound nbt=createNBT(stack),wrap=new NBTTagCompound();
+		NBTTagCompound nbt=createNBT(stack), wrap=new NBTTagCompound();
 		wrap.setLong("0", keyValue.getMostSignificantBits());
 		wrap.setLong("1", keyValue.getLeastSignificantBits());
 		nbt.setTag(key, wrap);
@@ -189,6 +187,7 @@ public class NBTUtil{
 			}
 		});
 	}
+	
 	public static void iterateL(NBTTagCompound nbt, BiConsumer<String,Long> consumer){
 		nbt.getKeySet().forEach(key->{
 			NBTBase base=nbt.getTag(key);
@@ -198,12 +197,17 @@ public class NBTUtil{
 		});
 	}
 	
-	public static <T extends NBTBase> void iterate(NBTTagCompound nbt,Class<T> type, BiConsumer<String,T> consumer){
+	public static <T extends NBTBase> void iterate(NBTTagCompound nbt, Class<T> type, BiConsumer<String,T> consumer){
 		nbt.getKeySet().forEach(key->{
 			NBTBase base=nbt.getTag(key);
 			try{
 				consumer.accept(key, (T)base);
-			}catch(ClassCastException e){}
+			}catch(ClassCastException e){
+			}
 		});
+	}
+	
+	public static void iterate(NBTTagCompound nbt, BiConsumer<String,NBTBase> consumer){
+		nbt.getKeySet().forEach(key->consumer.accept(key, nbt.getTag(key)));
 	}
 }

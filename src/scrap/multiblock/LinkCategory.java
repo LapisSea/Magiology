@@ -1,28 +1,27 @@
 package com.magiology.mc_objects.tile.multiblock;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.function.Predicate;
-
 import com.magiology.util.m_extensions.BlockPosM;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.function.Predicate;
+
 public class LinkCategory extends ArrayList<Link>{
 	
-	public final String				name;
-	public Runnable					onAllLoad					=()->{};
-	public Runnable					onChange					=()->{};
-	protected int					prevHash					=hashCode();
-	public boolean					removeLinkWhenLoadedAndlost	=true,allLoad,prevAllLoad;
+	public final String name;
+	public    Runnable onAllLoad=() -> {};
+	public    Runnable onChange =() -> {};
+	protected int      prevHash =hashCode();
+	public boolean removeLinkWhenLoadedAndlost=true, allLoad, prevAllLoad;
 	
-	private final TileMultiblock	parent;
+	private final TileMultiblock parent;
 	
 	public LinkCategory(TileMultiblock parent, String name, NBTTagCompound positions){
 		this(parent, name);
-		positions.getKeySet().forEach(k->add(new Link(parent.getPos(), new BlockPosM(positions.getLong(k)))));
+		positions.getKeySet().forEach(k -> add(new Link(parent.getPos(), new BlockPosM(positions.getLong(k)))));
 	}
 	
 	public LinkCategory(TileMultiblock parent, String name){
@@ -33,7 +32,7 @@ public class LinkCategory extends ArrayList<Link>{
 	
 	public void writeTo(NBTTagCompound nbt){
 		NBTTagCompound positions=new NBTTagCompound();
-		forEach(link->positions.setLong(String.valueOf(positions.getSize()), link.getPoint().toLong()));
+		forEach(link -> positions.setLong(String.valueOf(positions.getSize()), link.getPoint().toLong()));
 		nbt.setTag(name, positions);
 	}
 	
@@ -90,20 +89,20 @@ public class LinkCategory extends ArrayList<Link>{
 	}
 	
 	public Link get(Vec3i pos){
-		return stream().filter(l->l.getPoint().equals(pos)).findFirst().orElse(null);
+		return stream().filter(l -> l.getPoint().equals(pos)).findFirst().orElse(null);
 	}
 	
 	public void posWentBad(BlockPos pos){
-		stream().filter(l->l.getPoint().equals(pos)).forEach(l->l.setStatus(LinkStatus.UNLOADED));
+		stream().filter(l -> l.getPoint().equals(pos)).forEach(l -> l.setStatus(LinkStatus.UNLOADED));
 	}
+
 	public void handshake(Link link){
-		if(parent.isNbtLoaded());//TODO
+		if(parent.isNbtLoaded()) ;//TODO
 		
 		Link found=get(link.getSrcPos());
 		if(found==null){
 			link.setStatus(LinkStatus.UNLOADED);
-		}
-		else{
+		}else {
 			found.setStatus(LinkStatus.LOADED);
 			link.setStatus(LinkStatus.LOADED);
 		}

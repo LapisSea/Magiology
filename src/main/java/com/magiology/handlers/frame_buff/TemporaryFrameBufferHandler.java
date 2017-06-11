@@ -1,33 +1,34 @@
 package com.magiology.handlers.frame_buff;
 
+import com.magiology.util.statics.LogUtil;
+import com.magiology.util.statics.OpenGLM;
+import com.magiology.util.statics.UtilC;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
+
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-import com.magiology.util.statics.LogUtil;
-import com.magiology.util.statics.OpenGLM;
-import com.magiology.util.statics.UtilC;
-
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
-
 public class TemporaryFrameBufferHandler{
 	
 	public static final TemporaryFrameBufferHandler instance=new TemporaryFrameBufferHandler();
+	
 	private TemporaryFrameBufferHandler(){}
-
+	
 	private final List<TemporaryFrame> renderQueue=new ArrayList<>();
 	
-	private int bufferSizeRedFlag=12,periodicChecksSize=30;
+	private int bufferSizeRedFlag=12, periodicChecksSize=30;
 	
 	final List<TemporaryFrame> allBuffers=new ArrayList<TemporaryFrame>(){
+		
 		@Override
 		public boolean add(TemporaryFrame obj){
-			if(size()>=bufferSizeRedFlag||true)bufferGC();
+			if(size()>=bufferSizeRedFlag||true) bufferGC();
 			return super.add(obj);
 		}
-	},trashBank=new ArrayList();
+	}, trashBank                         =new ArrayList();
 	
 	public void bufferGC(){
 		long time=System.currentTimeMillis();
@@ -36,15 +37,15 @@ public class TemporaryFrameBufferHandler{
 			if(f.lastTimeUsed+14000<time){
 				unused.add(f);
 				f.dirty=true;
-				LogUtil.println("Deleted InWorldFrame id=",f.frameBuffer.framebufferObject);
+				LogUtil.println("Deleted InWorldFrame id=", f.frameBuffer.framebufferObject);
 				f.frameBuffer.deleteFramebuffer();
 			}
 		});
 		int siz=allBuffers.size();
 		allBuffers.removeAll(unused);
 		if(allBuffers.size()!=siz){
-			LogUtil.println("Old InWorldFrame list size:",siz);
-			LogUtil.println("New InWorldFrame list size:",allBuffers.size());
+			LogUtil.println("Old InWorldFrame list size:", siz);
+			LogUtil.println("New InWorldFrame list size:", allBuffers.size());
 		}
 	}
 	
@@ -52,19 +53,19 @@ public class TemporaryFrameBufferHandler{
 		renderQueue.add(frame);
 	}
 	
-	
 	public void renderFrames(){
-		if(renderQueue.isEmpty())return;
+		if(renderQueue.isEmpty()) return;
 		
 		OpenGLM.pushMatrix();
-
+		
 		OpenGLM.disableLighting();
 		try{
 			synchronized(renderQueue){
 				renderQueue.forEach(TemporaryFrame::render);
 				renderQueue.clear();
 			}
-		}catch(Exception e){}
+		}catch(Exception e){
+		}
 		
 		UtilC.getMC().getFramebuffer().bindFramebuffer(true);
 		ScaledResolution scaledresolution=new ScaledResolution(UtilC.getMC());

@@ -1,13 +1,8 @@
 package com.magiology.util.statics;
 
-import static org.lwjgl.opengl.GL11.*;
-
-import org.lwjgl.opengl.GL11;
-
 import com.magiology.util.objs.color.ColorM;
 import com.magiology.util.objs.vec.IVec3M;
 import com.magiology.util.objs.vec.Vec3M;
-
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
@@ -15,6 +10,10 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
+
+import static org.lwjgl.opengl.GL11.*;
 
 /**
  * Short for OpenGL Magiology
@@ -22,8 +21,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class OpenGLM extends GlStateManager{
 	
-	public static final String GL_VERSION=GL11.glGetString(GL11.GL_VERSION);
-	public static final boolean GL_IS_30=Character.getNumericValue(GL_VERSION.charAt(0))>=3;
+	public static final String  GL_VERSION=GL11.glGetString(GL11.GL_VERSION);
+	public static final boolean GL_IS_30  =Character.getNumericValue(GL_VERSION.charAt(0))>=3;
 	
 	public static enum BlendFunc{
 		
@@ -33,7 +32,7 @@ public class OpenGLM extends GlStateManager{
 		INVERT(SourceFactor.ONE_MINUS_DST_COLOR, DestFactor.ZERO);
 		
 		private final SourceFactor sfactor;
-		private final DestFactor dfactor;
+		private final DestFactor   dfactor;
 		
 		private BlendFunc(SourceFactor sfactor, DestFactor dfactor){
 			this.sfactor=sfactor;
@@ -52,7 +51,7 @@ public class OpenGLM extends GlStateManager{
 		LESS_THAN_256(GL_LESS, 0.99F),
 		NORMAL(GL_GREATER, 0.1F);
 		
-		private final int func;
+		private final int   func;
 		private final float ref;
 		
 		private AlphaFunc(int func, float ref){
@@ -126,11 +125,11 @@ public class OpenGLM extends GlStateManager{
 	}
 	
 	public static void rotate(IVec3M rot){
-		if(rot.x()!=0)rotateX(rot.x());
-		if(rot.y()!=0)rotateY(rot.y());
-		if(rot.z()!=0)rotateZ(rot.z());
+		if(rot.x()!=0) rotateX(rot.x());
+		if(rot.y()!=0) rotateY(rot.y());
+		if(rot.z()!=0) rotateZ(rot.z());
 	}
-
+	
 	public static void rotateX(double x){
 		rotate(x, 1, 0, 0);
 	}
@@ -154,7 +153,7 @@ public class OpenGLM extends GlStateManager{
 	public static void rotateZ(float z){
 		rotate(z, 0, 0, 1);
 	}
-
+	
 	public static void rotateXY(double x, double y){
 		rotateX(x);
 		rotateY(y);
@@ -184,23 +183,25 @@ public class OpenGLM extends GlStateManager{
 		rotateZ(z);
 		rotateY(y);
 	}
-
+	
 	public static void rotateXYZ(double x, double y, double z){
 		rotateX(x);
 		rotateY(y);
 		rotateZ(z);
 	}
+	
 	public static void rotateZYX(double z, double y, double x){
 		rotateZ(z);
 		rotateY(y);
 		rotateX(x);
 	}
+	
 	public static void rotateXZY(double x, double z, double y){
 		rotateX(x);
 		rotateZ(z);
 		rotateY(y);
 	}
-
+	
 	public static void rotateXY(float x, float y){
 		rotateX(x);
 		rotateY(y);
@@ -230,17 +231,19 @@ public class OpenGLM extends GlStateManager{
 		rotateZ(z);
 		rotateY(y);
 	}
-
+	
 	public static void rotateXYZ(float x, float y, float z){
 		rotateX(x);
 		rotateY(y);
 		rotateZ(z);
 	}
+	
 	public static void rotateZYX(float z, float y, float x){
 		rotateZ(z);
 		rotateY(y);
 		rotateX(x);
 	}
+	
 	public static void rotateXZY(float x, float z, float y){
 		rotateX(x);
 		rotateZ(z);
@@ -262,6 +265,39 @@ public class OpenGLM extends GlStateManager{
 	public static void bindTexture(ResourceLocation texture){
 		UtilC.getMC().renderEngine.bindTexture(texture);
 	}
-
+	
+	public static void checkError(){
+		int err=GL11.glGetError();
+		if(err!=0){
+			String errName;
+			switch(err){
+			case GL11.GL_INVALID_ENUM:
+				errName="GL_INVALID_ENUM";
+				break;
+			case GL11.GL_INVALID_VALUE:
+				errName="GL_INVALID_VALUE";
+				break;
+			case GL11.GL_INVALID_OPERATION:
+				errName="GL_INVALID_OPERATION";
+				break;
+			case GL11.GL_STACK_OVERFLOW:
+				errName="GL_STACK_OVERFLOW";
+				break;
+			case GL11.GL_STACK_UNDERFLOW:
+				errName="GL_STACK_UNDERFLOW";
+				break;
+			case GL11.GL_OUT_OF_MEMORY:
+				errName="GL_OUT_OF_MEMORY";
+				break;
+			case GL30.GL_INVALID_FRAMEBUFFER_OPERATION:
+				errName="GL_INVALID_FRAMEBUFFER_OPERATION";
+				break;
+			
+			default:
+				errName="UNKNOW_ERROR: "+err;
+			}
+			LogUtil.printStackTrace("OpenGL error: "+errName);
+		}
+	}
 	
 }

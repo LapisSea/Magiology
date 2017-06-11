@@ -1,17 +1,15 @@
 package com.magiology.util.objs.vec;
 
-import java.nio.FloatBuffer;
-
-import org.lwjgl.util.vector.Vector3f;
-
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
+import org.lwjgl.util.vector.Vector3f;
+
+import java.nio.FloatBuffer;
 
 public class Vec3MRead implements IVec3M<Vec3MRead>{
 	
-	protected double x,y,z;
+	protected double x, y, z;
 	
 	public Vec3MRead(double x, double y, double z){
 		this.x=x;
@@ -72,7 +70,7 @@ public class Vec3MRead implements IVec3M<Vec3MRead>{
 	public Vec3MRead(RayTraceResult h){
 		this(h.hitVec);
 	}
-
+	
 	public Vec3MRead load(FloatBuffer buf){
 		x=buf.get();
 		y=buf.get();

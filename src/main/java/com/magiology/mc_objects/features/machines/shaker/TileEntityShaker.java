@@ -1,16 +1,14 @@
 package com.magiology.mc_objects.features.machines.shaker;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.magiology.util.m_extensions.TileEntityMTickable;
-import com.magiology.util.statics.UtilM;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TileEntityShaker extends TileEntityMTickable implements IInventory{
 	
@@ -24,13 +22,13 @@ public class TileEntityShaker extends TileEntityMTickable implements IInventory{
 	@Override
 	public void readFromNBT(NBTTagCompound compound){
 		super.readFromNBT(compound);
-//		stacks=UtilM.readStacksFromNBT(compound, "Inv");
+		//		stacks=UtilM.readStacksFromNBT(compound, "Inv");
 	}
 	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound){
 		
-//		UtilM.writeStacksToNBT(stacks, compound, "Inv");
+		//		UtilM.writeStacksToNBT(stacks, compound, "Inv");
 		return super.writeToNBT(compound);
 	}
 	
@@ -73,9 +71,9 @@ public class TileEntityShaker extends TileEntityMTickable implements IInventory{
 	
 	@Override
 	public void setInventorySlotContents(int index, ItemStack stack){
-//		stacks[index]=stack;
+		//		stacks[index]=stack;
 		if(stack!=null&&stack.getCount()>this.getInventoryStackLimit()){
-//			stack.stackSize=this.getInventoryStackLimit();
+			//			stack.stackSize=this.getInventoryStackLimit();
 		}
 		this.markDirty();
 	}
@@ -84,6 +82,7 @@ public class TileEntityShaker extends TileEntityMTickable implements IInventory{
 	public int getInventoryStackLimit(){
 		return 64;
 	}
+	
 	@Override
 	public boolean isUsableByPlayer(EntityPlayer player){
 		return isInWorld()&&player.getDistanceSq(x()+0.5, y()+0.5, z()+0.5)<=64;
@@ -115,7 +114,7 @@ public class TileEntityShaker extends TileEntityMTickable implements IInventory{
 	
 	@Override
 	public void clear(){}
-
+	
 	@Override
 	public boolean isEmpty(){
 		return false;

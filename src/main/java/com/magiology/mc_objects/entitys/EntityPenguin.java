@@ -1,8 +1,5 @@
 package com.magiology.mc_objects.entitys;
 
-import javax.annotation.Nullable;
-import javax.vecmath.Vector2d;
-
 import com.magiology.mc_objects.entitys.ai.EntityAIWatchClosestM;
 import com.magiology.mc_objects.items.ItemJetpack;
 import com.magiology.util.m_extensions.BlockPosM;
@@ -14,7 +11,6 @@ import com.magiology.util.objs.data_parameter_wappers.DataParamFloat;
 import com.magiology.util.objs.vec.Vec2FM;
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.UtilM;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -36,33 +32,47 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+import javax.vecmath.Vector2d;
+
 public class EntityPenguin extends EntityAgeableM{
 	
-	
-	protected static final DataParamBoolean IS_LYING_DOWN=new DataParamBoolean(EntityPenguin.class);
-	protected static final DataParamEnum<Moods, Entity> MOOD=new DataParamEnum(EntityPenguin.class, Moods.NEUTRAL);
-	protected static final DataParamFloat STAMINA=new DataParamFloat(EntityPenguin.class);
-	protected static final DataParamBlockPos AI_TARGET=new DataParamBlockPos(EntityPenguin.class);
+	protected static final DataParamBoolean            IS_LYING_DOWN=new DataParamBoolean(EntityPenguin.class);
+	protected static final DataParamEnum<Moods,Entity> MOOD         =new DataParamEnum(EntityPenguin.class, Moods.NEUTRAL);
+	protected static final DataParamFloat              STAMINA      =new DataParamFloat(EntityPenguin.class);
+	protected static final DataParamBlockPos           AI_TARGET    =new DataParamBlockPos(EntityPenguin.class);
 	
 	public static enum BehaviorPolicies{
 		NOTHING,
-		ATTACK_ON_APPROACH, //attacks if target walks in to range
+		ATTACK_ON_APPROACH,
+		//attacks if target walks in to range
 		ATTACK_ON_SIGHT,
 		WILL_WORK_ALWAYS
 	}
 	
 	public static enum Moods{
-		NEUTRAL(true, false, true, BehaviorPolicies.NOTHING), //when nothing special is happening
-		HAPPY(true, false, true, BehaviorPolicies.NOTHING), //when a player gives food or if job done
-		SAD(true, false, true, BehaviorPolicies.NOTHING), //if job failed to be executed or if an accident occurs
-		SCARED(true, true, true, BehaviorPolicies.NOTHING), //when a penguin is hurt
-		SCARED2(false, true, true, BehaviorPolicies.ATTACK_ON_APPROACH), //when a mate is killed
-		IN_LOVE(false, false, true, BehaviorPolicies.NOTHING), //sexy time ;)
-		ANGRY(false, false, true, BehaviorPolicies.ATTACK_ON_SIGHT), //after a period of time of being SCARED2 (refuses to work for player unless given a gift)
-		LONELY(true, false, true, BehaviorPolicies.NOTHING), //when there is no mates around
-		CHEERFUL(false, false, false, BehaviorPolicies.NOTHING), //when a big project is successfully executed
-		ENERGETIC(false, false, true, BehaviorPolicies.NOTHING), //when not adult (Grandma: damn kinds wont shut up!)
-		PROTECTFUL(false, false, false, BehaviorPolicies.ATTACK_ON_APPROACH), //when a female is protecting eggs
+		NEUTRAL(true, false, true, BehaviorPolicies.NOTHING),
+		//when nothing special is happening
+		HAPPY(true, false, true, BehaviorPolicies.NOTHING),
+		//when a player gives food or if job done
+		SAD(true, false, true, BehaviorPolicies.NOTHING),
+		//if job failed to be executed or if an accident occurs
+		SCARED(true, true, true, BehaviorPolicies.NOTHING),
+		//when a penguin is hurt
+		SCARED2(false, true, true, BehaviorPolicies.ATTACK_ON_APPROACH),
+		//when a mate is killed
+		IN_LOVE(false, false, true, BehaviorPolicies.NOTHING),
+		//sexy time ;)
+		ANGRY(false, false, true, BehaviorPolicies.ATTACK_ON_SIGHT),
+		//after a period of time of being SCARED2 (refuses to work for player unless given a gift)
+		LONELY(true, false, true, BehaviorPolicies.NOTHING),
+		//when there is no mates around
+		CHEERFUL(false, false, false, BehaviorPolicies.NOTHING),
+		//when a big project is successfully executed
+		ENERGETIC(false, false, true, BehaviorPolicies.NOTHING),
+		//when not adult (Grandma: damn kinds wont shut up!)
+		PROTECTFUL(false, false, false, BehaviorPolicies.ATTACK_ON_APPROACH),
+		//when a female is protecting eggs
 		RESPECTFUL(true, false, true, BehaviorPolicies.NOTHING);//when passing by the player owner or king penguin
 		
 		public final boolean runsAway, canMove, willingToWork;
@@ -76,8 +86,8 @@ public class EntityPenguin extends EntityAgeableM{
 		}
 	}
 	
-	protected float baseSpeed=0.15F;
-	protected int lyingDownStabiliser=0;
+	protected float baseSpeed          =0.15F;
+	protected int   lyingDownStabiliser=0;
 	protected EntityAIWatchClosestM watcher;
 	
 	public EntityPenguin(World worldIn){
@@ -85,7 +95,7 @@ public class EntityPenguin extends EntityAgeableM{
 		IS_LYING_DOWN.register(this, false);
 		MOOD.register(this, Moods.NEUTRAL);
 		STAMINA.register(this, 1);
-		AI_TARGET.register(this, new BlockPos(0,-1,0));
+		AI_TARGET.register(this, new BlockPos(0, -1, 0));
 		setAISpeed(0.3);
 		setSize(10/16F, 14/16F);
 	}
@@ -104,9 +114,8 @@ public class EntityPenguin extends EntityAgeableM{
 	
 	public class Animator{
 		
-		
 		public Vec3M armTipLeft, armTipRight;//Just a tiiip!
-		public float slidingTransition, prevSlidingTransition, swimmingMul, prevSwimmingMul,swimRot,prevSwimRot;
+		public float slidingTransition, prevSlidingTransition, swimmingMul, prevSwimmingMul, swimRot, prevSwimRot;
 		public Vec2FM armRotLeft1=new Vec2FM(), armRotLeft2=new Vec2FM(), armRotRight1=new Vec2FM(), armRotRight2=new Vec2FM();
 		
 		private void update(){
@@ -117,7 +126,7 @@ public class EntityPenguin extends EntityAgeableM{
 			prevSwimRot=swimRot;
 			slidingTransition=UtilM.graduallyEqualize(slidingTransition, getIsLyingDown()?1:0, 0.2F);
 			swimmingMul=UtilM.graduallyEqualize(slidingTransition, isInWater()?1:0, 0.2F);
-			swimRot=UtilM.exponentiallyEqualize(swimRot, -(float)Math.toDegrees(Math.atan2(getActualMotionY(), new Vector2d(getActualMotionX(),getActualMotionZ()).length())), 20);
+			swimRot=UtilM.exponentiallyEqualize(swimRot, -(float)Math.toDegrees(Math.atan2(getActualMotionY(), new Vector2d(getActualMotionX(), getActualMotionZ()).length())), 20);
 		}
 		
 		public Vec3M getArmTipLeft(){
@@ -138,9 +147,10 @@ public class EntityPenguin extends EntityAgeableM{
 		STAMINA.set(this, compound.getFloat("Stamina"));
 		MOOD.set(this, compound.getByte("Mood"));
 		int[] pos=compound.getIntArray("aiTarg");
-		if(pos.length==0)AI_TARGET.set(this, new BlockPos(0,0,0));
+		if(pos.length==0) AI_TARGET.set(this, new BlockPos(0, 0, 0));
 		else AI_TARGET.set(this, new BlockPosM(pos));
 	}
+	
 	@Override
 	public void writeEntityToNBT(NBTTagCompound compound){
 		super.writeEntityToNBT(compound);
@@ -148,23 +158,21 @@ public class EntityPenguin extends EntityAgeableM{
 		compound.setFloat("Stamina", STAMINA.get(this));
 		compound.setByte("Mood", MOOD.get(this));
 		BlockPos pos=AI_TARGET.get(this);
-		compound.setIntArray("aiTarg", new int[]{pos.getX(),pos.getY(),pos.getZ()});
+		compound.setIntArray("aiTarg", new int[]{pos.getX(), pos.getY(), pos.getZ()});
 	}
 	
 	@Override
 	public void onEntityUpdate(){
-		if(isRemote())animator.update();
+		if(isRemote()) animator.update();
 		super.onEntityUpdate();
-		
-		
 		
 		if(server()){
 			EntityPlayer pl=world.getClosestPlayer(posX, posY, posZ, 20, false);
 			if(pl!=null){
 				setItemStackToSlot(EntityEquipmentSlot.MAINHAND, pl.getHeldItemMainhand());
 			}
-			if(navigator!=null&&navigator.getPath()!=null)AI_TARGET.set(this, new BlockPos(navigator.getPath().getFinalPathPoint().xCoord,navigator.getPath().getFinalPathPoint().yCoord,navigator.getPath().getFinalPathPoint().zCoord));
-			else AI_TARGET.set(this, new BlockPos(0,-1,0));
+			if(navigator!=null&&navigator.getPath()!=null) AI_TARGET.set(this, new BlockPos(navigator.getPath().getFinalPathPoint().xCoord, navigator.getPath().getFinalPathPoint().yCoord, navigator.getPath().getFinalPathPoint().zCoord));
+			else AI_TARGET.set(this, new BlockPos(0, -1, 0));
 			
 			BlockPos pos=this.getPosition();
 			//Biome biome=worldObj.provider.getBiomeForCoords(pos);
@@ -203,7 +211,6 @@ public class EntityPenguin extends EntityAgeableM{
 		int i=EnchantmentHelper.getRespirationModifier(this);
 		return i>0&&rand.nextInt((i+1)*4)>0?air:air-1;
 	}
-	
 	
 	@Override
 	public boolean canBreatheUnderwater(){

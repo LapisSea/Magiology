@@ -2,7 +2,6 @@ package com.magiology.util.interf;
 
 import com.magiology.util.m_extensions.BlockPosM;
 import com.magiology.util.objs.vec.IVec3M;
-
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 

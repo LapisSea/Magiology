@@ -1,7 +1,6 @@
 package com.magiology.forge.networking;
 
 import com.magiology.core.Magiology;
-
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;

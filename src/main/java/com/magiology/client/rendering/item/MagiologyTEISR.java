@@ -1,16 +1,15 @@
 package com.magiology.client.rendering.item;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemStack;
+import org.lwjgl.opengl.GL11;
 
 public class MagiologyTEISR extends TileEntityItemStackRenderer{
 	
 	private static boolean isWrapped=false;
 	
 	public static void wrapp(){
-		if(isWrapped)return;
+		if(isWrapped) return;
 		isWrapped=true;
 		TileEntityItemStackRenderer.instance=new MagiologyTEISR(TileEntityItemStackRenderer.instance);
 	}
@@ -28,7 +27,6 @@ public class MagiologyTEISR extends TileEntityItemStackRenderer{
 			GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 			SIRRegistry.renderStack(stack);
 			GL11.glPopAttrib();
-			
 			
 		}else parent.renderByItem(stack);
 	}

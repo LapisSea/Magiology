@@ -1,6 +1,9 @@
 package com.magiology.io;
 
-import static com.magiology.core.MReference.*;
+import com.magiology.core.MReference;
+import com.magiology.core.Magiology;
+import com.magiology.util.statics.UtilM;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,20 +14,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipFile;
 
-import org.apache.commons.io.FileUtils;
-
-import com.magiology.core.MReference;
-import com.magiology.core.Magiology;
-import com.magiology.util.statics.UtilM;
+import static com.magiology.core.MReference.MC_VERSION;
+import static com.magiology.core.MReference.MODID;
 
 public class IOManager{
 	
-	private List<File> files=new ArrayList<>(),folders=new ArrayList<>();
+	private List<File> files=new ArrayList<>(), folders=new ArrayList<>();
 	private List<IODirectory> dirs=new ArrayList<>();
 	
 	public void addFolder(String path){
 		folders.add(new File(path));
 	}
+	
 	public void addFile(String path){
 		files.add(new File(path));
 	}
@@ -56,9 +57,10 @@ public class IOManager{
 			try{
 				String content=FileUtils.readFileToString(versionFile);
 				versionOk=content.equals(md5);
-			}catch(IOException e){}
+			}catch(IOException e){
+			}
 		}
-		if(versionOk)return;
+		if(versionOk) return;
 		File root=new File(getRoot());
 		
 		try{
@@ -84,7 +86,7 @@ public class IOManager{
 				InputStream inputStream=null;
 				try{
 					new File(finalFile.getParent()).mkdirs();
-					if(finalFile.exists())finalFile.delete();
+					if(finalFile.exists()) finalFile.delete();
 					finalFile.createNewFile();
 					String path="files/"+fileBase.getPath().replace('\\', '/');
 					try{
@@ -150,6 +152,7 @@ public class IOManager{
 		public String read(String localPath) throws IOException{
 			return new String(Files.readAllBytes(getPath(localPath)));
 		}
+		
 		public String readOr(String localPath, String fail){
 			try{
 				return read(localPath);

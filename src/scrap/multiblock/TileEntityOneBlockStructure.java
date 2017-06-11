@@ -1,8 +1,5 @@
 package com.magiology.mc_objects.tile.multiblock;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.magiology.core.registry.init.ParticlesM;
 import com.magiology.forge.events.TickEvents;
 import com.magiology.forge.networking.UpdateTileNBTPacket;
@@ -10,7 +7,6 @@ import com.magiology.util.objs.color.ColorM;
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.CollectionConverter;
 import com.magiology.util.statics.UtilM;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -18,7 +14,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
-public abstract class TileEntityOneBlockStructure<T extends TileEntityOneBlockStructure<T,MultiblockDataType>, MultiblockDataType extends MultiblockData<T>>extends TileMultiblock<T, MultiblockDataType>{
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class TileEntityOneBlockStructure<T extends TileEntityOneBlockStructure<T,MultiblockDataType>, MultiblockDataType extends MultiblockData<T>> extends TileMultiblock<T,MultiblockDataType>{
 	
 	public static enum MultiblockState{
 		/**
@@ -47,8 +46,8 @@ public abstract class TileEntityOneBlockStructure<T extends TileEntityOneBlockSt
 	
 	public static final String BRAIN_CATEGORY="br", MULTIBLOCK_CATEGORY="mb";
 	
-	private T					brain		=null;
-	private MultiblockState		state		=MultiblockState.UNKNOW;
+	private T               brain=null;
+	private MultiblockState state=MultiblockState.UNKNOW;
 	
 	protected abstract boolean isMultiBlockValid();
 	
@@ -151,14 +150,13 @@ public abstract class TileEntityOneBlockStructure<T extends TileEntityOneBlockSt
 		return getBrain()==this;
 	}
 	
-	
 	@Override
 	protected void updateLinks(){
-		ParticlesM.MESSAGE.spawn(new Vec3M(getPos()).add(0.5).addZ(1).addX(-1), new Vec3M(0,0,0.01), 3/16F, 40, ColorM.WHITE, getMbCategory().toString());
-		getMbCategory().onAllLoad=()->{
+		ParticlesM.MESSAGE.spawn(new Vec3M(getPos()).add(0.5).addZ(1).addX(-1), new Vec3M(0, 0, 0.01), 3/16F, 40, ColorM.WHITE, getMbCategory().toString());
+		getMbCategory().onAllLoad=() -> {
 			Class<T> c=(Class<T>)this.getClass();
-			List<T> tiles=CollectionConverter.convLi(getMbCategory(), c, l->l.getPoint().getTile(this, c));
-			tiles.removeIf(t->t!=null);
+			List<T> tiles=CollectionConverter.convLi(getMbCategory(), c, l -> l.getPoint().getTile(this, c));
+			tiles.removeIf(t -> t!=null);
 			setMultiblockParts(tiles);
 		};
 		super.updateLinks();
@@ -170,7 +168,7 @@ public abstract class TileEntityOneBlockStructure<T extends TileEntityOneBlockSt
 			getBrain().breakMultiblock();
 			return;
 		}
-		TickEvents.nextTick(false, ()->getMultiblock().parts.forEach(T::unsetBrain));
+		TickEvents.nextTick(false, () -> getMultiblock().parts.forEach(T::unsetBrain));
 		
 	}
 	
@@ -209,7 +207,7 @@ public abstract class TileEntityOneBlockStructure<T extends TileEntityOneBlockSt
 		
 		LinkCategory mb=getMbCategory();
 		mb.clear();
-		multiblock.forEach(p->{
+		multiblock.forEach(p -> {
 			p.setBrain(this.getBrain());
 			mb.add(new Link(this.getPos(), p.getPos()));
 		});
@@ -217,15 +215,16 @@ public abstract class TileEntityOneBlockStructure<T extends TileEntityOneBlockSt
 	}
 	
 	protected void getPossibleConstruction(List<T> parts){
-		/*get connected*/{
+		/*get connected*/
+		{
 			parts.add((T)this);
 			int size=0;
 			
 			while(size<parts.size()){
 				size=parts.size();
 				
-				for(int i=0;i<parts.size();i++){
-					UtilM.getTileSides(parts.get(i), getClass()).stream().filter(t->!t.hasBrain()&&!parts.contains(t)).forEach(t->parts.add((T)t));
+				for(int i=0; i<parts.size(); i++){
+					UtilM.getTileSides(parts.get(i), getClass()).stream().filter(t -> !t.hasBrain()&&!parts.contains(t)).forEach(t -> parts.add((T)t));
 				}
 			}
 		}

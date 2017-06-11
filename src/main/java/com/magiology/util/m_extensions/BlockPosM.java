@@ -1,12 +1,9 @@
 package com.magiology.util.m_extensions;
 
-import java.util.function.Consumer;
-
 import com.magiology.util.interf.Locateable.LocateableBlockM;
 import com.magiology.util.interf.Worldabale;
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.UtilM;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -20,22 +17,23 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import java.util.function.Consumer;
+
 public class BlockPosM extends BlockPos implements LocateableBlockM{
 	
 	public static final BlockPosM ORIGIN=new BlockPosM();
 	
-	private static final int	NUM_X_BITS	=1+MathHelper.log2(MathHelper.smallestEncompassingPowerOfTwo(30000000));
-	private static final int	NUM_Z_BITS	=NUM_X_BITS;
-	private static final int	NUM_Y_BITS	=64-NUM_X_BITS-NUM_Z_BITS;
-	private static final int	Y_SHIFT		=0+NUM_Z_BITS;
-	private static final int	X_SHIFT		=Y_SHIFT+NUM_Y_BITS;
-	private static final long	X_MASK		=(1L<<NUM_X_BITS)-1L;
-	private static final long	Y_MASK		=(1L<<NUM_Y_BITS)-1L;
-	private static final long	Z_MASK		=(1L<<NUM_Z_BITS)-1L;
+	static final int  NUM_X_BITS=1+MathHelper.log2(MathHelper.smallestEncompassingPowerOfTwo(30000000));
+	static final int  NUM_Z_BITS=NUM_X_BITS;
+	static final int  NUM_Y_BITS=64-NUM_X_BITS-NUM_Z_BITS;
+	static final int  Y_SHIFT   =0+NUM_Z_BITS;
+	static final int  X_SHIFT   =Y_SHIFT+NUM_Y_BITS;
+	static final long X_MASK    =(1L<<NUM_X_BITS)-1L;
+	static final long Y_MASK    =(1L<<NUM_Y_BITS)-1L;
+	static final long Z_MASK    =(1L<<NUM_Z_BITS)-1L;
 	
 	public static BlockPosM get(Vec3i pos){
-		if(pos instanceof BlockPosM)
-			return (BlockPosM)pos;
+		if(pos instanceof BlockPosM) return (BlockPosM)pos;
 		return new BlockPosM(pos);
 	}
 	
@@ -84,8 +82,7 @@ public class BlockPosM extends BlockPos implements LocateableBlockM{
 	}
 	
 	public int getRedstonePower(IBlockAccess world, EnumFacing side){
-		if(world instanceof World)
-			((World)world).getRedstonePower(this, side);
+		if(world instanceof World) ((World)world).getRedstonePower(this, side);
 		IBlockState iblockstate=world.getBlockState(this);
 		Block block=iblockstate.getBlock();
 		return block.shouldCheckWeakPower(iblockstate, world, this, side)?getStrongPower(world):block.getWeakPower(iblockstate, world, this, side);
@@ -98,26 +95,20 @@ public class BlockPosM extends BlockPos implements LocateableBlockM{
 	private int getStrongPower(IBlockAccess world){
 		byte b0=0;
 		int i=Math.max(b0, world.getStrongPower(this.down(), EnumFacing.DOWN));
-		if(i>=15)
-			return i;
+		if(i>=15) return i;
 		else{
 			i=Math.max(i, world.getStrongPower(this.up(), EnumFacing.UP));
-			if(i>=15)
-				return i;
+			if(i>=15) return i;
 			else{
 				i=Math.max(i, world.getStrongPower(this.north(), EnumFacing.NORTH));
-				if(i>=15)
-					return i;
+				if(i>=15) return i;
 				else{
 					i=Math.max(i, world.getStrongPower(this.south(), EnumFacing.SOUTH));
-					if(i>=15)
-						return i;
+					if(i>=15) return i;
 					else{
 						i=Math.max(i, world.getStrongPower(this.west(), EnumFacing.WEST));
-						if(i>=15)
-							return i;
-						else
-							i=Math.max(i, world.getStrongPower(this.east(), EnumFacing.EAST));
+						if(i>=15) return i;
+						else i=Math.max(i, world.getStrongPower(this.east(), EnumFacing.EAST));
 						return i>=15?i:i;
 					}
 				}
@@ -257,10 +248,6 @@ public class BlockPosM extends BlockPos implements LocateableBlockM{
 	
 	public static void iterateBlocks(BlockPos start, BlockPos end, Consumer<BlockPos> callback){
 		MutableBlockPos.getAllInBox(start, end).forEach(callback::accept);
-	}
-	
-	public static BlockPosM fromLong(long serialized){
-		return new BlockPosM(serialized);
 	}
 	
 	public static BlockPosM conv(BlockPos pos){

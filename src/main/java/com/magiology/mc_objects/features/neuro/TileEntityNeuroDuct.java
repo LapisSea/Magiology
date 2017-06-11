@@ -2,7 +2,6 @@ package com.magiology.mc_objects.features.neuro;
 
 import com.magiology.forge.networking.UpdateTileNBTPacket;
 import com.magiology.util.m_extensions.TileEntityM;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -21,10 +20,12 @@ public class TileEntityNeuroDuct extends TileEntityM implements NeuroPart{
 		readNeuroPartFromNbt(compound);
 		BlockNeuroDuct.get().updateBlockStateAndSet(getState(), getWorld(), getPos());
 	}
+	
 	@Override
 	protected boolean nbtUsingWorld(NBTTagCompound compound){
 		return true;
 	}
+	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound){
 		writeNeuroPartToNbt(compound);
@@ -40,7 +41,7 @@ public class TileEntityNeuroDuct extends TileEntityM implements NeuroPart{
 	public void setController(TileEntityNeuroController controller){
 		if(this.controller!=controller){
 			this.controller=controller;
-			if(controller!=null)controller.requestConnectedRefresh();
+			if(controller!=null) controller.requestConnectedRefresh();
 			UpdateTileNBTPacket.markForSync(this);
 		}
 	}
@@ -58,7 +59,7 @@ public class TileEntityNeuroDuct extends TileEntityM implements NeuroPart{
 	@Override
 	public void onDisconnect(){
 		IBlockState state=getState();
-		if(state.getBlock() instanceof BlockNeuroDuct)setState(BlockNeuroBase.HAS_CONTROLLER.set(state, false));
+		if(state.getBlock() instanceof BlockNeuroDuct) setState(BlockNeuroBase.HAS_CONTROLLER.set(state, false));
 	}
 	
 }

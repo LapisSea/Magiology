@@ -1,7 +1,5 @@
 package com.magiology.mc_objects.particles;
 
-import org.lwjgl.opengl.GL11;
-
 import com.magiology.client.renderers.Renderer;
 import com.magiology.core.MReference;
 import com.magiology.handlers.particle.ParticleFactory;
@@ -13,25 +11,23 @@ import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.OpenGLM.BlendFunc;
 import com.magiology.util.statics.UtilC;
 import com.magiology.util.statics.UtilM;
-
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 public class ParticleMistBubbleFactory extends ParticleFactory{
 	
-	
-	public static final ResourceLocation MIST=new ResourceLocation(MReference.MODID,"/textures/particle/smooth_buble1.png");
-	public static int defultModel=-1;
+	public static final ResourceLocation MIST       =new ResourceLocation(MReference.MODID, "/textures/particle/smooth_buble1.png");
+	public static       int              defultModel=-1;
 
-	
 	public void spawn(Vec3M pos, Vec3M speed, float size, float lifeTime, float gravity, IColorM color){
 		spawn(pos, speed, size, lifeTime, new Vec3M(0, gravity, 0), color);
 	}
 	
 	public void spawn(Vec3M pos, Vec3M speed, float size, float lifeTime, Vec3M gravity, IColorM color){
-		if(UtilM.isRemote()&&shouldSpawn(pos))addParticle(new ParticleMistBubble(pos, speed, size, lifeTime, gravity, color));
+		if(UtilM.isRemote()&&shouldSpawn(pos)) addParticle(new ParticleMistBubble(pos, speed, size, lifeTime, gravity, color));
 	}
 	
 	@Override
@@ -57,14 +53,14 @@ public class ParticleMistBubbleFactory extends ParticleFactory{
 	
 	@Override
 	public void compileDisplayList(){
-		if(defultModel!=-1)GL11.glDeleteLists(defultModel, 1);
+		if(defultModel!=-1) GL11.glDeleteLists(defultModel, 1);
 		startList();
 		
 		Renderer.POS_UV.beginQuads();
-		Renderer.POS_UV.addVertex(0, -0.5, -0.5, 0,0);
-		Renderer.POS_UV.addVertex(0,  0.5, -0.5, 0,1);
-		Renderer.POS_UV.addVertex(0,  0.5,  0.5, 1,1);
-		Renderer.POS_UV.addVertex(0, -0.5,  0.5, 1,0);
+		Renderer.POS_UV.addVertex(0, -0.5, -0.5, 0, 0);
+		Renderer.POS_UV.addVertex(0, 0.5, -0.5, 0, 1);
+		Renderer.POS_UV.addVertex(0, 0.5, 0.5, 1, 1);
+		Renderer.POS_UV.addVertex(0, -0.5, 0.5, 1, 0);
 		Renderer.POS_UV.draw();
 		
 		defultModel=endList();
@@ -73,8 +69,7 @@ public class ParticleMistBubbleFactory extends ParticleFactory{
 	@SideOnly(Side.CLIENT)
 	public class ParticleMistBubble extends ParticleM{
 		
-		protected float lifeTime,originalSize,originalAlpha;
-		
+		protected float lifeTime, originalSize, originalAlpha;
 		
 		protected ParticleMistBubble(Vec3M pos, Vec3M speed, float size, float lifeTime, Vec3M gravity, IColorM color){
 			super(pos, speed);
@@ -93,7 +88,7 @@ public class ParticleMistBubbleFactory extends ParticleFactory{
 			float mul=1-Math.abs((getParticleAge()*2-lifeTime)/lifeTime);
 			setSize(originalSize*(float)Math.sqrt(mul));
 			getColor().a(mul*2*originalAlpha);
-			if(getParticleAge()>lifeTime)kill();
+			if(getParticleAge()>lifeTime) kill();
 		}
 		
 		@Override
@@ -111,10 +106,11 @@ public class ParticleMistBubbleFactory extends ParticleFactory{
 			return defultModel;
 		}
 		
-		
-		
-		@Override public int[] getModelIds(){return null;}
-		@Override public void renderModel(float xRotation, float zRotation, float yzRotation, float xyRotation, float xzRotation){}
+		@Override
+		public int[] getModelIds(){return null;}
+
+		@Override
+		public void renderModel(float xRotation, float zRotation, float yzRotation, float xyRotation, float xzRotation){}
 		
 		@Override
 		public ParticleFactory getFactorfy(){

@@ -2,6 +2,17 @@ package com.magiology.core.registry.init;
 
 import com.magiology.core.MReference;
 import com.magiology.core.registry.imp.AutoReferencedRegistry;
+import com.magiology.mc_objects.features.dimension_stabiliser.BlockDimensionStabiliser;
+import com.magiology.mc_objects.features.machines.shaker.BlockShaker;
+import com.magiology.mc_objects.features.neuro.BlockNeuroController;
+import com.magiology.mc_objects.features.neuro.BlockNeuroDuct;
+import com.magiology.mc_objects.features.screen.BlockScreen;
+import com.magiology.util.m_extensions.BlockM;
+import com.magiology.util.m_extensions.ItemBlockM;
+import com.magiology.util.statics.UtilM;
+import net.minecraft.item.ItemBlock;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+
 //<GEN:	IMPORTS START>
 import com.magiology.mc_objects.features.dimension_stabiliser.BlockDimensionStabiliser;
 import com.magiology.mc_objects.features.machines.shaker.BlockShaker;
@@ -9,16 +20,11 @@ import com.magiology.mc_objects.features.neuro.BlockNeuroController;
 import com.magiology.mc_objects.features.neuro.BlockNeuroDuct;
 import com.magiology.mc_objects.features.screen.BlockScreen;
 //<GEN:	IMPORTS END>
-import com.magiology.util.m_extensions.BlockM;
-import com.magiology.util.m_extensions.ItemBlockM;
-import com.magiology.util.statics.UtilM;
-
-import net.minecraft.item.ItemBlock;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class BlocksM extends AutoReferencedRegistry<BlockM>{
 	
 	private static final BlocksM instance=new BlocksM();
+	
 	public static BlocksM get(){
 		return instance;
 	}
@@ -30,7 +36,6 @@ public class BlocksM extends AutoReferencedRegistry<BlockM>{
 	public static BlockNeuroDuct           NEURO_DUCT;
 	public static BlockScreen              SCREEN;
 	//<GEN:	REFERENCE END>
-	
 	
 	private BlocksM(){
 		super(BlockM.class);

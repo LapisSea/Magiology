@@ -1,13 +1,12 @@
 package com.magiology.util.objs.vec;
 
-import org.lwjgl.util.vector.Vector3f;
-
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
+import org.lwjgl.util.vector.Vector3f;
 
 public class Vec3MFinal implements IVec3M<Vec3MFinal>{
 	
-	private final double x,y,z;
+	private final double x, y, z;
 	
 	public Vec3MFinal(Vec3i vec){
 		this(vec.getX(), vec.getY(), vec.getZ());
@@ -221,6 +220,7 @@ public class Vec3MFinal implements IVec3M<Vec3MFinal>{
 		dest.z=getZ();
 		return dest;
 	}
+	
 	@Override
 	public int hashCode(){
 		long hash=1;

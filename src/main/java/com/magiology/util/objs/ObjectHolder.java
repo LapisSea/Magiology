@@ -1,11 +1,11 @@
 package com.magiology.util.objs;
 
-
 public class ObjectHolder<T>{
 	
 	private T var;
 	
 	public ObjectHolder(){}
+	
 	public ObjectHolder(T var){
 		this.var=var;
 	}

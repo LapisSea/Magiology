@@ -8,10 +8,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class EntityEvents{
 	
 	public EntityEvents(){throw new UnsupportedOperationException();}
-
+	
 	@SubscribeEvent
 	public static void entityInteract(EntityInteract e){
-//		e.getEntityPlayer().startRiding(e.getTarget(),true);
+		//		e.getEntityPlayer().startRiding(e.getTarget(),true);
 	}
 	
 }

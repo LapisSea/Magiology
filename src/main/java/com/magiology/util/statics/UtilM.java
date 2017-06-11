@@ -1,44 +1,14 @@
 package com.magiology.util.statics;
 
-import static com.mojang.realmsclient.gui.ChatFormatting.*;
-
-import java.awt.Color;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.lang.reflect.Array;
-import java.math.BigDecimal;
-import java.nio.FloatBuffer;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Set;
-import java.util.Stack;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.ArrayUtils;
-
 import com.magiology.SoundM;
 import com.magiology.core.MReference;
 import com.magiology.util.interf.Locateable;
 import com.magiology.util.interf.Worldabale;
 import com.magiology.util.m_extensions.BlockPosM;
+import com.magiology.util.m_extensions.ItemM;
 import com.magiology.util.objs.color.ColorM;
 import com.magiology.util.objs.vec.Vec3M;
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -54,6 +24,8 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -62,13 +34,29 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
+import org.apache.commons.lang3.ArrayUtils;
+
+import java.awt.*;
+import java.io.*;
+import java.lang.reflect.Array;
+import java.math.BigDecimal;
+import java.nio.FloatBuffer;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+
+import static com.mojang.realmsclient.gui.ChatFormatting.GOLD;
+import static com.mojang.realmsclient.gui.ChatFormatting.RESET;
 
 public class UtilM{
 	
 	public class U extends UtilM{}
 	
-	public static final float	p		=1F/16F;
-	public static final String	LINE_REG="(\n|"+System.lineSeparator()+")";
+	public static final float  p       =1F/16F;
+	public static final String LINE_REG="(\n|"+System.lineSeparator()+")";
 	
 	public static String floatBufferToString(FloatBuffer buff){
 		StringBuilder print=new StringBuilder("Buffer{");
@@ -76,63 +64,17 @@ public class UtilM{
 		if(buff.capacity()>0){
 			int j=0;
 			print.append(buff.get(j));
-			for(j=1;j<buff.capacity();j++)
+			for(j=1; j<buff.capacity(); j++)
 				print.append(", ").append(buff.get(j));
 		}
 		print.append('}');
 		return print.toString();
 	}
 	
-	public static StringBuilder arrayToString(Object array){
-		StringBuilder print=new StringBuilder();
-		
-		print.append("[");
-		
-		if(array instanceof boolean[]){
-			boolean[] b=(boolean[])array;
-			for(int i=0;i<b.length;i++){
-				boolean c=b[i];
-				if(isArray(c)) print.append(arrayToString(c));
-				else print.append(c+(i==b.length-1?"":", "));
-			}
-		}else if(array instanceof float[]){
-			float[] b=(float[])array;
-			for(int i=0;i<b.length;i++){
-				float c=b[i];
-				if(isArray(c)) print.append(arrayToString(c));
-				else print.append(c+(i==b.length-1?"":", "));
-			}
-		}else if(array instanceof int[]){
-			int[] b=(int[])array;
-			for(int i=0;i<b.length;i++){
-				int c=b[i];
-				if(isArray(c)) print.append(arrayToString(c));
-				else print.append(c+(i==b.length-1?"":", "));
-			}
-		}else if(array instanceof double[]){
-			double[] b=(double[])array;
-			for(int i=0;i<b.length;i++){
-				double c=b[i];
-				if(isArray(c)) print.append(arrayToString(c));
-				else print.append(c+(i==b.length-1?"":", "));
-			}
-		}else if(array instanceof Object[]){
-			Object[] b=(Object[])array;
-			for(int i=0;i<b.length;i++){
-				Object c=b[i];
-				if(isArray(c)) print.append(arrayToString(c));
-				else print.append(toString(c)+(i==b.length-1?"":", "));
-			}
-		}else throw new IllegalStateException("Given object is not an array!");
-		
-		print.append("]");
-		
-		return print;
-	}
-	
 	public static boolean axisAlignedBBEqual(AxisAlignedBB box1, AxisAlignedBB box2){
 		if(box1==box2) return true;
-		return !isNull(box1, box2)&&box1.minX==box2.minX&&box1.minY==box2.minY&&box1.minZ==box2.minZ&&box1.maxX==box2.maxX&&box1.maxY==box2.maxY&&box1.maxZ==box2.maxZ;
+		return !isNull(box1, box2)&&box1.minX==box2.minX&&box1.minY==box2.minY&&box1.minZ==box2.minZ&&box1.maxX==box2.maxX&&box1.maxY==box2.maxY&&
+				   box1.maxZ==box2.maxZ;
 	}
 	
 	public static BlockPos BlockPos(int[] array3i){
@@ -141,7 +83,7 @@ public class UtilM{
 	
 	public static BlockPos[] BlockPosArray(int[] pos1, int[] pos2, int[] pos3){
 		BlockPos[] result=new BlockPos[0];
-		for(int i=0;i<pos1.length;i++)
+		for(int i=0; i<pos1.length; i++)
 			result=ArrayUtils.add(result, new BlockPos(pos1[i], pos2[i], pos3[i]));
 		return result;
 	}
@@ -179,14 +121,14 @@ public class UtilM{
 	
 	public static float[] countedArray(float start, float end){
 		float[] result=new float[(int)(end-start)];
-		for(int i=0;i<result.length;i++)
+		for(int i=0; i<result.length; i++)
 			result[i]=i;
 		return null;
 	}
 	
 	public static int[] countedArray(int start, int end){
 		int[] result=new int[end-start];
-		for(int i=0;i<result.length;i++)
+		for(int i=0; i<result.length; i++)
 			result[i]=i+start;
 		return result;
 	}
@@ -194,11 +136,9 @@ public class UtilM{
 	public static List<Vec3M> dotsOnRay(Vec3M start, Vec3M end, float differenceBetweenDots){
 		List<Vec3M> result=new ArrayList<>();
 		
-		Vec3M difference=start.sub(end),
-				direction=difference.normalize();
+		Vec3M difference=start.sub(end), direction=difference.normalize();
 		
-		float lenght=difference.length(),
-				posMul=differenceBetweenDots;
+		float lenght=difference.length(), posMul=differenceBetweenDots;
 		
 		result.add(start);
 		while(posMul<lenght){
@@ -237,9 +177,9 @@ public class UtilM{
 		timeStack.push(System.currentTimeMillis());
 	}
 	
-	public static void exit(int Int){
+	public static void exit(int exitCode){
 		LogUtil.println(MReference.NAME, "exiting! o/");
-		FMLCommonHandler.instance().exitJava(Int, false);
+		FMLCommonHandler.instance().exitJava(exitCode, false);
 	}
 	
 	public static boolean FALSE(){
@@ -278,25 +218,21 @@ public class UtilM{
 		return getEntityPos(entity).addY(entity.getEyeHeight());
 	}
 	
-	public static <T, E> T getMapKey(Map<T, E> map, E value){
-		for(Entry<T, E> entry:map.entrySet())
+	public static <T, E> T getMapKey(Map<T,E> map, E value){
+		for(Entry<T,E> entry : map.entrySet())
 			if(Objects.equals(value, entry.getValue())) return entry.getKey();
 		return null;
 	}
 	
-	public static <T, E> Set<T> getMapKeySet(Map<T, E> map, E value){
-		return map.entrySet()
-				.stream()
-				.filter(entry->Objects.equals(entry.getValue(), value))
-				.map(Map.Entry::getKey)
-				.collect(Collectors.toSet());
+	public static <T, E> Set<T> getMapKeySet(Map<T,E> map, E value){
+		return map.entrySet().stream().filter(entry->Objects.equals(entry.getValue(), value)).map(Map.Entry::getKey).collect(Collectors.toSet());
 	}
 	
 	public static <T> int getPosInArray(T object, T[] array){
 		if(isNull(object, array)) return -1;
 		if(array.length==0||isArray(object)) return -1;
 		int pos=-2;
-		for(int a=0;a<array.length;a++)
+		for(int a=0; a<array.length; a++)
 			if(array[a]==object){
 				pos=a;
 				a=array.length;
@@ -312,13 +248,13 @@ public class UtilM{
 		DateFormat dateFormat=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		Calendar cal=Calendar.getInstance();
 		Return.append("Invoke time: ").append(dateFormat.format(cal.getTime())).append("\n");
-		for(int i=2;i<a1.length;i++){
+		for(int i=2; i<a1.length; i++){
 			StackTraceElement a=a1[i];
 			String s=a.toString();
 			Return.append(s).append("\n");
 			length=Math.max(s.length(), length);
 		}
-		for(int b=0;b<length/4;b++)
+		for(int b=0; b<length/4; b++)
 			Return.append("_/\\_");
 		
 		return Return.toString();
@@ -458,7 +394,8 @@ public class UtilM{
 		try{
 			toBeTested.asSubclass(instance);
 			return true;
-		}catch(Exception ignored){}
+		}catch(Exception ignored){
+		}
 		return false;
 	}
 	
@@ -481,13 +418,13 @@ public class UtilM{
 	public static List<ItemStack> inventoryToList(IInventory inv){
 		List<ItemStack> result=new ArrayList<>();
 		int size=inv.getSizeInventory();
-		for(int i=0;i<size;i++)
+		for(int i=0; i<size; i++)
 			result.add(inv.getStackInSlot(i));
 		return result;
 	}
 	
-	public static boolean isAny(Object tester, Object...objects){
-		for(Object object:objects)
+	public static boolean isAny(Object tester, Object... objects){
+		for(Object object : objects)
 			if(tester==object) return true;
 		return false;
 	}
@@ -513,7 +450,7 @@ public class UtilM{
 			if(length==1) return false;
 			i=1;
 		}
-		for(;i<length;i++){
+		for(; i<length; i++){
 			char c=str.charAt(i);
 			if(c<='/'||c>=':') return false;
 		}
@@ -523,7 +460,7 @@ public class UtilM{
 	/**
 	 * Returns if stack contains a specific item
 	 * Note: no danger of null pointer exception!
-	 * @param item a
+	 * @param itemClass
 	 * @param stack a
 	 * @return a
 	 */
@@ -533,7 +470,18 @@ public class UtilM{
 		if(item==null) return false;
 		return item.getClass()==itemClass;
 	}
-	
+	/**
+	 * 
+	 * use {@link ItemM#isInStack(ItemStack)}
+	 * 
+	 * @param item
+	 * @param stack
+	 * @return
+	 */
+	@Deprecated
+	public static boolean isItemInStack(ItemM item, ItemStack stack){
+		return item.isInStack(stack);
+	}
 	public static boolean isItemInStack(Item item, ItemStack stack){
 		if(stack==null) return false;
 		return stack.getItem()==item;
@@ -545,8 +493,8 @@ public class UtilM{
 	 * @param objects a
 	 * @return a
 	 */
-	public static boolean isNull(Object...objects){
-		for(Object object:objects)
+	public static boolean isNull(Object... objects){
+		for(Object object : objects)
 			if(object==null) return true;
 		return false;
 	}
@@ -558,14 +506,14 @@ public class UtilM{
 	
 	public static String join(CharSequence splitter, Object[] args){
 		StringBuilder result=new StringBuilder();
-		for(Object o:args)
+		for(Object o : args)
 			result.append(o).append(splitter);
 		return result.substring(0, result.length()-splitter.length());
 	}
 	
 	public static String join(Object[] args){
 		StringBuilder result=new StringBuilder();
-		for(Object o:args)
+		for(Object o : args)
 			result.append(o);
 		return result.toString();
 	}
@@ -625,9 +573,9 @@ public class UtilM{
 		return signature(RESET);
 	}
 	
-	public static String signature(ChatFormatting...colorAfter){
+	public static String signature(ChatFormatting... colorAfter){
 		String result=GOLD+"["+ChatFormatting.DARK_GREEN+MReference.NAME+GOLD+"] ";
-		for(ChatFormatting a:colorAfter)
+		for(ChatFormatting a : colorAfter)
 			result+=a;
 		return result;
 	}
@@ -641,15 +589,13 @@ public class UtilM{
 	}
 	
 	public static ColorM graduallyEqualize(ColorM variable, ColorM goal, float speed){
-		return new ColorM(graduallyEqualize(variable.r(), goal.r(), speed),
-				graduallyEqualize(variable.g(), goal.g(), speed),
-				graduallyEqualize(variable.b(), goal.b(), speed),
-				graduallyEqualize(variable.a(), goal.a(), speed));
+		return new ColorM(graduallyEqualize(variable.r(), goal.r(), speed), graduallyEqualize(variable.g(), goal.g(), speed),
+						  graduallyEqualize(variable.b(), goal.b(), speed), graduallyEqualize(variable.a(), goal.a(), speed));
 	}
 	
 	public static float[] exponentiallyEqualize(float[] variable, float[] goal, float speed){
 		float[] result=new float[variable.length];
-		for(int i=0;i<result.length;i++)
+		for(int i=0; i<result.length; i++)
 			result[i]=exponentiallyEqualize(variable[i], goal[i], speed);
 		return result;
 	}
@@ -666,7 +612,7 @@ public class UtilM{
 	
 	public static float[] graduallyEqualize(float[] variable, float[] goal, float speed){
 		float[] result=new float[variable.length];
-		for(int i=0;i<result.length;i++)
+		for(int i=0; i<result.length; i++)
 			result[i]=graduallyEqualize(variable[i], goal[i], speed);
 		return result;
 	}
@@ -701,12 +647,12 @@ public class UtilM{
 		return new TargetPoint(tile.getWorld().provider.getDimension(), x(tile), y(tile), z(tile), range);
 	}
 	
-	public static String toString(Object...objs){
+	public static String toString(Object... objs){
 		StringBuilder print=new StringBuilder();
 		
-		if(objs!=null) for(int i=0;i<objs.length;i++){
+		if(objs!=null) for(int i=0; i<objs.length; i++){
 			Object a=objs[i];
-			if(isArray(a)) print.append(arrayToString(a));
+			if(isArray(a)) print.append(unknownArrayToString(a));
 			else if(a instanceof FloatBuffer) print.append(floatBufferToString((FloatBuffer)a));
 			else print.append(toString(a)+(i==objs.length-1?"":" "));
 		}
@@ -719,12 +665,25 @@ public class UtilM{
 		StringBuilder print=new StringBuilder();
 		
 		if(obj!=null){
-			if(isArray(obj)) print.append(arrayToString(obj));
+			if(isArray(obj)) print.append(unknownArrayToString(obj));
 			else if(obj instanceof FloatBuffer) print.append(floatBufferToString((FloatBuffer)obj));
 			else print.append(obj.toString());
 		}else print.append("null");
 		
 		return print.toString();
+	}
+	
+	private static String unknownArrayToString(Object arr){
+		if(arr instanceof boolean[]) return Arrays.toString((boolean[])arr);
+		if(arr instanceof float[]) return Arrays.toString((float[])arr);
+		if(arr instanceof byte[]) return Arrays.toString((byte[])arr);
+		if(arr instanceof int[]) return Arrays.toString((int[])arr);
+		if(arr instanceof long[]) return Arrays.toString((long[])arr);
+		if(arr instanceof short[]) return Arrays.toString((short[])arr);
+		if(arr instanceof char[]) return Arrays.toString((char[])arr);
+		if(arr instanceof double[]) return Arrays.toString((double[])arr);
+		if(arr instanceof Object[]) return Arrays.toString((Object[])arr);
+		return "ERR: "+arr;
 	}
 	
 	public static boolean TRUE(){
@@ -759,7 +718,7 @@ public class UtilM{
 		StringBuilder result=new StringBuilder();
 		char[] src=name.toCharArray();
 		
-		for(int i=0;i<src.length;i++){
+		for(int i=0; i<src.length; i++){
 			char c=src[i];
 			if(i>0&&Character.isUpperCase(c)){
 				char prev=src[i-1];
@@ -802,7 +761,7 @@ public class UtilM{
 	
 	public static String bytesToHex(byte[] bytes){
 		char[] hexChars=new char[bytes.length*2];
-		for(int j=0;j<bytes.length;j++){
+		for(int j=0; j<bytes.length; j++){
 			int v=bytes[j]&0xFF;
 			hexChars[j*2]=hexArray[v>>>4];
 			hexChars[j*2+1]=hexArray[v&0x0F];
@@ -812,7 +771,7 @@ public class UtilM{
 	
 	public static void writeStacksToNBT(ItemStack[] stacks, NBTTagCompound compound, String baseName){
 		NBTTagList nbtStacks=new NBTTagList();
-		for(int i=0;i<stacks.length;i++)
+		for(int i=0; i<stacks.length; i++)
 			if(stacks[i]!=null){
 				NBTTagCompound stackNbt=new NBTTagCompound();
 				stackNbt.setInteger("Slot", i);
@@ -826,7 +785,7 @@ public class UtilM{
 	public static ItemStack[] readStacksFromNBT(NBTTagCompound compound, String baseName){
 		NBTTagList nbtStacks=compound.getTagList(baseName, 10);
 		ItemStack[] stacks=new ItemStack[nbtStacks.tagCount()];
-		for(int i=0;i<stacks.length;i++){
+		for(int i=0; i<stacks.length; i++){
 			NBTTagCompound stackNbt=nbtStacks.getCompoundTagAt(i);
 			stacks[stackNbt.getInteger("Slot")]=new ItemStack(stackNbt);
 		}
@@ -840,7 +799,7 @@ public class UtilM{
 	public static List<TileEntity> getTileSides(World worldObj, BlockPos pos){
 		List<TileEntity> list=new ArrayList<>();
 		
-		for(EnumFacing side:EnumFacing.values()){
+		for(EnumFacing side : EnumFacing.values()){
 			TileEntity tile=worldObj.getTileEntity(pos.offset(side));
 			if(tile!=null) list.add(tile);
 		}
@@ -848,14 +807,14 @@ public class UtilM{
 		return list;
 	}
 	
-	public static <T extends Worldabale&Locateable<? extends BlockPos>> Map<EnumFacing, TileEntity> getTileSidesDir(T worldPointer){
+	public static <T extends Worldabale&Locateable<? extends BlockPos>> Map<EnumFacing,TileEntity> getTileSidesDir(T worldPointer){
 		return getTileSidesDir(worldPointer.getWorld(), worldPointer.getPos());
 	}
 	
-	public static Map<EnumFacing, TileEntity> getTileSidesDir(World worldObj, BlockPos pos){
-		Map<EnumFacing, TileEntity> map=new HashMap<>();
+	public static Map<EnumFacing,TileEntity> getTileSidesDir(World worldObj, BlockPos pos){
+		Map<EnumFacing,TileEntity> map=new HashMap<>();
 		
-		for(EnumFacing side:EnumFacing.values()){
+		for(EnumFacing side : EnumFacing.values()){
 			TileEntity tile=worldObj.getTileEntity(pos.offset(side));
 			if(tile!=null) map.put(side, tile);
 		}
@@ -870,7 +829,7 @@ public class UtilM{
 	public static <T> List<T> getTileSides(World worldObj, BlockPosM pos, Class<T> type){
 		List<T> list=new ArrayList<>();
 		
-		for(EnumFacing side:EnumFacing.values()){
+		for(EnumFacing side : EnumFacing.values()){
 			T tile=pos.offset(side).getTile(worldObj, type);
 			if(tile!=null) list.add(tile);
 		}
@@ -878,14 +837,15 @@ public class UtilM{
 		return list;
 	}
 	
-	public static <J extends Worldabale&Locateable<? extends BlockPosM>, T extends TileEntity> Map<EnumFacing, T> getTileSidesDir(J worldPointer, Class<T> type){
+	public static <J extends Worldabale&Locateable<? extends BlockPosM>, T extends TileEntity> Map<EnumFacing,T> getTileSidesDir(J worldPointer,
+																																 Class<T> type){
 		return getTileSidesDir(worldPointer.getWorld(), worldPointer.getPos(), type);
 	}
 	
-	public static <T extends TileEntity> Map<EnumFacing, T> getTileSidesDir(World worldObj, BlockPosM pos, Class<T> type){
-		Map<EnumFacing, T> map=new HashMap<>();
+	public static <T extends TileEntity> Map<EnumFacing,T> getTileSidesDir(World worldObj, BlockPosM pos, Class<T> type){
+		Map<EnumFacing,T> map=new HashMap<>();
 		
-		for(EnumFacing side:EnumFacing.values()){
+		for(EnumFacing side : EnumFacing.values()){
 			TileEntity tile=pos.offset(side).getTile(worldObj, type);
 			if(tile!=null) map.put(side, (T)tile);
 		}
@@ -893,7 +853,7 @@ public class UtilM{
 		return map;
 	}
 	
-	public static String localize(String input, Object...format){
+	public static String localize(String input, Object... format){
 		return I18n.translateToLocalFormatted(input, format);
 	}
 	
@@ -917,7 +877,7 @@ public class UtilM{
 		return (float)(min+(max-min)*precent);
 	}
 	
-	public static <T> T[] mixedToArray(Class<T> type, Object...data){
+	public static <T> T[] mixedToArray(Class<T> type, Object... data){
 		List<T> list=new ArrayList<>();
 		add(list, data);
 		return list.toArray((T[])Array.newInstance(type, list.size()));
@@ -929,7 +889,7 @@ public class UtilM{
 			return;
 		}
 		if(o.getClass().isArray()){
-			for(Object object:(Object[])o)
+			for(Object object : (Object[])o)
 				add(list, object);
 			return;
 		}
@@ -952,8 +912,19 @@ public class UtilM{
 	}
 	
 	private static enum COLOR_WORDS{
-		WHITE(new int[]{255, 255, 255, 255}), LIGHT_GRAY(new int[]{192, 192, 192, 255}), GRAY(new int[]{128, 128, 128, 255}), DARK_GRAY(new int[]{64, 64, 64, 255}), BLACK(new int[]{0, 0, 0, 255}), RED(new int[]{255, 0, 0, 255}), PINK(new int[]{255, 175, 175, 255}), ORANGE(new int[]{255, 200, 0, 255}), YELLOW(
-				new int[]{255, 255, 0, 255}), GREEN(new int[]{0, 255, 0, 255}), MAGENTA(new int[]{255, 0, 255, 255}), CYAN(new int[]{0, 255, 255, 255}), BLUE(new int[]{0, 0, 255, 255});
+		WHITE(new int[]{255, 255, 255, 255}),
+		LIGHT_GRAY(new int[]{192, 192, 192, 255}),
+		GRAY(new int[]{128, 128, 128, 255}),
+		DARK_GRAY(new int[]{64, 64, 64, 255}),
+		BLACK(new int[]{0, 0, 0, 255}),
+		RED(new int[]{255, 0, 0, 255}),
+		PINK(new int[]{255, 175, 175, 255}),
+		ORANGE(new int[]{255, 200, 0, 255}),
+		YELLOW(new int[]{255, 255, 0, 255}),
+		GREEN(new int[]{0, 255, 0, 255}),
+		MAGENTA(new int[]{255, 0, 255, 255}),
+		CYAN(new int[]{0, 255, 255, 255}),
+		BLUE(new int[]{0, 0, 255, 255});
 		
 		private final int[] data;
 		
@@ -973,31 +944,31 @@ public class UtilM{
 			switch(s.length()){
 			case 3:
 				return new int[]{//RGB
-						Integer.parseInt(s.charAt(0)+""+s.charAt(0), 16),
-						Integer.parseInt(s.charAt(1)+""+s.charAt(1), 16),
-						Integer.parseInt(s.charAt(2)+""+s.charAt(2), 16),
-						255
+								 Integer.parseInt(s.charAt(0)+""+s.charAt(0), 16),
+								 Integer.parseInt(s.charAt(1)+""+s.charAt(1), 16),
+								 Integer.parseInt(s.charAt(2)+""+s.charAt(2), 16),
+								 255
 				};
 			case 4:
 				return new int[]{//RGBA
-						Integer.parseInt(s.charAt(0)+""+s.charAt(0), 16),
-						Integer.parseInt(s.charAt(1)+""+s.charAt(1), 16),
-						Integer.parseInt(s.charAt(2)+""+s.charAt(2), 16),
-						Integer.parseInt(s.charAt(3)+""+s.charAt(3), 16),
-				};
+								 Integer.parseInt(s.charAt(0)+""+s.charAt(0), 16),
+								 Integer.parseInt(s.charAt(1)+""+s.charAt(1), 16),
+								 Integer.parseInt(s.charAt(2)+""+s.charAt(2), 16),
+								 Integer.parseInt(s.charAt(3)+""+s.charAt(3), 16),
+								 };
 			case 6:
 				return new int[]{//RRGGBB
-						Integer.parseInt(s.substring(0, 1), 16),
-						Integer.parseInt(s.substring(2, 3), 16),
-						Integer.parseInt(s.substring(4, 5), 16),
-						255
+								 Integer.parseInt(s.substring(0, 1), 16),
+								 Integer.parseInt(s.substring(2, 3), 16),
+								 Integer.parseInt(s.substring(4, 5), 16),
+								 255
 				};
 			case 8:
 				return new int[]{//RRGGBBAA
-						Integer.parseInt(s.substring(0, 1), 16),
-						Integer.parseInt(s.substring(2, 3), 16),
-						Integer.parseInt(s.substring(4, 5), 16),
-						Integer.parseInt(s.substring(6, 7), 16)
+								 Integer.parseInt(s.substring(0, 1), 16),
+								 Integer.parseInt(s.substring(2, 3), 16),
+								 Integer.parseInt(s.substring(4, 5), 16),
+								 Integer.parseInt(s.substring(6, 7), 16)
 				};
 			}
 			return COLOR_WORDS.WHITE.data;
@@ -1025,4 +996,40 @@ public class UtilM{
 	public static <T extends Worldabale&Locateable<? extends BlockPos>> Block getBlock(T worldPointer){
 		return getState(worldPointer).getBlock();
 	}
+
+	public static int howFarUnderI(Entity entity){
+		return (int)Math.floor(howFarUnder(entity));
+	}
+	public static double howFarUnder(Entity entity){
+		double y=entity.posY;
+		if(y<0)return Double.POSITIVE_INFINITY;
+		
+		World w=entity.getEntityWorld();
+		
+		MutableBlockPos pos=new MutableBlockPos(MathHelper.floor(entity.posX),Math.min(MathHelper.floor(y), 256),MathHelper.floor(entity.posZ));
+		IBlockState state=null;
+		
+		while(pos.getY()>0){
+			
+			state=w.getBlockState(pos);
+			
+			if(state.getCollisionBoundingBox(w, pos)==null){
+				pos.move(EnumFacing.DOWN);
+				
+				if(pos.getY()==0){
+					state=null;
+					break;
+				}
+			}else break;
+		}
+		
+		double hitY;
+		
+		if(state!=null)hitY=state.getBoundingBox(w, pos).maxY;
+		else hitY=pos.getY();
+		
+		
+		return Math.max(hitY-y, 0);
+	}
+	
 }

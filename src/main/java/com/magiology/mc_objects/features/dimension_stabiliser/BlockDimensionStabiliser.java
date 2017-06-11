@@ -2,7 +2,6 @@ package com.magiology.mc_objects.features.dimension_stabiliser;
 
 import com.magiology.util.m_extensions.BlockContainerM;
 import com.magiology.util.objs.block_bounds.BasicBlockBounds;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockRenderLayer;
@@ -14,23 +13,25 @@ import net.minecraft.world.IBlockAccess;
 public class BlockDimensionStabiliser extends BlockContainerM{
 	
 	private static BlockDimensionStabiliser instance;
+	
 	public static BlockDimensionStabiliser get(){
 		return instance;
 	}
+	
 	public BlockDimensionStabiliser(){
-		super(Material.IRON,()->new TileEntityDimensionStabiliser());
+		super(Material.IRON, ()->new TileEntityDimensionStabiliser());
 		
-		setBlockBounds(new BasicBlockBounds(0,0,0,1,8/16F,1));
+		setBlockBounds(new BasicBlockBounds(0, 0, 0, 1, 8/16F, 1));
 		instance=this;
 	}
 	
 	@Override
-	public boolean isBlockSolid(IBlockAccess worldIn,BlockPos pos,EnumFacing side){
+	public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side){
 		return false;
 	}
 	
 	@Override
-	public boolean isSideSolid(IBlockState state,IBlockAccess world,BlockPos pos,EnumFacing side){
+	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side){
 		return side==EnumFacing.DOWN;
 	}
 	
@@ -40,7 +41,7 @@ public class BlockDimensionStabiliser extends BlockContainerM{
 	}
 	
 	@Override
-	public IBlockState getActualState(IBlockState state,IBlockAccess worldIn,BlockPos pos){
+	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos){
 		return state;
 	}
 	
@@ -50,8 +51,8 @@ public class BlockDimensionStabiliser extends BlockContainerM{
 	}
 	
 	@Override
-	public boolean canRenderInLayer(IBlockState state,BlockRenderLayer layer){
+	public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer){
 		return layer==BlockRenderLayer.CUTOUT;
 	}
-
+	
 }

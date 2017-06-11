@@ -1,9 +1,9 @@
 package com.magiology.util.objs.color;
 
-import java.awt.Color;
-
 import com.magiology.util.interf.Calculable;
 import com.magiology.util.statics.math.MathUtil;
+
+import java.awt.*;
 
 public class ColorM extends ColorMRead implements Calculable<ColorM>{
 	
@@ -65,7 +65,6 @@ public class ColorM extends ColorMRead implements Calculable<ColorM>{
 		modifier=MathUtil.snap(modifier, 0, 1);
 		return new ColorM(c=='r'?modifier:r, c=='g'?modifier:g, c=='b'?modifier:b, c=='a'?modifier:a);
 	}
-	
 	
 	@Override
 	public ColorM add(float var){
@@ -223,7 +222,6 @@ public class ColorM extends ColorMRead implements Calculable<ColorM>{
 	public ColorM copy(){
 		return new ColorM(r(), g(), b(), a);
 	}
-	
 	
 	public static ColorM toColorM(IColorM color){
 		return color instanceof ColorM?(ColorM)color:new ColorM(color);

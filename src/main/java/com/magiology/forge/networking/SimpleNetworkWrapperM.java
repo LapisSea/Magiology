@@ -6,9 +6,9 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
- * 
+ *
  * @author LapisSea
- * 
+ *
  * @description wrapper for easy debugging + nice place for registration
  *
  */
@@ -21,7 +21,7 @@ public class SimpleNetworkWrapperM extends SimpleNetworkWrapper{
 		
 	}
 	
-	public <T extends IMessage&IMessageHandler<T, IMessage>> void registerPacket(Class<T> clazz, Side receiverSide){
+	public <T extends IMessage&IMessageHandler<T,IMessage>> void registerPacket(Class<T> clazz, Side receiverSide){
 		registerMessage(clazz, clazz, registrationId, receiverSide);
 		registrationId++;
 	}

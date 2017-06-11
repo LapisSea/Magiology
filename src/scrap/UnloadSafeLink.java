@@ -1,13 +1,5 @@
 package com.magiology.util.interf;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.function.Consumer;
-
 import com.magiology.core.registry.init.TileEntityRegistry;
 import com.magiology.forge.events.TickEvents;
 import com.magiology.util.interf.Locateable.LocateableBlockM;
@@ -16,16 +8,23 @@ import com.magiology.util.m_extensions.BlockPosM;
 import com.magiology.util.m_extensions.TileEntityM;
 import com.magiology.util.objs.ArrayList_ModifyHook;
 import com.magiology.util.statics.UtilM;
-
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.function.Consumer;
+
 /**
  * <p>This interface should be implemented exclusively on {@link TileEntityM}!</p>
  * <p>It is is used to provide a pointer to another block with safe handling of unloaded blocks (main use for multiblocks)</p>
- * 
+ *
  * @author LapisSea
  */
 public interface UnloadSafeLink extends Worldabale, LocateableBlockM{
@@ -35,10 +34,13 @@ public interface UnloadSafeLink extends Worldabale, LocateableBlockM{
 	abstract class LoadLink implements LocateableBlockM{
 		
 		public enum LoadLinkStatus{
-			LOADED(true, "load"), UNLOADED(false, "unLoad"), WAITING_FOR_RESPONSE(false, "waitFor"), UNKNOWN(false, "unknown");
+			LOADED(true, "load"),
+			UNLOADED(false, "unLoad"),
+			WAITING_FOR_RESPONSE(false, "waitFor"),
+			UNKNOWN(false, "unknown");
 			
-			public final boolean	loaded;
-			private final String	sh;
+			public final  boolean loaded;
+			private final String  sh;
 			
 			private LoadLinkStatus(boolean loaded, String sh){
 				this.loaded=loaded;
@@ -46,11 +48,11 @@ public interface UnloadSafeLink extends Worldabale, LocateableBlockM{
 			}
 		}
 		
-		private final BlockPosM		pos;
-		public final UnloadSafeLink	owner;
-		private LoadLinkStatus		status;
-		protected String			id;
-		public final String			category;
+		private final BlockPosM      pos;
+		public final  UnloadSafeLink owner;
+		private       LoadLinkStatus status;
+		protected     String         id;
+		public final  String         category;
 		
 		public LoadLink(BlockPosM pos, UnloadSafeLink owner, LoadLinkStatus status, String id, String category){
 			this.pos=pos;
@@ -88,6 +90,7 @@ public interface UnloadSafeLink extends Worldabale, LocateableBlockM{
 			if(obj==this) return true;
 			return obj.pos.equals(pos);
 		}
+
 		@Override
 		public BlockPosM getPos(){
 			return pos;
@@ -100,10 +103,10 @@ public interface UnloadSafeLink extends Worldabale, LocateableBlockM{
 			switch(compound.getInteger("t")){
 			case 0:
 				l=new LoadLinkBlock(pos, owner, LoadLinkStatus.UNLOADED, id, category);
-			break;
+				break;
 			case 1:
 				l=new LoadLinkTile(pos, owner, LoadLinkStatus.UNLOADED, id, category);
-			break;
+				break;
 			default:
 				return null;
 			}
@@ -125,7 +128,7 @@ public interface UnloadSafeLink extends Worldabale, LocateableBlockM{
 			boolean loadChange=status.loaded!=this.status.loaded;
 			this.status=status;
 			
-			if(loadChange)owner.markLinksDirty();
+			if(loadChange) owner.markLinksDirty();
 		}
 		
 		public UnloadSafeLink getPointed(){
@@ -164,13 +167,13 @@ public interface UnloadSafeLink extends Worldabale, LocateableBlockM{
 	
 	class LoadLinkTile extends LoadLink{
 		
-		private static final Map<Class<? extends TileEntity>, String> classToNameMap;
+		private static final Map<Class<? extends TileEntity>,String> classToNameMap;
 		
 		static{
 			try{
 				Field f=TileEntity.class.getDeclaredField("classToNameMap");
 				f.setAccessible(true);
-				classToNameMap=(Map<Class<? extends TileEntity>, String>)f.get(null);
+				classToNameMap=(Map<Class<? extends TileEntity>,String>)f.get(null);
 			}catch(Exception e){
 				throw new RuntimeException(e);
 			}
@@ -180,7 +183,7 @@ public interface UnloadSafeLink extends Worldabale, LocateableBlockM{
 			try{
 				Field f=TileEntity.class.getDeclaredField("classToNameMap");
 				f.setAccessible(true);
-				for(Entry<Class<? extends TileEntity>, String> i:classToNameMap.entrySet()){
+				for(Entry<Class<? extends TileEntity>,String> i : classToNameMap.entrySet()){
 					if(i.getKey()==t.getClass()) return i.getValue();
 				}
 			}catch(Exception e){
@@ -233,9 +236,9 @@ public interface UnloadSafeLink extends Worldabale, LocateableBlockM{
 	
 	class LinkCategory{
 		
-		private final UnloadSafeLink	owner;
-		public final String				category;
-		private final List<LoadLink>	links;
+		private final UnloadSafeLink owner;
+		public final  String         category;
+		private final List<LoadLink> links;
 		
 		public LinkCategory(String category, UnloadSafeLink owner){
 			this.category=category==null||category.isEmpty()?"all":category;
@@ -264,7 +267,7 @@ public interface UnloadSafeLink extends Worldabale, LocateableBlockM{
 		}
 		
 		private boolean posMatch(BlockPos pos){
-			return links.stream().anyMatch(l->l.pos.equals(pos));
+			return links.stream().anyMatch(l -> l.pos.equals(pos));
 		}
 		
 		public void clear(){
@@ -289,6 +292,7 @@ public interface UnloadSafeLink extends Worldabale, LocateableBlockM{
 			if(!(obj instanceof LinkCategory)) return false;
 			return category.equals(((LinkCategory)obj).category);
 		}
+
 		@Override
 		public String toString(){
 			return category+"="+links.toString();
@@ -300,7 +304,7 @@ public interface UnloadSafeLink extends Worldabale, LocateableBlockM{
 	default LinkCategory getLinks(String category){
 		String category0=category==null||category.isEmpty()?"all":category;
 		
-		LinkCategory links=getLinks().stream().filter(cat->cat.category.equals(category0)).findFirst().orElse(null);
+		LinkCategory links=getLinks().stream().filter(cat -> cat.category.equals(category0)).findFirst().orElse(null);
 		if(links==null) getLinks().add(links=new LinkCategory(category, this));
 		
 		return links;
@@ -311,19 +315,19 @@ public interface UnloadSafeLink extends Worldabale, LocateableBlockM{
 		if(data.getSize()==0) return;
 		
 		List<LinkCategory> links=getLinks();
-		data.getKeySet().forEach(categoryName->{
+		data.getKeySet().forEach(categoryName -> {
 			NBTTagCompound categoryData=data.getCompoundTag(categoryName);
-			for(int i=0;i<categoryData.getSize();i++){
+			for(int i=0; i<categoryData.getSize(); i++){
 				getLinks(categoryName).getAll().add(LoadLink.desterilise(categoryData.getCompoundTag(Integer.toString(i)), this, categoryName));
 			}
 		});
-		if(hasWorld())checkForChange();
+		if(hasWorld()) checkForChange();
 	}
 	
 	default void writeSafeLinkToNbt(NBTTagCompound compound){
-		Map<String, NBTTagCompound> categoryes=new HashMap<>();
+		Map<String,NBTTagCompound> categoryes=new HashMap<>();
 		
-		getLinks().forEach(cat->{
+		getLinks().forEach(cat -> {
 			List<LoadLink> catList=getLinksToSave(cat);
 			
 			if(catList==null||catList.isEmpty()) return;
@@ -331,7 +335,7 @@ public interface UnloadSafeLink extends Worldabale, LocateableBlockM{
 			NBTTagCompound categoryData=new NBTTagCompound();
 			categoryes.put(cat.category, categoryData);
 			
-			catList.forEach(link->categoryData.setTag(Integer.toString(categoryData.getSize()), link.sterilise(new NBTTagCompound())));
+			catList.forEach(link -> categoryData.setTag(Integer.toString(categoryData.getSize()), link.sterilise(new NBTTagCompound())));
 		});
 		
 		if(!categoryes.isEmpty()){
@@ -348,11 +352,11 @@ public interface UnloadSafeLink extends Worldabale, LocateableBlockM{
 	default void updateLoadSafeLinks(){
 		List<LoadLink> load=new ArrayList<>(), unload=new ArrayList<>();
 		
-		getLinks().forEach(category->category.getAll().forEach(l->(l.getStatus().loaded?load:unload).add(l)));
+		getLinks().forEach(category -> category.getAll().forEach(l -> (l.getStatus().loaded?load:unload).add(l)));
 		
-		load.stream().filter(l->!l.checkType()).forEach(l->l.setStatus(LoadLinkStatus.UNLOADED));
+		load.stream().filter(l -> !l.checkType()).forEach(l -> l.setStatus(LoadLinkStatus.UNLOADED));
 		
-		unload.stream().filter(link->getWorld().isBlockLoaded(link.pos)).forEach(link->{
+		unload.stream().filter(link -> getWorld().isBlockLoaded(link.pos)).forEach(link -> {
 			
 			LoadLinkStatus prevStatus=link.getStatus();
 			
@@ -381,7 +385,7 @@ public interface UnloadSafeLink extends Worldabale, LocateableBlockM{
 				linkFromLinkedToThis.setStatus(LoadLinkStatus.LOADED);
 				link.setStatus(LoadLinkStatus.LOADED);
 				
-			}else{
+			}else {
 				link.setStatus(LoadLinkStatus.LOADED);
 			}
 			
@@ -391,21 +395,21 @@ public interface UnloadSafeLink extends Worldabale, LocateableBlockM{
 	
 	default void notifyDestroy(){
 		List<UnloadSafeLink> notify=new ArrayList<>();
-		forEachLink(link->{
+		forEachLink(link -> {
 			UnloadSafeLink pointedTo=link.getPointed();
-			if(pointedTo!=null)notify.add(pointedTo);
+			if(pointedTo!=null) notify.add(pointedTo);
 		});
 		notify.forEach(UnloadSafeLink::updateLoadSafeLinks);
 	}
 	
 	default List<LoadLink> getLinkList(){
 		List<LoadLink> links=new ArrayList<>();
-		getLinks().forEach(v->links.addAll(v.getAll()));
+		getLinks().forEach(v -> links.addAll(v.getAll()));
 		return links;
 	}
 	
 	default void forEachLink(Consumer<LoadLink> link){
-		getLinks().forEach(v->v.getAll().forEach(link));
+		getLinks().forEach(v -> v.getAll().forEach(link));
 	}
 	
 	default void destroyLink(BlockPosM pos){
@@ -413,15 +417,16 @@ public interface UnloadSafeLink extends Worldabale, LocateableBlockM{
 		LoadLink l=getLinkbyPos(pos);
 		
 		if(l==null) return;
-		for(LinkCategory e:getLinks()){
+		for(LinkCategory e : getLinks()){
 			if(e.getAll().remove(l)) break;
 		}
 	}
 	
 	default LoadLink getLinkbyPos(BlockPosM pos){
 		LoadLink l=null;
-		mainFor:for(LinkCategory e:getLinks()){
-			for(LoadLink link:e.getAll()){
+		mainFor:
+		for(LinkCategory e : getLinks()){
+			for(LoadLink link : e.getAll()){
 				if(link.pos.equals(pos)){
 					l=link;
 					break mainFor;

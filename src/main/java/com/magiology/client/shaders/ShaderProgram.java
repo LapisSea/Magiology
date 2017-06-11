@@ -1,15 +1,5 @@
 package com.magiology.client.shaders;
 
-import java.io.File;
-import java.lang.reflect.Field;
-import java.nio.FloatBuffer;
-import java.nio.file.Files;
-
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.util.vector.Matrix4f;
-
 import com.google.common.base.Joiner;
 import com.magiology.core.ConfigM;
 import com.magiology.core.Magiology;
@@ -17,14 +7,20 @@ import com.magiology.util.objs.color.ColorM;
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.FileUtil;
 import com.magiology.util.statics.LogUtil;
-
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.shader.ShaderManager;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.util.vector.Matrix4f;
+
+import java.io.File;
+import java.nio.FloatBuffer;
+import java.nio.file.Files;
 
 public abstract class ShaderProgram{
 	
-	private int		programID	=-1,vertexShaderID,fragmentShaderID,bindUnbindSafety=0;
-	private boolean	vertexEnabled,fragmentEnabled;
+	private int programID=-1, vertexShaderID, fragmentShaderID, bindUnbindSafety=0;
+	private boolean vertexEnabled, fragmentEnabled;
 	
 	public static FloatBuffer matrixBuffer=BufferUtils.createFloatBuffer(16);
 	
@@ -41,7 +37,7 @@ public abstract class ShaderProgram{
 	public void compile(){
 		if(!ConfigM.shadersEnabled()) return;
 		deleteShader();
-		CharSequence vertex=getVertexShaderSrc(),fragment=getFragmentShaderSrc();
+		CharSequence vertex=getVertexShaderSrc(), fragment=getFragmentShaderSrc();
 		fragmentEnabled=fragment!=null&&fragment.length()>0;
 		vertexEnabled=vertex!=null&&vertex.length()>0;
 		
@@ -56,6 +52,7 @@ public abstract class ShaderProgram{
 		}
 		if(fragmentEnabled){
 			try{
+				Files.write(new File("derp.txt").toPath(), injectModules(fragment.toString()).toString().getBytes());
 				fragmentShaderID=loadShader(injectModules(fragment.toString()), GL20.GL_FRAGMENT_SHADER);
 			}catch(Exception e){
 				fragmentEnabled=false;
@@ -75,12 +72,12 @@ public abstract class ShaderProgram{
 	}
 	
 	private CharSequence injectModules(String shader){
-		int modulePos,off="#module".length();
+		int modulePos, off="#module".length();
 		
 		while((modulePos=shader.indexOf("#module"))!=-1){
 			
 			int startMarker=modulePos+off;
-			char startChar=' ',endChar=' ';
+			char startChar=' ', endChar=' ';
 			while(Character.isWhitespace(startChar=shader.charAt(startMarker))){
 				if(startMarker==shader.length()){
 					LogUtil.println("No module module name opening: line=", shader.substring(0, startMarker).split("\n").length);
@@ -122,11 +119,11 @@ public abstract class ShaderProgram{
 			}
 			if(comressTo1Line){
 				String[] lines=moduleSrc.split("\n");
-				for(int i=0;i<lines.length;i++)
+				for(int i=0; i<lines.length; i++)
 					lines[i]=lines[i].trim();
 				moduleSrc=Joiner.on(' ').join(lines);
 			}
-			String shaderStart=shader.substring(0, modulePos),shaderEnd=shader.substring(endMarker+1, shader.length());
+			String shaderStart=shader.substring(0, modulePos), shaderEnd=shader.substring(endMarker+1, shader.length());
 			
 			shader=shaderStart+moduleSrc+shaderEnd;
 		}
@@ -193,7 +190,6 @@ public abstract class ShaderProgram{
 	}
 	
 	public void bind(){
-		System.out.println(programID);
 		if(bindUnbindSafety>100){
 			deactivate();
 			bindUnbindSafety=0;

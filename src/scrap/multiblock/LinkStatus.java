@@ -1,7 +1,10 @@
 package com.magiology.mc_objects.tile.multiblock;
 
 public enum LinkStatus{
-	LOADED(true), UNLOADED(false), WAITING_FOR_RESPONSE(false), UNKNOWN(false);
+	LOADED(true),
+	UNLOADED(false),
+	WAITING_FOR_RESPONSE(false),
+	UNKNOWN(false);
 	
 	public final boolean loaded;
 	

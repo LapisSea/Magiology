@@ -1,21 +1,18 @@
 package com.magiology.client.shaders.programs;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-
 import com.magiology.client.shaders.ShaderProgram;
 import com.magiology.handlers.frame_buff.TemporaryFrame;
 import com.magiology.util.objs.color.ColorM;
-import com.magiology.util.statics.UtilM;
-
 import net.minecraft.client.shader.Framebuffer;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 
 public class MatterJumperShader extends ShaderProgram{
 	
-	protected int			screenSize,tim,prevFrameColor,wobleRadius,noiseRadius=-1,texUnit0,backFrame;
-	protected float			time,wobleRad,noiseRad;
-	protected ColorM		color;
-	protected Framebuffer	fBuf;
+	protected int screenSize, tim, prevFrameColor, wobleRadius, noiseRadius=-1, texUnit0, backFrame;
+	protected float time, wobleRad, noiseRad;
+	protected ColorM      color;
+	protected Framebuffer fBuf;
 	
 	@Override
 	protected CharSequence getVertexShaderSrc(){
@@ -46,9 +43,11 @@ public class MatterJumperShader extends ShaderProgram{
 	public void activate(TemporaryFrame fBuf, ColorM color, double time, float wobleRad, float noiseRad){
 		activate(fBuf.frameBuffer, color, time, wobleRad, noiseRad);
 	}
+
 	public void activate(Framebuffer fBuf, ColorM color, double time, float wobleRad, float noiseRad){
-		if(UtilM.TRUE())return;
-//		compile();
+		//		if(UtilM.TRUE())return;
+		//		compile();
+		bind();
 		GL13.glActiveTexture(GL13.GL_TEXTURE1);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, fBuf.framebufferTexture);
 		this.fBuf=fBuf;
@@ -56,7 +55,6 @@ public class MatterJumperShader extends ShaderProgram{
 		this.color=color;
 		this.wobleRad=wobleRad;
 		this.noiseRad=noiseRad;
-		bind();
 		initUniforms();
 	}
 	

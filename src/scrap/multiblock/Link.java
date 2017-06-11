@@ -4,14 +4,14 @@ import com.magiology.util.m_extensions.BlockPosM;
 
 public class Link{
 	
-	private final BlockPosM	point,source;
-	private LinkStatus		status	=LinkStatus.UNKNOWN, prevStatus=LinkStatus.UNKNOWN;
+	private final BlockPosM point, source;
+	private LinkStatus status=LinkStatus.UNKNOWN, prevStatus=LinkStatus.UNKNOWN;
 	
 	public LinkStatus getPrevStatus(){
 		return prevStatus;
 	}
 	
-	public Link(BlockPosM point,BlockPosM source){
+	public Link(BlockPosM point, BlockPosM source){
 		this.point=point;
 		this.source=source;
 	}
@@ -52,6 +52,7 @@ public class Link{
 	public BlockPosM getPoint(){
 		return point;
 	}
+
 	public BlockPosM getSrcPos(){
 		return point;
 	}

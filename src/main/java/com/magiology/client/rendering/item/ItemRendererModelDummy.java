@@ -1,12 +1,8 @@
 package com.magiology.client.rendering.item;
 
-import java.util.Collection;
-import java.util.Collections;
-
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.magiology.util.interf.ObjectReturn;
-
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelBlock;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -15,10 +11,14 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.common.model.IModelState;
 
+import java.util.Collection;
+import java.util.Collections;
+
 public class ItemRendererModelDummy implements IModel{
 
 	private static final IModelState NO_STATE=(t)->Optional.absent();
 	public static ModelBlock GEN_MODEL;
+
 	static{
 		
 	}
@@ -28,7 +28,6 @@ public class ItemRendererModelDummy implements IModel{
 	public ItemRendererModelDummy(ResourceLocation parent){
 		this.parent=parent;
 	}
-	
 	
 	@Override
 	public Collection<ResourceLocation> getDependencies(){
@@ -76,11 +75,9 @@ public class ItemRendererModelDummy implements IModel{
 		return new DummyVanillaBakedModel(GEN_MODEL.getAllTransforms());
 	}
 	
-	
 	@Override
 	public IModelState getDefaultState(){
 		return NO_STATE;
 	}
-	
 	
 }

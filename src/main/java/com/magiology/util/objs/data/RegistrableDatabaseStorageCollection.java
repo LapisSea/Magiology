@@ -1,19 +1,18 @@
 package com.magiology.util.objs.data;
 
-
 public abstract class RegistrableDatabaseStorageCollection<T> extends DatabaseStorageCollection<T>{
 	
 	private boolean registered=false;
 	
-	public RegistrableDatabaseStorageCollection(Class<?extends T> base){
+	public RegistrableDatabaseStorageCollection(Class<? extends T> base){
 		super(base);
 	}
-
+	
 	public void register(){
-		if(registered)return;
+		if(registered) return;
 		registered=true;
 		
-		for(T t:getDatabase()){
+		for(T t : getDatabase()){
 			registerObj(t);
 		}
 	}

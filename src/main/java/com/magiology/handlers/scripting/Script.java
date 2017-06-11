@@ -1,19 +1,19 @@
 package com.magiology.handlers.scripting;
 
+import com.magiology.core.Magiology;
+import com.magiology.io.IOManager.IODirectory;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.magiology.core.Magiology;
-import com.magiology.io.IOManager.IODirectory;
-
 public abstract class Script{
 	
-	protected final IODirectory		dir			=Magiology.EXTRA_FILES.getDirectoryManager("scripts");
-	protected static final String	NULL_PATH	="no_path_script";
-	protected List<ScriptWrapper>	logs		=new ArrayList<>();
-	protected boolean				compiled;
-	private String					sourcePath, source;
+	protected final        IODirectory         dir      =Magiology.EXTRA_FILES.getDirectoryManager("scripts");
+	protected static final String              NULL_PATH="no_path_script";
+	protected              List<ScriptWrapper> logs     =new ArrayList<>();
+	protected boolean compiled;
+	private   String  sourcePath, source;
 	
 	public Script(String sourcePath, boolean loadNow){
 		this.sourcePath=sourcePath;
@@ -46,7 +46,7 @@ public abstract class Script{
 	
 	public ScriptResult callMain(){
 		ScriptResult compile=preRun();
-		if(compile!=null)return compile;
+		if(compile!=null) return compile;
 		
 		ScriptWrapper activeWrap=newScriptWrapper();
 		logs.add(activeWrap);
@@ -56,7 +56,7 @@ public abstract class Script{
 	
 	protected ScriptResult preRun(){
 		
-		while(logs.size()>20)logs.remove(20);
+		while(logs.size()>20) logs.remove(20);
 		
 		if(!compiled){
 			compiled=true;
@@ -64,7 +64,7 @@ public abstract class Script{
 			logs.add(activeWrap);
 			ScriptResult result=compile(activeWrap);
 			activeWrap.getLog().log(result.isError, result.toString());
-			if(result.isError)return result;
+			if(result.isError) return result;
 		}
 		return null;
 	}

@@ -3,7 +3,7 @@ package com.magiology.handlers.scripting.script_types;
 import com.magiology.handlers.scripting.ScriptResult;
 
 public class RenderNUpdateScript extends RenderScript{
-
+	
 	public RenderNUpdateScript(String source){
 		super(source);
 		requiredFunctions.add("update");

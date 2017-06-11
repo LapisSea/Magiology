@@ -6,7 +6,6 @@ import com.magiology.util.objs.block_bounds.StateDependantBlockBounds;
 import com.magiology.util.objs.block_bounds.StateDependantBlockBounds.StateBounds;
 import com.magiology.util.statics.LogUtil;
 import com.magiology.util.statics.OpenGLM;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
@@ -16,18 +15,17 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-
 @SideOnly(Side.CLIENT)
 public class StateDependantBlockHighlightRenderer extends BlockHighlightRenderer<StateDependantBlockBounds>{
 	
 	public StateDependantBlockHighlightRenderer(StateDependantBlockBounds owner){
 		super(owner);
 	}
-
+	
 	@Override
 	public void drawBoundsOutline(IBlockState state, World world, BlockPos pos, RayTraceResult hit){
 		StateBounds box=getOwner().getBox(state);
-		if(box.getDrawModel()==-1)box.setDrawModel(createModel(box));
+		if(box.getDrawModel()==-1) box.setDrawModel(createModel(box));
 		
 		OpenGLM.callList(box.getDrawModel());
 	}
@@ -44,9 +42,10 @@ public class StateDependantBlockHighlightRenderer extends BlockHighlightRenderer
 		GlStateManager.glEndList();
 		return drawModel;
 	}
+	
 	@Override
 	public void markDirty(){
-		for(StateBounds box:getOwner().boxes){
+		for(StateBounds box : getOwner().boxes){
 			box.setDrawModel(-1);
 		}
 	}

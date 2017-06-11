@@ -6,7 +6,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.SERVER)
 public class ServerProxy extends CommonProxy{
 	
-	
 	@Override
 	public void loadModFiles(){
 		
@@ -16,10 +15,12 @@ public class ServerProxy extends CommonProxy{
 	public void preInit(){
 		
 	}
+	
 	@Override
 	public void init(){
 		
 	}
+	
 	@Override
 	public void postInit(){
 		

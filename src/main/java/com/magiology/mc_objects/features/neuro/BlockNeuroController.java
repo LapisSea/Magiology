@@ -1,7 +1,6 @@
 package com.magiology.mc_objects.features.neuro;
 
 import com.magiology.util.statics.LogUtil;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -20,7 +19,7 @@ public class BlockNeuroController extends BlockNeuroBase<TileEntityNeuroControll
 	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos fromPos){
 		TileEntityNeuroController tile=getTile(world, pos);
-		for(int i=0;i<6;i++){
+		for(int i=0; i<6; i++){
 			BlockPos pos1=tile.getPos().offset(EnumFacing.getFront(i));
 			TileEntity tile1=world.getTileEntity(pos1);
 			state=CONNECTIONS[i].set(state, tile1 instanceof NeuroPart);

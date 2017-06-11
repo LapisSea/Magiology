@@ -1,6 +1,5 @@
 package com.magiology.util.objs.data;
 
-
 public abstract class RegistrableDatabaseStorageArray<T> extends DatabaseStorageArray<T>{
 	
 	private boolean registered=false;
@@ -8,12 +7,12 @@ public abstract class RegistrableDatabaseStorageArray<T> extends DatabaseStorage
 	public RegistrableDatabaseStorageArray(Class<T> base){
 		super(base);
 	}
-
+	
 	public void register(){
-		if(registered)return;
+		if(registered) return;
 		registered=true;
 		
-		for(T t:getDatabase()){
+		for(T t : getDatabase()){
 			registerObj(t);
 		}
 	}

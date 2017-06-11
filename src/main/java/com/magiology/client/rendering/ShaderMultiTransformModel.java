@@ -11,12 +11,13 @@ public abstract class ShaderMultiTransformModel{
 	
 	protected int modelId=-1;
 	
-	
 	public int getModelListId(){
 		return modelId;
 	}
 	
 	public abstract int generateModel();
+	
 	public abstract int[] getMatrixIds();
+	
 	public abstract Matrix4f[] getMatrices();
 }

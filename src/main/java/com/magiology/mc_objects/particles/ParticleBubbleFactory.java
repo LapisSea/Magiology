@@ -1,7 +1,5 @@
 package com.magiology.mc_objects.particles;
 
-import org.lwjgl.opengl.GL11;
-
 import com.magiology.client.renderers.FastNormalRenderer;
 import com.magiology.handlers.particle.ParticleFactory;
 import com.magiology.handlers.particle.ParticleM;
@@ -13,15 +11,15 @@ import com.magiology.util.statics.OpenGLM.BlendFunc;
 import com.magiology.util.statics.RandUtil;
 import com.magiology.util.statics.UtilC;
 import com.magiology.util.statics.math.PartialTicksUtil;
-
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 public class ParticleBubbleFactory extends ParticleFactory{
-
+	
 	public static int defultModel=-1;
 	
 	public void spawn(Vec3M pos, Vec3M speed, float size, float lifeTime, float gravity, ColorM color){
@@ -29,7 +27,7 @@ public class ParticleBubbleFactory extends ParticleFactory{
 	}
 	
 	public void spawn(Vec3M pos, Vec3M speed, float size, float lifeTime, Vec3M gravity, ColorM color){
-		if(!shouldSpawn(pos))return;
+		if(!shouldSpawn(pos)) return;
 		addParticle(new ParticleBubble(pos, speed, size, lifeTime, gravity, color));
 	}
 	
@@ -55,7 +53,7 @@ public class ParticleBubbleFactory extends ParticleFactory{
 		GlStateManager.enableLighting();
 		RenderHelper.enableStandardItemLighting();
 		GlStateManager.enableRescaleNormal();
-		if(UtilC.getThePlayer().isSneaking())compileDisplayList();
+		if(UtilC.getThePlayer().isSneaking()) compileDisplayList();
 	}
 	
 	@Override
@@ -68,42 +66,41 @@ public class ParticleBubbleFactory extends ParticleFactory{
 	
 	@Override
 	public void compileDisplayList(){
-		if(defultModel!=-1)GL11.glDeleteLists(defultModel, 1);
+		if(defultModel!=-1) GL11.glDeleteLists(defultModel, 1);
 		startList();
 		
-		
 		FastNormalRenderer buff=new FastNormalRenderer();
-		buff.begin(true,FastNormalRenderer.POS);
+		buff.begin(true, FastNormalRenderer.POS);
 		
-		buff.add( 0.5, -0.5, -0.5);
-		buff.add( 0.5,  0.5, -0.5);
-		buff.add( 0.5,  0.5,  0.5);
-		buff.add( 0.5, -0.5,  0.5);
+		buff.add(0.5, -0.5, -0.5);
+		buff.add(0.5, 0.5, -0.5);
+		buff.add(0.5, 0.5, 0.5);
+		buff.add(0.5, -0.5, 0.5);
 		
-		buff.add(-0.5, -0.5,  0.5);
-		buff.add(-0.5,  0.5,  0.5);
-		buff.add(-0.5,  0.5, -0.5);
+		buff.add(-0.5, -0.5, 0.5);
+		buff.add(-0.5, 0.5, 0.5);
+		buff.add(-0.5, 0.5, -0.5);
 		buff.add(-0.5, -0.5, -0.5);
-
-		buff.add(-0.5,  0.5, -0.5);
-		buff.add(-0.5,  0.5,  0.5);
-		buff.add( 0.5,  0.5,  0.5);
-		buff.add( 0.5,  0.5, -0.5);
 		
-		buff.add( 0.5, -0.5, -0.5);
-		buff.add( 0.5, -0.5,  0.5);
-		buff.add(-0.5, -0.5,  0.5);
-		buff.add(-0.5, -0.5, -0.5);
-
-		buff.add( 0.5,  0.5, -0.5);
-		buff.add( 0.5, -0.5, -0.5);
-		buff.add(-0.5, -0.5, -0.5);
-		buff.add(-0.5,  0.5, -0.5);
+		buff.add(-0.5, 0.5, -0.5);
+		buff.add(-0.5, 0.5, 0.5);
+		buff.add(0.5, 0.5, 0.5);
+		buff.add(0.5, 0.5, -0.5);
 		
-		buff.add(-0.5,  0.5,  0.5);
-		buff.add(-0.5, -0.5,  0.5);
-		buff.add( 0.5, -0.5,  0.5);
-		buff.add( 0.5,  0.5,  0.5);
+		buff.add(0.5, -0.5, -0.5);
+		buff.add(0.5, -0.5, 0.5);
+		buff.add(-0.5, -0.5, 0.5);
+		buff.add(-0.5, -0.5, -0.5);
+		
+		buff.add(0.5, 0.5, -0.5);
+		buff.add(0.5, -0.5, -0.5);
+		buff.add(-0.5, -0.5, -0.5);
+		buff.add(-0.5, 0.5, -0.5);
+		
+		buff.add(-0.5, 0.5, 0.5);
+		buff.add(-0.5, -0.5, 0.5);
+		buff.add(0.5, -0.5, 0.5);
+		buff.add(0.5, 0.5, 0.5);
 		
 		buff.draw();
 		
@@ -113,9 +110,8 @@ public class ParticleBubbleFactory extends ParticleFactory{
 	@SideOnly(Side.CLIENT)
 	public class ParticleBubble extends ParticleM{
 		
-		protected float lifeTime,originalSize,originalAlpha;
-		protected Vec3M rotation=new Vec3M(),prevRotation=new Vec3M(),rotationSpeed=new Vec3M(RandUtil.CRF(4),RandUtil.CRF(4),RandUtil.CRF(4));
-		
+		protected float lifeTime, originalSize, originalAlpha;
+		protected Vec3M rotation=new Vec3M(), prevRotation=new Vec3M(), rotationSpeed=new Vec3M(RandUtil.CRF(4), RandUtil.CRF(4), RandUtil.CRF(4));
 		
 		protected ParticleBubble(Vec3M pos, Vec3M speed, float size, float lifeTime, Vec3M gravity, ColorM color){
 			super(pos, speed);
@@ -130,9 +126,9 @@ public class ParticleBubbleFactory extends ParticleFactory{
 		@Override
 		public void update(){
 			super.update();
-			float mul=1,age=getParticleAge(),age3=age*3;
+			float mul=1, age=getParticleAge(), age3=age*3;
 			
-			if(age3<lifeTime)mul=age3/lifeTime;
+			if(age3<lifeTime) mul=age3/lifeTime;
 			else if(age3-lifeTime*2>0){
 				float add=Math.min(1, (age-lifeTime)/lifeTime*-10F/3);
 				getColor().a(originalAlpha*add);
@@ -142,7 +138,7 @@ public class ParticleBubbleFactory extends ParticleFactory{
 			setSize(originalSize*(float)Math.sqrt(mul));
 			prevRotation.set(rotation);
 			
-			rotationSpeed.addSelf(RandUtil.CRF(1)*getSpeed().x()*120,RandUtil.CRF(1)*getSpeed().y()*120,RandUtil.CRF(1)*getSpeed().z()*120);
+			rotationSpeed.addSelf(RandUtil.CRF(1)*getSpeed().x()*120, RandUtil.CRF(1)*getSpeed().y()*120, RandUtil.CRF(1)*getSpeed().z()*120);
 			rotation.addSelf(rotationSpeed);
 			
 			if(getParticleAge()>lifeTime){
@@ -157,26 +153,27 @@ public class ParticleBubbleFactory extends ParticleFactory{
 		
 		@Override
 		public void moveParticle(Vec3M speed){
-			setBoundingBox(getBoundingBox().offset(speed.x(),speed.y(),speed.z()));
+			setBoundingBox(getBoundingBox().offset(speed.x(), speed.y(), speed.z()));
 			setPosFromBoundingBox();
 		}
+		
 		@Override
 		public void renderModel(float xRotation, float zRotation, float yzRotation, float xyRotation, float xzRotation){}
-
+		
 		@Override
 		public void setUpOpenGl(){
 			
 			OpenGLM.translate(PartialTicksUtil.calculate(this));
 			OpenGLM.rotate(PartialTicksUtil.calculate(prevRotation, rotation));
 			OpenGLM.scale(PartialTicksUtil.calculate(getPrevSize(), getSize()));
-			double angle=(getParticleAge()+PartialTicksUtil.partialTicks)/3,mul=0.15;
-			OpenGLM.scale(1+Math.sin(angle)*mul-mul,1+Math.sin(angle+1.5)*mul-mul,1+Math.sin(angle+3)*mul-mul);
+			double angle=(getParticleAge()+PartialTicksUtil.partialTicks)/3, mul=0.15;
+			OpenGLM.scale(1+Math.sin(angle)*mul-mul, 1+Math.sin(angle+1.5)*mul-mul, 1+Math.sin(angle+3)*mul-mul);
 			ColorM color=getColor();
-			if(color.a()<254/255F)OpenGLM.setUpOpaqueRendering(BlendFunc.NORMAL);
+			if(color.a()<254/255F) OpenGLM.setUpOpaqueRendering(BlendFunc.NORMAL);
 			else OpenGLM.endOpaqueRendering();
 			OpenGLM.color(color);
 		}
-
+		
 		@Override
 		public int[] getModelIds(){
 			return null;

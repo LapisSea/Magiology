@@ -1,17 +1,17 @@
 package com.magiology.util.objs.data;
 
+import com.magiology.util.statics.UtilM;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.magiology.util.statics.UtilM;
-
 public abstract class DatabaseStorageArray<T> implements IDatabaseStorage<T>{
 	
-	protected Map<Class, List<T>>		extensionHistory=new HashMap<>();
-	protected Map<String, List<T>>		nameHistory		=new HashMap<>();
-	protected final Class<? extends T>	base;
+	protected Map<Class,List<T>>  extensionHistory=new HashMap<>();
+	protected Map<String,List<T>> nameHistory     =new HashMap<>();
+	protected final Class<? extends T> base;
 	
 	public DatabaseStorageArray(T base1){
 		base=(Class<? extends T>)base1.getClass();
@@ -27,7 +27,7 @@ public abstract class DatabaseStorageArray<T> implements IDatabaseStorage<T>{
 		if(prev!=null) return prev;
 		
 		List<C> newResult=new ArrayList();
-		for(T t:getDatabase()){
+		for(T t : getDatabase()){
 			if(UtilM.instanceOf(t, c)) newResult.add((C)t);
 		}
 		extensionHistory.put(c, (List<T>)newResult);
@@ -40,7 +40,7 @@ public abstract class DatabaseStorageArray<T> implements IDatabaseStorage<T>{
 		if(prev!=null) return prev;
 		
 		List<T> newResult=new ArrayList();
-		for(T t:getDatabase()){
+		for(T t : getDatabase()){
 			if(t.getClass().getSimpleName().contains(name)) newResult.add(t);
 		}
 		

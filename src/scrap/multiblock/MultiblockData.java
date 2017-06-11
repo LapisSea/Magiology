@@ -1,8 +1,8 @@
 package com.magiology.mc_objects.tile.multiblock;
 
-import java.util.List;
-
 import com.magiology.util.objs.ArrayList_ModifyHook;
+
+import java.util.List;
 
 public class MultiblockData<T>{
 	

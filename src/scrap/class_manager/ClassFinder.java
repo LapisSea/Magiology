@@ -1,28 +1,21 @@
 package com.magiology.core.class_manager;
 
-import java.lang.reflect.Modifier;
-import java.util.*;
-
 import com.google.common.base.Joiner;
 import com.magiology.core.MReference;
-import com.magiology.util.statics.*;
-
 import org.apache.commons.lang3.ArrayUtils;
+
+import java.lang.reflect.Modifier;
 
 class ClassFinder{
 	
-	private static String okToCrashList[]={
-			MReference.SERVER_PROXY_LOCATION,
-			MReference.CLIENT_PROXY_LOCATION,
-			"com.magiology.util.statics.classload.ListCompiler"
-	};
+	private static String okToCrashList[]={MReference.SERVER_PROXY_LOCATION, MReference.CLIENT_PROXY_LOCATION, "com.magiology.util.statics.classload.ListCompiler"};
 	
 	static void load(){
 		
 		populate();
 		
 		Queue<String> sorted=new ArrayDeque<>();
-		ClassList.getClassesToSort().forEach((type)->{
+		ClassList.getClassesToSort().forEach((type) -> {
 			ClassList.implementations.put(type, new ArrayList<>());
 			ClassList.directImplementations.put(type, new ArrayList<>());
 			exploreType(type);
@@ -39,7 +32,7 @@ class ClassFinder{
 		List<Class<?>> impl=ClassList.implementations.get(targetType);
 		List<Class<?>> dirImpl=ClassList.directImplementations.get(targetType);
 		
-		for(Class<?> type:ClassList.allClasses){
+		for(Class<?> type : ClassList.allClasses){
 			if(targetType!=type&&UtilM.instanceOf(type, targetType)&&!Modifier.isAbstract(type.getModifiers())&&!Modifier.isInterface(type.getModifiers())) impl.add(type);
 			if(type.getSuperclass()==targetType) dirImpl.add(type);
 		}
@@ -53,16 +46,16 @@ class ClassFinder{
 			LogUtil.println("Starting to load all classes from "+MReference.NAME+"!");
 			UtilM.startTime();
 			
-			for(String clazz:ClassList.classes){
+			for(String clazz : ClassList.classes){
 				exploreAndLoadClass(loader, failed, clazz, null);
 			}
 			
 			LogUtil.println("Loading of all classes is done in "+UtilM.endTime()+"ms.");
 			if(failed.isEmpty()) LogUtil.println("Generated class list is ok! ^_^");
-			else{
+			else {
 				LogUtil.println("Something changed! Class list or black list needs to be updated!");
 				LogUtil.println("Failed class list:");
-				for(String string:failed)
+				for(String string : failed)
 					LogUtil.println(string);
 				
 				LogUtil.println("\nUpdating list...");
@@ -81,10 +74,10 @@ class ClassFinder{
 		try{
 			if(clazz==null){
 				ClassList.allClasses.add(clazs);
-				for(Class c:clazs.getDeclaredClasses()){
+				for(Class c : clazs.getDeclaredClasses()){
 					exploreAndLoadClass(loader, failed, null, c);
 				}
-			}else{
+			}else {
 				exploreAndLoadClass(loader, failed, null, loader.loadClass(clazz));
 			}
 			

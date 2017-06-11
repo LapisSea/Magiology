@@ -1,14 +1,10 @@
 package com.magiology.client.rendering.item;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.magiology.core.registry.init.ItemsM;
 import com.magiology.util.interf.Renderable;
 import com.magiology.util.interf.SpecialRender;
 import com.magiology.util.statics.LogUtil;
 import com.magiology.util.statics.UtilC;
-
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -17,6 +13,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Special Item Rrenderer Registry
@@ -65,7 +64,7 @@ public class SIRRegistry{
 			
 			UtilC.getRI().getItemModelMesher().register(item, new DummyMesh(loc));
 		}catch(Exception e){
-			for(int i=0;i<ItemsM.get().getDatabase().length;i++){
+			for(int i=0; i<ItemsM.get().getDatabase().length; i++){
 				LogUtil.println(ItemsM.get().getDatabase()[i].getRegistryName());
 			}
 			throw e;
@@ -75,9 +74,9 @@ public class SIRRegistry{
 	public static <T extends Item&SpecialRender> void register(){
 		MagiologyTEISR.wrapp();
 		ModelLoaderRegistry.registerLoader(new ModelLoaderM());
-		for(SpecialRender item:ItemsM.get().getByExtension(SpecialRender.class)){
+		for(SpecialRender item : ItemsM.get().getByExtension(SpecialRender.class)){
 			T itemRender=(T)item;
-			if(itemRender.getRenderer()instanceof IItemRenderer){
+			if(itemRender.getRenderer() instanceof IItemRenderer){
 				registerItem(itemRender);
 			}
 		}

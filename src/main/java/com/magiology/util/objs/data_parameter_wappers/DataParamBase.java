@@ -7,7 +7,6 @@ import net.minecraft.network.datasync.EntityDataManager;
 
 public class DataParamBase<Type, Ent extends Entity>{
 	
-	
 	protected final DataParameter<Type> parm;
 	protected boolean isRegistered=false;
 	

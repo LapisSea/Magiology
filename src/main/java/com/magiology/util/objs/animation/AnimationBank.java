@@ -1,5 +1,11 @@
 package com.magiology.util.objs.animation;
 
+import com.magiology.core.Magiology;
+import com.magiology.util.statics.LogUtil;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,22 +14,15 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import org.apache.commons.io.FileUtils;
-
-import com.magiology.core.Magiology;
-import com.magiology.util.statics.LogUtil;
-
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 @SideOnly(Side.CLIENT)
 public class AnimationBank{
 	
 	private static final List<Anim> animations=new ArrayList<>();
 	
 	private static class Anim{
+		
 		private final AnimationM instance;
-		private final String srcName,srcNameLower;
+		private final String     srcName, srcNameLower;
 		private final int accessId;
 		
 		public Anim(AnimationM instance, String srcName, int accessId){
@@ -38,13 +37,15 @@ public class AnimationBank{
 		String name0=name.toLowerCase();
 		return new AnimationMReference(stream(ent->ent.srcNameLower.equals(name0)).findFirst().get().accessId);
 	}
+	
 	public static AnimationMReference getByName(String name){
 		String name0=name.toLowerCase();
 		return new AnimationMReference(stream(ent->ent.srcNameLower.contains(name0)).findFirst().get().accessId);
 	}
-	public static Map<String, AnimationMReference> getAllWith(String name){
+	
+	public static Map<String,AnimationMReference> getAllWith(String name){
 		String name0=name.toLowerCase();
-		Map<String, AnimationMReference> result=new HashMap<>();
+		Map<String,AnimationMReference> result=new HashMap<>();
 		stream(ent->ent.srcNameLower.contains(name0)).forEach(ent->result.put(ent.srcName, new AnimationMReference(ent.accessId)));
 		return result;
 	}
@@ -64,7 +65,7 @@ public class AnimationBank{
 		load0(root, files);
 		files.stream().filter((f)->f.getPath().endsWith(".la")).forEach(f->{
 			String name=f.getPath();
-			name=name.substring(name.indexOf("animations\\")+11,name.length()-3).replace('\\', '/');
+			name=name.substring(name.indexOf("animations\\")+11, name.length()-3).replace('\\', '/');
 			try{
 				animations.add(new Anim(new AnimationM(FileUtils.readFileToString(f)), name, animations.size()));
 			}catch(Exception e){
@@ -72,10 +73,11 @@ public class AnimationBank{
 			}
 		});
 	}
-	private static void load0(File f,List<File> files){
+	
+	private static void load0(File f, List<File> files){
 		if(f.isDirectory()){
 			LogUtil.println(f);
-			for(String name:f.list()){
+			for(String name : f.list()){
 				load0(new File(f.getPath()+"/"+name), files);
 			}
 		}else files.add(f);

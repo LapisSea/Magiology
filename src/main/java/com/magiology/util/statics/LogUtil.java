@@ -1,19 +1,22 @@
 package com.magiology.util.statics;
 
-import static org.apache.logging.log4j.Level.*;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializer;
+import com.magiology.core.ConfigM;
+import com.magiology.core.MReference;
+import com.magiology.util.DebugWin;
+
+import net.minecraftforge.fml.common.FMLLog;
+import scala.reflect.api.Trees.NewExtractor;
+
+import org.apache.logging.log4j.Level;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import org.apache.logging.log4j.Level;
-
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializer;
-import com.magiology.core.MReference;
-
-import net.minecraftforge.fml.common.FMLLog;
+import static org.apache.logging.log4j.Level.*;
 
 public class LogUtil{
 	
@@ -29,7 +32,7 @@ public class LogUtil{
 		//		for(StackTraceElement stack:trace){
 		//			stack.getMethodName()
 		//		}
-		for(int i=count+1;i>=2;i--){
+		for(int i=count+1; i>=2; i--){
 			line.append(trace[i].getMethodName()).append('(').append(trace[i].getLineNumber()).append(')');
 			if(i!=2) line.append(splitter);
 		}
@@ -44,23 +47,23 @@ public class LogUtil{
 		StringBuilder line=new StringBuilder();
 		
 		int length=0;
-		for(int i=0;i<data.length;i++){
+		for(int i=0; i<data.length; i++){
 			String lin=(data[i]=data[i].replaceFirst("\\s+$", ""));
 			length=Math.max(length, lin.length());
 		}
 		
 		if(length>6){
 			line.append("<<");
-			for(int i=0, j=length-4;i<j;i++)
+			for(int i=0, j=length-4; i<j; i++)
 				line.append('=');
 			line.append(">>");
-		}else for(int i=0;i<length;i++)
+		}else for(int i=0; i<length; i++)
 			line.append('=');
 		
 		String lineS=line.toString();
 		
 		info(lineS);
-		for(String lin:data)
+		for(String lin : data)
 			info(lin);
 		info(lineS);
 	}
@@ -73,7 +76,7 @@ public class LogUtil{
 		info(UtilM.toString(obj));
 	}
 	
-	public static void println(Object...objs){
+	public static void println(Object... objs){
 		info(UtilM.toString(objs));
 	}
 	
@@ -96,7 +99,7 @@ public class LogUtil{
 		error(UtilM.toString(obj));
 	}
 	
-	public static void printlnEr(Object...objs){
+	public static void printlnEr(Object... objs){
 		error(UtilM.toString(objs));
 	}
 	
@@ -108,28 +111,52 @@ public class LogUtil{
 		info(UtilM.toString(obj));
 	}
 	
-	public static void printlnInf(Object...objs){
+	public static void printlnInf(Object... objs){
 		info(UtilM.toString(objs));
 	}
 	
 	public static void printStackTrace(){
+		printStackTrace(null);
+	}
+	
+	public static void printStackTrace(String msg){
 		StringBuilder result=new StringBuilder();
 		
 		StackTraceElement[] a1=Thread.currentThread().getStackTrace();
+		
+		if(msg==null){
+			DateFormat dateFormat=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			Calendar cal=Calendar.getInstance();
+			result.append("Invoke time: ").append(dateFormat.format(cal.getTime())).append("\n");
+		}else result.append(msg).append("\n");
+		
 		int length=0;
-		DateFormat dateFormat=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		Calendar cal=Calendar.getInstance();
-		result.append("Invoke time: ").append(dateFormat.format(cal.getTime())).append("\n");
-		for(int i=2;i<a1.length;i++){
+		for(int i=2; i<a1.length; i++){
 			StackTraceElement a=a1[i];
 			String s=a.toString();
 			result.append(s).append("\n");
 			length=Math.max(s.length(), length);
 		}
-		for(int b=0;b<length/4;b++)
+		for(int b=0; b<length/4; b++)
 			result.append("_/\\_");
 		
 		println(result);
+	}
+
+	public static void printlnDebug(){
+		printlnDebug("");
+	}
+	public static void printlnDebug(String txt){
+		if(!ConfigM.debugWin())return;
+		DebugWin.add(txt);
+	}
+	
+	public static void printlnDebug(Object obj){
+		if(ConfigM.debugWin())printlnDebug(UtilM.toString(obj));
+	}
+	
+	public static void printlnDebug(Object... objs){
+		if(ConfigM.debugWin())printlnDebug(UtilM.toString(objs));
 	}
 	
 	private static void all(String object){
@@ -153,9 +180,9 @@ public class LogUtil{
 	}
 	
 	private static void log(Level logLevel, String object){
-		//MagiLog.append(object+"\n");
+//		MagiLog.append(object+"\n");
 		String[] lines=object.split(UtilM.LINE_REG);
-		for(String line:lines){
+		for(String line : lines){
 			FMLLog.log(MReference.NAME, logLevel, line);
 		}
 	}
@@ -171,5 +198,6 @@ public class LogUtil{
 	private static void warn(String object){
 		log(WARN, object);
 	}
+	
 	
 }

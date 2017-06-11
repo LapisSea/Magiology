@@ -1,28 +1,79 @@
 package com.magiology.client.rendering.tile;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.lwjgl.opengl.GL11;
+
+import com.google.common.collect.Lists;
 import com.magiology.client.renderers.FastNormalRenderer;
 import com.magiology.client.renderers.Renderer;
+import com.magiology.core.registry.init.ParticlesM;
 import com.magiology.handlers.frame_buff.TemporaryFrame;
 import com.magiology.mc_objects.features.screen.TileEntityScreen;
 import com.magiology.mc_objects.features.screen.TileEntityScreen.ScreenMultiblockHandler;
+import com.magiology.util.interf.Locateable.LocateableBlockM;
 import com.magiology.util.m_extensions.TileEntitySpecialRendererM;
+import com.magiology.util.objs.PairM;
 import com.magiology.util.objs.color.ColorM;
+import com.magiology.util.objs.color.IColorM;
 import com.magiology.util.objs.vec.Vec2FM;
 import com.magiology.util.objs.vec.Vec2i;
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.GeometryUtil;
 import com.magiology.util.statics.OpenGLM;
+import com.magiology.util.statics.OpenGLM.BlendFunc;
 import com.magiology.util.statics.UtilC;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import scala.tools.nsc.doc.base.comment.Link;
 
 public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEntityScreen>{
 	
-	
 	@Override
 	public void renderTileEntityAt(TileEntityScreen tile, Vec3M renderPos, float partialTicks){
-//		if(RandUtil.RB(0.01))ParticleBubbleFactory.get().spawn(new Vec3M(tile.getPos()).add(3.5),new Vec3M(),1,20,0,ColorF.randomRGB());
+		//		if(RandUtil.RB(0.01))ParticleBubbleFactory.get().spawn(new Vec3M(tile.getPos()).add(3.5),new Vec3M(),1,20,0,ColorF.randomRGB());
+		List<PairM<TileEntityScreen,IColorM>> ll=new ArrayList<>();
+		
+		if(tile.isBrain()){
+			for(TileEntityScreen t:tile.getHandler().loaded){
+				ll.add(new PairM<>(t,ColorM.GREEN));
+			}
+			for(TileEntityScreen t:tile.getHandler().pending){
+				ll.add(new PairM<>(t,ColorM.RED));
+			}
+		}
+		else if(tile.hasBrain()){
+			ll.add(new PairM<>(tile.getBrain(),ColorM.BLUE));
+		}
+		
+		if(ll!=null){
+			OpenGLM.pushMatrix();
+			OpenGLM.translate(new Vec3M(tile.getPos()).mulSelf(-1).addSelf(renderPos).addSelf(0.5F).addSelf(tile.getRotation()));
+			
+			OpenGLM.disableTexture2D();
+			OpenGLM.disableDepth();
+			OpenGLM.setUpOpaqueRendering(BlendFunc.NORMAL);
+			try{
+				
+				for(PairM<TileEntityScreen,IColorM> i:ll){
+					GL11.glLineWidth(ll.size()*2);
+					i.obj2.bindWithA(0.2F);
+					Renderer.LINES.begin();
+					Renderer.LINES.addVertex(new Vec3M(tile.getPos()));
+					Renderer.LINES.addVertex(new Vec3M(i.obj1.getPos()));
+					Renderer.LINES.draw();
+				}
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			OpenGLM.enableTexture2D();
+			OpenGLM.enableDepth();
+			
+			OpenGLM.popMatrix();
+		}
+		ColorM.WHITE.bind();
 		
 		try{
 			double minX=0,minY=0,maxX=1,maxY=1;
@@ -34,11 +85,9 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 				renderScreen=mb!=null;
 			}
 			
-//			if(UtilM.peridOf(tile, 45))ParticlesM.MESSAGE.spawn(new Vec3M(tile.getPos()).add(0.5).addZ(1).addX(-1), new Vec3M(0,0,0.01), 3/16F, 40, ColorM.WHITE, tile.getBrain().toString());
-			
 			if(renderScreen){
 				boolean highl=false;
-				if(UtilC.getThePlayer().isSneaking())try{
+				if(UtilC.getThePlayer().isSneaking()) try{
 					highl=UtilC.getMC().objectMouseOver.getBlockPos().equals(tile.getPos());
 				}catch(Exception e){}
 				
@@ -48,13 +97,13 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 					
 					Vec2i size=brain.getSize2d();
 					if(screen==null){
-						screen=brain.screenTexture=new TemporaryFrame(size.x*64,size.y*64,false);
-						screen.setRednerHook(f->renderScreen(brain,f.getWidth(),f.getHeight()));
+						screen=brain.screenTexture=new TemporaryFrame(size.x*64, size.y*64, false);
+						screen.setRednerHook(f->renderScreen(brain, f.getWidth(), f.getHeight()));
 					}else{
-						screen.setSize(Math.max(size.x, 1)*64,Math.max(size.y, 1)*64);
+						screen.setSize(Math.max(size.x, 1)*64, Math.max(size.y, 1)*64);
 					}
 					Vec2i offset=brain.getPositions().get(tile.getMbId());
-					if(tile.screenDirty)screen.requestRender();
+					if(tile.screenDirty) screen.requestRender();
 					screen.bindTexture();
 					
 					minX=offset.x;
@@ -68,7 +117,10 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 					maxY/=size.y;
 					
 				}catch(Exception e){
-					if(UtilC.getThePlayer().isSneaking())e.printStackTrace();
+					if(UtilC.getThePlayer().isSneaking()){
+						ParticlesM.MESSAGE.spawn(new Vec3M(tile.getPos()).add(0.5).subX(1), new Vec3M(-0.01, 0, 0), 3/16F, 40, ColorM.RED, e.toString());
+						e.printStackTrace();
+					}
 					ColorM.BLUE.bind();
 					OpenGLM.disableTexture2D();
 				}
@@ -78,152 +130,111 @@ public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEnt
 			OpenGLM.translate(renderPos.addSelf(0.5F));
 			
 			OpenGLM.rotate(GeometryUtil.rotFromFacing(tile.getRotation()));
-			OpenGLM.translate(-0.5F,-0.5F,-0.5F);
-//			OpenGLM.translate(renderPos.addSelf(0.5F));
-//			OpenGLM.rotate(GeometryUtil.rotFromFacing(tile.getRotation()));
-//			OpenGLM.translate(-0.5F,-0.5F,-0.5F);
+			OpenGLM.translate(-0.5F, -0.5F, -0.5F);
 			
-//			FastNormalRenderer renderer=new FastNormalRenderer();
-//			renderer.begin(true,FastNormalRenderer.POS_UV);
-//
-//			renderer.add(0, 1, 0.5,  minX-1,maxY+1);
-//			renderer.add(0, 0, 0.5,  minX-1,minY-1);
-//			renderer.add(1, 0, 0.5,  maxX+1,minY-1);
-//			renderer.add(1, 1, 0.5,  maxX+1,maxY+1);
-//
-//			renderer.draw();
-            
-            if(Minecraft.isAmbientOcclusionEnabled())GlStateManager.shadeModel(7425);
-            else GlStateManager.shadeModel(7424);
-            
+			if(Minecraft.isAmbientOcclusionEnabled()) GlStateManager.shadeModel(7425);
+			else GlStateManager.shadeModel(7424);
+			
 			try{
 				FastNormalRenderer buf=new FastNormalRenderer();
-				buf.begin(true, FastNormalRenderer.POS_UV).usingQuadConversion();
-				buf.add(0, 1, 11.01F/16F, minX,maxY);
-				buf.add(0, 0, 11.01F/16F,  minX,minY);
-				buf.add(1, 0, 11.01F/16F,  maxX,minY);
-				buf.add(1, 1, 11.01F/16F,  maxX,maxY);
+				buf.begin(true, FastNormalRenderer.POS_UV);
+				buf.add(0, 1, 11.01F/16F, minX, maxY);
+				buf.add(0, 0, 11.01F/16F, minX, minY);
+				buf.add(1, 0, 11.01F/16F, maxX, minY);
+				buf.add(1, 1, 11.01F/16F, maxX, maxY);
 				buf.draw();
 				
 			}catch(Exception e){
-				if(UtilC.getThePlayer().isSneaking())e.printStackTrace();
+				if(UtilC.getThePlayer().isSneaking()) e.printStackTrace();
 			}
 			
-			if(!tile.hasBrain())OpenGLM.enableTexture2D();
+			if(!tile.hasBrain()) OpenGLM.enableTexture2D();
 			OpenGLM.popMatrix();
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		OpenGLM.enableTexture2D();
-
-//		OpenGLM.pushMatrix();
-//		OpenGLM.translate(new Vec3M(tile.getPos()).mul(-1).add(renderPos));
-//
-//			OpenGLM.disableTexture2D();
-//			OpenGLM.disableDepth();
-//			OpenGLM.setUpOpaqueRendering(BlendFunc.NORMAL);
-//			List<Link> ll=tile.getMbCategory();
-//			for(Link i:ll){
-//				GL11.glLineWidth(ll.size()*2);
-//				IColorM c=ColorM.BLUE;
-//				if(i.getStatus()==LinkStatus.LOADED)c=ColorM.GREEN;
-//				if(i.getStatus()==LinkStatus.UNLOADED)c=ColorM.RED;
-//				c.bindWithA(0.2F);
-//				Renderer.LINES.begin();
-//				Renderer.LINES.addVertex(new Vec3M(tile.getPos()));
-//				Renderer.LINES.addVertex(new Vec3M(i.getPoint()));
-//				Renderer.LINES.draw();
-//			}
-//			OpenGLM.enableTexture2D();
-//			OpenGLM.enableDepth();
-//		
-//		OpenGLM.popMatrix();
-		ColorM.WHITE.bind();
+		
 	}
 	
 	private void renderScreen(TileEntityScreen tile, int width, int height){
 		
 		TileEntityScreen brain=tile.getBrain();
-
+		
 		OpenGLM.disableTexture2D();
 		ColorM.WHITE.bind();
 		Renderer.POS.beginQuads();
-		Renderer.POS.addVertex(1,       1,        0);
-		Renderer.POS.addVertex(1,       height-1, 0);
+		Renderer.POS.addVertex(1, 1, 0);
+		Renderer.POS.addVertex(1, height-1, 0);
 		Renderer.POS.addVertex(width-1, height-1, 0);
-		Renderer.POS.addVertex(width-1, 1,        0);
+		Renderer.POS.addVertex(width-1, 1, 0);
 		Renderer.POS.draw();
-
+		
 		ColorM.ORANGE.bind();
 		Renderer.LINES.begin();
-		Renderer.LINES.addVertex(1,1,0);
-		Renderer.LINES.addVertex(width-1,height-1,0);
-		Renderer.LINES.addVertex(1,height-1,0);
-		Renderer.LINES.addVertex(width-1,1,0);
+		Renderer.LINES.addVertex(1, 1, 0);
+		Renderer.LINES.addVertex(width-1, height-1, 0);
+		Renderer.LINES.addVertex(1, height-1, 0);
+		Renderer.LINES.addVertex(width-1, 1, 0);
 		Renderer.LINES.draw();
-
-
+		
 		OpenGLM.pushMatrix();
 		Vec2FM pos=brain.click;
-		OpenGLM.translate(pos.x,pos.y,0);
-
-
+		OpenGLM.translate(pos.x, pos.y, 0);
+		
 		ColorM.RED.bind();
 		Renderer.POS.beginQuads();
-		Renderer.POS.addVertex( 1,  1, 0);
-		Renderer.POS.addVertex( 1, -1, 0);
+		Renderer.POS.addVertex(1, 1, 0);
+		Renderer.POS.addVertex(1, -1, 0);
 		Renderer.POS.addVertex(-1, -1, 0);
-		Renderer.POS.addVertex(-1,  1, 0);
+		Renderer.POS.addVertex(-1, 1, 0);
 		Renderer.POS.draw();
-
+		
 		OpenGLM.popMatrix();
-
+		
 		if(brain.highlighted){
 			OpenGLM.pushMatrix();
 			
 			Vec2FM pos1=brain.highlight;
-			OpenGLM.translate(pos1.x,pos1.y,0);
-
+			OpenGLM.translate(pos1.x, pos1.y, 0);
+			
 			ColorM.BLUE.bind();
 			Renderer.POS.beginQuads();
-			Renderer.POS.addVertex( 1,  1, 0);
-			Renderer.POS.addVertex( 1, -1, 0);
+			Renderer.POS.addVertex(1, 1, 0);
+			Renderer.POS.addVertex(1, -1, 0);
 			Renderer.POS.addVertex(-1, -1, 0);
-			Renderer.POS.addVertex(-1,  1, 0);
+			Renderer.POS.addVertex(-1, 1, 0);
 			Renderer.POS.draw();
-
+			
 			OpenGLM.popMatrix();
 		}
-
-
-
+		
 		ColorM.BLACK.bind();
 		Renderer.POS.beginQuads();
-
-		Renderer.POS.addVertex(0,     0, 0);
-		Renderer.POS.addVertex(0,     1, 0);
+		
+		Renderer.POS.addVertex(0, 0, 0);
+		Renderer.POS.addVertex(0, 1, 0);
 		Renderer.POS.addVertex(width, 1, 0);
 		Renderer.POS.addVertex(width, 0, 0);
-
-		Renderer.POS.addVertex(0,     height-1, 0);
-		Renderer.POS.addVertex(0,     height,   0);
-		Renderer.POS.addVertex(width, height,   0);
+		
+		Renderer.POS.addVertex(0, height-1, 0);
+		Renderer.POS.addVertex(0, height, 0);
+		Renderer.POS.addVertex(width, height, 0);
 		Renderer.POS.addVertex(width, height-1, 0);
-
-		Renderer.POS.addVertex(0, 0,      0);
+		
+		Renderer.POS.addVertex(0, 0, 0);
 		Renderer.POS.addVertex(0, height, 0);
 		Renderer.POS.addVertex(1, height, 0);
-		Renderer.POS.addVertex(1, 0,      0);
-
-		Renderer.POS.addVertex(width-1, 0,      0);
+		Renderer.POS.addVertex(1, 0, 0);
+		
+		Renderer.POS.addVertex(width-1, 0, 0);
 		Renderer.POS.addVertex(width-1, height, 0);
-		Renderer.POS.addVertex(width,   height, 0);
-		Renderer.POS.addVertex(width,   0,      0);
-
+		Renderer.POS.addVertex(width, height, 0);
+		Renderer.POS.addVertex(width, 0, 0);
+		
 		Renderer.POS.draw();
 		ColorM.WHITE.bind();
 		OpenGLM.enableTexture2D();
 	}
-	
 	
 }

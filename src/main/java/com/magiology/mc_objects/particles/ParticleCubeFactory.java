@@ -1,7 +1,5 @@
 package com.magiology.mc_objects.particles;
 
-import org.lwjgl.opengl.GL11;
-
 import com.magiology.client.renderers.FastNormalRenderer;
 import com.magiology.handlers.particle.ParticleFactory;
 import com.magiology.handlers.particle.ParticleM;
@@ -13,12 +11,12 @@ import com.magiology.util.statics.OpenGLM.AlphaFunc;
 import com.magiology.util.statics.RandUtil;
 import com.magiology.util.statics.UtilM;
 import com.magiology.util.statics.math.PartialTicksUtil;
-
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 public class ParticleCubeFactory extends ParticleFactory{
 	
@@ -29,9 +27,9 @@ public class ParticleCubeFactory extends ParticleFactory{
 	}
 	
 	public void spawn(Vec3M pos, Vec3M speed, float size, float lifeTime, Vec3M gravity, IColorM color){
-		if(!UtilM.isRemote()||!shouldSpawn(pos))return;
+		if(!UtilM.isRemote()||!shouldSpawn(pos)) return;
 		addParticle(new ParticleCube(pos, speed, size, lifeTime, gravity, color));
-//		if(UtilC.getWorldTime()%20==0)compileDisplayList();
+		//		if(UtilC.getWorldTime()%20==0)compileDisplayList();
 	}
 	
 	@Override
@@ -67,40 +65,40 @@ public class ParticleCubeFactory extends ParticleFactory{
 	
 	@Override
 	public void compileDisplayList(){
-		if(defultModel!=-1)GL11.glDeleteLists(defultModel, 1);
+		if(defultModel!=-1) GL11.glDeleteLists(defultModel, 1);
 		startList();
 		FastNormalRenderer buff=new FastNormalRenderer();
-		buff.begin(true,FastNormalRenderer.POS);
+		buff.begin(true, FastNormalRenderer.POS);
 		
-		buff.add( 0.5, -0.5, -0.5);
-		buff.add( 0.5,  0.5, -0.5);
-		buff.add( 0.5,  0.5,  0.5);
-		buff.add( 0.5, -0.5,  0.5);
+		buff.add(0.5, -0.5, -0.5);
+		buff.add(0.5, 0.5, -0.5);
+		buff.add(0.5, 0.5, 0.5);
+		buff.add(0.5, -0.5, 0.5);
 		
-		buff.add(-0.5, -0.5,  0.5);
-		buff.add(-0.5,  0.5,  0.5);
-		buff.add(-0.5,  0.5, -0.5);
+		buff.add(-0.5, -0.5, 0.5);
+		buff.add(-0.5, 0.5, 0.5);
+		buff.add(-0.5, 0.5, -0.5);
 		buff.add(-0.5, -0.5, -0.5);
 
-		buff.add(-0.5,  0.5, -0.5);
-		buff.add(-0.5,  0.5,  0.5);
-		buff.add( 0.5,  0.5,  0.5);
-		buff.add( 0.5,  0.5, -0.5);
+		buff.add(-0.5, 0.5, -0.5);
+		buff.add(-0.5, 0.5, 0.5);
+		buff.add(0.5, 0.5, 0.5);
+		buff.add(0.5, 0.5, -0.5);
 		
-		buff.add( 0.5, -0.5, -0.5);
-		buff.add( 0.5, -0.5,  0.5);
-		buff.add(-0.5, -0.5,  0.5);
+		buff.add(0.5, -0.5, -0.5);
+		buff.add(0.5, -0.5, 0.5);
+		buff.add(-0.5, -0.5, 0.5);
 		buff.add(-0.5, -0.5, -0.5);
 
-		buff.add( 0.5,  0.5, -0.5);
-		buff.add( 0.5, -0.5, -0.5);
+		buff.add(0.5, 0.5, -0.5);
+		buff.add(0.5, -0.5, -0.5);
 		buff.add(-0.5, -0.5, -0.5);
-		buff.add(-0.5,  0.5, -0.5);
+		buff.add(-0.5, 0.5, -0.5);
 		
-		buff.add(-0.5,  0.5,  0.5);
-		buff.add(-0.5, -0.5,  0.5);
-		buff.add( 0.5, -0.5,  0.5);
-		buff.add( 0.5,  0.5,  0.5);
+		buff.add(-0.5, 0.5, 0.5);
+		buff.add(-0.5, -0.5, 0.5);
+		buff.add(0.5, -0.5, 0.5);
+		buff.add(0.5, 0.5, 0.5);
 		
 		buff.draw();
 		
@@ -110,9 +108,8 @@ public class ParticleCubeFactory extends ParticleFactory{
 	@SideOnly(Side.CLIENT)
 	public class ParticleCube extends ParticleM{
 		
-		protected float lifeTime,originalSize,originalAlpha;
-		protected Vec3M rotation=new Vec3M(RandUtil.RF(90),RandUtil.RF(90),RandUtil.RF(90)),prevRotation=new Vec3M(),rotationSpeed=new Vec3M(RandUtil.CRF(4),RandUtil.CRF(4),RandUtil.CRF(4));
-		
+		protected float lifeTime, originalSize, originalAlpha;
+		protected Vec3M rotation=new Vec3M(RandUtil.RF(90), RandUtil.RF(90), RandUtil.RF(90)), prevRotation=new Vec3M(), rotationSpeed=new Vec3M(RandUtil.CRF(4), RandUtil.CRF(4), RandUtil.CRF(4));
 		
 		protected ParticleCube(Vec3M pos, Vec3M speed, float size, float lifeTime, Vec3M gravity, IColorM color){
 			super(pos, speed);
@@ -132,7 +129,7 @@ public class ParticleCubeFactory extends ParticleFactory{
 			setSize(originalSize*(float)Math.sqrt(mul));
 			prevRotation.set(rotation);
 			if(!isCollided()){
-				rotationSpeed=rotationSpeed.add(RandUtil.CRF(1)*getSpeed().x()*120,RandUtil.CRF(1)*getSpeed().y()*120,RandUtil.CRF(1)*getSpeed().z()*120);
+				rotationSpeed=rotationSpeed.add(RandUtil.CRF(1)*getSpeed().x()*120, RandUtil.CRF(1)*getSpeed().y()*120, RandUtil.CRF(1)*getSpeed().z()*120);
 				rotation.addSelf(rotationSpeed);
 			}
 			if(getParticleAge()>lifeTime){
@@ -145,13 +142,13 @@ public class ParticleCubeFactory extends ParticleFactory{
 		
 		@Override
 		public void onCollided(Vec3i direction){
-//			PrintUtil.println(getSpeed());
-			if(direction.getX()!=0)getSpeed().mulSelfX(-1);
-			if(direction.getY()!=0)getSpeed().mulSelfY(-1);
-			if(direction.getZ()!=0)getSpeed().mulSelfZ(-1);
+			//			PrintUtil.println(getSpeed());
+			if(direction.getX()!=0) getSpeed().mulSelfX(-1);
+			if(direction.getY()!=0) getSpeed().mulSelfY(-1);
+			if(direction.getZ()!=0) getSpeed().mulSelfZ(-1);
 			
 			rotationSpeed=rotationSpeed.mul(-0.3);
-			rotation.set((rotation.x()*2+Math.round(rotation.x()/90)*90)/3,(rotation.y()*2+Math.round(rotation.y()/90)*90)/3,(rotation.z()*2+Math.round(rotation.z()/90)*90)/3);
+			rotation.set((rotation.x()*2+Math.round(rotation.x()/90)*90)/3, (rotation.y()*2+Math.round(rotation.y()/90)*90)/3, (rotation.z()*2+Math.round(rotation.z()/90)*90)/3);
 		}
 		
 		@Override
@@ -176,6 +173,7 @@ public class ParticleCubeFactory extends ParticleFactory{
 		public int getModelId(){
 			return defultModel;
 		}
+
 		@Override
 		public ParticleFactory getFactorfy(){
 			return null;

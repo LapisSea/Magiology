@@ -1,77 +1,84 @@
 package com.magiology.util.statics;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
-
 import com.magiology.util.objs.PairM;
 import com.magiology.util.objs.vec.IVec3M;
 import com.magiology.util.objs.vec.Vec2FM;
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.objs.vec.Vec3MFinal;
 import com.magiology.util.statics.math.MatrixUtil;
-
 import net.minecraft.client.model.PositionTextureVertex;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.AxisDirection;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.*;
 import net.minecraft.util.math.RayTraceResult.Type;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
+import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 public class GeometryUtil{
-
+	
 	public static class Quad extends Triangle{
+		
 		public Vec3M pos4;
+		
 		public Quad(PositionTextureVertex[] quad){
-			this(new Vec3M(quad[0].vector3D),new Vec3M(quad[1].vector3D),new Vec3M(quad[2].vector3D),new Vec3M(quad[3].vector3D));
+			this(new Vec3M(quad[0].vector3D), new Vec3M(quad[1].vector3D), new Vec3M(quad[2].vector3D), new Vec3M(quad[3].vector3D));
 		}
+		
 		public Quad(Vec3M pos1, Vec3M pos2, Vec3M pos3, Vec3M pos4){
 			super(pos1, pos2, pos3);
 			this.pos4=pos4;
 		}
+		
 		public Quad add(Quad tri){
 			return new Quad(pos1.add(tri.pos1), pos2.add(tri.pos2), pos3.add(tri.pos3), pos4.add(tri.pos4));
 		}
+		
 		@Override
 		public Quad add(Vec3M pos){
 			return new Quad(pos1.add(pos), pos2.add(pos), pos3.add(pos), pos4.add(pos));
 		}
+		
 		@Override
 		public Quad copy(){
 			return new Quad(pos1.copy(), pos2.copy(), pos3.copy(), pos4.copy());
 		}
+		
 		public Triangle getTriangle1(){
 			return new Triangle(pos1, pos2, pos3);
 		}
+		
 		public Triangle getTriangle2(){
 			return new Triangle(pos1, pos3, pos4);
 		}
+		
 		@Override
 		public Quad mul(double mul){
-			return new Quad(pos1.mul(mul), pos2.mul(mul), pos3.mul(mul),pos4.mul(mul));
+			return new Quad(pos1.mul(mul), pos2.mul(mul), pos3.mul(mul), pos4.mul(mul));
 		}
+		
 		public Quad mul(Quad tri){
 			return new Quad(pos1.mul(tri.pos1), pos2.mul(tri.pos2), pos3.mul(tri.pos3), pos4.mul(tri.pos4));
 		}
+		
 		public Quad sub(Quad tri){
 			return new Quad(pos1.sub(tri.pos1), pos2.sub(tri.pos2), pos3.sub(tri.pos3), pos4.sub(tri.pos4));
 		}
+		
 		@Override
 		public void transform(Matrix4f matrix){
 			super.transform(matrix);
 			pos4=MatrixUtil.transformVector(pos4, matrix);
 		}
 	}
+	
 	public static class Ray{
+		
 		public static Ray byDir(Vec3M origin, Vec3M normal){
 			return new Ray(origin, normal);
 		}
@@ -79,47 +86,59 @@ public class GeometryUtil{
 		public static Ray byPos(Vec3M pos1, Vec3M pos2){
 			return new Ray(pos1, pos2.sub(pos1).normalize());
 		}
-		public Vec3M origin,dir;
+		
+		public Vec3M origin, dir;
 		
 		private Ray(Vec3M origin, Vec3M normal){
 			this.origin=origin;
 			dir=normal;
 		}
 	}
+	
 	public static class Triangle{
+		
 		private Vec3M normal;
-		public Vec3M pos1,pos2,pos3;
+		public  Vec3M pos1, pos2, pos3;
+		
 		public Triangle(Vec3M pos1, Vec3M pos2, Vec3M pos3){
 			this.pos1=pos1;
 			this.pos2=pos2;
 			this.pos3=pos3;
 		}
+		
 		public Triangle add(Triangle tri){
 			return new Triangle(pos1.add(tri.pos1), pos2.add(tri.pos2), pos3.add(tri.pos3));
 		}
+		
 		public Triangle add(Vec3M pos){
 			return new Triangle(pos1.add(pos), pos2.add(pos), pos3.add(pos));
 		}
+		
 		public Triangle copy(){
 			Triangle result=new Triangle(pos1.copy(), pos2.copy(), pos3.copy());
 			result.normal=normal;
 			return result;
 		}
+		
 		public Vec3M getNormal(){
 			if(normal==null){
 				normal=GeometryUtil.getNormalM(pos1, pos2, pos3);
 			}
 			return normal;
 		}
+		
 		public Triangle mul(double mul){
 			return new Triangle(pos1.mul(mul), pos2.mul(mul), pos3.mul(mul));
 		}
+		
 		public Triangle mul(Triangle tri){
 			return new Triangle(pos1.mul(tri.pos1), pos2.mul(tri.pos2), pos3.mul(tri.pos3));
 		}
+		
 		public Triangle sub(Triangle tri){
 			return new Triangle(pos1.sub(tri.pos1), pos2.sub(tri.pos2), pos3.sub(tri.pos3));
 		}
+		
 		public void transform(Matrix4f matrix){
 			pos1=MatrixUtil.transformVector(pos1, matrix);
 			pos2=MatrixUtil.transformVector(pos2, matrix);
@@ -129,63 +148,49 @@ public class GeometryUtil{
 	}
 	
 	public static Vec3M checkPointToTrianleMovmentColision(final Vec3M point, final List<Triangle> start, final List<Triangle> end){
-		if(start.size()!=end.size())return null;
-		Iterator<Triangle> Start=start.iterator(),End=end.iterator();
+		if(start.size()!=end.size()) return null;
+		Iterator<Triangle> Start=start.iterator(), End=end.iterator();
 		Vec3M result=null;
 		while(Start.hasNext()){
-			Triangle startTri=Start.next(),endTri=End.next();
+			Triangle startTri=Start.next(), endTri=End.next();
 			
 			Vec3M res=checkPointToTrianleMovmentColision(point, startTri, endTri);
 			if(res!=null){
-				if(result==null)result=res;
+				if(result==null) result=res;
 				else result=result.add(res);
 			}
 		}
-//		if(result!=null)result=result.mul();
+		//		if(result!=null)result=result.mul();
 		return result;
 	}
+	
 	public static Vec3M checkPointToTrianleMovmentColision(final Vec3M point, final Triangle start, final Triangle end){
 		int quality=6;
 		float qualityMul=1F/(quality-1);
 		
-		
-		Vec3M
-			startMiddle=start.pos1.add(start.pos2).add(start.pos3).mul(1F/3F),
-			endMiddle  =  end.pos1.add(  end.pos2).add(  end.pos3).mul(1F/3F),
-			pointDistVec=point.sub(startMiddle),
-			endDistVec=endMiddle.sub(startMiddle);
+		Vec3M startMiddle=start.pos1.add(start.pos2).add(start.pos3).mul(1F/3F), endMiddle=end.pos1.add(end.pos2).add(end.pos3).mul(1F/3F), pointDistVec=point.sub(startMiddle), endDistVec=endMiddle.sub(startMiddle);
 		
 		Triangle difference=start.sub(end);
-		if(intersectRayTriangle(
-				Ray.byPos(
-					point,
-					point.add(endDistVec.normalize().mul(
-						Math.min(difference.pos1.length(),
-						Math.min(difference.pos2.length(),
-								 difference.pos3.length()))
-					))),
-				end
-			)==null
-		)return null;
+		if(intersectRayTriangle(Ray.byPos(point, point.add(endDistVec.normalize().mul(Math.min(difference.pos1.length(), Math.min(difference.pos2.length(), difference.pos3.length()))))), end)==null) return null;
 		
-		
-		float
-			pointDistance=pointDistVec.length(),
-			endDistance=endDistVec.length(),
-			precentage=pointDistance/endDistance;
-		if(precentage>1)return null;
+		float pointDistance=pointDistVec.length(), endDistance=endDistVec.length(), precentage=pointDistance/endDistance;
+		if(precentage>1) return null;
 		precentage/=quality;
 		
-		boolean nullFromStart=true,notNullAtSomePoint=false;
+		boolean nullFromStart=true, notNullAtSomePoint=false;
 		Triangle[] stages=new Triangle[quality];
 		stages[0]=start.copy();
-		for(int i=0;i<quality-1;i++){
+		for(int i=0; i<quality-1; i++){
 			int j=i+1;
-			if(stages[j]==null)stages[j]=start.sub(difference.mul(qualityMul*j));
+			if(stages[j]==null) stages[j]=start.sub(difference.mul(qualityMul*j));
 			
-			float distance1=(float)stages[i].pos1.distanceTo(point),distance2=(float)stages[i].pos2.distanceTo(point),distance3=(float)stages[i].pos3.distanceTo(point),maxDistance=Math.min(distance1, Math.min(distance2, distance3));
-			distance1/=maxDistance;distance2/=maxDistance;distance3/=maxDistance;
-			distance1*=distance1*distance1;distance2*=distance2*distance2;distance3*=distance3*distance3;
+			float distance1=(float)stages[i].pos1.distanceTo(point), distance2=(float)stages[i].pos2.distanceTo(point), distance3=(float)stages[i].pos3.distanceTo(point), maxDistance=Math.min(distance1, Math.min(distance2, distance3));
+			distance1/=maxDistance;
+			distance2/=maxDistance;
+			distance3/=maxDistance;
+			distance1*=distance1*distance1;
+			distance2*=distance2*distance2;
+			distance3*=distance3*distance3;
 			
 			Triangle diff=stages[i+1].sub(stages[i]);
 			
@@ -193,96 +198,85 @@ public class GeometryUtil{
 			diff.pos1=diff.pos1.mul(1/distance1);
 			diff.pos2=diff.pos2.mul(1/distance2);
 			diff.pos3=diff.pos3.mul(1/distance3);
-			Vec3M
-				triNormal=diff.pos1.add(diff.pos2).add(diff.pos3).normalize().mul(maxDiff),
-				result=intersectRayTriangle(Ray.byPos(point, point.sub(triNormal)), stages[i]);
+			Vec3M triNormal=diff.pos1.add(diff.pos2).add(diff.pos3).normalize().mul(maxDiff), result=intersectRayTriangle(Ray.byPos(point, point.sub(triNormal)), stages[i]);
 			
 			if(nullFromStart&&result!=null){
 				nullFromStart=false;
 				notNullAtSomePoint=true;
 			}
-			if(notNullAtSomePoint&&result==null)return triNormal.mul(quality);
+			if(notNullAtSomePoint&&result==null) return triNormal.mul(quality);
 		}
-
+		
 		return null;
 	}
-
-	public static Vec3d getNormalD(Vec3d pos0,Vec3d pos1, Vec3d pos2){
-		Vec3d vec3  = pos1.subtractReverse(pos0);
-		Vec3d vec31 = pos1.subtractReverse(pos2);
+	
+	public static Vec3d getNormalD(Vec3d pos0, Vec3d pos1, Vec3d pos2){
+		Vec3d vec3=pos1.subtractReverse(pos0);
+		Vec3d vec31=pos1.subtractReverse(pos2);
 		return vec31.crossProduct(vec3).normalize();
 	}
-	public static Vec3d getNormalD(Vec3M pos0,Vec3M pos1, Vec3M pos2){
-		Vec3M vec3  = pos1.subtractReverse(pos0);
-		Vec3M vec31 = pos1.subtractReverse(pos2);
+	
+	public static Vec3d getNormalD(Vec3M pos0, Vec3M pos1, Vec3M pos2){
+		Vec3M vec3=pos1.subtractReverse(pos0);
+		Vec3M vec31=pos1.subtractReverse(pos2);
 		return vec31.crossProduct(vec3).normalize().conv();
 	}
-	public static Vec3M getNormalM(Vec3d pos0,Vec3d pos1, Vec3d pos2){
-		Vec3d vec3  = pos1.subtractReverse(pos0);
-		Vec3d vec31 = pos1.subtractReverse(pos2);
+	
+	public static Vec3M getNormalM(Vec3d pos0, Vec3d pos1, Vec3d pos2){
+		Vec3d vec3=pos1.subtractReverse(pos0);
+		Vec3d vec31=pos1.subtractReverse(pos2);
 		return new Vec3M(vec31.crossProduct(vec3).normalize());
 	}
-	public static Vec3M getNormalM(Vec3M pos0,Vec3M pos1, Vec3M pos2){
-		Vec3M vec3  = pos1.subtractReverse(pos0);
-		Vec3M vec31 = pos1.subtractReverse(pos2);
+	
+	public static Vec3M getNormalM(Vec3M pos0, Vec3M pos1, Vec3M pos2){
+		Vec3M vec3=pos1.subtractReverse(pos0);
+		Vec3M vec31=pos1.subtractReverse(pos2);
 		return vec31.crossProduct(vec3).normalize();
 	}
 	
 	public static PairM<Vec3d,Vec3d> getStartEndLook(Entity entity){
-		float
-			f=entity.rotationPitch,
-			f1=entity.rotationYaw,
-			f2=MathHelper.cos(-f1*0.017453292F-(float)Math.PI),
-			f3=MathHelper.sin(-f1*0.017453292F-(float)Math.PI),
-			f4=-MathHelper.cos(-f*0.017453292F),
-			f5=MathHelper.sin(-f*0.017453292F),
-			f6=f3*f4,f7=f2*f4;
-		double
-			d0=entity.posX,
-			d1=entity.posY+entity.getEyeHeight(),
-			d2=entity.posZ,
-			d3=5;
-		Vec3d
-			start=new Vec3d(d0,d1,d2),
-			end=start.addVector(f6*d3,f5*d3,f7*d3);
-		return new PairM<>(start,end);
+		float f=entity.rotationPitch, f1=entity.rotationYaw, f2=MathHelper.cos(-f1*0.017453292F-(float)Math.PI), f3=MathHelper.sin(-f1*0.017453292F-(float)Math.PI), f4=-MathHelper.cos(-f*0.017453292F), f5=MathHelper.sin(-f*0.017453292F), f6=f3*f4, f7=f2*f4;
+		double d0=entity.posX, d1=entity.posY+entity.getEyeHeight(), d2=entity.posZ, d3=5;
+		Vec3d start=new Vec3d(d0, d1, d2), end=start.addVector(f6*d3, f5*d3, f7*d3);
+		return new PairM<>(start, end);
 	}
+	
 	public static Vec3M intersectRayQuad(Ray ray, Quad quad){
-		return intersectRayTriangles(ray,quad.getTriangle1(),quad.getTriangle2()).obj1;
+		return intersectRayTriangles(ray, quad.getTriangle1(), quad.getTriangle2()).obj1;
 	}
-	public static PairM<Vec3M, Integer> intersectRayQuads(Ray ray, List<Quad> quads){
+	
+	public static PairM<Vec3M,Integer> intersectRayQuads(Ray ray, List<Quad> quads){
 		Triangle[] data=new Triangle[quads.size()*2];
 		
-		
 		int i=0;
-		for(Quad quad:quads){
+		for(Quad quad : quads){
 			data[i*2]=quad.getTriangle1();
 			data[i*2+1]=quad.getTriangle2();
 			i++;
 		}
 		
-		PairM<Vec3M, Integer> result=intersectRayTriangles(ray,data);
-		if(result==null)return null;
+		PairM<Vec3M,Integer> result=intersectRayTriangles(ray, data);
+		if(result==null) return null;
 		result.obj2-=result.obj2%2;
 		result.obj2/=2;
 		return result;
 	}
 	
-	public static PairM<Vec3M, Integer> intersectRayQuads(Ray ray, Quad...quads){
+	public static PairM<Vec3M,Integer> intersectRayQuads(Ray ray, Quad... quads){
 		Triangle[] data=new Triangle[quads.length*2];
 		
-		
-		for(int i=0;i<quads.length;i++){
+		for(int i=0; i<quads.length; i++){
 			data[i*2]=quads[i].getTriangle1();
 			data[i*2+1]=quads[i].getTriangle2();
 		}
 		
-		PairM<Vec3M, Integer> result=intersectRayTriangles(ray,data);
-		if(result==null)return null;
+		PairM<Vec3M,Integer> result=intersectRayTriangles(ray, data);
+		if(result==null) return null;
 		result.obj2-=result.obj2%2;
 		result.obj2/=2;
 		return result;
 	}
+	
 	public static Vec3M intersectRayTriangle(Ray ray, Triangle tri){
 		Vector3f res=intersectRayTriangle(ray.origin.toLWJGLVec(), ray.dir.toLWJGLVec(), tri.pos1.toLWJGLVec(), tri.pos2.toLWJGLVec(), tri.pos3.toLWJGLVec());
 		return res!=null?new Vec3M(res.x, res.y, res.z):null;
@@ -299,67 +293,67 @@ public class GeometryUtil{
 		
 		Vector3f v=new Vector3f(tri2);
 		Vector3f.sub(v, tri0, v);
-
+		
 		Vector3f n=new Vector3f();
 		Vector3f.cross(u, v, n);
-
-		if(n.length()==0)return null;
-
+		
+		if(n.length()==0) return null;
+		
 		Vector3f w=new Vector3f(start);
 		Vector3f.sub(w, tri0, w);
-
+		
 		float a=-Vector3f.dot(n, w);
 		float b=Vector3f.dot(n, dir);
-
-		if(Math.abs(b)<0.000000001)return null;
-
+		
+		if(Math.abs(b)<0.000000001) return null;
+		
 		float r=a/b;
-
-		if(r<0.0)return null;
-
+		
+		if(r<0.0) return null;
+		
 		Vector3f i=new Vector3f(start);
 		i.x+=r*dir.x;
 		i.y+=r*dir.y;
 		i.z+=r*dir.z;
-
+		
 		float uu, uv, vv, wu, wv, D;
-
+		
 		uu=Vector3f.dot(u, u);
 		uv=Vector3f.dot(u, v);
 		vv=Vector3f.dot(v, v);
-
+		
 		Vector3f.sub(i, tri0, w);
-
+		
 		wu=Vector3f.dot(w, u);
 		wv=Vector3f.dot(w, v);
-
-		D=uv*uv-uu*vv;
-
-		float s, t;
-
-		s=(uv*wv-vv*wu)/D;
-		if(s<0.0||s>1.0)return null;
 		
-
+		D=uv*uv-uu*vv;
+		
+		float s, t;
+		
+		s=(uv*wv-vv*wu)/D;
+		if(s<0.0||s>1.0) return null;
+		
 		t=(uv*wu-uu*wv)/D;
-		if(t<0.0||s+t>1.0)return null;
-
+		if(t<0.0||s+t>1.0) return null;
+		
 		return i;
 	}
-	public static PairM<Vec3M, Integer> intersectRayTriangles(Ray ray, Triangle...triangles){
+	
+	public static PairM<Vec3M,Integer> intersectRayTriangles(Ray ray, Triangle... triangles){
 		List<Vec3M> results=new ArrayList<>();
 		
-		for(Triangle triangle:triangles){
+		for(Triangle triangle : triangles){
 			Vec3M result=intersectRayTriangle(ray, triangle);
 			if(result!=null){
 				results.add(result);
 			}
 		}
-		if(results.isEmpty())return null;
+		if(results.isEmpty()) return null;
 		
 		float minDistance=Float.MAX_VALUE;
 		int closestId=-1;
-		for(int i=0;i<results.size();i++){
+		for(int i=0; i<results.size(); i++){
 			double distance=results.get(i).distanceTo(ray.origin);
 			if(distance<minDistance){
 				minDistance=(float)distance;
@@ -370,40 +364,41 @@ public class GeometryUtil{
 	}
 	
 	public static RayTraceResult rayTrace(Entity player){
-		return rayTrace(player,false);
+		return rayTrace(player, false);
 	}
-	public static RayTraceResult rayTrace(Entity entity,boolean useLiquids){
+	
+	public static RayTraceResult rayTrace(Entity entity, boolean useLiquids){
 		PairM<Vec3d,Vec3d> look=getStartEndLook(entity);
-		return entity.world.rayTraceBlocks(look.obj1,look.obj2,useLiquids,!useLiquids,false);
+		return entity.world.rayTraceBlocks(look.obj1, look.obj2, useLiquids, !useLiquids, false);
 	}
 	
 	public static List<Vec2FM> cricleSectorSize(double startDeg, double size, double degreeSpacing){
-		return cricleSector(startDeg,startDeg+size,1,degreeSpacing);
+		return cricleSector(startDeg, startDeg+size, 1, degreeSpacing);
 	}
 	
 	public static List<Vec2FM> cricleSector(double startDeg, double endDeg, double degreeSpacing){
-		return cricleSector(startDeg,endDeg,1,degreeSpacing);
+		return cricleSector(startDeg, endDeg, 1, degreeSpacing);
 	}
 	
 	public static List<Vec2FM> cricleSectorSize(double startDeg, double size, float radius, double degreeSpacing){
-		return cricleSector(startDeg,startDeg+size,radius,degreeSpacing);
+		return cricleSector(startDeg, startDeg+size, radius, degreeSpacing);
 	}
 	
 	public static List<Vec2FM> cricleSector(double startDeg, double endDeg, float radius, double degreeSpacing){
-		if(degreeSpacing>120)throw new IllegalStateException("Minimal resolution is 120deg/point");
+		if(degreeSpacing>120) throw new IllegalStateException("Minimal resolution is 120deg/point");
 		List<Vec2FM> points=new ArrayList<>();
 		
 		degreeSpacing=Math.toRadians(degreeSpacing);
 		startDeg=Math.toRadians(startDeg);
 		endDeg=Math.toRadians(endDeg);
 		
-		if(endDeg<startDeg)degreeSpacing*=-1;
+		if(endDeg<startDeg) degreeSpacing*=-1;
 		int pointCount=(int)Math.floor((endDeg-startDeg)/degreeSpacing);
 		
 		points.add(anglePoint(startDeg));
 		if(pointCount>0){
 			double angle=startDeg;
-			for(int i=0;i<pointCount;i++){
+			for(int i=0; i<pointCount; i++){
 				angle+=degreeSpacing;
 				points.add(anglePoint(angle));
 			}
@@ -417,8 +412,9 @@ public class GeometryUtil{
 		}
 		return points;
 	}
+	
 	public static Vec2FM anglePoint(double rad){
-		return new Vec2FM((float)Math.sin(rad),(float)Math.cos(rad));
+		return new Vec2FM((float)Math.sin(rad), (float)Math.cos(rad));
 	}
 	
 	private static final List<IVec3M> facingRotations;
@@ -426,18 +422,18 @@ public class GeometryUtil{
 	static{
 		List<IVec3M> arList=new ArrayList<>();
 		
-		for(EnumFacing facing:EnumFacing.values()){
+		for(EnumFacing facing : EnumFacing.values()){
 			Vec3i rotVec=facing.getDirectionVec();
-			double x,y;
+			double x, y;
 			
-			if(rotVec.getY()==1)x=-90;
-			else if(rotVec.getY()==-1)x=90;
+			if(rotVec.getY()==1) x=-90;
+			else if(rotVec.getY()==-1) x=90;
 			else x=0;
 			
-			if(rotVec.getX()!=0||rotVec.getZ()!=0)y=Math.toDegrees(Math.atan2(rotVec.getX(),rotVec.getZ()));
+			if(rotVec.getX()!=0||rotVec.getZ()!=0) y=Math.toDegrees(Math.atan2(rotVec.getX(), rotVec.getZ()));
 			else y=0;
 			
-			arList.add(new Vec3MFinal(x,y,0));
+			arList.add(new Vec3MFinal(x, y, 0));
 		}
 		facingRotations=Collections.unmodifiableList(arList);
 	}
@@ -448,36 +444,42 @@ public class GeometryUtil{
 	
 	public static AxisAlignedBB[] generatePipeSyleBoxes(double size){
 		AxisAlignedBB[] boxes=new AxisAlignedBB[7];
-		double size2=size/2,size2m5=0.5-size2,size2p5=0.5+size2;
-		boxes[6]=new AxisAlignedBB(size2m5,size2m5,size2m5,size2p5,size2p5,size2p5);
-
-		for(int id=0;id<6;id++){
+		double size2=size/2, size2m5=0.5-size2, size2p5=0.5+size2;
+		boxes[6]=new AxisAlignedBB(size2m5, size2m5, size2m5, size2p5, size2p5, size2p5);
+		
+		for(int id=0; id<6; id++){
 			
 			EnumFacing side=EnumFacing.getFront(id);
-
+			
 			double min=side.getAxisDirection()==AxisDirection.POSITIVE?size2p5:0;
 			double max=side.getAxisDirection()==AxisDirection.POSITIVE?1:size2m5;
 			
 			switch(side.getAxis()){
-			case X:boxes[id]=new AxisAlignedBB(min,size2m5,size2m5,max,size2p5,size2p5);break;
-			case Y:boxes[id]=new AxisAlignedBB(size2m5,min,size2m5,size2p5,max,size2p5);break;
-			case Z:boxes[id]=new AxisAlignedBB(size2m5,size2m5,min,size2p5,size2p5,max);break;
+			case X:
+				boxes[id]=new AxisAlignedBB(min, size2m5, size2m5, max, size2p5, size2p5);
+				break;
+			case Y:
+				boxes[id]=new AxisAlignedBB(size2m5, min, size2m5, size2p5, max, size2p5);
+				break;
+			case Z:
+				boxes[id]=new AxisAlignedBB(size2m5, size2m5, min, size2p5, size2p5, max);
+				break;
 			}
 		}
 		
 		return boxes;
 	}
 	
-	
 	private static final class Hit{
 		
-		private RayTraceResult	h;
-		private double			d;
+		private RayTraceResult h;
+		private double         d;
 		
 		private Hit(RayTraceResult h, double d, int id){
-			this(h,d);
+			this(h, d);
 			h.subHit=id;
 		}
+		
 		private Hit(RayTraceResult h, double d){
 			this.h=h;
 			this.d=d;
@@ -490,18 +492,18 @@ public class GeometryUtil{
 		private Vec3d start;
 		
 		public boolean add(RayTraceResult hit, int id){
-			return hit.typeOfHit==Type.BLOCK&&add(new Hit(hit, hit.hitVec.distanceTo(start),id));
+			return hit.typeOfHit==Type.BLOCK&&add(new Hit(hit, hit.hitVec.distanceTo(start), id));
 		}
 	}
 	
-	private static final HitList HITS=new HitList();
-	private static final Hit NULL_HIT=new Hit(null, Double.MAX_VALUE);
+	private static final HitList HITS    =new HitList();
+	private static final Hit     NULL_HIT=new Hit(null, Double.MAX_VALUE);
 	
 	public static RayTraceResult rayTrace(List<AxisAlignedBB> boxes, Vec3d start, Vec3d end, BlockPos pos){
 		HITS.clear();
 		HITS.start=start;
 		
-		for(int i=0;i<boxes.size();i++){
+		for(int i=0; i<boxes.size(); i++){
 			Vec3d vec3d=start.subtract(pos.getX(), pos.getY(), pos.getZ());
 			Vec3d vec3d1=end.subtract(pos.getX(), pos.getY(), pos.getZ());
 			RayTraceResult hit=boxes.get(i).calculateIntercept(vec3d, vec3d1);
@@ -509,7 +511,7 @@ public class GeometryUtil{
 				RayTraceResult hitLocal=new RayTraceResult(hit.hitVec.addVector(pos.getX(), pos.getY(), pos.getZ()), hit.sideHit, pos);
 				hitLocal.hitInfo=hit.hitInfo;
 				hitLocal.subHit=hit.subHit;
-				HITS.add(hitLocal,i);
+				HITS.add(hitLocal, i);
 			}
 		}
 		

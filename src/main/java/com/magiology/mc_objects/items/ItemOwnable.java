@@ -1,19 +1,12 @@
 package com.magiology.mc_objects.items;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 import com.magiology.util.m_extensions.ItemM;
 import com.magiology.util.objs.NBTUtil;
 import com.magiology.util.statics.UtilM;
 import com.mojang.authlib.GameProfile;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
@@ -25,11 +18,16 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 public abstract class ItemOwnable extends ItemM{
 	
-	private static final String				OWNER		="owner",LEGIT="128-database";
-	public final boolean					showPlayer;
-	private static final Map<UUID,String>	NAME_MAPPER	=new HashMap<>();
+	private static final String OWNER="owner", LEGIT="128-database";
+	public final boolean showPlayer;
+	private static final Map<UUID,String> NAME_MAPPER=new HashMap<>();
 	
 	public ItemOwnable(boolean showPlayer){
 		this.showPlayer=showPlayer;
@@ -110,6 +108,7 @@ public abstract class ItemOwnable extends ItemM{
 		applyOwner(stack, player);
 		return super.onDroppedByPlayer(stack, player);
 	}
+	
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
 		applyOwner(hand, player);

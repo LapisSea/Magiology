@@ -4,7 +4,6 @@ import com.magiology.client.renderers.Renderer;
 import com.magiology.client.rendering.highlight.BlockHighlightRenderer;
 import com.magiology.util.objs.block_bounds.IBlockBounds;
 import com.magiology.util.statics.OpenGLM;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
@@ -13,7 +12,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 
 public class BasicBlockHighlightRenderer extends BlockHighlightRenderer{
 
@@ -26,14 +24,14 @@ public class BasicBlockHighlightRenderer extends BlockHighlightRenderer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void drawBoundsOutline(IBlockState state, World world, BlockPos pos, RayTraceResult hit){
-		if(drawModel==-1)createModel(state, world, pos);
+		if(drawModel==-1) createModel(state, world, pos);
 		
 		OpenGLM.callList(drawModel);
 	}
 	
 	@SideOnly(Side.CLIENT)
 	private void createModel(IBlockState state, World world, BlockPos pos){
-		if(drawModel!=-1)OpenGLM.glDeleteLists(drawModel, 1);
+		if(drawModel!=-1) OpenGLM.glDeleteLists(drawModel, 1);
 		drawModel=GLAllocation.generateDisplayLists(1);
 		GlStateManager.glNewList(drawModel, 4864);
 		
@@ -46,7 +44,7 @@ public class BasicBlockHighlightRenderer extends BlockHighlightRenderer{
 	
 	@Override
 	protected void finalize(){
-		if(drawModel!=-1)OpenGLM.glDeleteLists(drawModel, 1);
+		if(drawModel!=-1) OpenGLM.glDeleteLists(drawModel, 1);
 	}
 
 	@Override

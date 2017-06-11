@@ -1,24 +1,23 @@
 package com.magiology.core.registry.init;
 
 import com.magiology.core.registry.imp.AutoReferencedRegistry;
+import com.magiology.mc_objects.items.ItemJetpack;
+import com.magiology.mc_objects.items.ItemMatterJumper;
+import com.magiology.mc_objects.items.SimpleItems.ItemMistyPowder;
+import com.magiology.util.m_extensions.ItemM;
+import com.magiology.util.statics.UtilM;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+
 //<GEN:	IMPORTS START>
 import com.magiology.mc_objects.items.ItemJetpack;
 import com.magiology.mc_objects.items.ItemMatterJumper;
 import com.magiology.mc_objects.items.SimpleItems.ItemMistyPowder;
 //<GEN:	IMPORTS END>
-import com.magiology.util.m_extensions.ItemM;
-import com.magiology.util.m_extensions.ResourceLocationM;
-import com.magiology.util.statics.UtilM;
-
-import net.minecraftforge.fml.common.FMLContainer;
-import net.minecraftforge.fml.common.InjectedModContainer;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ItemsM extends AutoReferencedRegistry<ItemM>{
-
+	
 	private static final ItemsM instance=new ItemsM();
+	
 	public static ItemsM get(){
 		return instance;
 	}
@@ -28,7 +27,6 @@ public class ItemsM extends AutoReferencedRegistry<ItemM>{
 	public static ItemMatterJumper MATTER_JUMPER;
 	public static ItemMistyPowder  MISTY_POWDER;
 	//<GEN:	REFERENCE END>
-	
 	
 	private ItemsM(){
 		super(ItemM.class);

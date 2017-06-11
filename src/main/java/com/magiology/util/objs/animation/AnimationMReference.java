@@ -14,12 +14,15 @@ public class AnimationMReference{
 	public float get(int id, float pos){
 		return get().get(id, pos);
 	}
+
 	public float[] getAll(float pos){
 		return get().getAll(pos);
 	}
+
 	public int getIdName(String name){
 		return get().getIdName(name);
 	}
+
 	private AnimationM get(){
 		return AnimationBank.get(accessId);
 	}

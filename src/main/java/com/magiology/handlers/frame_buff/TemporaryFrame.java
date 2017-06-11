@@ -1,28 +1,26 @@
 package com.magiology.handlers.frame_buff;
 
-import org.lwjgl.opengl.GL11;
-
 import com.magiology.util.interf.ObjectSimpleCallback;
-import com.magiology.util.objs.color.ColorM;
+import com.magiology.util.objs.color.IColorM;
 import com.magiology.util.statics.LogUtil;
 import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.UtilC;
-
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class TemporaryFrame{
 	
-	public Framebuffer								frameBuffer	=new Framebuffer(1, 1, false);
-	boolean											dirty		=true, gcPossible=false;
-	long											lastTimeUsed=System.currentTimeMillis();
-	private int										width, height;
-	private boolean									useDepth, willBeRendered=false;
-	private ObjectSimpleCallback<TemporaryFrame>	rednerHook	=f->{};
+	public Framebuffer frameBuffer=new Framebuffer(1, 1, false);
+	boolean dirty=true, gcPossible=false;
+	long lastTimeUsed=System.currentTimeMillis();
+	private int width, height;
+	private boolean useDepth, willBeRendered=false;
+	private ObjectSimpleCallback<TemporaryFrame> rednerHook=f->{};
 	
 	public TemporaryFrame(int width, int height, boolean useDepth){
 		this.width=width;
@@ -46,7 +44,7 @@ public class TemporaryFrame{
 		return this;
 	}
 	
-	public TemporaryFrame setClearColor(ColorM color){
+	public TemporaryFrame setClearColor(IColorM color){
 		frameBuffer.setFramebufferColor(color.r(), color.g(), color.b(), color.a());
 		return this;
 	}
@@ -86,7 +84,6 @@ public class TemporaryFrame{
 		TemporaryFrameBufferHandler.instance.resurrectList(this);
 		if(dirty){
 			dirty=false;
-			frameBuffer.deleteFramebuffer();
 			frameBuffer.useDepth=useDepth;
 			frameBuffer.createBindFramebuffer(width, height);
 			onBufferInit();
@@ -94,6 +91,7 @@ public class TemporaryFrame{
 			forceRender();
 			return;
 		}
+		
 		OpenGLM.pushMatrix();
 		frameBuffer.framebufferClear();
 		frameBuffer.bindFramebuffer(true);
@@ -136,5 +134,10 @@ public class TemporaryFrame{
 	public void setRednerHook(ObjectSimpleCallback<TemporaryFrame> rednerHook){
 		this.rednerHook=rednerHook;
 		lastTimeUsed=System.currentTimeMillis();
+	}
+	
+	@Override
+	protected void finalize() throws Throwable{
+		frameBuffer.deleteFramebuffer();
 	}
 }

@@ -1,8 +1,5 @@
 package com.magiology.client.rendering.highlight.types;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.magiology.client.renderers.Renderer;
 import com.magiology.client.rendering.highlight.BlockHighlightRenderer;
 import com.magiology.util.objs.AngularVec3;
@@ -11,7 +8,6 @@ import com.magiology.util.objs.block_bounds.MultiBlockBounds;
 import com.magiology.util.objs.block_bounds.MultiBlockBounds.StateData;
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.OpenGLM;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
@@ -23,44 +19,33 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.ArrayList;
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class MultiHighlightRenderer extends BlockHighlightRenderer<MultiBlockBounds>{
 	
-
-	private static final Vec3i
-			EAST_UP	=new Vec3i(1, 1, 0),
-			WEST_UP=new Vec3i(-1, 1, 0),
-			EAST_DOWN=new Vec3i(1, -1, 0),
-			WEST_DOWN=new Vec3i(-1, -1, 0),
-			
-			UP_SOUTH=new Vec3i(0, 1, 1),
-			UP_NORTH=new Vec3i(0, 1, -1),
-			DOWN_SOUTH=new Vec3i(0, -1, 1),
-			DOWN_NORTH=new Vec3i(0, -1, -1),
-			
-			EAST_SOUTH=new Vec3i(1, 0, 1),
-			EAST_NORTH=new Vec3i(1, 0, -1),
-			WEST_SOUTH=new Vec3i(-1, 0, 1),
-			WEST_NORTH=new Vec3i(-1, 0, -1);
-	private static final double	EXPAND=0.0020000000949949026D;
+	private static final Vec3i EAST_UP=new Vec3i(1, 1, 0), WEST_UP=new Vec3i(-1, 1, 0), EAST_DOWN=new Vec3i(1, -1, 0), WEST_DOWN=new Vec3i(-1, -1, 0),
+	
+	UP_SOUTH=new Vec3i(0, 1, 1), UP_NORTH=new Vec3i(0, 1, -1), DOWN_SOUTH=new Vec3i(0, -1, 1), DOWN_NORTH=new Vec3i(0, -1, -1),
+	
+	EAST_SOUTH=new Vec3i(1, 0, 1), EAST_NORTH=new Vec3i(1, 0, -1), WEST_SOUTH=new Vec3i(-1, 0, 1), WEST_NORTH=new Vec3i(-1, 0, -1);
+	private static final double EXPAND=0.0020000000949949026D;
 	
 	@SideOnly(Side.CLIENT)
 	private static class BoxLine{
 		
-		PairM<Vec3M, Vec3M>	rawLine;
-		Vec3i				vec;
+		PairM<Vec3M,Vec3M> rawLine;
+		Vec3i              vec;
 		
 		public BoxLine(Vec3M v1, Vec3M v2, Vec3i vec){
 			rawLine=new PairM<>(v1, v2);
 			this.vec=vec;
 		}
 		
-		private PairM<Vec3M, Vec3M> actualLine(){
+		private PairM<Vec3M,Vec3M> actualLine(){
 			int x=vec.getX(), y=vec.getY(), z=vec.getZ();
-			return new PairM<>(
-					rawLine.obj1.add(x==0?-EXPAND:EXPAND*x, y==0?-EXPAND:EXPAND*y, z==0?-EXPAND:EXPAND*z),
-					rawLine.obj2.add(x==0?EXPAND:EXPAND*x, y==0?EXPAND:EXPAND*y, z==0?EXPAND:EXPAND*z));
+			return new PairM<>(rawLine.obj1.add(x==0?-EXPAND:EXPAND*x, y==0?-EXPAND:EXPAND*y, z==0?-EXPAND:EXPAND*z), rawLine.obj2.add(x==0?EXPAND:EXPAND*x, y==0?EXPAND:EXPAND*y, z==0?EXPAND:EXPAND*z));
 		}
 		
 		@Override
@@ -84,7 +69,7 @@ public class MultiHighlightRenderer extends BlockHighlightRenderer<MultiBlockBou
 			//is a box in contact on side:
 			boolean down=false, up=false, north=false, south=false, west=false, east=false;
 			
-			for(AxisAlignedBB test:boxes){
+			for(AxisAlignedBB test : boxes){
 				//check if boxes are the same on axis
 				boolean xEqual=box.minX==test.minX&&box.maxX==test.maxX;
 				boolean yEqual=box.minY==test.minY&&box.maxY==test.maxY;
@@ -169,7 +154,7 @@ public class MultiHighlightRenderer extends BlockHighlightRenderer<MultiBlockBou
 		//finally put calculated lines to model
 		Renderer.LINES.begin();
 		lines.forEach(lineObj->{
-			PairM<Vec3M, Vec3M> line=lineObj.actualLine();
+			PairM<Vec3M,Vec3M> line=lineObj.actualLine();
 			Renderer.LINES.addVertex(line.obj1);
 			Renderer.LINES.addVertex(line.obj2);
 		});
@@ -179,22 +164,21 @@ public class MultiHighlightRenderer extends BlockHighlightRenderer<MultiBlockBou
 		OpenGLM.glEndList();
 	}
 	
-	
 	public MultiHighlightRenderer(MultiBlockBounds owner){
 		super(owner);
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void drawBoundsOutline(IBlockState state, World world, BlockPos pos, RayTraceResult hit){
 		StateData data=getOwner().getStateData(state, world, pos);
-		if(data.getDrawModel()==-1)createModel(data);
+		if(data.getDrawModel()==-1) createModel(data);
 		OpenGLM.callList(data.getDrawModel());
 	}
 	
 	@Override
 	public void markDirty(){
-		for(StateData box:getOwner().allStates){
+		for(StateData box : getOwner().allStates){
 			box.setDrawModel(-1);
 		}
 	}

@@ -1,8 +1,5 @@
 package com.magiology.client.rendering.item.renderers;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-
 import com.magiology.client.renderers.FastNormalRenderer;
 import com.magiology.client.rendering.item.SIRRegistry.IItemRenderer;
 import com.magiology.client.shaders.effects.PositionAwareEffect;
@@ -15,11 +12,12 @@ import com.magiology.util.objs.color.ColorM;
 import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.UtilC;
 import com.magiology.util.statics.math.PartialTicksUtil;
-
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.item.ItemStack;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 
 public class ItemMatterJumperRenderer implements IItemRenderer{
 	
@@ -57,27 +55,26 @@ public class ItemMatterJumperRenderer implements IItemRenderer{
 		src.bindFramebufferTexture();
 		
 		MatterJumperShader shader=ShadersM.MATTER_JUMPER;
-//		shader.compile();
-		if(shader!=null){
-			float noiseRad=4;
-			//			noiseRad=UtilC.fluctuateLinSmooth(200, 0, 0, 1);
-			//			noiseRad*=noiseRad;
-			//			noiseRad=2+noiseRad*6+RandUtil.CRF(0.2);
-			
-			shader.activate(
-					RenderEvents.MAIN_FRAME_COPY,
-					new ColorM(UtilC.fluctuateLinSmooth(210, 0, 0.54, 0.56), UtilC.fluctuateLinSmooth(250, 0, 0.54, 0.56), UtilC.fluctuateLinSmooth(320, 0, 0.54, 0.56), 1),
-					UtilC.getWorldTime()*1D+PartialTicksUtil.partialTicks,
-					10, noiseRad);
-		}
+		//shader.compile();
+		float noiseRad=4;
+		//noiseRad=UtilC.fluctuateLinSmooth(200, 0, 0, 1);
+		//noiseRad*=noiseRad;
+		//noiseRad=2+noiseRad*6+RandUtil.CRF(0.2);
+		
+		shader.activate(RenderEvents.MAIN_FRAME_COPY, new ColorM(UtilC.fluctuateLinSmooth(210, 0, 0.54, 0.56), UtilC.fluctuateLinSmooth(250, 0, 0.54, 0.56), UtilC.fluctuateLinSmooth(320, 0, 0.54, 0.56), 1), UtilC.getWorldTime()*1D+PartialTicksUtil.partialTicks, 10, noiseRad);
+		
 		src.bindFramebufferTexture();
 		
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		OpenGLM.bindTexture(new ResourceLocationM("textures/blocks/CoalLevel2.png"));
+		OpenGLM.bindTexture(new ResourceLocationM("textures/blocks/coal_level_2.png"));
 		
-		//		OpenGLM.translate(0.5, 0.5, 0.5);
-		//		OpenGLM.rotate(new Vec3M(UtilC.fluctuateSmooth(100, 0)*360,UtilC.fluctuateSmooth(80, 140)*180,UtilC.fluctuateSmooth(140, 0)*720).mul(500).sqrt());
-		//		OpenGLM.translate(-0.5, -0.5, -0.5);
+//		OpenGLM.translate(0.5, 0.5, 0.5);
+//		OpenGLM.rotate(new Vec3M(
+//			UtilC.fluctuateLinSmooth(100, 0,0,1)*360,
+//			UtilC.fluctuateLinSmooth(80, 140, 0, 1)*180,
+//			UtilC.fluctuateLinSmooth(140, 0, 0, 1)*720).mul(500).sqrt());
+//		OpenGLM.translate(-0.5, -0.5, -0.5);
+		
 		FastNormalRenderer buff=new FastNormalRenderer();
 		buff.begin(true, FastNormalRenderer.POS_UV);
 		buff.add(0, 0, 1, 1, 0);
@@ -110,7 +107,7 @@ public class ItemMatterJumperRenderer implements IItemRenderer{
 		buff.add(1, 1, 0, 1, 1);
 		buff.add(0, 1, 0, 1, 0);
 		buff.draw();
-		if(shader!=null) shader.deactivate();
+		shader.deactivate();
 		
 		OpenGLM.popMatrix();
 	}

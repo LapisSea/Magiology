@@ -1,21 +1,19 @@
 package com.magiology.client.post;
 
+import com.magiology.util.interf.ObjectSimpleCallback;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import com.magiology.util.interf.ObjectSimpleCallback;
-
 public abstract class PostProcessFX{
 	
-	private static List<PostProcessFX> TO_RENDER=new ArrayList<>(),BATCHED_PASS=new ArrayList<>(),INSTANT_PASS=new ArrayList<>();
+	private static List<PostProcessFX> TO_RENDER=new ArrayList<>(), BATCHED_PASS=new ArrayList<>(), INSTANT_PASS=new ArrayList<>();
 	
-	private static final ObjectSimpleCallback<PostProcessFX> 
-		NOW=fx->{
-			fx.render(INSTANT_PASS);
-			processList(INSTANT_PASS);
-			INSTANT_PASS.clear();
-		},
-		OR_NEVER=fx->fx.render(BATCHED_PASS);
+	private static final ObjectSimpleCallback<PostProcessFX> NOW=fx->{
+		fx.render(INSTANT_PASS);
+		processList(INSTANT_PASS);
+		INSTANT_PASS.clear();
+	}, OR_NEVER                                                 =fx->fx.render(BATCHED_PASS);
 	
 	private ObjectSimpleCallback<PostProcessFX> process;
 	
@@ -28,6 +26,7 @@ public abstract class PostProcessFX{
 			}
 		}
 	}
+
 	private static void processList(List<PostProcessFX> l){
 		l.forEach(PostProcessFX::process);
 	}

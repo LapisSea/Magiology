@@ -1,7 +1,5 @@
 package com.magiology.handlers.particle;
 
-import java.util.List;
-
 import com.magiology.util.interf.Worldabale;
 import com.magiology.util.objs.color.ColorM;
 import com.magiology.util.objs.vec.Vec2i;
@@ -10,7 +8,6 @@ import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.UtilC;
 import com.magiology.util.statics.math.MathUtil;
 import com.magiology.util.statics.math.PartialTicksUtil;
-
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -18,6 +15,8 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public abstract class IParticle implements Worldabale{
@@ -125,7 +124,7 @@ public abstract class IParticle implements Worldabale{
 			return;
 		}
 		Vec3M originalSpeed=speed.copy();
-		List<AxisAlignedBB> boundingBoxes=getWorld().getCollisionBoxes(null,getBoundingBox().addCoord(speed.x(), speed.y(), speed.z()));
+		List<AxisAlignedBB> boundingBoxes=getWorld().getCollisionBoxes(null, getBoundingBox().addCoord(speed.x(), speed.y(), speed.z()));
 		boundingBoxes.forEach(box->speed.setX(box.calculateXOffset(getBoundingBox(), speed.x())));
 		setBoundingBox(getBoundingBox().offset(speed.x(), 0, 0));
 		boundingBoxes.forEach(box->speed.setY(box.calculateYOffset(getBoundingBox(), speed.y())));
@@ -133,10 +132,10 @@ public abstract class IParticle implements Worldabale{
 		boundingBoxes.forEach(box->speed.setZ(box.calculateZOffset(getBoundingBox(), speed.z())));
 		setBoundingBox(getBoundingBox().offset(0, 0, speed.z()));
 		setPosFromBoundingBox();
-		final boolean xColided=originalSpeed.x()!=speed.x(),yColided=originalSpeed.y()!=speed.y(),zColided=originalSpeed.z()!=speed.z();
+		final boolean xColided=originalSpeed.x()!=speed.x(), yColided=originalSpeed.y()!=speed.y(), zColided=originalSpeed.z()!=speed.z();
 		setCollided(xColided||yColided||zColided);
 		if(isCollided()){
-			int x=0,y=0,z=0;
+			int x=0, y=0, z=0;
 			if(xColided&&getSpeed().x()!=0) x=MathUtil.getNumPrefix(getSpeed().x());
 			if(yColided&&getSpeed().y()!=0) y=MathUtil.getNumPrefix(getSpeed().y());
 			if(zColided&&getSpeed().z()!=0) z=MathUtil.getNumPrefix(getSpeed().z());
@@ -192,7 +191,7 @@ public abstract class IParticle implements Worldabale{
 		growth/=2;
 		
 		//get world intersection
-		List<AxisAlignedBB> boundingBoxes=getWorld().getCollisionBoxes(null,getBoundingBox());
+		List<AxisAlignedBB> boundingBoxes=getWorld().getCollisionBoxes(null, getBoundingBox());
 		//exit if nothing to process
 		if(boundingBoxes.isEmpty()) return;
 		
@@ -220,7 +219,7 @@ public abstract class IParticle implements Worldabale{
 			if((box.minZ+box.maxZ)/2<pos.z()) push.setZ(box.maxZ-bb.minZ+growth);
 			else push.setZ(box.minZ-bb.maxZ-growth);
 			
-		}else for(AxisAlignedBB box:boundingBoxes){
+		}else for(AxisAlignedBB box : boundingBoxes){
 			
 			if((box.minX+box.maxX)/2<pos.x()) push.setX(Math.max(push.x(), box.maxX-bb.minX+growth));
 			else push.setX(Math.min(push.x(), box.maxX-bb.minX-growth));

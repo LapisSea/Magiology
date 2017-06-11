@@ -4,11 +4,11 @@ import com.magiology.core.Magiology;
 import com.magiology.util.statics.LogUtil;
 
 public class AssistantBotLaucher{
+	
 	private static boolean RAN;
 	
-	
 	public static void run(){
-		if(RAN)return;
+		if(RAN) return;
 		RAN=true;
 		
 		if(!Magiology.IS_DEV){

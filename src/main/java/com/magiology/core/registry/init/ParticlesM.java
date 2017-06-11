@@ -3,6 +3,9 @@ package com.magiology.core.registry.init;
 import com.magiology.core.registry.imp.AutoReferencedRegistry;
 import com.magiology.handlers.particle.ParticleFactory;
 import com.magiology.handlers.particle.ParticleHandler;
+import com.magiology.mc_objects.particles.*;
+import com.magiology.util.statics.UtilM;
+
 //<GEN:	IMPORTS START>
 import com.magiology.mc_objects.particles.ParticleBubbleFactory;
 import com.magiology.mc_objects.particles.ParticleCubeFactory;
@@ -10,11 +13,11 @@ import com.magiology.mc_objects.particles.ParticleMessageFactory;
 import com.magiology.mc_objects.particles.ParticleMistBubbleFactory;
 import com.magiology.mc_objects.particles.ParticleMistyEnergyFactory;
 //<GEN:	IMPORTS END>
-import com.magiology.util.statics.UtilM;
 
 public class ParticlesM extends AutoReferencedRegistry<ParticleFactory>{
 	
 	private static final ParticlesM instance=new ParticlesM();
+	
 	public static ParticlesM get(){return instance;}
 	
 	//<GEN:	REFERENCE START>
@@ -24,7 +27,6 @@ public class ParticlesM extends AutoReferencedRegistry<ParticleFactory>{
 	public static ParticleMistBubbleFactory  MIST_BUBBLE;
 	public static ParticleMistyEnergyFactory MISTY_ENERGY;
 	//<GEN:	REFERENCE END>
-	
 	
 	private ParticlesM(){
 		super(ParticleFactory.class);
@@ -48,8 +50,8 @@ public class ParticlesM extends AutoReferencedRegistry<ParticleFactory>{
 	
 	@Override
 	protected String classNameToCutName(String className){
-		if(className.startsWith("Particle"))className=className.substring("Particle".length());
-		if(className.endsWith("Factory"))className=className.substring(0,className.length()-"Factory".length());
+		if(className.startsWith("Particle")) className=className.substring("Particle".length());
+		if(className.endsWith("Factory")) className=className.substring(0, className.length()-"Factory".length());
 		return UtilM.standardizeName(className);
 	}
 }

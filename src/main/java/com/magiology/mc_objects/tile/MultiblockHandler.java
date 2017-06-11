@@ -1,19 +1,20 @@
 package com.magiology.mc_objects.tile;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.magiology.util.interf.Locateable.LocateableBlockM;
 import com.magiology.util.m_extensions.BlockPosM;
 import com.magiology.util.m_extensions.TileEntityM;
+import com.magiology.util.statics.LogUtil;
 
 import net.minecraft.world.World;
 
-public abstract class MultiblockHandler<T extends TileEntityM,PartType extends LocateableBlockM>{
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class MultiblockHandler<T extends TileEntityM, PartType extends LocateableBlockM>{
 	
-	public final List<PartType>	loaded	=new ArrayList<>(),pending=new ArrayList<>();
-	protected final T			owner;
-	public boolean				built;
+	public final List<PartType> loaded=new ArrayList<>(), pending=new ArrayList<>();
+	protected final T       owner;
+	public          boolean built;
 	
 	public MultiblockHandler(T owner){
 		this.owner=owner;
@@ -24,9 +25,10 @@ public abstract class MultiblockHandler<T extends TileEntityM,PartType extends L
 	protected abstract boolean validatePos(World world, PartType pos);
 	
 	public abstract void addBlockPos(BlockPosM pos);
+	
 	public void addPos(PartType pos){
-		if(built)return;
-		pending.add(pos);
+		if(built) return;
+		if(!pending.contains(pos))pending.add(pos);
 		updatePending();
 	}
 	
@@ -38,18 +40,25 @@ public abstract class MultiblockHandler<T extends TileEntityM,PartType extends L
 		if(heap.size()==pending.size()){
 			pending.clear();
 			loaded.addAll(heap);
-		}else pending.removeAll(heap);
+		}
+	}
+	
+	public void tryToForm(){
+		if(built||!multiblockValid())return;
+		onCreate();
 	}
 	
 	public boolean multiblockValid(){
+		updatePending();
+		if(loaded.isEmpty())return false;
 		List<PartType> needed=getMultiblockNeededPositions();
 		
 		//all loaded contain mb and everything is valid
-		return needed.stream().allMatch(loc->loaded.stream().anyMatch(pos->pos.equals(loc))&&
-				validatePosWithLoadCheck(getWorld(), loc));
+		return needed.stream().allMatch(loc->loaded.stream().anyMatch(pos->pos.equals(loc))&&validatePosWithLoadCheck(getWorld(), loc));
 	}
 	
 	protected boolean validatePosWithLoadCheck(World world, PartType pos){
+		if(pos instanceof TileEntityM&&!((TileEntityM)pos).isNbtLoaded())return false;
 		return pos.getPos().isLoaded(getWorld())&&validatePos(world, pos);
 	}
 	
@@ -60,12 +69,13 @@ public abstract class MultiblockHandler<T extends TileEntityM,PartType extends L
 	public void onCreate(){
 		built=true;
 		pending.clear();
+		loaded.retainAll(getMultiblockNeededPositions());
 	}
 	
 	public void onBreak(){
 		built=false;
 	}
-
+	
 	public abstract boolean canBePart(BlockPosM pos);
 	
 }

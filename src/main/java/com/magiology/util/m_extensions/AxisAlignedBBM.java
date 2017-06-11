@@ -1,11 +1,9 @@
 package com.magiology.util.m_extensions;
 
 import com.magiology.util.objs.vec.IVec3M;
-
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-
 
 public class AxisAlignedBBM extends AxisAlignedBB{
 	
@@ -16,7 +14,7 @@ public class AxisAlignedBBM extends AxisAlignedBB{
 	public AxisAlignedBBM(BlockPos pos1, BlockPos pos2){
 		super(pos1, pos2);
 	}
-
+	
 	public AxisAlignedBBM(Vec3d vec1, Vec3d vec2){
 		super(vec1, vec2);
 	}

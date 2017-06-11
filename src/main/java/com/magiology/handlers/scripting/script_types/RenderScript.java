@@ -14,7 +14,6 @@ public class RenderScript extends JsScript{
 		requiredFunctions.add("render");
 	}
 	
-	
 	public ScriptResult render(){
 		return standardFunctionCall("render");
 	}

@@ -1,23 +1,11 @@
 package com.magiology.client;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Rectangle;
+import javax.swing.*;
+import javax.swing.text.Document;
+import java.awt.*;
 import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.UIManager;
-import javax.swing.text.Document;
 
 public class MagiLog extends JFrame{
 	
@@ -28,12 +16,13 @@ public class MagiLog extends JFrame{
 			e1.printStackTrace();
 		}
 	}
+	
 	private static final MagiLog LOG=new MagiLog();
 	
-	private JTextField	findField;
-	private JButton		findButton;
-	private JTextArea	textArea;
-	private int			pos	=0;
+	private JTextField findField;
+	private JButton    findButton;
+	private JTextArea  textArea;
+	private int pos=0;
 	
 	public MagiLog(){
 		
@@ -54,7 +43,8 @@ public class MagiLog extends JFrame{
 		}finally{
 			try{
 				reader.close();
-			}catch(Exception e){}
+			}catch(Exception e){
+			}
 		}
 		
 		JPanel header=new JPanel(new GridBagLayout());
@@ -131,8 +121,9 @@ public class MagiLog extends JFrame{
 		textArea.append(str);
 		try{
 			textArea.scrollRectToVisible(textArea.modelToView(textArea.getText().length()));
-		}catch(Exception e){}
-		if(!isVisible())setVisible(true);
+		}catch(Exception e){
+		}
+		if(!isVisible()) setVisible(true);
 	}
 	
 }

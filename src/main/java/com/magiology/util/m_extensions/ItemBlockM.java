@@ -15,7 +15,7 @@ public class ItemBlockM extends ItemBlock{
 	public ItemBlockM(Block block){
 		super(block);
 	}
-
+	
 	@Override
 	public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState){
 		if(!world.setBlockState(pos, newState, 3)) return false;
@@ -25,7 +25,7 @@ public class ItemBlockM extends ItemBlock{
 		if(state.getBlock()==block){
 			if(block instanceof BlockContainerM){
 				TileEntity tile=world.getTileEntity(pos);
-				if(tile instanceof TileEntityM)((TileEntityM)tile).markNbtAsLoaded();
+				if(tile instanceof TileEntityM) ((TileEntityM)tile).markNbtAsLoaded();
 			}
 			setTileEntityNBT(world, player, pos, stack);
 			block.onBlockPlacedBy(world, pos, state, player, stack);

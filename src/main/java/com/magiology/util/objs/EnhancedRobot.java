@@ -1,10 +1,10 @@
 package com.magiology.util.objs;
 
-import java.awt.AWTException;
-import java.awt.Robot;
+import java.awt.*;
 
 public class EnhancedRobot extends Robot{
-	public EnhancedRobot()throws AWTException{super();}
+	
+	public EnhancedRobot() throws AWTException{super();}
 	
 	public void clickKeyKeyboard(int keyCode){
 		try{
@@ -14,6 +14,7 @@ public class EnhancedRobot extends Robot{
 			e.printStackTrace();
 		}
 	}
+	
 	public void clickKeyMouse(int keyCode){
 		try{
 			mousePress(keyCode);

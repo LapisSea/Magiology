@@ -1,7 +1,6 @@
 package com.magiology.forge.networking;
 
 import com.magiology.util.statics.UtilC;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IThreadListener;
@@ -12,7 +11,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public abstract class PacketM implements IMessage,IMessageHandler<PacketM,IMessage>{
+public abstract class PacketM implements IMessage, IMessageHandler<PacketM,IMessage>{
 	
 	public abstract void toBytes(PacketBufferM buf);
 	

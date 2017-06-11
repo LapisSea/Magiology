@@ -1,26 +1,25 @@
 package com.magiology.handlers.particle;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.UtilC;
-
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class ParticleFactory{
 	
 	@SideOnly(Side.CLIENT)
-	protected static final int	defultSpawnDistance	=32;
+	protected static final int             defultSpawnDistance=32;
 	@SideOnly(Side.CLIENT)
-	private List<IParticle>		particles			=new ArrayList();
+	private                List<IParticle> particles          =new ArrayList();
 	@SideOnly(Side.CLIENT)
-	private int					id					=-1;
+	private                int             id                 =-1;
 	@SideOnly(Side.CLIENT)
-	private boolean				deadDirty			=false;
+	private                boolean         deadDirty          =false;
 	
 	@SideOnly(Side.CLIENT)
 	public void markDeadDirty(){
@@ -55,7 +54,7 @@ public abstract class ParticleFactory{
 	
 	@SideOnly(Side.CLIENT)
 	public abstract boolean hasDistanceLimit();
-
+	
 	@SideOnly(Side.CLIENT)
 	public abstract boolean hasStaticModel();
 	
@@ -88,7 +87,7 @@ public abstract class ParticleFactory{
 	
 	@SideOnly(Side.CLIENT)
 	public void update(){
-		if(particles.isEmpty())return;
+		if(particles.isEmpty()) return;
 		particles.stream().forEach(IParticle::update);
 		if(deadDirty){
 			particles.removeIf(IParticle::isDead);
@@ -101,17 +100,17 @@ public abstract class ParticleFactory{
 		if(!particles.isEmpty()){
 			setUpOpenGl();
 			if(hasStaticModel()){
-				for(int j=0;j<particles.size();j++){
+				for(int j=0; j<particles.size(); j++){
 					IParticle particle=particles.get(j);
 					GlStateManager.pushMatrix();
 					particle.setUpOpenGl();
 					int[] ids=particle.getModelIds();
 					if(ids==null) GlStateManager.callList(particle.getModelId());
-					else for(int i:ids)GlStateManager.callList(i);
+					else for(int i : ids) GlStateManager.callList(i);
 					GlStateManager.popMatrix();
 				}
 			}else{
-				for(int j=0;j<particles.size();j++){
+				for(int j=0; j<particles.size(); j++){
 					IParticle particle=particles.get(j);
 					GlStateManager.pushMatrix();
 					particle.setUpOpenGl();

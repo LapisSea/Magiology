@@ -18,9 +18,9 @@ public class LogBuffer{
 	}
 	
 	public void flush(){
-		if(buff.length()==0)return;
+		if(buff.length()==0) return;
 		
-		if(logMlutiLine())return;
+		if(logMlutiLine()) return;
 		
 		hook.process(buff.toString());
 		buff=new StringBuilder();
@@ -28,7 +28,7 @@ public class LogBuffer{
 	
 	private boolean logMlutiLine(){
 		if(buff.indexOf(UtilM.LINE_REG)!=-1){
-			for(String line:buff.toString().split(UtilM.LINE_REG))hook.process(line);
+			for(String line : buff.toString().split(UtilM.LINE_REG)) hook.process(line);
 			buff=new StringBuilder();
 			return true;
 		}

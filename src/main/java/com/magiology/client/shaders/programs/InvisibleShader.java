@@ -1,11 +1,5 @@
 package com.magiology.client.shaders.programs;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
-
 import com.magiology.client.shaders.ShaderProgram;
 import com.magiology.client.shaders.effects.PositionAwareEffect;
 import com.magiology.client.shaders.effects.SoftEffectsShader;
@@ -16,23 +10,27 @@ import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.UtilC;
 import com.magiology.util.statics.math.PartialTicksUtil;
-
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLivingBase;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class InvisibleShader extends ShaderProgram{
 	
-	public static InvisibleShader	instance;
-	public static float				screenSizeF;
+	public static InvisibleShader instance;
+	public static float           screenSizeF;
 	
-	private UniformUploaderF2	screenDim;
-	private UniformUploaderF1	screenSize;
+	private UniformUploaderF2 screenDim;
+	private UniformUploaderF1 screenSize;
 	
 	//	private UniformUploaderCustom<T>
 	
-	private List<PositionAwareEffect>		effects				=new ArrayList<>();
-	public static List<EntityLivingBase>	INVISIBLE_ENTITYS	=new ArrayList<>();
+	private       List<PositionAwareEffect> effects          =new ArrayList<>();
+	public static List<EntityLivingBase>    INVISIBLE_ENTITYS=new ArrayList<>();
 	
 	public InvisibleShader(){
 		instance=this;
@@ -85,16 +83,16 @@ public class InvisibleShader extends ShaderProgram{
 	}
 	
 	public void render(){
-		if(INVISIBLE_ENTITYS.isEmpty())return;
+		if(INVISIBLE_ENTITYS.isEmpty()) return;
 		
-		if(!shouldRender())return;
+		if(!shouldRender()) return;
 		
 		RenderManager renderManager=UtilC.getMC().getRenderManager();
 		GlStateManager.pushMatrix();
 		activate();
 		OpenGLM.translate(PartialTicksUtil.calculate(UtilC.getViewEntity()).mul(-1));
 		
-		for(EntityLivingBase entity:INVISIBLE_ENTITYS){
+		for(EntityLivingBase entity : INVISIBLE_ENTITYS){
 			Vec3M pos=PartialTicksUtil.calculate(entity);
 			GlStateManager.enableBlend();
 			GL11.glAlphaFunc(GL11.GL_GREATER, 0);

@@ -1,14 +1,14 @@
 package com.magiology.util.objs;
 
-import static net.minecraft.util.EnumFacing.*;
-
 import net.minecraft.util.EnumFacing;
+
+import static net.minecraft.util.EnumFacing.*;
 
 public class BlockSides{
 	
-	private final boolean	sides[]			=new boolean[6];
-	private int				straight		=3;
-	private boolean			straightDirty	=true;
+	private final boolean sides[]      =new boolean[6];
+	private       int     straight     =3;
+	private       boolean straightDirty=true;
 	
 	public void setSide(EnumFacing facing, boolean flag){
 		setSide(facing.getIndex(), flag);
@@ -26,10 +26,11 @@ public class BlockSides{
 	public boolean getSide(int facing){
 		return sides[facing];
 	}
-
+	
 	public boolean isStraight(EnumFacing facing){
 		return isStraight(facing);
 	}
+	
 	/**
 	 * 3 = no straight lines
 	 */
@@ -54,9 +55,9 @@ public class BlockSides{
 	}
 	
 	protected int calcMirrored(){
-		if(getSide(UP)&&getSide(DOWN)&&    !getSide(NORTH)&&!getSide(SOUTH)&&!getSide(EAST)&&!getSide(WEST)  )return 0;
-		if(getSide(NORTH)&&getSide(SOUTH)&&!getSide(UP)&&!getSide(DOWN)&&    !getSide(EAST)&&!getSide(WEST)  )return 1;
-		if(getSide(EAST)&&getSide(WEST)&&  !getSide(UP)&&!getSide(DOWN)&&    !getSide(NORTH)&&!getSide(SOUTH))return 2;
+		if(getSide(UP)&&getSide(DOWN)&&!getSide(NORTH)&&!getSide(SOUTH)&&!getSide(EAST)&&!getSide(WEST)) return 0;
+		if(getSide(NORTH)&&getSide(SOUTH)&&!getSide(UP)&&!getSide(DOWN)&&!getSide(EAST)&&!getSide(WEST)) return 1;
+		if(getSide(EAST)&&getSide(WEST)&&!getSide(UP)&&!getSide(DOWN)&&!getSide(NORTH)&&!getSide(SOUTH)) return 2;
 		return 3;
 	}
 	

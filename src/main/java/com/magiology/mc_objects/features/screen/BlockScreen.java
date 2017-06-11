@@ -1,14 +1,11 @@
 package com.magiology.mc_objects.features.screen;
 
-import org.lwjgl.util.vector.Matrix4f;
-
 import com.magiology.core.registry.init.ItemsM;
 import com.magiology.mc_objects.items.ItemMatterJumper;
 import com.magiology.mc_objects.items.ItemMatterJumper.MatterJumperMode;
 import com.magiology.util.m_extensions.BlockContainerM;
 import com.magiology.util.m_extensions.BlockContainerM.MixedRender;
 import com.magiology.util.m_extensions.BlockPosM;
-import com.magiology.util.m_extensions.TileEntityM;
 import com.magiology.util.objs.BlockStates;
 import com.magiology.util.objs.BlockStates.IPropertyM;
 import com.magiology.util.objs.BlockStates.PropertyBoolM;
@@ -17,25 +14,20 @@ import com.magiology.util.objs.block_bounds.StateDependantBlockBounds;
 import com.magiology.util.objs.vec.Vec2FM;
 import com.magiology.util.objs.vec.Vec3M;
 import com.magiology.util.statics.GeometryUtil;
+import com.magiology.util.statics.LogUtil;
 import com.magiology.util.statics.UtilM;
 import com.magiology.util.statics.math.MatrixUtil;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.lwjgl.util.vector.Matrix4f;
 
 public class BlockScreen extends BlockContainerM<TileEntityScreen> implements MixedRender{
 	
@@ -46,8 +38,7 @@ public class BlockScreen extends BlockContainerM<TileEntityScreen> implements Mi
 	public BlockScreen(){
 		super(Material.IRON, ()->new TileEntityScreen(), UtilM.mixedToArray(IPropertyM.class, ROT, ACTIVE, SIDE_EDGE));
 		
-		setBlockBounds(new StateDependantBlockBounds(
-				state->ROT.get(state).getIndex()/2,
+		setBlockBounds(new StateDependantBlockBounds(state->ROT.get(state).getIndex()/2,
 				
 				new AxisAlignedBB(0, p*5, 0, 1, 1-p*5, 1),
 				new AxisAlignedBB(0, 0, p*5, 1, 1, 1-p*5),
@@ -61,7 +52,6 @@ public class BlockScreen extends BlockContainerM<TileEntityScreen> implements Mi
 		if(tile==null) return;
 		updateBlockStateAndSet(state, world, pos, tile);
 	}
-	
 	
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ){
@@ -102,7 +92,6 @@ public class BlockScreen extends BlockContainerM<TileEntityScreen> implements Mi
 		return EnumBlockRenderType.MODEL;
 	}
 	
-	
 	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos fromPos){
 		TileEntityScreen tile=getTile(world, pos);
@@ -134,6 +123,7 @@ public class BlockScreen extends BlockContainerM<TileEntityScreen> implements Mi
 		
 		return SIDE_EDGE[id].set(state, !hasSide);
 	}
+	
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		TileEntityScreen tile=getTile(world, pos);
@@ -141,8 +131,7 @@ public class BlockScreen extends BlockContainerM<TileEntityScreen> implements Mi
 		
 		ItemStack heldItem=player.getHeldItem(hand);
 		
-		//LogUtil.println(tile.getMbCategory());
-		if(UtilM.isItemInStack(ItemsM.MATTER_JUMPER, heldItem)){
+		if(ItemsM.MATTER_JUMPER.isInStack(heldItem)){
 			MatterJumperMode mode=ItemMatterJumper.getMode(heldItem);
 			
 			if(mode==MatterJumperMode.WRENCH){

@@ -1,15 +1,6 @@
 package com.magiology.util.statics;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
-import java.io.Serializable;
-
+import java.io.*;
 
 public class FileUtil{
 	
@@ -31,23 +22,25 @@ public class FileUtil{
 	}
 	
 	public static StringBuilder getFileTxt(File file){
-		if(!file.exists()||file.isDirectory())return null;
+		if(!file.exists()||file.isDirectory()) return null;
 		StringBuilder result=new StringBuilder();
-		BufferedReader br = null;
+		BufferedReader br=null;
 		try{
 			br=new BufferedReader(new FileReader(file));
 			String line=null;
-			while((line=br.readLine())!=null)result.append(line).append("\n");
+			while((line=br.readLine())!=null) result.append(line).append("\n");
 			br.close();
 		}catch(Exception e){
 			e.printStackTrace();
-			if(br!=null)try{
+			if(br!=null) try{
 				br.close();
-			}catch(Exception e1){}
+			}catch(Exception e1){
+			}
 		}
 		return result;
 	}
-	public static void setFileObj(File file,Serializable content){
+	
+	public static void setFileObj(File file, Serializable content){
 		try{
 			file.createNewFile();
 			ObjectOutputStream out=new ObjectOutputStream(new FileOutputStream(file));
@@ -64,7 +57,7 @@ public class FileUtil{
 		}
 	}
 	
-	public static void setFileTxt(File file,String content){
+	public static void setFileTxt(File file, String content){
 		try{
 			file.createNewFile();
 			PrintWriter out=new PrintWriter(file);

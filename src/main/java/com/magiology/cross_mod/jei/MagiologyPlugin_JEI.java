@@ -4,13 +4,7 @@ import com.magiology.cross_mod.ExtensionLoader;
 import com.magiology.cross_mod.jei.shaker.ShakerCategory;
 import com.magiology.cross_mod.jei.shaker.ShakingRecipeHandler;
 import com.magiology.cross_mod.jei.shaker.ShakingRecipeMaker;
-
-import mezz.jei.api.BlankModPlugin;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.IJeiHelpers;
-import mezz.jei.api.IModRegistry;
-import mezz.jei.api.ISubtypeRegistry;
-import mezz.jei.api.JEIPlugin;
+import mezz.jei.api.*;
 import mezz.jei.api.ingredients.IIngredientRegistry;
 import mezz.jei.api.ingredients.IModIngredientRegistration;
 

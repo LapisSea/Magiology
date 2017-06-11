@@ -1,28 +1,29 @@
 package com.magiology;
 
-import org.lwjgl.util.vector.Matrix4f;
-
 import com.magiology.client.renderers.FastNormalRenderer;
 import com.magiology.client.renderers.Renderer;
 import com.magiology.client.rendering.ShaderMultiTransformModel;
 import com.magiology.util.objs.animation.AnimationM;
 import com.magiology.util.objs.color.ColorM;
 import com.magiology.util.objs.vec.Vec3M;
+import com.magiology.util.statics.LogUtil;
 import com.magiology.util.statics.OpenGLM;
+import com.magiology.util.statics.RandUtil;
 import com.magiology.util.statics.OpenGLM.BlendFunc;
 import com.magiology.util.statics.TestingAnimationM;
 import com.magiology.util.statics.UtilC;
+import com.magiology.util.statics.UtilM;
 import com.magiology.util.statics.math.MathUtil;
 import com.magiology.util.statics.math.MatrixUtil;
 import com.magiology.util.statics.math.PartialTicksUtil;
-
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.util.vector.Matrix4f;
 
 /**
- * 
- * this is a class where my brain makes proofs of concepts, heavy debugging and things like that.
- * 
+ *
+ * this is a class where my brain makes proofs of concepts, heavy debugging and things like that... Also farts, but don't mind that.
+ *
  * @author LapisSea
  *
  */
@@ -32,24 +33,7 @@ public class Development{
 		
 		@Override
 		public int[] getMatrixIds(){
-			return new int[]{
-					0, 0, 0, 0,
-					0, 0, 0, 0,
-					0, 0, 0, 0,
-					0, 0, 0, 0,
-					0, 0, 0, 0,
-					
-					1, 1, 0, 0,
-					0, 0, 1, 1,
-					0, 0, 1, 1,
-					1, 1, 0, 0,
-					
-					2, 2, 1, 1,
-					1, 1, 2, 2,
-					1, 1, 2, 2,
-					2, 2, 1, 1,
-					2, 2, 2, 2
-			};
+			return new int[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,1,1,1,1,0,0,2,2,1,1,1,1,2,2,1,1,2,2,2,2,1,1,2,2,2,2};
 		}
 		
 		@Override
@@ -58,7 +42,7 @@ public class Development{
 			Matrix4f mat1=MatrixUtil.createMatrix(new Vec3M()).rotateAt(new Vec3M(0.5, 0.5, 0.5), new Vec3M(MathUtil.sin(tim)*15, 0, 0)).finish();
 			Matrix4f mat2=Matrix4f.mul(mat1, MatrixUtil.createMatrix(new Vec3M()).rotateAt(new Vec3M(0.5, 0.5, 0.5), new Vec3M(MathUtil.sin(tim)*15, 0, 0)).finish(), null);
 			Matrix4f mat3=Matrix4f.mul(mat2, MatrixUtil.createMatrix(new Vec3M()).rotateAt(new Vec3M(0.5, 0.5, 0.5), new Vec3M(MathUtil.sin(tim)*15, 0, 0)).finish(), null);
-			return new Matrix4f[]{mat1, mat2, mat3};
+			return new Matrix4f[]{mat1,mat2,mat3};
 		}
 		
 		@Override
@@ -207,7 +191,6 @@ public class Development{
 	}
 	
 	public static void startupTest(){
-		
 		//		final String script ="\n"
 		//				+  "function main(){\n"
 		//				+  "	var JavaHomeGetter = Java.type(\"com.magiology.handlers.scripting.bridge.JavaHomeGetter\");\n"

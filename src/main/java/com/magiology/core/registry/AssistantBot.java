@@ -1,5 +1,14 @@
 package com.magiology.core.registry;
 
+import com.google.common.collect.Lists;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.magiology.core.MReference;
+import com.magiology.util.objs.PairM;
+import com.magiology.util.statics.LogUtil;
+import com.magiology.util.statics.UtilM;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -11,52 +20,41 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import com.google.common.collect.Lists;
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.magiology.core.MReference;
-import com.magiology.util.objs.PairM;
-import com.magiology.util.statics.LogUtil;
-import com.magiology.util.statics.UtilM;
-
 /*{
-  "last update": 1483797254192
+  "last update": 1484430226358
 }*/
 
 /**
- * 
+ *
  * This is a class that makes development a bit faster and easier as it abstracts and automates the
  * process of registration with a clean code generation. The code is the same in terms of performance/load
  * time when compared to how you would manually register something.<br>
  * "Life improvement class"
- * 
+ *
  * @author LapisSea
  */
 public class AssistantBot{
 	
 	static{
-		LogUtil.println(AssistantBot.class.getSimpleName(),"class loaded!");
+		LogUtil.println(AssistantBot.class.getSimpleName(), "class loaded!");
 	}
 	
 	public interface AutomatableCode{
 		
-		PairM<String, String>[] getMarkers();
+		PairM<String,String>[] getMarkers();
 		
-		void generate(final StringBuilder generated, List<Class> allClasses, int id);
+		void generate(String src, final StringBuilder generated, List<Class> allClasses, int id);
 		
 	}
 	
-	private static final List<String> fails=Lists.newArrayList(new String[]{
-		MReference.SERVER_PROXY_LOCATION,
-		MReference.CLIENT_PROXY_LOCATION
-	});
-		
-	private static final String ROOT="../src/main/java/";
-	private static final File thisClass=getFileFromClass(AssistantBot.class);
-	private static Map<String, Object> BOT_DATA;
-	private static String THIS_CLASS_SRC;
-	private static int START, END;
+	private static final List<String> fails=Lists.newArrayList(MReference.SERVER_PROXY_LOCATION, MReference.CLIENT_PROXY_LOCATION);
+	
+	private static final String ROOT     ="../src/main/java/";
+	private static final File   thisClass=getFileFromClass(AssistantBot.class);
+	
+	private static Map<String,Object> BOT_DATA;
+	private static String             THIS_CLASS_SRC;
+	private static int                START, END;
 	private static boolean DIRTY=false;
 	
 	static void run(){
@@ -66,7 +64,7 @@ public class AssistantBot{
 	}
 	
 	private static void end(){
-		LogUtil.println("Assistant bot finished in:",UtilM.endTime());
+		LogUtil.println("Assistant bot finished in:", UtilM.endTime());
 	}
 	
 	private static void detectAndUpdate(){
@@ -99,14 +97,15 @@ public class AssistantBot{
 		List<Class> allClasses=new ArrayList<>();
 		getJavaFiles().forEach(file->{
 			String classPath=file.getPath();
-			classPath=classPath.substring(ROOT.length(),classPath.length()-5).replaceAll("(/|\\\\)", ".");
+			classPath=classPath.substring(ROOT.length(), classPath.length()-5).replaceAll("(/|\\\\)", ".");
 			try{
 				exploreAndLoadClass(allClasses, loader.loadClass(classPath));
 			}catch(Exception e){
-				if(!fails.contains(classPath))throw new RuntimeException(e);
+				if(!fails.contains(classPath)) throw new RuntimeException(e);
 			}
 		});
-		allClasses.stream().filter(clas->clas.getName().startsWith("com.magiology.core.registry.init.")&&UtilM.instanceOf(clas, AutomatableCode.class)).forEach(clas->{
+		allClasses.stream().filter(
+			clas->clas.getName().startsWith("com.magiology.core.registry.init.")&&UtilM.instanceOf(clas, AutomatableCode.class)).forEach(clas->{
 			try{
 				Path classPath=getFileFromClass(clas).toPath();
 				
@@ -114,25 +113,22 @@ public class AssistantBot{
 				constructor.setAccessible(true);
 				AutomatableCode autoCode=(AutomatableCode)constructor.newInstance();
 				
-				PairM<String, String>[] markers=autoCode.getMarkers();
+				PairM<String,String>[] markers=autoCode.getMarkers();
 				String src=new String(Files.readAllBytes(classPath));
 				
 				String newSrc=src;
 				
-				for(int i=0;i<markers.length;i++){
+				for(int i=0; i<markers.length; i++){
 					PairM<String,String> marker=markers[i];
-					int startPos=src.indexOf(marker.obj1),endPos=src.indexOf(marker.obj2);
-					if(startPos==-1)throw new IllegalStateException("Can't find "+marker.obj1+" in "+clas.getName());
-					if(endPos==-1)throw new IllegalStateException("Can't find "+marker.obj2+" in "+clas.getName());
+					int startPos=src.indexOf(marker.obj1), endPos=src.indexOf(marker.obj2);
+					if(startPos==-1) throw new IllegalStateException("Can't find "+marker.obj1+" in "+clas.getName());
+					if(endPos==-1) throw new IllegalStateException("Can't find "+marker.obj2+" in "+clas.getName());
 					startPos+=marker.obj1.length();
 					
 					StringBuilder generated=new StringBuilder();
-					autoCode.generate(generated, allClasses,i);
+					autoCode.generate(src, generated, allClasses, i);
 					
-					newSrc=
-							newSrc.substring(0, startPos)+
-							generated.toString()+
-							newSrc.substring(endPos, newSrc.length());
+					newSrc=newSrc.substring(0, startPos)+generated.toString()+newSrc.substring(endPos, newSrc.length());
 				}
 				
 				if(!newSrc.equals(src)){
@@ -145,9 +141,10 @@ public class AssistantBot{
 			}
 		});
 	}
+	
 	private static void exploreAndLoadClass(List<Class> classes, Class<?> clazs){
 		classes.add(clazs);
-		for(Class c:clazs.getDeclaredClasses()){
+		for(Class c : clazs.getDeclaredClasses()){
 			exploreAndLoadClass(classes, c);
 		}
 	}
@@ -163,7 +160,7 @@ public class AssistantBot{
 		boolean started=false;
 		char lastChar=' ';
 		
-		for(int i=0;i<THIS_CLASS_SRC.length();i++){
+		for(int i=0; i<THIS_CLASS_SRC.length(); i++){
 			char ch=THIS_CLASS_SRC.charAt(i);
 			if(lastChar=='*'&&ch=='/'){
 				END=i-1;
@@ -177,13 +174,12 @@ public class AssistantBot{
 			lastChar=ch;
 		}
 		
-		BOT_DATA=new Gson().fromJson(THIS_CLASS_SRC.substring(START, END), new TypeToken<Map<String, Object>>(){}.getType());
+		BOT_DATA=new Gson().fromJson(THIS_CLASS_SRC.substring(START, END), new TypeToken<Map<String,Object>>(){}.getType());
 	}
+	
 	private static void writeData(){
-		String newClassSrc=
-				THIS_CLASS_SRC.substring(0, START)+
-				new GsonBuilder().setPrettyPrinting().create().toJson(BOT_DATA)+
-				THIS_CLASS_SRC.substring(END, THIS_CLASS_SRC.length());
+		String newClassSrc=THIS_CLASS_SRC.substring(0, START)+new GsonBuilder().setPrettyPrinting().create().toJson(BOT_DATA)+
+							   THIS_CLASS_SRC.substring(END, THIS_CLASS_SRC.length());
 		try{
 			Files.write(thisClass.toPath(), newClassSrc.getBytes());
 		}catch(IOException e){
@@ -204,9 +200,11 @@ public class AssistantBot{
 		String path1=file.toString();
 		return path1.endsWith(".java")&&!path1.endsWith("package-info.java");
 	};
+	
 	private static List<File> getJavaFiles(){
 		return getJavaFiles(new ArrayList<>(), new File(ROOT));
 	}
+	
 	private static List<File> getJavaFiles(List<File> fileList, File dir){
 		
 		List<File> files=Lists.newArrayList(dir.listFiles());
@@ -215,7 +213,7 @@ public class AssistantBot{
 		files.stream().filter(IS_JAVA_FILE).forEach(fileList::add);
 		return fileList;
 	}
-
+	
 	private static File getFileFromClass(Class clazz){
 		return new File(ROOT+clazz.getName().replace(".", "/")+".java");
 	}
