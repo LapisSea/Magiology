@@ -11,3 +11,8 @@
 !/run/mods/1.10.2/magiology/
 !spooky.scary.skeletons
 !.editorconfig
+!safe_setup_eclipse.bat
+!safe_setup_idea.bat
+!setup_eclipse.bat
+!setup_idea.bat
+!runClient.bat
