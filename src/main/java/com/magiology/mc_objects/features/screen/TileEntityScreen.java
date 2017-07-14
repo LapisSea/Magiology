@@ -30,7 +30,6 @@ import com.magiology.util.statics.Structure;
 import com.magiology.util.statics.Structure.Plane;
 import com.magiology.util.statics.UtilM;
 
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;

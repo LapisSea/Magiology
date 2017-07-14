@@ -54,7 +54,7 @@ public class BlockPosM extends BlockPos implements LocateableBlockM{
 	}
 	
 	public BlockPosM(Vec3d source){
-		this(source.xCoord, source.yCoord, source.zCoord);
+		this(source.x, source.y, source.z);
 	}
 	
 	public BlockPosM(Vec3i source){
@@ -70,7 +70,7 @@ public class BlockPosM extends BlockPos implements LocateableBlockM{
 	}
 	
 	public BlockPosM(PathPoint point){
-		this(point.xCoord, point.yCoord, point.zCoord);
+		this(point.x, point.y, point.z);
 	}
 	
 	public BlockPosM(long serialized){

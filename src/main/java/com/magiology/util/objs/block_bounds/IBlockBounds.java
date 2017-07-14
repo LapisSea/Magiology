@@ -47,7 +47,7 @@ public interface IBlockBounds{
 		if(blockBox!=null){
 			AxisAlignedBB axisalignedbb=blockBox.offset(pos);
 			
-			if(entityBox.intersectsWith(axisalignedbb)){
+			if(entityBox.intersects(axisalignedbb)){
 				collidingBoxes.add(axisalignedbb);
 			}
 		}

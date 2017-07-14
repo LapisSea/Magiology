@@ -50,7 +50,7 @@ public abstract class AbstractRealPhysicsVec3F{
 					if(bounding!=null){
 						surfaceHit(new PairM<Vec3M,Vec3M>(new Vec3M(hit.hitVec), new Vec3M().offset(hit.sideHit)));
 						Vec3M pos=getPos();
-						if(bounding.isVecInside(pos.conv())){
+						if(bounding.contains(pos.conv())){
 							double toMaxYDist=Math.abs(pos.y()-bounding.maxY), toMinYDist=Math.abs(pos.y()-bounding.minY), toMinXDist=Math.abs(pos.x()-bounding.minX), toMaxXDist=Math.abs(pos.x()-bounding.maxX), toMinZDist=Math.abs(pos.z()-bounding.minZ), toMaxZDist=Math.abs(pos.z()-bounding.maxZ), min=Math.min(
 								toMaxYDist, Math.min(toMinYDist, Math.min(toMinXDist, Math.min(toMaxXDist, Math.min(toMinZDist, toMaxZDist)))));
 							if(min==toMaxYDist) addPos(new Vec3M(0, toMaxYDist, 0));

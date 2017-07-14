@@ -280,7 +280,7 @@ public class AdvancedRenderer{
 		Vec3M finalNormal1=MatrixUtil.transformVector(triangle.normal1.add(0, 0, 0), new Vector3f(), rotation.x, rotation.y, rotation.z, 1).normalize();
 		Vec3M finalNormal2=MatrixUtil.transformVector(triangle.normal2.add(0, 0, 0), new Vector3f(), rotation.x, rotation.y, rotation.z, 1).normalize();
 		Vec3M[] pos=new Vec3M[4];
-		for(int b=0; b<4; b++) pos[b]=MatrixUtil.transformVector(new Vec3M(triangle.pos4[b].vector3D.xCoord, triangle.pos4[b].vector3D.yCoord, triangle.pos4[b].vector3D.zCoord), transformation);
+		for(int b=0; b<4; b++) pos[b]=MatrixUtil.transformVector(new Vec3M(triangle.pos4[b].vector3D.x, triangle.pos4[b].vector3D.y, triangle.pos4[b].vector3D.z), transformation);
 		Renderer.POS_UV_NORMAL.addVertex(pos[0], triangle.pos4[0].texturePositionX, triangle.pos4[0].texturePositionY, finalNormal1);
 		Renderer.POS_UV_NORMAL.addVertex(pos[1], triangle.pos4[1].texturePositionX, triangle.pos4[1].texturePositionY, finalNormal1);
 		Renderer.POS_UV_NORMAL.addVertex(pos[2], triangle.pos4[2].texturePositionX, triangle.pos4[2].texturePositionY, finalNormal1);
@@ -302,10 +302,10 @@ public class AdvancedRenderer{
 			for(ShadedQuad a : shadedTriangles){
 				Vec3M finalNormal1=MatrixUtil.transformVector(a.normal1.add(0, 0, 0), new Vector3f(0, 0, 0), rotation.x, rotation.y, rotation.z, 1);
 				Vec3M finalNormal2=MatrixUtil.transformVector(a.normal2.add(0, 0, 0), new Vector3f(0, 0, 0), rotation.x, rotation.y, rotation.z, 1);
-				buffer.add(new ShadedQuad(new PositionTextureVertex(MatrixUtil.transformVector(new Vec3d(a.pos4[0].vector3D.xCoord, a.pos4[0].vector3D.yCoord, a.pos4[0].vector3D.zCoord), transformation), a.pos4[0].texturePositionX, a.pos4[0].texturePositionY),
-										  new PositionTextureVertex(MatrixUtil.transformVector(new Vec3d(a.pos4[1].vector3D.xCoord, a.pos4[1].vector3D.yCoord, a.pos4[1].vector3D.zCoord), transformation), a.pos4[1].texturePositionX, a.pos4[1].texturePositionY),
-										  new PositionTextureVertex(MatrixUtil.transformVector(new Vec3d(a.pos4[2].vector3D.xCoord, a.pos4[2].vector3D.yCoord, a.pos4[2].vector3D.zCoord), transformation), a.pos4[2].texturePositionX, a.pos4[2].texturePositionY),
-										  new PositionTextureVertex(MatrixUtil.transformVector(new Vec3d(a.pos4[3].vector3D.xCoord, a.pos4[3].vector3D.yCoord, a.pos4[3].vector3D.zCoord), transformation), a.pos4[3].texturePositionX, a.pos4[3].texturePositionY), finalNormal1, finalNormal2));
+				buffer.add(new ShadedQuad(new PositionTextureVertex(MatrixUtil.transformVector(new Vec3d(a.pos4[0].vector3D.x, a.pos4[0].vector3D.y, a.pos4[0].vector3D.z), transformation), a.pos4[0].texturePositionX, a.pos4[0].texturePositionY),
+										  new PositionTextureVertex(MatrixUtil.transformVector(new Vec3d(a.pos4[1].vector3D.x, a.pos4[1].vector3D.y, a.pos4[1].vector3D.z), transformation), a.pos4[1].texturePositionX, a.pos4[1].texturePositionY),
+										  new PositionTextureVertex(MatrixUtil.transformVector(new Vec3d(a.pos4[2].vector3D.x, a.pos4[2].vector3D.y, a.pos4[2].vector3D.z), transformation), a.pos4[2].texturePositionX, a.pos4[2].texturePositionY),
+										  new PositionTextureVertex(MatrixUtil.transformVector(new Vec3d(a.pos4[3].vector3D.x, a.pos4[3].vector3D.y, a.pos4[3].vector3D.z), transformation), a.pos4[3].texturePositionX, a.pos4[3].texturePositionY), finalNormal1, finalNormal2));
 			}
 			if(isItself){
 				shadedTriangles=buffer;

@@ -1,9 +1,10 @@
 package com.magiology.util.objs;
 
-import joptsimple.internal.Objects;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
+
 
 public class ArrayList_ModifyHook<E> extends ArrayList<E>{
 	
@@ -16,7 +17,7 @@ public class ArrayList_ModifyHook<E> extends ArrayList<E>{
 	
 	public ArrayList_ModifyHook(Runnable hook){
 		super();
-		Objects.ensureNotNull(this.hook=hook);
+		this.hook=Objects.requireNonNull(hook);
 	}
 	
 	public ArrayList_ModifyHook(Collection<? extends E> c){
@@ -26,11 +27,11 @@ public class ArrayList_ModifyHook<E> extends ArrayList<E>{
 	
 	public ArrayList_ModifyHook(Collection<? extends E> c, Runnable hook){
 		super(c);
-		Objects.ensureNotNull(this.hook=hook);
+		this.hook=Objects.requireNonNull(hook);
 	}
 	
 	protected void setHook(Runnable hook){
-		Objects.ensureNotNull(this.hook=hook);
+		this.hook=Objects.requireNonNull(hook);
 	}
 	
 	protected void callHook(){

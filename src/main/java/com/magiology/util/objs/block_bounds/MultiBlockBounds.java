@@ -9,7 +9,6 @@ import com.magiology.util.statics.CollectionConverter;
 import com.magiology.util.statics.GeometryUtil;
 import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.UtilM;
-import joptsimple.internal.Objects;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -23,6 +22,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BooleanSupplier;
 
 public class MultiBlockBounds implements IBlockBounds{
@@ -102,21 +102,21 @@ public class MultiBlockBounds implements IBlockBounds{
 	}
 	
 	public void modifyBlockBounds(int id, AxisAlignedBB box, boolean constant){
-		Objects.ensureNotNull(box);
+		Objects.requireNonNull(box);
 		constants[id]=constant;
 		boxes.set(id, box);
 		markDirty();
 	}
 	
 	public void setBlockBounds(int constants, AxisAlignedBB... boxes){
-		Objects.ensureNotNull(boxes);
+		Objects.requireNonNull(boxes);
 		if(boxes.length==0) throw new IllegalArgumentException("Boxes are empty!");
 		
 		markDirty();
 		
 		this.boxes.clear();
 		for(AxisAlignedBB box : boxes){
-			Objects.ensureNotNull(box);
+			Objects.requireNonNull(box);
 			this.boxes.add(box);
 		}
 		this.constants=new boolean[boxes.length];

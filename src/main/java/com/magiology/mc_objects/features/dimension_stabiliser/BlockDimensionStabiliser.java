@@ -26,11 +26,6 @@ public class BlockDimensionStabiliser extends BlockContainerM{
 	}
 	
 	@Override
-	public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side){
-		return false;
-	}
-	
-	@Override
 	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side){
 		return side==EnumFacing.DOWN;
 	}

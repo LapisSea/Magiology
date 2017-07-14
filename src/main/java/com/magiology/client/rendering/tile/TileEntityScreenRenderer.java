@@ -32,7 +32,7 @@ import scala.tools.nsc.doc.base.comment.Link;
 public class TileEntityScreenRenderer extends TileEntitySpecialRendererM<TileEntityScreen>{
 	
 	@Override
-	public void renderTileEntityAt(TileEntityScreen tile, Vec3M renderPos, float partialTicks){
+	public void render(TileEntityScreen tile, Vec3M renderPos, float partialTicks){
 		//		if(RandUtil.RB(0.01))ParticleBubbleFactory.get().spawn(new Vec3M(tile.getPos()).add(3.5),new Vec3M(),1,20,0,ColorF.randomRGB());
 		List<PairM<TileEntityScreen,IColorM>> ll=new ArrayList<>();
 		

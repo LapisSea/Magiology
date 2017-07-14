@@ -7,7 +7,7 @@ import com.magiology.util.objs.vec.Vec3M;
 public class DummyTileEntityRenderer extends TileEntitySpecialRendererM<TileEntityDimensionStabiliser>{
 	
 	@Override
-	public void renderTileEntityAt(TileEntityDimensionStabiliser tileEntity, Vec3M renderPos, float partialTicks){
+	public void render(TileEntityDimensionStabiliser tileEntity, Vec3M renderPos, float partialTicks){
 		////		PrintUtil.printStackTrace();
 		//		OpenGLM.pushMatrix();
 		////		EntityPlayer player=UtilC.getThePlayer();

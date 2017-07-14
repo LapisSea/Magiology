@@ -36,7 +36,7 @@ public class BasicBlockHighlightRenderer extends BlockHighlightRenderer{
 		GlStateManager.glNewList(drawModel, 4864);
 		
 		Renderer.LINES.begin();
-		generateBoxLines(getOwner().getBoundingBox(state, world, pos).expandXyz(0.0020000000949949026D)).forEach(Renderer.LINES::addVertex);
+		generateBoxLines(getOwner().getBoundingBox(state, world, pos).expand(0.0020000000949949026D,0.0020000000949949026D,0.0020000000949949026D)).forEach(Renderer.LINES::addVertex);
 		Renderer.LINES.draw();
 		
 		GlStateManager.glEndList();

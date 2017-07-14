@@ -264,9 +264,9 @@ public class Vec3M extends Vec3MRead implements Serializable, WritableVector3f, 
 	}
 	
 	public float distanceTo(Vec3d vec){
-		double d0=vec.xCoord-x;
-		double d1=vec.yCoord-y;
-		double d2=vec.zCoord-z;
+		double d0=vec.x-x;
+		double d1=vec.y-y;
+		double d2=vec.z-z;
 		return MathHelper.sqrt(d0*d0+d1*d1+d2*d2);
 	}
 	

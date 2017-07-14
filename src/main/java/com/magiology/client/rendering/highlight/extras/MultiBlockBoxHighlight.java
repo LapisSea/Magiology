@@ -19,7 +19,7 @@ public class MultiBlockBoxHighlight implements HighlightListener<MultiBlockBound
 		if(id==-1) return;
 		
 		float alphaRaw=UtilC.fluctuateLinSmooth(50, 0, 0, 1), alpha=alphaRaw*0.3F+0.1F;
-		AxisAlignedBB box=parent.getBox(id).expandXyz(0.005);
+		AxisAlignedBB box=parent.getBox(id).expand(0.005,0.005,0.005);
 		IColorM.BLACK.bindWithA(alpha);
 		Renderer.LINES.begin();
 		

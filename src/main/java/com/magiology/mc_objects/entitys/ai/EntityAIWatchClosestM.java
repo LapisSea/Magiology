@@ -53,12 +53,12 @@ public class EntityAIWatchClosestM extends EntityAIBase{
 			return this.closestEntity!=null;
 		}
 	}
-
+	
 	/**
 	 * Returns whether an in-progress EntityAIBase should continue executing
 	 */
 	@Override
-	public boolean continueExecuting(){
+	public boolean shouldContinueExecuting(){
 		return !this.closestEntity.isEntityAlive()?false:(this.theWatcher.getDistanceSqToEntity(this.closestEntity)>this.maxDistanceForPlayer*this.maxDistanceForPlayer?false:this.lookTime>0);
 	}
 

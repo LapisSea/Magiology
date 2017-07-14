@@ -3,10 +3,11 @@ package com.magiology.util.statics;
 import com.magiology.util.objs.color.ColorM;
 import com.magiology.util.objs.vec.IVec3M;
 import com.magiology.util.objs.vec.Vec3M;
+
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -96,7 +97,7 @@ public class OpenGLM extends GlStateManager{
 		translate(vec.x(), vec.y(), vec.z());
 	}
 	
-	public static VertexBuffer getWB(){
+	public static BufferBuilder getWB(){
 		return Tessellator.getInstance().getBuffer();
 	}
 	

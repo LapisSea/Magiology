@@ -24,9 +24,9 @@ public class Vec3MRead implements IVec3M<Vec3MRead>{
 	}
 	
 	public Vec3MRead(Vec3d vec){
-		x=vec.xCoord;
-		y=vec.yCoord;
-		z=vec.zCoord;
+		x=vec.x;
+		y=vec.y;
+		z=vec.z;
 	}
 	
 	@Override

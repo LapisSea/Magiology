@@ -88,7 +88,7 @@ public class RenderEvents{
 			if(tile instanceof TileEntityScreen) highlighted=(TileEntityScreen)tile;
 		}
 		if(pos==null) TileEntityScreen.setHighlighted(highlighted, 0, 0, 0);
-		else TileEntityScreen.setHighlighted(highlighted, (float)hit.hitVec.xCoord-pos.getX(), (float)hit.hitVec.yCoord-pos.getY(), (float)hit.hitVec.zCoord-pos.getZ());
+		else TileEntityScreen.setHighlighted(highlighted, (float)hit.hitVec.x-pos.getX(), (float)hit.hitVec.y-pos.getY(), (float)hit.hitVec.z-pos.getZ());
 		PostProcessFX.processAll();
 	}
 	

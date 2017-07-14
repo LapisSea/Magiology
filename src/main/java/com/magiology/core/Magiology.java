@@ -31,9 +31,6 @@ public class Magiology extends GenericModContainerImpl{
 	public static final boolean IS_DEV, CLIENT_ONLY_REMOVED;
 	
 	static{
-		LogUtil.printStackTrace();
-		System.exit(0);
-		CompatibilityChecker.checkJava8();
 		getClassLoader().addClassLoaderExclusion("jdk.nashorn");
 		boolean clientOnlyRemoved=false;
 		try{

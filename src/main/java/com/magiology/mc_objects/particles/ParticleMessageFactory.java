@@ -98,7 +98,7 @@ public class ParticleMessageFactory extends ParticleFactory{
 
 		@Override
 		public void renderModel(float xRotation, float zRotation, float yzRotation, float xyRotation, float xzRotation){
-			FontRenderer fr=UtilC.getMC().fontRendererObj;
+			FontRenderer fr=UtilC.getMC().fontRenderer;
 			int w=fr.getStringWidth(text);
 			
 			ColorM bgCol=new ColorM(0, 0, 0, 0.2*getColor().a());

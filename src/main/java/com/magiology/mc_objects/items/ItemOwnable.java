@@ -4,6 +4,8 @@ import com.magiology.util.m_extensions.ItemM;
 import com.magiology.util.objs.NBTUtil;
 import com.magiology.util.statics.UtilM;
 import com.mojang.authlib.GameProfile;
+
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,13 +36,14 @@ public abstract class ItemOwnable extends ItemM{
 		
 	}
 	
+	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
+	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flagIn){
 		if(!showPlayer) return;
 		
 		UUID uuid=getUUID(stack);
-		EntityPlayer pl=getOwner(uuid, playerIn.world);
+		EntityPlayer pl=getOwner(uuid, world);
 		String name;
 		
 		if(pl!=null){

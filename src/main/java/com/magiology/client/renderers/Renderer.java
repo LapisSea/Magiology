@@ -7,8 +7,9 @@ import com.magiology.util.objs.vec.Vec2FM;
 import com.magiology.util.objs.vec.Vec2i;
 import com.magiology.util.statics.OpenGLM;
 import com.magiology.util.statics.math.MathUtil;
+
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.math.Vec3d;
@@ -34,7 +35,7 @@ public class Renderer{
 	}
 	
 	static final   Renderer     instance   =new Renderer();
-	private static VertexBuffer renderer   =OpenGLM.getWB();
+	private static BufferBuilder renderer   =OpenGLM.getWB();
 	private static Tessellator  tessellator=OpenGLM.getT();
 	
 	public static final LineRenderer             LINES              =new LineRenderer();
@@ -96,7 +97,7 @@ public class Renderer{
 		}
 		
 		public void addVertex(Vec3d pos, double u, double v, ColorM color, int xLight, int yLight){
-			addVertex(pos.xCoord, pos.yCoord, pos.zCoord, u, v, color.r(), color.g(), color.b(), color.a(), xLight, yLight);
+			addVertex(pos.x, pos.y, pos.z, u, v, color.r(), color.g(), color.b(), color.a(), xLight, yLight);
 		}
 		
 		public void addVertex(IVec3M pos, double u, double v, float red, float green, float blue, float alpha, int xLight, int yLight){

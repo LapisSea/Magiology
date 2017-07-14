@@ -5,8 +5,11 @@ import com.magiology.util.interf.Renderable;
 import com.magiology.util.interf.SpecialRender;
 import com.magiology.util.objs.NBTUtil;
 import com.magiology.util.statics.math.MathUtil;
+
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -33,8 +36,8 @@ public class ItemMatterJumper extends ItemOwnable implements SpecialRender{
 	}
 	
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
-		super.addInformation(stack, playerIn, tooltip, advanced);
+	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flagIn){
+		super.addInformation(stack, world, tooltip, flagIn);
 		tooltip.add(getModeAsString(stack));
 	}
 	

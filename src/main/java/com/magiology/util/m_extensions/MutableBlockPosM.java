@@ -101,7 +101,7 @@ public class MutableBlockPosM extends MutableBlockPos{
 	
 	public MutableBlockPosM setPos(LocateableVec3D vec){
 		Vec3d v=vec.getPos();
-		return this.setPos(v.xCoord, v.yCoord, v.zCoord);
+		return this.setPos(v.x, v.y, v.z);
 	}
 	
 	public MutableBlockPosM setPos(LocateableVec3M vec){

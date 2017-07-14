@@ -13,7 +13,7 @@ public class Vec3MFinal implements IVec3M<Vec3MFinal>{
 	}
 	
 	public Vec3MFinal(Vec3d vec){
-		this(vec.xCoord, vec.yCoord, vec.zCoord);
+		this(vec.x, vec.y, vec.z);
 	}
 	
 	public Vec3MFinal(IVec3M vec){

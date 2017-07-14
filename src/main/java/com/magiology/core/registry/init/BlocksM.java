@@ -11,6 +11,7 @@ import com.magiology.util.m_extensions.BlockM;
 import com.magiology.util.m_extensions.ItemBlockM;
 import com.magiology.util.statics.UtilM;
 import net.minecraft.item.ItemBlock;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 //<GEN:	IMPORTS START>
@@ -42,8 +43,8 @@ public class BlocksM extends AutoReferencedRegistry<BlockM>{
 		block.setRegistryName(MReference.MODID, name);
 		block.setUnlocalizedName(name);
 		ItemBlock ib=new ItemBlockM(block);
-		GameRegistry.register(block);
-		GameRegistry.register(ib.setRegistryName(MReference.MODID, name));
+		ForgeRegistries.BLOCKS.register(block);
+		ForgeRegistries.ITEMS.register(ib.setRegistryName(MReference.MODID, name));
 	}
 	
 	@Override

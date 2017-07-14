@@ -39,8 +39,8 @@ public abstract class PacketM implements IMessage, IMessageHandler<PacketM,IMess
 			listener=UtilC.getMC();
 			player=UtilC.getThePlayer();
 		}else{
-			listener=((WorldServer)ctx.getServerHandler().playerEntity.world);
-			player=ctx.getServerHandler().playerEntity;
+			listener=((WorldServer)ctx.getServerHandler().player.world);
+			player=ctx.getServerHandler().player;
 		}
 		
 		listener.addScheduledTask(()->message.onMessage(player.world, player, isRemote));

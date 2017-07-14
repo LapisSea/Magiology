@@ -171,7 +171,7 @@ public class EntityPenguin extends EntityAgeableM{
 			if(pl!=null){
 				setItemStackToSlot(EntityEquipmentSlot.MAINHAND, pl.getHeldItemMainhand());
 			}
-			if(navigator!=null&&navigator.getPath()!=null) AI_TARGET.set(this, new BlockPos(navigator.getPath().getFinalPathPoint().xCoord, navigator.getPath().getFinalPathPoint().yCoord, navigator.getPath().getFinalPathPoint().zCoord));
+			if(navigator!=null&&navigator.getPath()!=null) AI_TARGET.set(this, new BlockPos(navigator.getPath().getFinalPathPoint().x, navigator.getPath().getFinalPathPoint().y, navigator.getPath().getFinalPathPoint().z));
 			else AI_TARGET.set(this, new BlockPos(0, -1, 0));
 			
 			BlockPos pos=this.getPosition();
@@ -227,11 +227,8 @@ public class EntityPenguin extends EntityAgeableM{
 		if(this.getRidingEntity() instanceof EntityBoat){
 			inWater=false;
 		}else{
-			if(world.handleMaterialAcceleration(this.getEntityBoundingBox().expand(0.0D, -0.4000000059604645D, 0.0D).contract(0.001D), Material.WATER, this)){
+			if(world.handleMaterialAcceleration(this.getEntityBoundingBox().expand(0.0D, -0.4000000059604645D, 0.0D).contract(0.001D,0.001D,0.001D), Material.WATER, this)){
 				
-				if(!inWater&&!firstUpdate){
-					this.resetHeight();
-				}
 				fallDistance=0.0F;
 				inWater=true;
 				setFire(0);

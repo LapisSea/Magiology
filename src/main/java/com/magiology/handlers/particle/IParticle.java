@@ -124,7 +124,7 @@ public abstract class IParticle implements Worldabale{
 			return;
 		}
 		Vec3M originalSpeed=speed.copy();
-		List<AxisAlignedBB> boundingBoxes=getWorld().getCollisionBoxes(null, getBoundingBox().addCoord(speed.x(), speed.y(), speed.z()));
+		List<AxisAlignedBB> boundingBoxes=getWorld().getCollisionBoxes(null, getBoundingBox().contract(speed.x(), speed.y(), speed.z()));
 		boundingBoxes.forEach(box->speed.setX(box.calculateXOffset(getBoundingBox(), speed.x())));
 		setBoundingBox(getBoundingBox().offset(speed.x(), 0, 0));
 		boundingBoxes.forEach(box->speed.setY(box.calculateYOffset(getBoundingBox(), speed.y())));

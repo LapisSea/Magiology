@@ -36,7 +36,7 @@ public class StateDependantBlockHighlightRenderer extends BlockHighlightRenderer
 		GlStateManager.glNewList(drawModel, 4864);
 		
 		Renderer.LINES.begin();
-		generateBoxLines(box.box.expandXyz(0.0020000000949949026D)).forEach(Renderer.LINES::addVertex);
+		generateBoxLines(box.box.expand(0.0020000000949949026D,0.0020000000949949026D,0.0020000000949949026D)).forEach(Renderer.LINES::addVertex);
 		Renderer.LINES.draw();
 		
 		GlStateManager.glEndList();

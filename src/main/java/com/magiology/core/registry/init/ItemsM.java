@@ -6,6 +6,8 @@ import com.magiology.mc_objects.items.ItemMatterJumper;
 import com.magiology.mc_objects.items.SimpleItems.ItemMistyPowder;
 import com.magiology.util.m_extensions.ItemM;
 import com.magiology.util.statics.UtilM;
+
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 //<GEN:	IMPORTS START>
@@ -34,7 +36,7 @@ public class ItemsM extends AutoReferencedRegistry<ItemM>{
 		String name=UtilM.classNameToMcName(obj.getClass());
 		obj.setRegistryName(name);
 		obj.setUnlocalizedName(name);
-		GameRegistry.register(obj);
+		ForgeRegistries.ITEMS.register(obj);
 	}
 	
 	@Override

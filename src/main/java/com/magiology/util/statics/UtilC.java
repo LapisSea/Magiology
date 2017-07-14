@@ -87,7 +87,7 @@ public class UtilC{
 	}
 	
 	public static Vec2i[] arrangeStringsForGui(final String[] strings, int lines, int marginX, int marginY){
-		FontRenderer fr=getMC().fontRendererObj;
+		FontRenderer fr=getMC().fontRenderer;
 		Vec2i[] result=new Vec2i[strings.length];
 		int columns=(int)Math.floor(strings.length/(float)lines)+1;
 		String[][] formattedStrings=new String[columns][lines];
@@ -118,7 +118,7 @@ public class UtilC{
 	public static String getStringForSize(String text, float allowedWidth){
 		if(text.isEmpty()) return text;
 		String Return=""+text;
-		FontRenderer font=getMC().fontRendererObj;
+		FontRenderer font=getMC().fontRenderer;
 		while(font.getStringWidth(Return)>allowedWidth){
 			Return=Return.substring(0, Return.length()-1);
 		}

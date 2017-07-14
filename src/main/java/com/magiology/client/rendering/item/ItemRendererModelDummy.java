@@ -1,7 +1,6 @@
 package com.magiology.client.rendering.item;
 
 import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import com.magiology.util.interf.ObjectReturn;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelBlock;
@@ -10,13 +9,15 @@ import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.common.model.IModelState;
+import net.minecraftforge.common.model.TRSRTransformation;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 
 public class ItemRendererModelDummy implements IModel{
 
-	private static final IModelState NO_STATE=(t)->Optional.absent();
+	private static final IModelState NO_STATE=t->Optional.empty();
 	public static ModelBlock GEN_MODEL;
 
 	static{
@@ -40,7 +41,7 @@ public class ItemRendererModelDummy implements IModel{
 	}
 	
 	@Override
-	public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation,TextureAtlasSprite> bakedTextureGetter){
+	public IBakedModel bake(IModelState state, VertexFormat format, java.util.function.Function<ResourceLocation,TextureAtlasSprite> bakedTextureGetter){
 		GEN_MODEL=ModelBlock.deserialize(((ObjectReturn<String>)()->{
 			StringBuilder s=new StringBuilder();
 			s.append("{");

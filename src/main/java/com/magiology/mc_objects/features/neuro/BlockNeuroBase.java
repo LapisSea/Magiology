@@ -64,8 +64,4 @@ public abstract class BlockNeuroBase<T extends TileEntityM&NeuroPart> extends Bl
 		}
 	}
 	
-	@Override
-	public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side){
-		return false;
-	}
 }

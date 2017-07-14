@@ -305,8 +305,8 @@ public class EntityPenguinRenderer extends RenderLiving<EntityPenguin>{
 		//			if(path!=null&&path.getCurrentPathLength()>1)for(int i=0;i<path.getCurrentPathLength()-1;i++){
 		//				PathPoint ia=path.getPathPointFromIndex(i);
 		//				PathPoint ie=path.getPathPointFromIndex(i+1);
-		//				Renderer.LINES.addVertex(ia.xCoord-pos1.x+0.5, ia.yCoord-pos1.y+0.5, ia.zCoord-pos1.z+0.5);
-		//				Renderer.LINES.addVertex(ie.xCoord-pos1.x+0.5, ie.yCoord-pos1.y+0.5, ie.zCoord-pos1.z+0.5);
+		//				Renderer.LINES.addVertex(ia.x-pos1.x+0.5, ia.y-pos1.y+0.5, ia.z-pos1.z+0.5);
+		//				Renderer.LINES.addVertex(ie.x-pos1.x+0.5, ie.y-pos1.y+0.5, ie.z-pos1.z+0.5);
 		//			}
 		//			Renderer.LINES.draw();
 		//

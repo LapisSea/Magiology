@@ -270,7 +270,7 @@ public class AxisAlignedBBFloat{
 	 * Returns if the supplied Vec3D is completely inside the bounding box
 	 */
 	public static boolean isVecInside(Vec3d vec){
-		return vec.xCoord>minX(buffer, pointer)&&vec.xCoord<maxX(buffer, pointer)?vec.yCoord>minY(buffer, pointer)&&vec.yCoord<maxY(buffer, pointer)?vec.zCoord>minZ(buffer, pointer)&&vec.zCoord<maxZ(buffer, pointer):false:false;
+		return vec.x>minX(buffer, pointer)&&vec.x<maxX(buffer, pointer)?vec.y>minY(buffer, pointer)&&vec.y<maxY(buffer, pointer)?vec.z>minZ(buffer, pointer)&&vec.z<maxZ(buffer, pointer):false:false;
 	}
 	
 	/**
@@ -345,15 +345,15 @@ public class AxisAlignedBBFloat{
 	}
 	
 	public static boolean intersectsWithYZ(Vec3d vec){
-		return vec.yCoord>=minY(buffer, pointer)&&vec.yCoord<=maxY(buffer, pointer)&&vec.zCoord>=minZ(buffer, pointer)&&vec.zCoord<=maxZ(buffer, pointer);
+		return vec.y>=minY(buffer, pointer)&&vec.y<=maxY(buffer, pointer)&&vec.z>=minZ(buffer, pointer)&&vec.z<=maxZ(buffer, pointer);
 	}
 	
 	public static boolean intersectsWithXZ(Vec3d vec){
-		return vec.xCoord>=minX(buffer, pointer)&&vec.xCoord<=maxX(buffer, pointer)&&vec.zCoord>=minZ(buffer, pointer)&&vec.zCoord<=maxZ(buffer, pointer);
+		return vec.x>=minX(buffer, pointer)&&vec.x<=maxX(buffer, pointer)&&vec.z>=minZ(buffer, pointer)&&vec.z<=maxZ(buffer, pointer);
 	}
 	
 	public static boolean intersectsWithXY(Vec3d vec){
-		return vec.xCoord>=minX(buffer, pointer)&&vec.xCoord<=maxX(buffer, pointer)&&vec.yCoord>=minY(buffer, pointer)&&vec.yCoord<=maxY(buffer, pointer);
+		return vec.x>=minX(buffer, pointer)&&vec.x<=maxX(buffer, pointer)&&vec.y>=minY(buffer, pointer)&&vec.y<=maxY(buffer, pointer);
 	}
 	
 	public static String buffToString(){
